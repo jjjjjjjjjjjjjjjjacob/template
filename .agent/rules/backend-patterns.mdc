@@ -1,0 +1,84 @@
+---
+description: Backend development patterns and rules for apps/convex
+globs: apps/convex/**/*
+alwaysApply: true
+---
+
+# Backend Development Rules
+
+## Query Optimization
+
+### Always Use Indexes
+```typescript
+// ✅ GOOD - Using index
+const items = await ctx.db
+  .query('items')
+  .withIndex('by_user', (q) => q.eq('userId', userId))
+  .collect();
+
+// ❌ BAD - Using filter
+const items = await ctx.db
+  .query('items')
+  .filter((q) => q.eq(q.field('userId'), userId))
+  .collect();
+```
+
+### Schema Design
+```typescript
+tableName: defineTable({
+  field: v.string(),
+  created_at: v.number(),
+})
+  .index('by_field', ['field'])
+  .index('by_created', ['created_at']);
+```
+
+## Function Patterns
+
+### Authentication
+```typescript
+export const authenticatedFunction = mutation({
+  args: { /* args */ },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error('Not authenticated');
+    // Function logic
+  },
+});
+```
+
+### File Organization
+- Functions by domain: `convex/users.ts`, `convex/emojis.ts`
+- API path: `convex/foo/bar.ts` → `api.foo.bar.functionName`
+- Schema in `convex/schema.ts`
+
+## Search Implementation
+
+### Existing Search System
+- Full search implementation at `convex/search.ts`
+- Includes fuzzy matching and scoring
+- Query parser with operators
+- Multi-type search support
+
+### Search Features
+- Fuzzy search algorithm
+- Query operators (quotes, exclusions)
+- Relevance scoring
+- Don't recreate - extend existing implementation
+
+## Testing
+
+### Using convex-test
+```typescript
+import { convexTest } from 'convex-test';
+import schema from './schema';
+import { modules } from '../vitest.setup';
+
+const t = convexTest(schema, modules);
+
+// Test mutations
+const result = await t.mutation(api.users.create, { name: 'Test' });
+
+// Verify data
+expect(result).toBeTypeOf('string');
+```

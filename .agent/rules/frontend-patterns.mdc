@@ -1,0 +1,80 @@
+---
+description: Frontend development patterns and rules for apps/web
+globs: apps/web/**/*
+alwaysApply: true
+---
+
+# Frontend Development Rules
+
+## Component Organization
+
+### Feature-Based Structure
+```
+apps/web/src/features/[feature]/
+├── components/     # Feature-specific components
+├── hooks/         # Custom hooks for logic
+├── lib/           # Utilities
+├── services/      # API calls
+├── types/         # TypeScript interfaces
+└── index.ts       # Barrel exports
+```
+
+## Import Patterns
+
+### Within apps/web
+```typescript
+import { Button } from '@/components/ui/button';  // shadcn components
+import { useAuth } from '@/features/auth';        // Feature imports
+import { cn } from '@/utils/tailwind-utils';      // Local utils
+```
+
+### From other workspaces
+```typescript
+import { api } from '@template/convex';
+import type { User } from '@template/types';
+import { formatDate } from '@template/utils';
+```
+
+## UI Conventions
+
+### Text Casing
+- ALL UI text must be lowercase
+- Buttons: "save changes" NOT "Save Changes"  
+- Headers: "user profile" NOT "User Profile"
+- Exception: Proper nouns and user content
+
+### Component Patterns
+- Use shadcn/ui components for consistency
+- Implement loading states with Skeleton components
+- Progressive enhancement with fallbacks
+- Fixed dimensions for UI consistency (e.g., 48x48px)
+
+## Performance Rules
+
+### Bundle Optimization
+- Lazy load heavy components (charts, editors)
+- Dynamic imports for code splitting
+- Keep chunks under 250KB
+- Monitor with `bun run analyze-bundle`
+
+### Font Loading
+- Use font-display: fallback for critical fonts
+- Subset large font files
+- Progressive loading by priority
+
+## Testing Requirements
+
+### Component Tests
+```typescript
+/// <reference lib="dom" />
+import { render, screen } from '@testing-library/react';
+import { afterEach, cleanup } from '@testing-library/react';
+
+afterEach(cleanup);
+```
+
+### Test Patterns
+- Use @testing-library/react
+- Prefer role-based queries
+- Test user interactions, not implementation
+- Mock at barrel export level

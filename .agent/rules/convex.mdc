@@ -1,0 +1,115 @@
+---
+description: Convex backend development patterns and best practices
+globs: apps/convex/**/*
+alwaysApply: true
+---
+# Convex Development Guide
+
+## Query Patterns
+
+### Use Indexes, Not Filters
+```typescript
+// ✅ GOOD - Using index
+const messages = await ctx.db
+  .query("messages")
+  .withIndex("by_channel", (q) => q.eq("channel", channelId))
+  .collect();
+
+// ❌ BAD - Using filter
+const messages = await ctx.db
+  .query("messages")
+  .filter((q) => q.eq(q.field("channel"), channelId))
+  .collect();
+```
+
+### Schema with Indexes
+```typescript
+export default defineSchema({
+  messages: defineTable({
+    channel: v.id("channels"),
+    body: v.string(),
+    user: v.id("users"),
+  })
+    .index("by_channel", ["channel"])
+    .index("by_channel_user", ["channel", "user"]),
+});
+```
+
+## Function Types
+
+### Query
+```typescript
+import { query } from "./_generated/server";
+import { v } from "convex/values";
+
+export const getItems = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("items")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
+  }
+});
+```
+
+### Mutation
+```typescript
+import { mutation } from "./_generated/server";
+
+export const createItem = mutation({
+  args: { text: v.string() },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Not authenticated");
+    
+    return await ctx.db.insert("items", { 
+      text: args.text,
+      userId: identity.subject 
+    });
+  }
+});
+```
+
+### Action (for external APIs)
+```typescript
+import { action } from "./_generated/server";
+import { internal } from "./_generated/api";
+
+export const fetchExternal = action({
+  args: { url: v.string() },
+  handler: async (ctx, { url }) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    // Call mutation to store result
+    await ctx.runMutation(internal.items.store, { data });
+    return data;
+  }
+});
+```
+
+## File Organization
+
+- **API Path**: `convex/foo/bar.ts` → `api.foo.bar.functionName`
+- **Schema**: Always in `convex/schema.ts`
+- **Organize by domain**: `users.ts`, `emojis.ts`, `search.ts`
+
+## Authentication
+
+Always check authentication in mutations:
+```typescript
+const identity = await ctx.auth.getUserIdentity();
+if (!identity) throw new Error("Not authenticated");
+```
+
+## Existing Systems
+
+### Search Implementation
+Full search system exists at `convex/search.ts`:
+- Fuzzy matching algorithm
+- Query parsing with operators
+- Relevance scoring
+- Multi-type search
+
+**Don't recreate - extend existing search implementation**

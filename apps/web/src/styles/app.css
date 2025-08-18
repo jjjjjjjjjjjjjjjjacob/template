@@ -1,0 +1,913 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import './fonts.css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  color-scheme: dark;
+}
+
+/* Global themes */
+@theme inline {
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+  --font-geist: 'GeistSans';
+  --font-geist-mono: 'GeistMono';
+  --font-doto: 'Doto';
+  --font-noto: 'NotoEmoji';
+  --font-noto-color: var(--font-emoji);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Theme colors for Tailwind integration */
+  --color-theme-primary: var(--theme-primary);
+  --color-theme-secondary: var(--theme-secondary);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.205 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Default theme colors (pink-orange gradient) */
+  --theme-primary: hsl(330 81% 50%); /* pink-600 */
+  --theme-secondary: hsl(25 95% 48%); /* orange-600 */
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50 cursor-default;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer utilities {
+  .font-sans {
+    font-family: var(--font-family-sans);
+  }
+
+  .font-mono {
+    font-family: var(--font-family-mono);
+  }
+
+  .font-geist {
+    font-family: var(--font-geist);
+  }
+
+  .font-geist-mono {
+    font-family: var(--font-geist-mono);
+  }
+
+  *::-webkit-scrollbar {
+    @apply w-2 bg-transparent;
+  }
+  *::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    @apply bg-muted rounded-full;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .bg-dot-pattern {
+    background-image: radial-gradient(currentColor 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  .bg-noise-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+}
+
+/* Accordion animations */
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+/* Wiggle animation for emojis */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+/* Shimmy animation for rating */
+@keyframes shimmy {
+  0% {
+    transform: translateX(0) scale(1.05);
+  }
+  25% {
+    transform: translateX(-2px) scale(1.05);
+  }
+  75% {
+    transform: translateX(2px) scale(1.05);
+  }
+  100% {
+    transform: translateX(0) scale(1.05);
+  }
+}
+
+/* Pulse scale animation for rating selection */
+@keyframes pulse-scale {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Number pop animation */
+@keyframes number-pop {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Fade in down animation for CTA */
+@keyframes fade-in-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Smooth emoji transitions for rating selector */
+@keyframes emoji-slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(30px) scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(15px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes emoji-slide-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateX(-15px) scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.8);
+  }
+}
+
+/* Rating scale animation */
+@keyframes rating-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(5px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Hover arrow slide */
+@keyframes arrow-slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(5px);
+  }
+}
+
+/* Mobile-optimized bounce (lighter) */
+@keyframes bounce-light {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40%,
+  43% {
+    transform: translateY(-5px);
+  }
+  70% {
+    transform: translateY(-2px);
+  }
+  90% {
+    transform: translateY(-1px);
+  }
+}
+
+/* Scale with spring effect */
+@keyframes scale-spring {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Stagger animation for lists */
+@keyframes stagger-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+.animate-pulse-scale {
+  animation: pulse-scale 0.5s ease-in-out;
+}
+
+.animate-number-pop {
+  animation: number-pop 0.5s ease-out;
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.3s ease-out;
+}
+
+.animate-emoji-slide-in {
+  animation: emoji-slide-in 0.3s ease-out;
+}
+
+.animate-emoji-slide-out {
+  animation: emoji-slide-out 0.3s ease-out;
+}
+
+.animate-rating-reveal {
+  animation: rating-reveal 0.4s ease-out;
+}
+
+.animate-arrow-slide {
+  animation: arrow-slide 0.2s ease-out;
+}
+
+.animate-bounce-light {
+  animation: bounce-light 1s ease-in-out;
+}
+
+.animate-scale-spring {
+  animation: scale-spring 0.2s ease-out;
+}
+
+.animate-stagger-fade-in {
+  animation: stagger-fade-in 0.4s ease-out;
+}
+
+/* Responsive animation controls */
+@media (prefers-reduced-motion: reduce) {
+  .animate-accordion-down,
+  .animate-accordion-up,
+  .animate-wiggle,
+  .animate-pulse-scale,
+  .animate-number-pop,
+  .animate-fade-in-down,
+  .animate-emoji-slide-in,
+  .animate-emoji-slide-out,
+  .animate-rating-reveal,
+  .animate-arrow-slide,
+  .animate-bounce-light,
+  .animate-scale-spring,
+  .animate-stagger-fade-in {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Keep opacity transitions for accessibility */
+  .animate-fade-in-down {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Mobile-specific animation optimizations */
+@media (max-width: 768px) {
+  .animate-accordion-down,
+  .animate-accordion-up {
+    animation-duration: 0.15s; /* Faster on mobile */
+  }
+
+  .animate-emoji-slide-in,
+  .animate-emoji-slide-out {
+    animation-duration: 0.2s; /* Shorter for mobile responsiveness */
+  }
+
+  .animate-bounce-light {
+    animation-duration: 0.8s; /* Slightly faster bounce */
+  }
+}
+
+/* Connection-aware animations (slow networks) */
+@media (prefers-reduced-data: reduce) {
+  .animate-wiggle,
+  .animate-bounce-light,
+  .animate-scale-spring {
+    animation: none !important;
+  }
+}
+
+.container {
+  @apply mx-auto w-full px-4;
+}
+
+.cl-formButtonPrimary,
+.cl-socialButtonsBlockButton {
+  @apply bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md px-3 font-medium whitespace-nowrap !shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
+}
+
+.cl-card,
+.cl-socialButtonsBlockButton,
+.cl-alert,
+.cl-phoneInputBox,
+.cl-userButtonPopoverCard {
+  @apply border-input bg-background rounded-lg border;
+}
+
+.cl-headerTitle,
+.cl-loading,
+.cl-formFieldLabel,
+.cl-formHeaderTitle,
+.cl-selectButton__countryCode,
+.cl-selectButton__countryCode p,
+.cl-selectOption p,
+.cl-selectOption div,
+.cl-modalCloseButton,
+.cl-navbarButton,
+.cl-breadcrumbsItem.cl-breadcrumbsItem__currentPage,
+.cl-profileSectionTitle p,
+.cl-userPreviewTextContainer,
+.cl-profileSectionContent p,
+.cl-form p,
+.cl-accordionTriggerButton {
+  @apply dark:text-foreground;
+}
+
+.cl-headerSubtitle,
+.cl-dividerText,
+.cl-footerActionText,
+.cl-alertText,
+.cl-formFieldInfoText,
+.cl-formFieldSuccessText,
+.cl-identityPreviewText,
+.cl-userButtonPopoverActionButton,
+.cl-userButtonPopoverActionButton svg,
+.cl-userButtonPopoverActionButtonText,
+.cl-userButtonPopoverFooter p,
+.cl-userButtonPopoverFooter a,
+.cl-formHeaderSubtitle,
+.cl-breadcrumbsItem,
+.cl-breadcrumbsItemDivider,
+.cl-fileDropAreaHint,
+.cl-fileDropAreaFooterHint,
+.cl-form
+  p[data-localization-key='userProfile.emailAddressPage.emailCode.formHint'],
+p[data-localization-key='userProfile.profilePage.successMessage'] {
+  @apply text-muted-foreground;
+}
+
+.cl-dividerLine {
+  @apply bg-border;
+}
+
+.cl-formFieldInput[type='text'],
+.cl-formFieldInput[type='email'],
+.cl-formFieldInput[type='password'] {
+  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.cl-footerActionLink {
+  @apply text-accent-foreground hover:text-accent-foreground/90 underline;
+}
+
+.cl-otpCodeFieldInput {
+  @apply !border-input text-foreground !border;
+}
+
+.cl-formResendCodeLink {
+  @apply text-primary disabled:opacity-90;
+}
+
+.cl-selectSearchInput__countryCode {
+  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border border-b file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.cl-selectOptionsContainer__countryCode {
+  @apply border-input bg-background border;
+}
+
+.cl-internal-icon,
+.cl-userPreviewSecondaryIdentifier__userButton {
+  @apply text-foreground;
+}
+
+/* Prevent icon blowout */
+.cl-internal-icon,
+.cl-internal-icon svg,
+.cl-userButtonPopoverActionButton svg,
+.cl-socialButtonsBlockButton svg,
+.cl-alternativeMethodsBlockButton svg {
+  width: 1rem !important;
+  height: 1rem !important;
+  max-width: 1rem !important;
+  max-height: 1rem !important;
+  flex-shrink: 0;
+}
+
+button[data-localization-key='userProfile.start.dangerSection.deleteAccountButton'] {
+  @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+}
+
+.cl-fileDropAreaBox {
+  @apply dark:bg-gray-900;
+}
+
+.cl-fileDropAreaIconBox {
+  @apply dark:bg-gray-800;
+}
+
+.cl-fileDropAreaIcon {
+  @apply dark:text-gray-400;
+}
+
+.cl-fileDropAreaButtonPrimary {
+  @apply text-foreground hover:bg-secondary hover:text-accent-foreground h-10 px-4 py-2 transition-colors;
+}
+
+.cl-userButtonPopoverActionButton,
+.cl-profileSectionPrimaryButton,
+.cl-accordionTriggerButton,
+.cl-navbarButton {
+  @apply hover:bg-accent hover:text-accent-foreground;
+}
+
+.cl-card {
+  @apply rounded-lg shadow-md;
+}
+
+.cl-userButtonPopoverCard {
+  @apply rounded-md;
+}
+
+.cl-userButtonPopoverFooter a {
+  @apply hover:text-muted-foreground;
+}
+
+.cl-badge {
+  @apply border-input bg-background text-foreground rounded-full border px-2.5 py-0.5 text-xs !shadow-none;
+}
+
+.cl-badge[data-localization-key='badge__unverified'] {
+  @apply text-destructive border bg-transparent dark:text-red-500;
+}
+
+.cl-formButtonReset {
+  @apply text-foreground hover:bg-secondary;
+}
+
+.cl-footer {
+  @apply bg-background from-background to-background text-muted-foreground rounded-b-lg border-x border-b bg-gradient-to-t;
+}
+.cl-userButtonPopoverFooter {
+  @apply from-background to-background rounded-b-lg bg-gradient-to-t;
+}
+
+.cl-signIn-start,
+.cl-signUp-start,
+.cl-signIn-password,
+.cl-signIn-alternativeMethods,
+.cl-signIn-emailCode {
+  @apply rounded-b-none border-b-0;
+}
+
+.cl-cardBox {
+  @apply rounded-lg shadow-sm;
+}
+
+.cl-socialButtonsBlockButton {
+  @apply bg-foreground h-10 !border;
+}
+
+.cl-alternativeMethods .cl-alternativeMethodsBlockButton {
+  @apply border-input text-muted-foreground h-10 !border;
+}
+
+.cl-alternativeMethodsBlockButton {
+  @apply h-10 !shadow-none;
+}
+
+.cl-navbar {
+  @apply from-background to-background rounded-lg border-y border-l bg-gradient-to-t;
+}
+
+.cl-scrollBox {
+  @apply border-input from-background to-background rounded-lg rounded-l-none border bg-gradient-to-t;
+}
+
+h1[data-localization-key='userProfile.navbar.title'] {
+  @apply text-foreground;
+}
+
+.cl-profilePage > .cl-header {
+  @apply border-b;
+}
+
+.cl-profileSection__profile,
+.cl-profileSection__emailAddresses {
+  @apply border-b;
+}
+
+.cl-menuButton {
+  @apply text-foreground hover:text-foreground;
+}
+
+.cl-menuList {
+  @apply border-input bg-background border;
+}
+
+.cl-actionCard {
+  @apply border-input bg-background border;
+}
+
+.cl-menuItem[data-color='neutral'] {
+  @apply text-foreground hover:bg-muted;
+}
+
+.cl-avatarImageActionsUpload {
+  @apply border-input text-foreground !border;
+}
+
+.cl-userButtonPopoverMain {
+  @apply border-input bg-background rounded-lg;
+}
+
+.cl-navbarMobileMenuRow {
+  @apply from-background to-background rounded-lg border-x border-t bg-gradient-to-t;
+}
+
+.cl-navbarMobileMenuButton {
+  @apply text-foreground;
+}
+
+/* Theme color palette as CSS custom properties */
+:root {
+  /* Default theme colors (pink-orange gradient) */
+  --theme-primary: hsl(330 81% 50%); /* pink-600 (darker for better contrast) */
+  --theme-secondary: hsl(
+    25 95% 48%
+  ); /* orange-600 (darker for better contrast) */
+  --theme-accent: hsl(330 81% 50%); /* pink-600 */
+
+  /* All available theme colors (Tailwind HSL - optimized for contrast) */
+  --color-purple: hsl(262 83% 48%); /* purple-600 */
+  --color-pink: hsl(330 81% 50%); /* pink-600 */
+  --color-blue: hsl(217 91% 50%); /* blue-600 */
+  --color-emerald: hsl(160 84% 35%); /* emerald-700 */
+  --color-orange: hsl(25 95% 48%); /* orange-600 */
+  --color-red: hsl(0 84% 50%); /* red-600 */
+  --color-indigo: hsl(239 84% 57%); /* indigo-600 */
+  --color-teal: hsl(173 80% 35%); /* teal-700 */
+  --color-slate: hsl(215 28% 25%); /* slate-700 */
+  --color-amber: hsl(45 93% 42%); /* amber-600 */
+  --color-lime: hsl(84 81% 39%); /* lime-600 */
+  --color-cyan: hsl(188 95% 32%); /* cyan-700 */
+  --color-violet: hsl(262 90% 65%); /* violet-500 */
+  --color-fuchsia: hsl(292 84% 51%); /* fuchsia-600 */
+  --color-green: hsl(142 76% 31%); /* green-700 */
+  --color-yellow: hsl(54 92% 50%); /* yellow-500 */
+
+  /* Accent colors (darker variants for better contrast) */
+  --accent-purple: hsl(262 83% 48%); /* purple-600 */
+  --accent-pink: hsl(330 81% 50%); /* pink-600 */
+  --accent-blue: hsl(217 91% 50%); /* blue-600 */
+  --accent-emerald: hsl(160 84% 35%); /* emerald-700 */
+  --accent-orange: hsl(25 95% 48%); /* orange-600 */
+  --accent-red: hsl(0 84% 50%); /* red-600 */
+  --accent-indigo: hsl(239 84% 57%); /* indigo-600 */
+  --accent-teal: hsl(173 80% 35%); /* teal-700 */
+  --accent-slate: hsl(215 28% 25%); /* slate-700 */
+  --accent-amber: hsl(45 93% 42%); /* amber-600 */
+  --accent-lime: hsl(84 81% 39%); /* lime-600 */
+  --accent-cyan: hsl(188 95% 32%); /* cyan-700 */
+  --accent-violet: hsl(262 90% 65%); /* violet-500 */
+  --accent-fuchsia: hsl(292 84% 51%); /* fuchsia-600 */
+  --accent-green: hsl(142 76% 31%); /* green-700 */
+  --accent-yellow: hsl(54 92% 50%); /* yellow-500 */
+}
+
+/* Color theme classes (following .dark pattern) */
+.purple-primary {
+  --theme-primary: hsl(262 83% 48%); /* purple-600 */
+}
+
+.pink-primary {
+  --theme-primary: hsl(330 81% 50%); /* pink-600 - same as default */
+}
+
+.blue-primary {
+  --theme-primary: hsl(217 91% 50%); /* blue-600 */
+}
+
+.emerald-primary {
+  --theme-primary: hsl(160 84% 35%); /* emerald-700 */
+}
+
+.orange-primary {
+  --theme-primary: hsl(25 95% 48%); /* orange-600 */
+}
+
+.red-primary {
+  --theme-primary: hsl(0 84% 50%); /* red-600 */
+}
+
+.indigo-primary {
+  --theme-primary: hsl(239 84% 57%); /* indigo-600 */
+}
+
+.teal-primary {
+  --theme-primary: hsl(173 80% 35%); /* teal-700 */
+}
+
+.slate-primary {
+  --theme-primary: hsl(215 28% 25%); /* slate-700 */
+}
+
+.amber-primary {
+  --theme-primary: hsl(45 93% 42%); /* amber-600 */
+}
+
+.lime-primary {
+  --theme-primary: hsl(84 81% 39%); /* lime-600 */
+}
+
+.cyan-primary {
+  --theme-primary: hsl(188 95% 32%); /* cyan-700 */
+}
+
+.violet-primary {
+  --theme-primary: hsl(262 90% 65%); /* violet-500 */
+}
+
+.fuchsia-primary {
+  --theme-primary: hsl(292 84% 51%); /* fuchsia-600 */
+}
+
+.green-primary {
+  --theme-primary: hsl(142 76% 31%); /* green-700 */
+}
+
+.yellow-primary {
+  --theme-primary: hsl(54 92% 50%); /* yellow-500 */
+}
+
+/* Secondary color theme classes */
+.purple-secondary {
+  --theme-secondary: hsl(262 83% 48%); /* purple-600 */
+}
+
+.pink-secondary {
+  --theme-secondary: hsl(330 81% 50%); /* pink-600 */
+}
+
+.blue-secondary {
+  --theme-secondary: hsl(217 91% 50%); /* blue-600 */
+}
+
+.emerald-secondary {
+  --theme-secondary: hsl(160 84% 35%); /* emerald-700 */
+}
+
+.orange-secondary {
+  --theme-secondary: hsl(25 95% 48%); /* orange-600 */
+}
+
+.red-secondary {
+  --theme-secondary: hsl(0 84% 50%); /* red-600 */
+}
+
+.indigo-secondary {
+  --theme-secondary: hsl(239 84% 57%); /* indigo-600 */
+}
+
+.teal-secondary {
+  --theme-secondary: hsl(173 80% 35%); /* teal-700 */
+}
+
+.slate-secondary {
+  --theme-secondary: hsl(215 28% 25%); /* slate-700 */
+}
+
+.amber-secondary {
+  --theme-secondary: hsl(45 93% 42%); /* amber-600 */
+}
+
+.lime-secondary {
+  --theme-secondary: hsl(84 81% 39%); /* lime-600 */
+}
+
+.cyan-secondary {
+  --theme-secondary: hsl(188 95% 32%); /* cyan-700 */
+}
+
+.violet-secondary {
+  --theme-secondary: hsl(262 90% 65%); /* violet-500 */
+}
+
+.fuchsia-secondary {
+  --theme-secondary: hsl(292 84% 51%); /* fuchsia-600 */
+}
+
+.green-secondary {
+  --theme-secondary: hsl(142 76% 31%); /* green-700 */
+}
+
+.yellow-secondary {
+  --theme-secondary: hsl(54 92% 50%); /* yellow-500 */
+}

@@ -1,0 +1,74 @@
+---
+description: Testing patterns and requirements for the template repository
+globs: /**/*.test.ts,/**/*.test.tsx
+alwaysApply: true
+---
+# Testing Guidelines
+
+## Test Framework
+
+- **Runner**: Vitest with Happy DOM environment
+- **Frontend**: @testing-library/react
+- **Backend**: convex-test
+- **File naming**: `[name].test.ts` or `[name].test.tsx`
+- **Structure**: Use `describe` blocks for grouping, `it` for test cases
+
+## Frontend Testing
+
+```typescript
+/// <reference lib="dom" />
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { afterEach, vi } from 'vitest';
+
+afterEach(cleanup);
+
+it('handles user interaction', () => {
+  const handleClick = vi.fn();
+  render(<Button onClick={handleClick}>click me</Button>);
+  
+  const button = screen.getByRole('button');
+  fireEvent.click(button);
+  
+  expect(handleClick).toHaveBeenCalledTimes(1);
+  expect(button).toHaveTextContent('click me');
+});
+```
+
+### Key Patterns
+- Include DOM reference: `/// <reference lib="dom" />`
+- Use `screen` queries (prefer role-based)
+- Clean up after each test
+- Mock with `vi.fn()`
+- Test user interactions, not implementation
+
+## Backend Testing
+
+```typescript
+import { convexTest } from 'convex-test';
+import schema from './schema';
+import { modules } from '../vitest.setup';
+import { api } from './_generated/api';
+
+const t = convexTest(schema, modules);
+
+it('creates and retrieves data', async () => {
+  // Test mutation
+  const id = await t.mutation(api.users.create, {
+    name: 'Test User',
+    email: 'test@example.com'
+  });
+  
+  expect(id).toBeTypeOf('string');
+  
+  // Verify data
+  const user = await t.query(api.users.get, { id });
+  expect(user.name).toBe('Test User');
+  expect(user.email).toBe('test@example.com');
+});
+```
+
+### Key Patterns
+- Initialize with `convexTest(schema, modules)`
+- Test mutations and queries
+- Verify data integrity after operations
+- Test edge cases and optional fields

@@ -119,7 +119,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="font-loading min-h-screen bg-black text-white">
         <CriticalFontPreloads />
         <Header />
-        <main className="pt-16">{children}</main>
+        <main className="mt-16">{children}</main>
         <ReactQueryDevtools />
         <TanStackRouterDevtools position="bottom-right" />
         <PerformanceDashboard />

@@ -1,35 +1,62 @@
-import { Link } from '@tanstack/react-router';
+import { Sun, Moon } from 'lucide-react';
+import { useTheme } from './theme-provider';
+import { useSectionTracking } from '@/hooks/use-section-tracking';
 
 export function Header() {
+  const { setTheme, resolvedTheme } = useTheme();
+  const { activeSection, scrollToSection } = useSectionTracking();
+
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <header className="fixed top-0 right-0 left-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-md">
+    <header className="border-border bg-background/50 fixed top-0 right-0 left-0 z-50 border-b backdrop-blur-md">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link
-          to="/"
-          className="text-xl font-bold text-white transition-colors hover:text-white/80"
+        <button
+          onClick={() => scrollToSection('home')}
+          className={`text-xl font-bold transition-colors ${
+            activeSection === 'home'
+              ? 'text-foreground'
+              : 'text-foreground/80 hover:text-foreground'
+          }`}
         >
-          template
-        </Link>
+          jacob stein
+        </button>
 
         <nav className="flex items-center gap-6">
-          <Link
-            to="/"
-            className="text-sm text-white/70 transition-colors hover:text-white"
+          <button
+            onClick={() => scrollToSection('projects')}
+            className={`text-sm transition-colors ${
+              activeSection === 'projects'
+                ? 'text-foreground font-medium'
+                : 'text-muted-foreground hover:text-foreground hover:font-medium'
+            }`}
           >
-            home
-          </Link>
-          <Link
-            to="/discover"
-            className="text-sm text-white/70 transition-colors hover:text-white"
+            projects
+          </button>
+          <button
+            onClick={() => scrollToSection('resume')}
+            className={`text-sm transition-colors ${
+              activeSection === 'resume'
+                ? 'text-foreground font-medium'
+                : 'text-muted-foreground hover:text-foreground hover:font-medium'
+            }`}
           >
-            discover
-          </Link>
-          <Link
-            to="/search"
-            className="text-sm text-white/70 transition-colors hover:text-white"
+            resume
+          </button>
+
+          <button
+            onClick={toggleTheme}
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-2 rounded-lg p-2 transition-colors"
+            aria-label="Toggle theme"
           >
-            search
-          </Link>
+            {resolvedTheme === 'dark' ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
+          </button>
         </nav>
       </div>
     </header>

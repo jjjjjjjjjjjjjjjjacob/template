@@ -8,11 +8,7 @@
     "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "commands": [
-          "convex dev",
-          "ngrok http --url=https://teal-trusting-unicorn.ngrok-free.app 3211"
-        ],
-        "parallel": true,
+        "command": "convex dev",
         "cwd": "{projectRoot}"
       }
     },

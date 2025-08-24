@@ -195,6 +195,52 @@
   .animation-delay-400 {
     animation-delay: 400ms;
   }
+
+  /* 3D Transform utilities for project slideshow */
+  .transform-3d {
+    transform-style: preserve-3d;
+  }
+
+  .perspective-dramatic {
+    perspective: 1000px;
+  }
+
+  .-rotate-y-1 {
+    transform: rotateY(-1deg);
+  }
+
+  .rotate-y-1 {
+    transform: rotateY(1deg);
+  }
+
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+
+  .scale-85 {
+    transform: scale(0.85);
+  }
+
+  .scale-110 {
+    transform: scale(1.1);
+  }
+
+  .translate-z-12 {
+    transform: translateZ(3rem);
+  }
+
+  /* Combined transform states for project slideshow */
+  .slideshow-left-default {
+    transform: rotateY(-1deg) scale(0.85) !important;
+  }
+
+  .slideshow-right-default {
+    transform: rotateY(1deg) scale(0.85) !important;
+  }
+
+  .slideshow-hover {
+    transform: rotateY(0deg) scale(1) !important;
+  }
 }
 
 /* Accordion animations */
@@ -390,6 +436,82 @@
   }
 }
 
+/* Section fade-in animations */
+@keyframes section-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes card-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Initial hidden states for animations */
+.animate-on-scroll {
+  opacity: 0 !important;
+  transform: translateY(40px) !important;
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out !important;
+}
+
+.animate-on-scroll.animate-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.animate-card-on-scroll {
+  opacity: 0 !important;
+  transform: translateY(24px) scale(0.98) !important;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out !important;
+}
+
+.animate-card-on-scroll.animate-visible {
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;
+}
+
+.animate-header-on-scroll {
+  opacity: 0 !important;
+  transform: translateY(-10px) !important;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out !important;
+}
+
+.animate-header-on-scroll.animate-visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* Project slideshow 3D animations */
+@keyframes rotate-left-and-zoom-in {
+  0% {
+    transform: rotateY(-1deg) scale(0.85);
+  }
+  100% {
+    transform: rotateY(0deg) scale(1.08) translateZ(50px);
+  }
+}
+
+@keyframes rotate-right-and-zoom-in {
+  0% {
+    transform: rotateY(1deg) scale(0.85);
+  }
+  100% {
+    transform: rotateY(0deg) scale(1.08) translateZ(50px);
+  }
+}
+
 .animate-accordion-down {
   animation: accordion-down 0.2s ease-out;
 }
@@ -442,7 +564,45 @@
   animation: stagger-fade-in 0.4s ease-out;
 }
 
+.animate-section-fade-in {
+  animation: section-fade-in 0.8s ease-out;
+}
+
+.animate-card-fade-in {
+  animation: card-fade-in 0.6s ease-out;
+}
+
+/* Animation delay utilities for staggering */
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animate-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animate-rotate-left-and-zoom-in {
+  animation: rotate-left-and-zoom-in 0.6s ease-out;
+}
+
+.animate-rotate-right-and-zoom-in {
+  animation: rotate-right-and-zoom-in 0.6s ease-out;
+}
+
 /* Responsive animation controls */
+/*
 @media (prefers-reduced-motion: reduce) {
   .animate-accordion-down,
   .animate-accordion-up,
@@ -456,17 +616,21 @@
   .animate-arrow-slide,
   .animate-bounce-light,
   .animate-scale-spring,
-  .animate-stagger-fade-in {
+  .animate-stagger-fade-in,
+  .animate-rotate-left-and-zoom-in,
+  .animate-rotate-right-and-zoom-in {
     animation: none !important;
     transition: none !important;
   }
 
   /* Keep opacity transitions for accessibility */
+  /*
   .animate-fade-in-down {
     opacity: 1 !important;
     transform: none !important;
   }
 }
+*/
 
 /* Mobile-specific animation optimizations */
 @media (max-width: 768px) {

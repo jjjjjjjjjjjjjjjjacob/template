@@ -18,10 +18,10 @@ import {
   FontLoadingStatus,
 } from '@/components/font-preloader';
 import { SearchProvider } from '@/features/search';
+import { ThemeProvider } from '@/components/theme-provider';
 import appCss from '@/styles/app.css?url';
 import fontsCss from '@/styles/fonts.css?url';
-import { ConvexReactClient } from 'convex/react';
-import { ConvexProvider } from 'convex/react';
+import { ConvexReactClient, ConvexProvider } from 'convex/react';
 import { ConvexQueryClient } from '@convex-dev/react-query';
 import { performanceMonitor } from '@/lib/performance-monitor';
 
@@ -40,9 +40,9 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'template | modern full-stack monorepo',
+        title: 'jacob stein | ui/ux - fullstack - product',
         content:
-          'A modern full-stack monorepo template with real-time capabilities and 3D graphics',
+          'A portfolio website for Jacob Stein, a UI/UX designer and fullstack developer',
       },
     ],
     links: [
@@ -82,16 +82,18 @@ function RootComponent() {
 
   return (
     <ConvexProvider client={convexClient}>
-      <FontPreloader
-        enableProgressiveLoading={true}
-        enablePerformanceMonitoring={true}
-      >
-        <SearchProvider>
-          <RootDocument>
-            <Outlet />
-          </RootDocument>
-        </SearchProvider>
-      </FontPreloader>
+      <ThemeProvider>
+        <FontPreloader
+          enableProgressiveLoading={true}
+          enablePerformanceMonitoring={true}
+        >
+          <SearchProvider>
+            <RootDocument>
+              <Outlet />
+            </RootDocument>
+          </SearchProvider>
+        </FontPreloader>
+      </ThemeProvider>
     </ConvexProvider>
   );
 }
@@ -116,10 +118,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="font-loading min-h-screen bg-black text-white">
+      <body className="font-loading min-h-screen bg-background text-foreground transition-colors duration-300">
         <CriticalFontPreloads />
         <Header />
-        <main className="mt-16">{children}</main>
+        <main className="mt-16 select-none">{children}</main>
         <ReactQueryDevtools />
         <TanStackRouterDevtools position="bottom-right" />
         <PerformanceDashboard />

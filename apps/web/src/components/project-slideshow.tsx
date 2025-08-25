@@ -1,10 +1,17 @@
 import { cn } from '@/utils';
 import { useState, useRef, useCallback } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { ExternalLink } from 'lucide-react';
 
 interface ProjectSlideshowProps {
   previews: string[];
   title: string;
-  isHovered: boolean;
+  projectUrl?: string;
   className?: string;
   slideDirection?: 'left-to-right' | 'right-to-left';
   isMobile?: boolean;
@@ -13,14 +20,16 @@ interface ProjectSlideshowProps {
 export function ProjectSlideshow({
   previews,
   title,
-  isHovered,
+  projectUrl,
   className = '',
   slideDirection = 'left-to-right',
   isMobile = false,
 }: ProjectSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [showDialog, setShowDialog] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   /*
@@ -59,6 +68,12 @@ export function ProjectSlideshow({
   };
   */
 
+  const handleMobileIframeClick = () => {
+    if (isMobile) {
+      setShowDialog(true);
+    }
+  };
+
   if (previews.length === 0) return null;
 
   return (
@@ -68,14 +83,16 @@ export function ProjectSlideshow({
         `drop-shadow-muted/10 relative overflow-hidden transition perspective-dramatic`,
         className
       )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       // onTouchStart={onTouchStart}
       // onTouchMove={onTouchMove}
       // onTouchEnd={onTouchEnd}
     >
       <div
         className={cn(
-          'h-full overflow-hidden opacity-100 transform-3d',
-          'transition-all duration-700 ease-in-out',
+          'relative h-full overflow-hidden opacity-100 transform-3d',
+          'transition-transform-smooth',
           // Mobile state - no transforms
           isMobile && 'transform-none',
           // Desktop default states
@@ -98,7 +115,19 @@ export function ProjectSlideshow({
           loading="lazy"
           scrolling=""
           tabIndex={-1}
+          style={{
+            pointerEvents: isMobile ? 'none' : 'auto',
+          }}
         />
+        
+        {/* Mobile overlay to catch clicks and prevent iframe interaction */}
+        {isMobile && (
+          <button
+            onClick={handleMobileIframeClick}
+            className="absolute inset-0 z-10 cursor-pointer bg-transparent"
+            aria-label={`Open ${title} preview in dialog`}
+          />
+        )}
       </div>
 
       {previews.length > 1 && (
@@ -125,6 +154,34 @@ export function ProjectSlideshow({
           <div className="text-xs text-white/50">swipe →</div>
         </div>
       )}
+
+      {/* Mobile dialog for full iframe interaction */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="max-w-[95vw] max-h-[90vh] p-0">
+          <DialogHeader className="p-4 pb-2">
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-left">{title}</DialogTitle>
+              {projectUrl && (
+                <button
+                  onClick={() => window.open(projectUrl, '_blank')}
+                  className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  go to site
+                </button>
+              )}
+            </div>
+          </DialogHeader>
+          <div className="h-[70vh] w-full px-4 pb-4">
+            <iframe
+              src={previews[currentIndex]}
+              className="bg-background h-full w-full rounded-lg border shadow-lg"
+              title={`${title} preview - ${currentIndex + 1}`}
+              loading="lazy"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -36,8 +36,6 @@ export function AnimatedSection({
       )}
       style={{ 
         transitionDelay: delay ? `${delay}ms` : undefined,
-        // Force browser to calculate initial styles
-        willChange: 'opacity, transform'
       }}
     >
       {children}

@@ -8,6 +8,8 @@ interface ParticleFieldProps extends Partial<ParticleConfig> {
   containerSize?: { width: number; height: number };
   onCopyPositions?: (positions: Float32Array) => void;
   configs?: ParticleConfig[];
+  initialPositions?: Float32Array;
+  onReady?: () => void;
 }
 
 function Particles({
@@ -19,10 +21,10 @@ function Particles({
   color = '#ffffff',
 
   // Initial Distribution
-  spreadX = 0.1,
-  spreadY = 0.1,
-  clusterCount = 3,
-  clusterRadius = 0.15,
+  _spreadX = 0.1,
+  _spreadY = 0.1,
+  _clusterCount = 3,
+  _clusterRadius = 0.15,
   initialVelocity = 0.3,
 
   // Physics
@@ -46,7 +48,7 @@ function Particles({
 
   // Boundaries
   boundaryDamping = 0.8,
-  boundaryPadding = 5,
+  boundaryPadding = 0,
   boundaryRoundness = 0,
 
   // Temperature
@@ -76,9 +78,9 @@ function Particles({
   obstacleHeat = 0.05,
 
   // Corona/Slope Controls
-  innerBoundary = 200,
-  outerBoundary = 800,
-  slopeSharpness = 2.5,
+  _innerBoundary = 200,
+  _outerBoundary = 800,
+  _slopeSharpness = 2.5,
 
   // Scroll Inertia
   scrollInertiaStrength = 0.5,
@@ -93,49 +95,12 @@ function Particles({
   const mesh = useRef<THREE.Points>(null);
   const mouse = useRef({ x: 0, y: 0, active: false });
   const activePointers = useRef(new Set<number>());
-  const scrollVelocity = useRef({ x: 0, y: 0 });
+  const _scrollVelocity = useRef({ x: 0, y: 0 });
   const lastScrollPosition = useRef({ x: 0, y: 0 });
   const scrollInertia = useRef({ x: 0, y: 0 });
-  const [defaultPositionsData, setDefaultPositionsData] = useState<Float32Array | null>(null);
-  const [isLoadingPositions, setIsLoadingPositions] = useState(true);
-  const [fadeInOpacity, setFadeInOpacity] = useState(0);
-  const [positionCount, setPositionCount] = useState(0);
 
-  // Load positions-buffer.json on mount
-  useEffect(() => {
-    fetch('/positions-buffer.json')
-      .then((res) => res.json())
-      .then((data) => {
-        // Convert the array back to ArrayBuffer and then to Float32Array
-        const uint8Array = new Uint8Array(data.positionsBuffer);
-        const buffer = uint8Array.buffer;
-        const floatArray = new Float32Array(buffer);
-        setDefaultPositionsData(floatArray);
-        setPositionCount(data.count);
-        setIsLoadingPositions(false);
-      })
-      .catch(() => {
-        setIsLoadingPositions(false);
-      });
-  }, []);
-
-  // Fade in animation when positions are loaded
-  useEffect(() => {
-    if (!isLoadingPositions && fadeInOpacity < 1) {
-      const fadeTimer = setInterval(() => {
-        setFadeInOpacity((prev) => {
-          const newOpacity = prev + 0.05;
-          if (newOpacity >= 1) {
-            clearInterval(fadeTimer);
-            return 1;
-          }
-          return newOpacity;
-        });
-      }, 16); // ~60fps
-
-      return () => clearInterval(fadeTimer);
-    }
-  }, [isLoadingPositions, fadeInOpacity]);
+  // Fade-in control
+  const fadeInDuration = 5; // seconds
 
   // Calculate actual boundaries based on container size
   const boundaryX = containerSize.width / 2;
@@ -144,127 +109,64 @@ function Particles({
   const positions = useMemo(() => {
     const positions = new Float32Array(count * 3);
 
-    // If still loading, return empty positions to prevent flash
-    if (isLoadingPositions) {
-      return positions;
-    }
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
 
-    // Try to use positions from the buffer if available
-    if (defaultPositionsData && defaultPositionsData.length > 0) {
-      const availablePositions = Math.floor(defaultPositionsData.length / 3);
+      // Spawn particles in a tight ring just outside the obstacle
+      const minRadius = obstacleRadius * 0.7;
+      const maxRadius = obstacleRadius;
 
-      for (let i = 0; i < count; i++) {
-        if (i < availablePositions) {
-          // Use position from buffer
-          positions[i * 3] = defaultPositionsData[i * 3];
-          positions[i * 3 + 1] = defaultPositionsData[i * 3 + 1];
-          positions[i * 3 + 2] = defaultPositionsData[i * 3 + 2];
-        } else {
-          // If we need more particles than available in buffer, generate additional ones
-          // using the same ring/corona formation pattern
-          const angle = Math.random() * Math.PI * 2;
+      // Gaussian noise around a base radius near the obstacle edge
+      const randomU = Math.random();
+      const randomV = Math.random();
+      const gaussianRandom =
+        Math.sqrt(-2.0 * Math.log(randomU)) * Math.cos(2.0 * Math.PI * randomV);
 
-          const minRadius = obstacleRadius * 1.2;
-          const maxRadius =
-            Math.min(containerSize.width, containerSize.height) * 0.4;
+      const baseRadius = obstacleRadius * 0.5;
+      const radiusSpread = (maxRadius - minRadius) * 0.1;
+      const radius = baseRadius + gaussianRandom * radiusSpread;
 
-          const randomU = Math.random();
-          const randomV = Math.random();
-          const gaussianRandom =
-            Math.sqrt(-2.0 * Math.log(randomU)) *
-            Math.cos(2.0 * Math.PI * randomV);
+      const finalRadius = Math.max(minRadius, Math.min(maxRadius, radius));
 
-          const centerRadius = (minRadius + maxRadius) / 2;
-          const radiusSpread = (maxRadius - minRadius) / 4;
-          const radius = centerRadius + gaussianRandom * radiusSpread;
+      // Small positional noise to avoid perfect ring
+      const noiseScale = 0.03;
+      const noiseX = (Math.random() - 0.5) * finalRadius * noiseScale;
+      const noiseY = (Math.random() - 0.5) * finalRadius * noiseScale;
 
-          const finalRadius = Math.max(minRadius, Math.min(maxRadius, radius));
-
-          const noiseScale = 0.1;
-          const noiseX = (Math.random() - 0.5) * finalRadius * noiseScale;
-          const noiseY = (Math.random() - 0.5) * finalRadius * noiseScale;
-
-          positions[i * 3] = Math.cos(angle) * finalRadius + noiseX;
-          positions[i * 3 + 1] = Math.sin(angle) * finalRadius + noiseY;
-          positions[i * 3 + 2] = 0;
-        }
-      }
-    } else {
-      // Fallback to original generation if JSON is not available
-      for (let i = 0; i < count; i++) {
-        const angle = Math.random() * Math.PI * 2;
-
-        const minRadius = obstacleRadius * 1.2;
-        const maxRadius =
-          Math.min(containerSize.width, containerSize.height) * 0.4;
-
-        const randomU = Math.random();
-        const randomV = Math.random();
-        const gaussianRandom =
-          Math.sqrt(-2.0 * Math.log(randomU)) *
-          Math.cos(2.0 * Math.PI * randomV);
-
-        const centerRadius = (minRadius + maxRadius) / 2;
-        const radiusSpread = (maxRadius - minRadius) / 4;
-        const radius = centerRadius + gaussianRandom * radiusSpread;
-
-        const finalRadius = Math.max(minRadius, Math.min(maxRadius, radius));
-
-        const noiseScale = 0.1;
-        const noiseX = (Math.random() - 0.5) * finalRadius * noiseScale;
-        const noiseY = (Math.random() - 0.5) * finalRadius * noiseScale;
-
-        positions[i * 3] = Math.cos(angle) * finalRadius + noiseX;
-        positions[i * 3 + 1] = Math.sin(angle) * finalRadius + noiseY;
-        positions[i * 3 + 2] = 0;
-      }
+      positions[i * 3] = Math.cos(angle) * finalRadius + noiseX;
+      positions[i * 3 + 1] = Math.sin(angle) * finalRadius + noiseY;
+      positions[i * 3 + 2] = 0;
     }
     return positions;
-  }, [
-    count,
-    containerSize,
-    obstacleRadius,
-    defaultPositionsData,
-    isLoadingPositions,
-  ]);
+  }, [count, containerSize, obstacleRadius]);
 
   const velocities = useMemo(() => {
     const velocities = new Float32Array(count * 3);
 
-    // Only apply initial velocity if we're generating new positions (not loading from buffer)
-    const shouldApplyInitialVelocity =
-      !defaultPositionsData || defaultPositionsData.length === 0;
-
     for (let i = 0; i < count; i++) {
-      if (shouldApplyInitialVelocity) {
-        // Give particles initial velocity away from their cluster center
-        const particleX = positions[i * 3];
-        const particleY = positions[i * 3 + 1];
-        const distFromCenter = Math.sqrt(
-          particleX * particleX + particleY * particleY
-        );
+      // Give particles initial velocity away from their cluster center
+      const particleX = positions[i * 3];
+      const particleY = positions[i * 3 + 1];
+      const distFromCenter = Math.sqrt(
+        particleX * particleX + particleY * particleY
+      );
 
-        if (distFromCenter > 0) {
-          // Radial expansion velocity
-          velocities[i * 3] =
-            (particleX / distFromCenter) * initialVelocity +
-            (Math.random() - 0.5) * 0.2;
-          velocities[i * 3 + 1] =
-            (particleY / distFromCenter) * initialVelocity +
-            (Math.random() - 0.5) * 0.2;
-        } else {
-          velocities[i * 3] = (Math.random() - 0.5) * 0.5;
-          velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
-        }
+      if (distFromCenter > 0) {
+        // Radial expansion velocity
+        velocities[i * 3] =
+          (particleX / distFromCenter) * initialVelocity +
+          (Math.random() - 0.5) * 0.2;
+        velocities[i * 3 + 1] =
+          (particleY / distFromCenter) * initialVelocity +
+          (Math.random() - 0.5) * 0.2;
       } else {
-        // Start with zero velocity when loading from saved positions
-        velocities[i * 3] = 0;
-        velocities[i * 3 + 1] = 0;
+        velocities[i * 3] = (Math.random() - 0.5) * 0.5;
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
       }
       velocities[i * 3 + 2] = 0;
     }
     return velocities;
-  }, [count, positions, initialVelocity, defaultPositionsData]);
+  }, [count, positions, initialVelocity]);
 
   const temperatures = useMemo(() => {
     const temps = new Float32Array(count);
@@ -422,34 +324,79 @@ function Particles({
     };
   }, [scrollInertiaStrength, scrollInertiaDamping, scrollInertiaMax]);
 
+  // Ensure material starts invisible to avoid initial flicker
+  useEffect(() => {
+    if (mesh.current && mesh.current.material) {
+      (mesh.current.material as THREE.PointsMaterial).opacity = 0;
+    }
+  }, []);
+
   useFrame((state) => {
     if (!mesh.current) return;
 
     const geometry = mesh.current.geometry;
     const positionsArray = geometry.attributes.position.array as Float32Array;
     const time = state.clock.elapsedTime;
-    
-    // Handle color lerping for magenta field (between H 137 & H 340)
-    if (color === '#ff0059') {
-      // Lerp between green (H 137) and magenta (H 340)
-      const t = (Math.sin(time * 0.08) + 1) / 2; // Much slower oscillation for smooth transitions
-      const hue = 137 + (340 - 137) * t; // Lerp between 137 and 340
-      const hslColor = new THREE.Color();
-      hslColor.setHSL(hue / 360, 1, 0.5);
-      if (mesh.current.material) {
-        (mesh.current.material as THREE.PointsMaterial).color = hslColor;
-      }
+
+    // Fade in particle opacity over the first second
+    const material = mesh.current.material as THREE.PointsMaterial | undefined;
+    if (material) {
+      const progress = Math.min(1, time / fadeInDuration);
+      material.opacity = opacity * progress;
     }
-    
-    // Handle inverse color lerping for cyan field (opposite to magenta) - pastel colors
-    if (color === '#00ffff') {
-      // Lerp inversely - when magenta is at H 340, cyan is at H 137
-      const t = (Math.sin(time * 0.08) + 1) / 2; // Same speed as magenta
-      const hue = 340 - (340 - 137) * t; // Inverse lerp: 340 to 137
-      const hslColor = new THREE.Color();
-      hslColor.setHSL(hue / 360, 0.4, 0.7); // Lower saturation (0.4) and higher lightness (0.7) for pastel effect
+
+    // Smooth #ff0059 ↔ cyan cycle avoiding oversaturated intermediate colors
+    if (color === '#ff0059') {
+      const rawCycle = (Math.sin(time) + 1) / 20; // 0..1
+      // Transform cycle to stay longer on endpoints (ff0059 & cyan) with shorter transitions
+      // Use power curve to compress middle and expand endpoints
+      let cycle;
+      if (rawCycle < 0.5) {
+        // First half: mostly stay on ff0059, quick transition at end
+        cycle = Math.pow(rawCycle * 2, 3) * 0.5; // cubic curve: slow start, fast end
+      } else {
+        // Second half: quick transition at start, mostly stay on cyan
+        cycle = 0.5 + (1 - Math.pow(2 - rawCycle * 2, 3)) * 0.5; // inverted cubic
+      }
+
+      // Use hsl(339, 100.00%, 50.00%) actual color values (pink-magenta)
+      const FF0059_H = 355; // degrees
+      const FF0059_S = 1.0;
+      const FF0059_L = 0.5;
+
+      const CYAN_H = 200; // degrees
+      const CYAN_S = 1.0;
+      const CYAN_L = 0.5;
+
+      // Only desaturate during the brief transition periods
+      let saturationCurve = 1.0;
+      if (cycle > 0.1 && cycle < 0.9) {
+        // Only desaturate in the middle 80% of transition, but more aggressively
+        const transitionProgress = (cycle - 0.1) / 0.8; // 0..1 within transition zone
+        saturationCurve = 1 - Math.sin(transitionProgress * Math.PI) * 0.8; // 0.2 to 1.0
+      }
+
+      // Lerp hue taking shorter path around color wheel
+      const h1 = FF0059_H;
+      let h2 = CYAN_H;
+      const hueDiff = h2 - h1;
+
+      // Take shorter path (328° to 180° goes forward)
+      if (hueDiff > 180) {
+        h2 -= 360;
+      } else if (hueDiff < -180) {
+        h2 += 360;
+      }
+
+      const h = h1 + (h2 - h1) * cycle;
+      const s = Math.min(FF0059_S, CYAN_S) * saturationCurve;
+      const l =
+        FF0059_L + (CYAN_L - FF0059_L) * cycle + (1 - saturationCurve) * 0.2;
+
+      const target = new THREE.Color();
+      target.setHSL((h < 0 ? h + 360 : h) / 360, s, l);
       if (mesh.current.material) {
-        (mesh.current.material as THREE.PointsMaterial).color = hslColor;
+        (mesh.current.material as THREE.PointsMaterial).color = target;
       }
     }
 
@@ -667,55 +614,61 @@ function Particles({
         // Rounded rectangle boundary
         const effectiveBoundaryX = boundaryX - boundaryPadding;
         const effectiveBoundaryY = boundaryY - boundaryPadding;
-        const cornerRadius = Math.min(boundaryRoundness, effectiveBoundaryX, effectiveBoundaryY);
-        
+        const cornerRadius = Math.min(
+          boundaryRoundness,
+          effectiveBoundaryX,
+          effectiveBoundaryY
+        );
+
         // Check if particle is in a corner region
         const cornerX = effectiveBoundaryX - cornerRadius;
         const cornerY = effectiveBoundaryY - cornerRadius;
-        
+
         // Check each corner
         if (Math.abs(particleX) > cornerX && Math.abs(particleY) > cornerY) {
           // Particle is in a corner region
           const nearestCornerX = particleX > 0 ? cornerX : -cornerX;
           const nearestCornerY = particleY > 0 ? cornerY : -cornerY;
-          
+
           const distFromCorner = Math.sqrt(
-            Math.pow(particleX - nearestCornerX, 2) + 
-            Math.pow(particleY - nearestCornerY, 2)
+            Math.pow(particleX - nearestCornerX, 2) +
+              Math.pow(particleY - nearestCornerY, 2)
           );
-          
+
           if (distFromCorner > cornerRadius) {
             // Particle is outside the rounded corner
             const angle = Math.atan2(
-              particleY - nearestCornerY, 
+              particleY - nearestCornerY,
               particleX - nearestCornerX
             );
-            
+
             // Position particle just inside the corner boundary with small offset
             const safeRadius = cornerRadius * 0.95; // Small inward offset to prevent sticking
             positionsArray[i3] = nearestCornerX + Math.cos(angle) * safeRadius;
-            positionsArray[i3 + 1] = nearestCornerY + Math.sin(angle) * safeRadius;
-            
+            positionsArray[i3 + 1] =
+              nearestCornerY + Math.sin(angle) * safeRadius;
+
             // Calculate proper reflection normal
             const normalX = Math.cos(angle);
             const normalY = Math.sin(angle);
-            const dotProduct = velocities[i3] * normalX + velocities[i3 + 1] * normalY;
-            
+            const dotProduct =
+              velocities[i3] * normalX + velocities[i3 + 1] * normalY;
+
             // Only reflect if moving outward (positive dot product)
             if (dotProduct > 0) {
               velocities[i3] -= 2 * dotProduct * normalX;
               velocities[i3 + 1] -= 2 * dotProduct * normalY;
-              
+
               // Add small random perturbation to prevent getting stuck
               const perturbation = 0.1;
               velocities[i3] += (Math.random() - 0.5) * perturbation;
               velocities[i3 + 1] += (Math.random() - 0.5) * perturbation;
             }
-            
+
             // Apply damping
             velocities[i3] *= boundaryDamping;
             velocities[i3 + 1] *= boundaryDamping;
-            
+
             // Temperature effects
             if (particleY > 0) {
               temperatures[i] *= coolingRate; // Cool down at top
@@ -735,7 +688,8 @@ function Particles({
 
           if (positionsArray[i3 + 1] > effectiveBoundaryY) {
             positionsArray[i3 + 1] = effectiveBoundaryY;
-            velocities[i3 + 1] = -Math.abs(velocities[i3 + 1]) * boundaryDamping;
+            velocities[i3 + 1] =
+              -Math.abs(velocities[i3 + 1]) * boundaryDamping;
             temperatures[i] *= coolingRate; // Cool down at top
           } else if (positionsArray[i3 + 1] < -effectiveBoundaryY) {
             positionsArray[i3 + 1] = -effectiveBoundaryY;
@@ -783,7 +737,7 @@ function Particles({
           size={size}
           color={color}
           transparent
-          opacity={opacity * fadeInOpacity}
+          opacity={opacity}
           sizeAttenuation={false}
           blending={THREE.AdditiveBlending}
         />
@@ -800,10 +754,14 @@ function Particles({
   );
 }
 
-
 export function ParticleField(
   props: ParticleFieldProps & { copyTrigger?: number }
 ) {
+  // Guard against SSR/hydration issues: react-three-fiber should only render on client
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const [containerSize, setContainerSize] = useState({
     width: 800,
     height: 600,
@@ -812,15 +770,19 @@ export function ParticleField(
   const currentPositionsRef = useRef<Float32Array | null>(null);
 
   // Handle position copying when requested
+  const { onCopyPositions, copyTrigger } = props;
   useEffect(() => {
+    // Only act on explicit user-triggered increments (copyTrigger > 0)
     if (
-      props.onCopyPositions &&
+      onCopyPositions &&
       currentPositionsRef.current &&
-      props.copyTrigger !== undefined
+      typeof copyTrigger === 'number' &&
+      copyTrigger > 0
     ) {
-      props.onCopyPositions(currentPositionsRef.current);
+      onCopyPositions(currentPositionsRef.current);
     }
-  }, [props.copyTrigger, props.onCopyPositions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [copyTrigger]);
 
   useEffect(() => {
     const updateSize = () => {
@@ -847,51 +809,70 @@ export function ParticleField(
   return (
     <div
       ref={containerRef}
-      className="particle-container pointer-events-none absolute inset-0"
+      className="particle-container pointer-events-none absolute inset-0 p-0"
     >
-      <Canvas
-        orthographic
-        camera={{
-          position: [0, 0, 100],
-          zoom: 1,
-          left: -containerSize.width / 2,
-          right: containerSize.width / 2,
-          top: containerSize.height / 2,
-          bottom: -containerSize.height / 2,
-          near: 0.1,
-          far: 1000,
-        }}
-        style={{ background: 'transparent' }}
-      >
-        <OrthographicCamera
-          makeDefault
-          position={[0, 0, 100]}
-          left={-containerSize.width / 2}
-          right={containerSize.width / 2}
-          top={containerSize.height / 2}
-          bottom={-containerSize.height / 2}
-          near={0.1}
-          far={1000}
-        />
-        {props.configs ? (
-          // Render multiple particle systems
-          props.configs.map((config, index) => (
-            <Particles
-              key={index}
-              {...config}
-              containerSize={containerSize}
-              currentPositionsRef={index === 0 ? currentPositionsRef : undefined}
-            />
-          ))
-        ) : (
-          // Single particle system (backward compatibility)
-          <Particles
-            {...props}
-            containerSize={containerSize}
-            currentPositionsRef={currentPositionsRef}
+      {isClient && (
+        <Canvas
+          orthographic
+          camera={{
+            position: [0, 0, 100],
+            zoom: 1,
+            left: -containerSize.width / 2,
+            right: containerSize.width / 2,
+            top: containerSize.height / 2,
+            bottom: -containerSize.height / 2,
+            near: 0.1,
+            far: 1000,
+          }}
+          style={{ background: 'transparent' }}
+        >
+          {/* Notify once on first rendered frame */}
+          {(() => {
+            function FirstFrameNotifier({ onReady }: { onReady?: () => void }) {
+              const notified = useRef(false);
+              useFrame(() => {
+                if (!notified.current) {
+                  notified.current = true;
+                  if (onReady) onReady();
+                }
+              });
+              return null;
+            }
+            return <FirstFrameNotifier onReady={props.onReady} />;
+          })()}
+          <OrthographicCamera
+            makeDefault
+            position={[0, 0, 100]}
+            left={-containerSize.width / 2}
+            right={containerSize.width / 2}
+            top={containerSize.height / 2}
+            bottom={-containerSize.height / 2}
+            near={0.1}
+            far={1000}
           />
-        )}
-      </Canvas>
+          {props.configs ? (
+            // Render multiple particle systems
+            props.configs.map((config, index) => (
+              <Particles
+                key={index}
+                {...config}
+                containerSize={containerSize}
+                currentPositionsRef={
+                  index === 0 ? currentPositionsRef : undefined
+                }
+              />
+            ))
+          ) : (
+            // Single particle system (backward compatibility)
+            <Particles
+              key="single-particle-system"
+              {...props}
+              containerSize={containerSize}
+              currentPositionsRef={currentPositionsRef}
+            />
+          )}
+        </Canvas>
+      )}
     </div>
   );
 }

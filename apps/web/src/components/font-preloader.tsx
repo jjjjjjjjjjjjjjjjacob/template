@@ -79,10 +79,6 @@ export function CriticalFontPreloads() {
         href: '/fonts/optimized/GeistSans-Variable.woff2',
         type: 'font/woff2',
       },
-      {
-        href: '/fonts/optimized/noto-color-emoji-core.woff2',
-        type: 'font/woff2',
-      },
     ];
 
     preloadLinks.forEach(({ href, type }) => {

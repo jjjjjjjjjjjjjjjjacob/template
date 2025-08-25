@@ -88,7 +88,7 @@ function ProjectCard({ project }: { project: Project }) {
       {/* 3D Preview Viewport */}
       <div className="hidden overflow-hidden">
         <div
-          className={`relative h-80 w-full overflow-hidden rounded-lg transition-all duration-700 ease-out [perspective:1000px] ${
+          className={`relative h-80 w-full overflow-hidden rounded-lg transition-transform-smooth [perspective:1000px] ${
             isHovered
               ? '[transform:rotateX(0deg)_rotateY(0deg)_scale(1.02)]'
               : '[transform:rotateX(12deg)_rotateY(-8deg)_scale(0.96)]'
@@ -102,7 +102,7 @@ function ProjectCard({ project }: { project: Project }) {
           />
           {/* Overlay */}
           <div
-            className={`absolute inset-0 flex cursor-pointer items-center justify-center transition-opacity duration-300 ${
+            className={`absolute inset-0 flex cursor-pointer items-center justify-center transition-smooth-fast ${
               isHovered ? 'opacity-0' : 'opacity-0 hover:opacity-100'
             }`}
             onClick={() => window.open(project.url, '_blank')}
@@ -123,7 +123,7 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
           <button
             onClick={() => window.open(project.url, '_blank')}
-            className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors-smooth"
           >
             <ExternalLink className="h-4 w-4" />
             visit

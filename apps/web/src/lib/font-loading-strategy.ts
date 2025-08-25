@@ -23,6 +23,7 @@ class FontLoadingManager {
   private fonts: Map<string, FontMetrics> = new Map();
   private options: Required<FontLoadingOptions>;
   private loadingPromises: Map<string, Promise<void>> = new Map();
+  private initialized = false;
 
   constructor(options: FontLoadingOptions = {}) {
     this.options = {
@@ -35,13 +36,34 @@ class FontLoadingManager {
   }
 
   /**
+   * Update runtime options (idempotent, merges with existing)
+   */
+  configure(options: FontLoadingOptions = {}) {
+    this.options = {
+      ...this.options,
+      ...options,
+    };
+  }
+
+  /**
    * Initialize font loading strategy
    */
   init(): void {
     if (typeof window === 'undefined') return;
+    if (this.initialized) return;
+    this.initialized = true;
 
     // Add font loading class to document
     document.documentElement.classList.add('font-loading');
+
+    // Fallback timeout to ensure font-loading class is removed
+    setTimeout(() => {
+      if (document.documentElement.classList.contains('font-loading')) {
+        document.documentElement.classList.remove('font-loading');
+        document.documentElement.classList.add('fonts-loaded');
+        console.warn('Font loading fallback timeout triggered');
+      }
+    }, this.options.fallbackTimeout || 3000);
 
     // Set up font loading detection
     if ('fonts' in document) {
@@ -67,17 +89,22 @@ class FontLoadingManager {
 
     const criticalFonts = [
       '/fonts/optimized/GeistSans-Variable.woff2',
-      '/fonts/optimized/noto-color-emoji-core.woff2',
     ];
 
     criticalFonts.forEach((fontUrl) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.href = fontUrl;
-      link.as = 'font';
-      link.type = 'font/woff2';
-      link.crossOrigin = 'anonymous';
-      document.head.appendChild(link);
+      // Skip if a preload for this href already exists (from SSR or another pass)
+      const exists = document.querySelector(
+        `link[rel="preload"][href="${fontUrl}"]`
+      );
+      if (!exists) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.href = fontUrl;
+        link.as = 'font';
+        link.type = 'font/woff2';
+        link.crossOrigin = 'anonymous';
+        document.head.appendChild(link);
+      }
     });
   }
 
@@ -149,7 +176,7 @@ class FontLoadingManager {
    * Check if all critical fonts are loaded
    */
   areCriticalFontsLoaded(): boolean {
-    const criticalFonts = ['GeistSans', 'NotoColorEmoji'];
+    const criticalFonts = ['GeistSans'];
     return criticalFonts.every((font) => {
       const metrics = this.fonts.get(font);
       return metrics?.success || metrics?.fallbackUsed;
@@ -171,6 +198,7 @@ class FontLoadingManager {
     // Monitor individual font loads
     document.fonts.addEventListener('loadingdone', (event) => {
       const fontFaces = event.fontfaces;
+      console.log('Font loaded:', fontFaces);
       fontFaces.forEach((fontFace) => {
         console.log(`Font loaded: ${fontFace.family}`);
       });
@@ -188,25 +216,18 @@ class FontLoadingManager {
     // Load fonts in order of priority
     const fontLoadingQueue = [
       { name: 'GeistSans', url: '/fonts/optimized/GeistSans-Variable.woff2' },
-      {
-        name: 'NotoColorEmoji',
-        url: '/fonts/optimized/noto-color-emoji-core.woff2',
-      },
       { name: 'GeistMono', url: '/fonts/optimized/GeistMono-Variable.woff2' },
-      {
-        name: 'Doto',
-        url: '/fonts/optimized/Doto-VariableFont_ROND,wght.woff2',
-      },
     ];
 
-    // Load high-priority fonts immediately
-    this.loadFont(fontLoadingQueue[0].name, fontLoadingQueue[0].url);
-    this.loadFont(fontLoadingQueue[1].name, fontLoadingQueue[1].url);
+    // Load high-priority fonts immediately, but avoid duplicate network by
+    // deferring to CSS-driven loading (no URL) and only detect readiness
+    this.loadFont(fontLoadingQueue[0].name);
+    this.loadFont(fontLoadingQueue[1].name);
 
     // Load lower priority fonts after a delay
     setTimeout(() => {
       fontLoadingQueue.slice(2).forEach((font) => {
-        this.loadFont(font.name, font.url);
+        this.loadFont(font.name);
       });
     }, 1000);
   }
@@ -319,12 +340,14 @@ class FontLoadingManager {
     const totalLoadTime = Math.max(...metrics.map((m) => m.loadTime));
     const failedFonts = metrics.filter((m) => !m.success);
 
+    /*
     console.log('Font loading complete:', {
       totalLoadTime,
       loadedFonts: metrics.length,
       failedFonts: failedFonts.length,
       metrics,
     });
+    */
 
     // Report to analytics
     if (typeof window !== 'undefined' && 'posthog' in window) {
@@ -343,9 +366,9 @@ export const fontLoadingManager = new FontLoadingManager();
 
 // Utility function to initialize font loading
 export function initializeFontLoading(options?: FontLoadingOptions): void {
-  const manager = new FontLoadingManager(options);
-  manager.init();
-  manager.preloadCriticalFonts();
+  fontLoadingManager.configure(options);
+  fontLoadingManager.init();
+  fontLoadingManager.preloadCriticalFonts();
 }
 
 // React hook for font loading status

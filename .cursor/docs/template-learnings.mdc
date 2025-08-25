@@ -1,0 +1,10 @@
+Workspace: template
+
+Learnings:
+- The home page (`apps/web/src/routes/index.tsx`) renders a resume section inline; adding UI below it is best done within this file to keep sections cohesive.
+- `Separator` from `@/components/ui` is used between major sections; follow this for visual rhythm.
+- Lint rules enforce multi-line anchors and disallow unused variables; keep added markup formatted and avoid introducing unused vars.
+
+Helpful in:
+- Adding small UI sections to the home page without creating new shared components.
+- Ensuring anchors and minor UI follow the project's formatting and class naming conventions.

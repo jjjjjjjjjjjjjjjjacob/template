@@ -125,7 +125,7 @@ export const defaultParticleConfig: ParticleConfig = {
 
   // Boundaries
   boundaryDamping: 1,
-  boundaryPadding: 5,
+  boundaryPadding: 0,
   boundaryRoundness: 0,
 
   // Temperature

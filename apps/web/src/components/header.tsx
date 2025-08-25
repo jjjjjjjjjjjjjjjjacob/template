@@ -1,9 +1,14 @@
 import { Sun, Moon } from 'lucide-react';
+import * as React from 'react';
 import { useTheme } from './theme-provider';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
 
 export function Header() {
   const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
   const { activeSection, scrollToSection } = useSectionTracking();
 
   const toggleTheme = () => {
@@ -51,10 +56,15 @@ export function Header() {
             className="text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-2 rounded-lg p-2 transition-colors"
             aria-label="Toggle theme"
           >
-            {resolvedTheme === 'dark' ? (
-              <Sun className="h-5 w-5" />
+            {mounted ? (
+              resolvedTheme === 'dark' ? (
+                <Sun className="h-5 w-5" />
+              ) : (
+                <Moon className="h-5 w-5" />
+              )
             ) : (
-              <Moon className="h-5 w-5" />
+              // Render a placeholder to avoid hydration mismatch
+              <Sun className="h-5 w-5 opacity-0" />
             )}
           </button>
         </nav>

@@ -1,38 +1,34 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ParticleField } from '@/components/particle-field';
-import {
-  ParticleControls,
-  defaultParticleConfig,
-} from '@/components/particle-controls';
+import { defaultParticleConfig } from '@/components/particle-controls';
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useTheme } from '@/components/theme-provider';
 import { ProjectSlideshow } from '@/components/project-slideshow';
-import { ResumeFilterControls } from '@/components/resume-filter-controls';
 import { AnimatedSection } from '@/components/animated-section';
 import { useResumeFilter } from '@/hooks/use-resume-filter';
 import { ExternalLink, Calendar, MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui';
+import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
+import { useSectionTracking } from '@/hooks/use-section-tracking';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 });
 
 function HomePage() {
-  const [showControls1, setShowControls1] = useState(false);
-  const [showControls2, setShowControls2] = useState(false);
-  const [showControls3, setShowControls3] = useState(false);
-
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { resolvedTheme } = useTheme();
   const resumeData = useResumeFilter();
+  const { scrollToSection } = useSectionTracking();
+  const gpuParticleCounts = {
+    field1: 3000,
+    field2: 3000,
+    field3: 14000,
+    isLoading: false,
+    gpuTier: 'high' as const,
+  };
 
   // Dynamic colors based on theme
   const primaryColor = useMemo(() => {
@@ -50,7 +46,7 @@ function HomePage() {
     // Boundary area
     boundaryPadding: defaultParticleConfig.boundaryPadding,
     // Obstacle area - start with disabled
-    obstacleEnabled: false,
+    obstacleEnabled: true,
     obstacleX: defaultParticleConfig.obstacleX,
     obstacleY: defaultParticleConfig.obstacleY,
     obstacleRadius: defaultParticleConfig.obstacleRadius,
@@ -60,6 +56,7 @@ function HomePage() {
   const mobileObstacleRadius = 256;
   const desktopBoundaryRoundness = 0;
   const desktopObstacleRadius = 280;
+  const { assetsReady, markParticlesReady } = usePageAssetsReady();
 
   useEffect(() => {
     if (isMobile) {
@@ -73,51 +70,31 @@ function HomePage() {
     }
   }, [isMobile]);
 
-  // Enable obstacle after 200ms delay
-  useEffect(() => {
-    // Immediately scroll to top and prevent any automatic scrolling
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    
-    // Prevent any focus-related scrolling for the first few seconds
-    const preventScroll = (e: Event) => {
-      e.preventDefault();
-      window.scrollTo(0, 0);
-    };
-    
-    window.addEventListener('scroll', preventScroll, { passive: false });
-    
-    const scrollTimer = setTimeout(() => {
-      window.removeEventListener('scroll', preventScroll);
-    }, 1000);
-
-    const timer = setTimeout(() => {
-      setSharedConfig((prev) => ({
-        ...prev,
-        obstacleEnabled: true,
-        obstacleRadius: isMobile ? mobileObstacleRadius : desktopObstacleRadius,
-      }));
-    }, 200);
-
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(scrollTimer);
-      window.removeEventListener('scroll', preventScroll);
-    };
-  }, [isMobile]);
-
   // Update particle colors when theme changes
   useEffect(() => {
-    setParticleConfig1((prev) => ({
-      ...prev,
-      color: primaryColor,
-    }));
-    setParticleConfig3((prev) => ({
-      ...prev,
-      color: secondaryColor,
-    }));
+    setParticleConfig1((prev) =>
+      prev.color === primaryColor ? prev : { ...prev, color: primaryColor }
+    );
+    setParticleConfig3((prev) =>
+      prev.color === secondaryColor ? prev : { ...prev, color: secondaryColor }
+    );
   }, [primaryColor, secondaryColor]);
+
+  // Update particle counts when GPU detection completes
+  const { isLoading: gpuLoading, field1, field2, field3 } = gpuParticleCounts;
+  useEffect(() => {
+    if (!gpuLoading) {
+      setParticleConfig1((prev) =>
+        prev.count === field1 ? prev : { ...prev, count: field1 }
+      );
+      setParticleConfig2((prev) =>
+        prev.count === field2 ? prev : { ...prev, count: field2 }
+      );
+      setParticleConfig3((prev) =>
+        prev.count === field3 ? prev : { ...prev, count: field3 }
+      );
+    }
+  }, [gpuLoading, field1, field2, field3]);
 
   // Use filtered project data from resume hook
   const { projects } = resumeData;
@@ -130,23 +107,17 @@ function HomePage() {
     project: (typeof projects)[0];
     index: number;
   }) => {
-    const [projectCardIsHovered, setProjectCardIsHovered] = useState(false);
-
     const isEven = index % 2 === 0;
     const slideDirection = isEven ? 'left-to-right' : 'right-to-left';
 
     return (
-      <div
-        className="group"
-        onMouseEnter={() => setProjectCardIsHovered(true)}
-        onMouseLeave={() => setProjectCardIsHovered(false)}
-      >
+      <div className="group">
         {/* Mobile Layout - Vertical */}
         <div className="space-y-8 md:hidden">
           <ProjectSlideshow
             previews={project.previews}
             title={project.title}
-            isHovered={false}
+            projectUrl={project.url}
             className="relative h-80 w-full"
             slideDirection={slideDirection}
             isMobile={true}
@@ -164,7 +135,7 @@ function HomePage() {
               </div>
               <button
                 onClick={() => window.open(project.url, '_blank')}
-                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
               >
                 <ExternalLink className="h-4 w-4" />
                 visit
@@ -229,7 +200,7 @@ function HomePage() {
             <ProjectSlideshow
               previews={project.previews}
               title={project.title}
-              isHovered={projectCardIsHovered}
+              projectUrl={project.url}
               className="relative h-full w-full"
               slideDirection={slideDirection}
               isMobile={false}
@@ -251,7 +222,7 @@ function HomePage() {
               </div>
               <button
                 onClick={() => window.open(project.url, '_blank')}
-                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
               >
                 <ExternalLink className="h-4 w-4" />
                 visit
@@ -442,11 +413,37 @@ function HomePage() {
     </section>
   );
 
+  const SiteFooter = () => (
+    <footer className="bg-background py-12">
+      <div className="container mx-auto px-4">
+        <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 sm:flex-row">
+          <p className="text-muted-foreground text-sm">
+            © {new Date().getFullYear()} jacob stein
+          </p>
+          <div className="text-muted-foreground flex items-center gap-4 text-sm">
+            <a
+              href="#projects"
+              className="hover:text-foreground transition-colors-smooth"
+            >
+              projects
+            </a>
+            <a
+              href="#resume"
+              className="hover:text-foreground transition-colors-smooth"
+            >
+              resume
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+
   // Independent configs for each particle field (including how they respond to areas)
   const [particleConfig1, setParticleConfig1] = useState({
     ...defaultParticleConfig,
-    color: primaryColor, // Primary color for field 1
-    count: 6000,
+    color: secondaryColor,
+    count: gpuParticleCounts.field1,
     size: 1.5,
     speed: 0.025,
     opacity: 0.6,
@@ -469,7 +466,7 @@ function HomePage() {
     mouseForce: 0.4,
     mouseHeat: 0.25,
     boundaryDamping: 1,
-    boundaryPadding: 5,
+    boundaryPadding: 0,
     boundaryRoundness: isMobile
       ? mobileBoundaryRoundness
       : desktopBoundaryRoundness,
@@ -498,7 +495,7 @@ function HomePage() {
   const [particleConfig2, setParticleConfig2] = useState({
     ...defaultParticleConfig,
     color: '#ff0059', // Magenta for field 2 - lerps between H 137 & H 340
-    count: 3000,
+    count: gpuParticleCounts.field2,
     size: 1.5,
     speed: 0.02,
     opacity: 0.6,
@@ -550,7 +547,7 @@ function HomePage() {
   const [particleConfig3, setParticleConfig3] = useState({
     ...defaultParticleConfig,
     color: secondaryColor, // Secondary color particles
-    count: 27000,
+    count: gpuParticleCounts.field3,
     size: 1.5,
     speed: 0.005,
     opacity: 0.4,
@@ -609,7 +606,7 @@ function HomePage() {
     setParticleConfig1({
       ...defaultParticleConfig,
       color: primaryColor,
-      count: 6000,
+      count: gpuParticleCounts.field1,
       size: 1.5,
       speed: 0.025,
       opacity: 0.6,
@@ -666,7 +663,7 @@ function HomePage() {
     setParticleConfig2({
       ...defaultParticleConfig,
       color: '#ff0059',
-      count: 3000,
+      count: gpuParticleCounts.field2,
       size: 1.5,
       speed: 0.02,
       opacity: 0.6,
@@ -723,7 +720,7 @@ function HomePage() {
     setParticleConfig3({
       ...defaultParticleConfig,
       color: secondaryColor,
-      count: 27000,
+      count: gpuParticleCounts.field3,
       size: 1.5,
       speed: 0.005,
       opacity: 0.4,
@@ -779,28 +776,16 @@ function HomePage() {
   const handleInitialize1 = () => {
     setInitKey1((prev) => prev + 1);
     // Temporarily disable obstacle and re-enable after delay
-    setSharedConfig((prev) => ({ ...prev, obstacleEnabled: false }));
-    setTimeout(() => {
-      setSharedConfig((prev) => ({ ...prev, obstacleEnabled: true }));
-    }, 200);
   };
 
   const handleInitialize2 = () => {
     setInitKey2((prev) => prev + 1);
     // Temporarily disable obstacle and re-enable after delay
-    setSharedConfig((prev) => ({ ...prev, obstacleEnabled: false }));
-    setTimeout(() => {
-      setSharedConfig((prev) => ({ ...prev, obstacleEnabled: true }));
-    }, 200);
   };
 
   const handleInitialize3 = () => {
     setInitKey3((prev) => prev + 1);
     // Temporarily disable obstacle and re-enable after delay
-    setSharedConfig((prev) => ({ ...prev, obstacleEnabled: false }));
-    setTimeout(() => {
-      setSharedConfig((prev) => ({ ...prev, obstacleEnabled: true }));
-    }, 200);
   };
 
   const handleCopyPositions = (positions: Float32Array) => {
@@ -825,6 +810,8 @@ function HomePage() {
     // Copy positions to clipboard instead of downloading
     navigator.clipboard.writeText(JSON.stringify(positionData, null, 2));
   };
+
+  // No-op: hero visibility is controlled by assetsReady
 
   // Merge configs for each field (shared areas override individual settings)
   const config1 = {
@@ -863,363 +850,47 @@ function HomePage() {
   return (
     <div
       data-section="home"
-      className={`relative mt-16 min-h-[80vh] overflow-hidden bg-transparent transition-colors duration-300`}
+      className={`transition-colors-smooth relative mt-16 min-h-[80vh] overflow-hidden bg-transparent`}
     >
       <div className="relative flex min-h-[90vh] flex-grow flex-col items-center justify-center">
-        {/* Control Buttons */}
-        <div className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-4 md:top-20 md:right-4 md:bottom-auto md:left-auto md:translate-x-0">
-          {/* Cyan Controls */}
-          {isMobile ? (
-            <Dialog open={showControls1} onOpenChange={setShowControls1}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-cyan-400/50 bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30"
-                >
-                  cyan controls
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-sm border-white/20 bg-black/95">
-                <ParticleControls
-                  config={config1}
-                  onChange={(newConfig) => {
-                    const sharedUpdates: any = {};
-                    if (newConfig.mouseRadius !== config1.mouseRadius)
-                      sharedUpdates.mouseRadius = newConfig.mouseRadius;
-                    if (newConfig.boundaryPadding !== config1.boundaryPadding)
-                      sharedUpdates.boundaryPadding = newConfig.boundaryPadding;
-                    if (newConfig.obstacleEnabled !== config1.obstacleEnabled)
-                      sharedUpdates.obstacleEnabled = newConfig.obstacleEnabled;
-                    if (newConfig.obstacleX !== config1.obstacleX)
-                      sharedUpdates.obstacleX = newConfig.obstacleX;
-                    if (newConfig.obstacleY !== config1.obstacleY)
-                      sharedUpdates.obstacleY = newConfig.obstacleY;
-                    if (newConfig.obstacleRadius !== config1.obstacleRadius)
-                      sharedUpdates.obstacleRadius = newConfig.obstacleRadius;
-
-                    if (Object.keys(sharedUpdates).length > 0) {
-                      setSharedConfig((prev) => ({
-                        ...prev,
-                        ...sharedUpdates,
-                      }));
-                    }
-
-                    setParticleConfig1(newConfig);
-                  }}
-                  onReset={handleReset1}
-                  onInitialize={handleInitialize1}
-                  onCopyPositions={() => {
-                    setCopyTrigger((prev) => prev + 1);
-                    const btn = document.activeElement as HTMLButtonElement;
-                    const originalText = btn.innerText;
-                    btn.innerText = 'copied!';
-                    setTimeout(() => {
-                      btn.innerText = originalText;
-                    }, 1000);
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
-          ) : (
-            <Popover open={showControls1} onOpenChange={setShowControls1}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-cyan-400/50 bg-cyan-500/20 text-cyan-400 hover:bg-cyan-500/30"
-                >
-                  cyan controls
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="border-border bg-popover m-0 w-full p-0"
-                align="end"
-              >
-                <ParticleControls
-                  config={config1}
-                  onChange={(newConfig) => {
-                    const sharedUpdates: any = {};
-                    if (newConfig.mouseRadius !== config1.mouseRadius)
-                      sharedUpdates.mouseRadius = newConfig.mouseRadius;
-                    if (newConfig.boundaryPadding !== config1.boundaryPadding)
-                      sharedUpdates.boundaryPadding = newConfig.boundaryPadding;
-                    if (newConfig.obstacleEnabled !== config1.obstacleEnabled)
-                      sharedUpdates.obstacleEnabled = newConfig.obstacleEnabled;
-                    if (newConfig.obstacleX !== config1.obstacleX)
-                      sharedUpdates.obstacleX = newConfig.obstacleX;
-                    if (newConfig.obstacleY !== config1.obstacleY)
-                      sharedUpdates.obstacleY = newConfig.obstacleY;
-                    if (newConfig.obstacleRadius !== config1.obstacleRadius)
-                      sharedUpdates.obstacleRadius = newConfig.obstacleRadius;
-
-                    if (Object.keys(sharedUpdates).length > 0) {
-                      setSharedConfig((prev) => ({
-                        ...prev,
-                        ...sharedUpdates,
-                      }));
-                    }
-
-                    setParticleConfig1(newConfig);
-                  }}
-                  onReset={handleReset1}
-                  onInitialize={handleInitialize1}
-                  onCopyPositions={() => {
-                    setCopyTrigger((prev) => prev + 1);
-                    const btn = document.activeElement as HTMLButtonElement;
-                    const originalText = btn.innerText;
-                    btn.innerText = 'copied!';
-                    setTimeout(() => {
-                      btn.innerText = originalText;
-                    }, 1000);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          )}
-
-          {/* Magenta Controls */}
-          {isMobile ? (
-            <Dialog open={showControls2} onOpenChange={setShowControls2}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-pink-400/50 bg-pink-500/20 text-pink-400 hover:bg-pink-500/30"
-                >
-                  magenta controls
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-sm border-white/20 bg-black/95">
-                <ParticleControls
-                  config={config2}
-                  onChange={(newConfig) => {
-                    const sharedUpdates: any = {};
-                    if (newConfig.mouseRadius !== config2.mouseRadius)
-                      sharedUpdates.mouseRadius = newConfig.mouseRadius;
-                    if (newConfig.boundaryPadding !== config2.boundaryPadding)
-                      sharedUpdates.boundaryPadding = newConfig.boundaryPadding;
-                    if (newConfig.obstacleEnabled !== config2.obstacleEnabled)
-                      sharedUpdates.obstacleEnabled = newConfig.obstacleEnabled;
-                    if (newConfig.obstacleX !== config2.obstacleX)
-                      sharedUpdates.obstacleX = newConfig.obstacleX;
-                    if (newConfig.obstacleY !== config2.obstacleY)
-                      sharedUpdates.obstacleY = newConfig.obstacleY;
-                    if (newConfig.obstacleRadius !== config2.obstacleRadius)
-                      sharedUpdates.obstacleRadius = newConfig.obstacleRadius;
-
-                    if (Object.keys(sharedUpdates).length > 0) {
-                      setSharedConfig((prev) => ({
-                        ...prev,
-                        ...sharedUpdates,
-                      }));
-                    }
-
-                    setParticleConfig2(newConfig);
-                  }}
-                  onReset={handleReset2}
-                  onInitialize={handleInitialize2}
-                  onCopyPositions={() => {
-                    setCopyTrigger((prev) => prev + 1);
-                    const btn = document.activeElement as HTMLButtonElement;
-                    const originalText = btn.innerText;
-                    btn.innerText = 'copied!';
-                    setTimeout(() => {
-                      btn.innerText = originalText;
-                    }, 1000);
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
-          ) : (
-            <Popover open={showControls2} onOpenChange={setShowControls2}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-pink-400/50 bg-pink-500/20 text-pink-400 hover:bg-pink-500/30"
-                >
-                  magenta controls
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="border-border bg-popover m-0 w-full p-0"
-                align="end"
-              >
-                <ParticleControls
-                  config={config2}
-                  onChange={(newConfig) => {
-                    const sharedUpdates: any = {};
-                    if (newConfig.mouseRadius !== config2.mouseRadius)
-                      sharedUpdates.mouseRadius = newConfig.mouseRadius;
-                    if (newConfig.boundaryPadding !== config2.boundaryPadding)
-                      sharedUpdates.boundaryPadding = newConfig.boundaryPadding;
-                    if (newConfig.obstacleEnabled !== config2.obstacleEnabled)
-                      sharedUpdates.obstacleEnabled = newConfig.obstacleEnabled;
-                    if (newConfig.obstacleX !== config2.obstacleX)
-                      sharedUpdates.obstacleX = newConfig.obstacleX;
-                    if (newConfig.obstacleY !== config2.obstacleY)
-                      sharedUpdates.obstacleY = newConfig.obstacleY;
-                    if (newConfig.obstacleRadius !== config2.obstacleRadius)
-                      sharedUpdates.obstacleRadius = newConfig.obstacleRadius;
-
-                    if (Object.keys(sharedUpdates).length > 0) {
-                      setSharedConfig((prev) => ({
-                        ...prev,
-                        ...sharedUpdates,
-                      }));
-                    }
-
-                    setParticleConfig2(newConfig);
-                  }}
-                  onReset={handleReset2}
-                  onInitialize={handleInitialize2}
-                  onCopyPositions={() => {
-                    setCopyTrigger((prev) => prev + 1);
-                    const btn = document.activeElement as HTMLButtonElement;
-                    const originalText = btn.innerText;
-                    btn.innerText = 'copied!';
-                    setTimeout(() => {
-                      btn.innerText = originalText;
-                    }, 1000);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          )}
-
-          {/* White Controls */}
-          {isMobile ? (
-            <Dialog open={showControls3} onOpenChange={setShowControls3}>
-              <DialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-muted-foreground/50 bg-muted-foreground/20 text-muted-foreground hover:bg-muted-foreground/30"
-                >
-                  gray controls
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="border-border bg-popover max-h-[80vh] overflow-y-auto">
-                <ParticleControls
-                  config={config3}
-                  onChange={(newConfig) => {
-                    const sharedUpdates: any = {};
-                    if (newConfig.mouseRadius !== config3.mouseRadius)
-                      sharedUpdates.mouseRadius = newConfig.mouseRadius;
-                    if (newConfig.boundaryPadding !== config3.boundaryPadding)
-                      sharedUpdates.boundaryPadding = newConfig.boundaryPadding;
-                    if (newConfig.obstacleEnabled !== config3.obstacleEnabled)
-                      sharedUpdates.obstacleEnabled = newConfig.obstacleEnabled;
-                    if (newConfig.obstacleX !== config3.obstacleX)
-                      sharedUpdates.obstacleX = newConfig.obstacleX;
-                    if (newConfig.obstacleY !== config3.obstacleY)
-                      sharedUpdates.obstacleY = newConfig.obstacleY;
-                    if (newConfig.obstacleRadius !== config3.obstacleRadius)
-                      sharedUpdates.obstacleRadius = newConfig.obstacleRadius;
-
-                    if (Object.keys(sharedUpdates).length > 0) {
-                      setSharedConfig((prev) => ({
-                        ...prev,
-                        ...sharedUpdates,
-                      }));
-                    }
-
-                    setParticleConfig3(newConfig);
-                  }}
-                  onReset={handleReset3}
-                  onInitialize={handleInitialize3}
-                  onCopyPositions={() => {
-                    setCopyTrigger((prev) => prev + 1);
-                    const btn = document.activeElement as HTMLButtonElement;
-                    const originalText = btn.innerText;
-                    btn.innerText = 'copied!';
-                    setTimeout(() => {
-                      btn.innerText = originalText;
-                    }, 1000);
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
-          ) : (
-            <Popover open={showControls3} onOpenChange={setShowControls3}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-muted-foreground/50 bg-muted-foreground/20 text-muted-foreground hover:bg-muted-foreground/30"
-                >
-                  gray controls
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="border-border bg-popover m-0 w-full p-0"
-                align="end"
-              >
-                <ParticleControls
-                  config={config3}
-                  onChange={(newConfig) => {
-                    const sharedUpdates: any = {};
-                    if (newConfig.mouseRadius !== config3.mouseRadius)
-                      sharedUpdates.mouseRadius = newConfig.mouseRadius;
-                    if (newConfig.boundaryPadding !== config3.boundaryPadding)
-                      sharedUpdates.boundaryPadding = newConfig.boundaryPadding;
-                    if (newConfig.obstacleEnabled !== config3.obstacleEnabled)
-                      sharedUpdates.obstacleEnabled = newConfig.obstacleEnabled;
-                    if (newConfig.obstacleX !== config3.obstacleX)
-                      sharedUpdates.obstacleX = newConfig.obstacleX;
-                    if (newConfig.obstacleY !== config3.obstacleY)
-                      sharedUpdates.obstacleY = newConfig.obstacleY;
-                    if (newConfig.obstacleRadius !== config3.obstacleRadius)
-                      sharedUpdates.obstacleRadius = newConfig.obstacleRadius;
-
-                    if (Object.keys(sharedUpdates).length > 0) {
-                      setSharedConfig((prev) => ({
-                        ...prev,
-                        ...sharedUpdates,
-                      }));
-                    }
-
-                    setParticleConfig3(newConfig);
-                  }}
-                  onReset={handleReset3}
-                  onInitialize={handleInitialize3}
-                  onCopyPositions={() => {
-                    setCopyTrigger((prev) => prev + 1);
-                    const btn = document.activeElement as HTMLButtonElement;
-                    const originalText = btn.innerText;
-                    btn.innerText = 'copied!';
-                    setTimeout(() => {
-                      btn.innerText = originalText;
-                    }, 1000);
-                  }}
-                />
-              </PopoverContent>
-            </Popover>
-          )}
-        </div>
-        {/*<div className="relative flex w-full  max-w-2xl flex-grow flex-col items-center justify-center overflow-hidden sm:max-h-128">*/}
-        <div className="relative flex h-full w-full flex-grow flex-col items-center justify-center overflow-hidden">
+        <div className="relative flex h-full w-full flex-grow flex-col items-center justify-center overflow-hidden p-0">
           {/* Single particle field with combined configurations */}
           <ParticleField
             key={`combined-${particleKey1}-${particleKey2}-${particleKey3}`}
             configs={[config1, config2, config3]}
             onCopyPositions={handleCopyPositions}
             copyTrigger={copyTrigger}
+            onReady={markParticlesReady}
           />
-
           <div className="pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4">
-            <h1 className="text-foreground text-4xl font-bold tracking-tight transition-colors duration-300 sm:text-5xl">
+            <h1
+              data-visible={assetsReady}
+              className="animate-in fade-in text-foreground transition-colors-smooth text-4xl font-bold tracking-tight opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100 sm:text-5xl"
+            >
               jacob stein
             </h1>
 
-            <p className="text-muted-foreground text-md max-w-md text-center tracking-tight transition-colors duration-300 sm:text-lg">
+            <p
+              data-visible={assetsReady}
+              className="text-muted-foreground text-md transition-colors-smooth max-w-md text-center tracking-tight opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100 sm:text-lg"
+            >
               ui/ux - fullstack - product
             </p>
 
-            <div className="flex gap-2">
+            <div
+              data-visible={assetsReady}
+              className="flex gap-2 opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100"
+            >
               <Button
-                className="border-border bg-primary/10 text-primary hover:bg-primary/20 pointer-events-auto rounded-lg border px-6 py-3 text-[10px] backdrop-blur-sm transition-all duration-300 sm:text-sm"
+                className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-6 py-3 text-[10px] backdrop-blur-sm sm:text-sm"
                 size="sm"
+                onClick={() => scrollToSection('projects')}
               >
                 projects
               </Button>
               <Button
-                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground pointer-events-auto rounded-lg border bg-transparent px-6 py-3 text-[10px] transition-all duration-300 sm:text-sm"
+                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-6 py-3 text-[10px] sm:text-sm"
+                onClick={() => scrollToSection('resume')}
                 size="sm"
               >
                 resume
@@ -1248,10 +919,6 @@ function HomePage() {
                     </p>
                   </AnimatedSection>
                 </div>
-                <ResumeFilterControls
-                  currentFilters={resumeData.filters}
-                  resumeData={resumeData}
-                />
               </div>
             </div>
 
@@ -1287,20 +954,6 @@ function HomePage() {
                       </p>
                     </AnimatedSection>
                   </div>
-                  <div className="hidden md:block">
-                    <ResumeFilterControls
-                      currentFilters={resumeData.filters}
-                      resumeData={resumeData}
-                      className="mb-4"
-                    />
-                  </div>
-                </div>
-                <div className="md:hidden">
-                  <ResumeFilterControls
-                    currentFilters={resumeData.filters}
-                    resumeData={resumeData}
-                    className="justify-center"
-                  />
                 </div>
 
                 <AnimatedSection animationType="section" delay={400}>
@@ -1320,6 +973,8 @@ function HomePage() {
           </div>
         </div>
       </AnimatedSection>
+      <Separator className="w-full" />
+      <SiteFooter />
     </div>
   );
 }

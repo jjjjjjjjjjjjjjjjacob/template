@@ -94,7 +94,7 @@ export const resumeProfile: ResumeProfile = {
   projects: [
     {
       id: 'heat-tech',
-      title: 'Heat.tech',
+      title: 'HEAT.tech',
       url: 'https://heat.tech',
       company: 'Heat.tech',
       timeline: '2022 - 2025',
@@ -171,7 +171,7 @@ export const resumeProfile: ResumeProfile = {
       },
       
       previews: [
-        'https://heat.tech/search/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73?q=boxer',
+        // Removed broken animation URL that returned 404 during load
         'https://heat.tech',
         'https://heat.tech/plugins',
         'https://heat.tech/3d-viewer'

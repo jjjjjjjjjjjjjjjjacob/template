@@ -85,4 +85,10 @@ export default defineSchema({
     .searchIndex('search', {
       searchField: 'name',
     }),
+
+  // TODO: Re-enable these tables after fixing type issues
+  // socialConnections: defineTable({...}),
+  // appleIdConnections: defineTable({...}),
+  // sessionEvents: defineTable({...}),
+  // adminUsers: defineTable({...}),
 });

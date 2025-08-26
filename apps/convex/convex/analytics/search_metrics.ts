@@ -1,6 +1,5 @@
 import { internalMutation, query } from '../_generated/server';
 import { v } from 'convex/values';
-import { internal } from '../_generated/api';
 
 // Schema types for analytics
 export type SearchMetric = {
@@ -382,18 +381,15 @@ export const trackSearchClick = internalMutation({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await ctx.scheduler.runAfter(
-      0,
-      internal.analytics.search_metrics.recordSearchMetric,
-      {
-        type: 'click',
-        query: args.query,
-        userId: args.userId,
-        clickedResultId: args.resultId,
-        clickedResultType: args.resultType,
-        clickPosition: args.position,
-      }
-    );
+    await ctx.db.insert('searchMetrics', {
+      timestamp: Date.now(),
+      type: 'click',
+      query: args.query,
+      userId: args.userId,
+      clickedResultId: args.resultId,
+      clickedResultType: args.resultType,
+      clickPosition: args.position,
+    });
   },
 });
 
@@ -405,15 +401,12 @@ export const trackSearchError = internalMutation({
     userId: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    await ctx.scheduler.runAfter(
-      0,
-      internal.analytics.search_metrics.recordSearchMetric,
-      {
-        type: 'error',
-        query: args.query,
-        userId: args.userId,
-        error: args.error,
-      }
-    );
+    await ctx.db.insert('searchMetrics', {
+      timestamp: Date.now(),
+      type: 'error',
+      query: args.query,
+      userId: args.userId,
+      error: args.error,
+    });
   },
 });

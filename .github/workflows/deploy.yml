@@ -216,7 +216,7 @@ jobs:
           CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}
         run: |
           bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set CLERK_FRONTEND_API_URL ${{ secrets.CLERK_FRONTEND_API_URL }}
-          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set CLERK_WEBHOOK_SIGNING_SECRET ${{ secrets.CLERK_WEBHOOK_SIGNING_SECRET }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set CLERK_WEBHOOK_SECRET ${{ secrets.CLERK_WEBHOOK_SECRET }}
 
       # Build and deploy Convex backend
       - name: Build Convex Backend

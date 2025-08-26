@@ -609,3 +609,9 @@ export const createForSeed = internalMutation({
     });
   },
 });
+
+// TODO: Re-enable these functions after fixing type issues
+// export const handleAppleIdConnection = internalMutation({...});
+// export const trackUserSignup = action({...});
+// export const trackSessionEvent = action({...});
+// export const trackSessionEventInternal = internalMutation({...});

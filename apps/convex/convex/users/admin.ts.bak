@@ -1,0 +1,110 @@
+import { internalMutation, query } from '../_generated/server';
+import { v } from 'convex/values';
+
+export const updateAdminStatus = internalMutation({
+  args: {
+    externalId: v.string(),
+    isAdmin: v.boolean(),
+    grantedBy: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // First, find the user by external_id
+    const user = await ctx.db
+      .query('users')
+      .withIndex('by_external_id', (q) => q.eq('external_id', args.externalId))
+      .unique();
+
+    if (!user) {
+      throw new Error(`User not found with external_id: ${args.externalId}`);
+    }
+
+    // Check if admin record exists
+    const existingAdmin = await ctx.db
+      .query('adminUsers')
+      .withIndex('byUser', (q) => q.eq('userId', args.externalId))
+      .unique();
+
+    const now = Date.now();
+
+    if (existingAdmin) {
+      // Update existing admin status
+      if (args.isAdmin && !existingAdmin.isAdmin) {
+        // Granting admin status
+        await ctx.db.patch(existingAdmin._id, {
+          isAdmin: true,
+          grantedAt: now,
+          grantedBy: args.grantedBy,
+          revokedAt: undefined,
+          revokedBy: undefined,
+        });
+      } else if (!args.isAdmin && existingAdmin.isAdmin) {
+        // Revoking admin status
+        await ctx.db.patch(existingAdmin._id, {
+          isAdmin: false,
+          revokedAt: now,
+          revokedBy: args.grantedBy,
+        });
+      }
+      return existingAdmin._id;
+    } else {
+      // Create new admin record
+      return await ctx.db.insert('adminUsers', {
+        userId: args.externalId,
+        isAdmin: args.isAdmin,
+        grantedAt: args.isAdmin ? now : 0,
+        grantedBy: args.isAdmin ? args.grantedBy : undefined,
+        revokedAt: args.isAdmin ? undefined : now,
+        revokedBy: args.isAdmin ? undefined : args.grantedBy,
+      });
+    }
+  },
+});
+
+export const getAdminStatus = query({
+  args: {
+    userId: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const adminRecord = await ctx.db
+      .query('adminUsers')
+      .withIndex('byUser', (q) => q.eq('userId', args.userId))
+      .unique();
+
+    return {
+      isAdmin: adminRecord?.isAdmin || false,
+      grantedAt: adminRecord?.grantedAt,
+      grantedBy: adminRecord?.grantedBy,
+      revokedAt: adminRecord?.revokedAt,
+      revokedBy: adminRecord?.revokedBy,
+    };
+  },
+});
+
+export const getAllAdmins = query({
+  handler: async (ctx) => {
+    const adminRecords = await ctx.db
+      .query('adminUsers')
+      .withIndex('byAdminStatus', (q) => q.eq('isAdmin', true))
+      .collect();
+
+    const admins = [];
+    for (const adminRecord of adminRecords) {
+      const user = await ctx.db
+        .query('users')
+        .withIndex('by_external_id', (q) => q.eq('external_id', adminRecord.userId))
+        .unique();
+
+      if (user) {
+        admins.push({
+          userId: adminRecord.userId,
+          user,
+          grantedAt: adminRecord.grantedAt,
+          grantedBy: adminRecord.grantedBy,
+          role: adminRecord.role,
+        });
+      }
+    }
+
+    return admins;
+  },
+});

@@ -282,7 +282,7 @@ function HomePage() {
   };
 
   // Use filtered data from resume hook
-  const { skills, topAchievements, summary } = resumeData;
+  const { skills, summary } = resumeData;
 
   // Transform projects for experience section
   const experiences = projects.map((project) => ({
@@ -600,9 +600,9 @@ function HomePage() {
   const [initKey1, setInitKey1] = useState(0);
   const [initKey2, setInitKey2] = useState(0);
   const [initKey3, setInitKey3] = useState(0);
-  const [copyTrigger, setCopyTrigger] = useState(0);
 
-  const handleReset1 = () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _handleReset1 = () => {
     setParticleConfig1({
       ...defaultParticleConfig,
       color: primaryColor,
@@ -659,6 +659,7 @@ function HomePage() {
     setInitKey1((prev) => prev + 1);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleReset2 = () => {
     setParticleConfig2({
       ...defaultParticleConfig,
@@ -716,6 +717,7 @@ function HomePage() {
     setInitKey2((prev) => prev + 1);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleReset3 = () => {
     setParticleConfig3({
       ...defaultParticleConfig,
@@ -773,16 +775,19 @@ function HomePage() {
     setInitKey3((prev) => prev + 1);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleInitialize1 = () => {
     setInitKey1((prev) => prev + 1);
     // Temporarily disable obstacle and re-enable after delay
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleInitialize2 = () => {
     setInitKey2((prev) => prev + 1);
     // Temporarily disable obstacle and re-enable after delay
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleInitialize3 = () => {
     setInitKey3((prev) => prev + 1);
     // Temporarily disable obstacle and re-enable after delay
@@ -859,13 +864,12 @@ function HomePage() {
             key={`combined-${particleKey1}-${particleKey2}-${particleKey3}`}
             configs={[config1, config2, config3]}
             onCopyPositions={handleCopyPositions}
-            copyTrigger={copyTrigger}
             onReady={markParticlesReady}
           />
           <div className="pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4">
             <h1
               data-visible={assetsReady}
-              className="animate-in fade-in text-foreground transition-colors-smooth text-4xl font-bold tracking-tight opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100 sm:text-5xl"
+              className="animate-in fade-in text-foreground transition-colors-smooth text-4xl font-medium tracking-tight opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100 sm:text-5xl"
             >
               jacob stein
             </h1>
@@ -946,7 +950,7 @@ function HomePage() {
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <AnimatedSection animationType="header" delay={200}>
-                      <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl">
+                      <h1 className="text-foreground text-4xl font-medium tracking-tight sm:text-5xl">
                         jacob stein
                       </h1>
                       <p className="text-muted-foreground mt-2 text-xl">

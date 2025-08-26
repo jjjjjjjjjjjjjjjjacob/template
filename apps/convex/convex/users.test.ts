@@ -285,12 +285,12 @@ describe('Users Functions', () => {
       // Test users.current
       const usersResult = await t.query(api.users.current, {});
 
-      // Test vibes.getCurrentUser
-      const vibesResult = await t.query(api.vibes.getCurrentUser, {});
+      // Test items.getCurrentUser
+      const itemsResult = await t.query(api.items.getCurrentUser, {});
 
       // Both should return null when not authenticated
       expect(usersResult).toBeNull();
-      expect(vibesResult).toBeNull();
+      expect(itemsResult).toBeNull();
     });
 
     it('should behave consistently with vibes getCurrentUser when AUTHENTICATED', async () => {
@@ -319,18 +319,18 @@ describe('Users Functions', () => {
         .withIdentity(mockIdentity)
         .query(api.users.current, {});
 
-      // Test vibes.getCurrentUser with authentication
-      const vibesResult = await t
+      // Test items.getCurrentUser with authentication
+      const itemsResult = await t
         .withIdentity(mockIdentity)
-        .query(api.vibes.getCurrentUser, {});
+        .query(api.items.getCurrentUser, {});
 
       // Both should return the same user data
       expect(usersResult).toBeDefined();
-      expect(vibesResult).toBeDefined();
+      expect(itemsResult).toBeDefined();
       expect(usersResult?.external_id).toBe(userData.external_id);
-      expect(vibesResult?.external_id).toBe(userData.external_id);
+      expect(itemsResult?.external_id).toBe(userData.external_id);
       expect(usersResult?.username).toBe(userData.username);
-      expect((vibesResult as { username: string })?.username).toBe(
+      expect((itemsResult as { username: string })?.username).toBe(
         userData.username
       );
     });
@@ -355,13 +355,13 @@ describe('Users Functions', () => {
         'User not authenticated'
       );
 
-      // Test vibes.create (requires auth)
+      // Test items.create (requires auth)
       await expect(
-        t.mutation(api.vibes.create, {
-          title: 'Test Vibe',
+        t.mutation(api.items.create, {
+          title: 'Test Item',
           description: 'Test Description',
         })
-      ).rejects.toThrow('You must be logged in to create a vibe');
+      ).rejects.toThrow('You must be logged in to create an item');
     });
 
     it('should have consistent auth behavior in mutations when AUTHENTICATED', async () => {
@@ -384,25 +384,25 @@ describe('Users Functions', () => {
       expect(userResult).toBeDefined();
       expect(userResult?.external_id).toBe(mockIdentity.subject);
 
-      // Test vibes.create with authentication - should succeed
-      const vibeResult = await t
+      // Test items.create with authentication - should succeed
+      const itemResult = await t
         .withIdentity(mockIdentity)
-        .mutation(api.vibes.create, {
-          title: 'Authenticated Test Vibe',
-          description: 'This vibe was created by an authenticated user',
+        .mutation(api.items.create, {
+          title: 'Authenticated Test Item',
+          description: 'This item was created by an authenticated user',
           tags: ['test', 'auth'],
         });
-      expect(vibeResult).toBeTypeOf('string'); // Returns the document ID
+      expect(itemResult).toBeTypeOf('string'); // Returns the document ID
 
-      // Verify the vibe was created with the correct user ID
-      const createdVibes = await t.query(api.vibes.getByUser, {
+      // Verify the item was created with the correct user ID
+      const createdItems = await t.query(api.items.getByUser, {
         userId: mockIdentity.subject,
       });
-      const createdVibe = createdVibes.find(
-        (v: { title?: string }) => v.title === 'Authenticated Test Vibe'
+      const createdItem = createdItems.find(
+        (v: { title?: string }) => v.title === 'Authenticated Test Item'
       );
-      expect(createdVibe).toBeDefined();
-      expect(createdVibe?.createdById).toBe(mockIdentity.subject);
+      expect(createdItem).toBeDefined();
+      expect(createdItem?.createdById).toBe(mockIdentity.subject);
     });
   });
 

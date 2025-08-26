@@ -14,7 +14,7 @@ export interface TestWrapperOptions {
   // Router configuration
   router?: Router<any, any>;
   initialPath?: string;
-  initialSearch?: Record<string, any>;
+  initialSearch?: Record<string, string | string[]>;
 
   // Auth configuration
   auth?: {
@@ -42,18 +42,18 @@ export interface MockApiHandlers {
   // Convex API mock handlers
   convex?: {
     emojis?: {
-      getPopular?: () => any[];
+      getPopular?: () => unknown[];
       getCategories?: () => string[];
-      search?: (args: any) => any;
-      getByEmojis?: (args: any) => any[];
+      search?: (args: { query: string }) => unknown;
+      getByEmojis?: (args: { emojis: string[] }) => unknown[];
     };
     users?: {
-      getCurrentUser?: () => any;
-      updateProfile?: (args: any) => any;
+      getCurrentUser?: () => unknown;
+      updateProfile?: (args: Record<string, unknown>) => unknown;
     };
     admin?: {
-      getUsers?: () => any[];
-      getUserStats?: () => any;
+      getUsers?: () => unknown[];
+      getUserStats?: () => unknown;
     };
   };
 
@@ -61,7 +61,7 @@ export interface MockApiHandlers {
   external?: Array<{
     method: 'GET' | 'POST' | 'PUT' | 'DELETE';
     url: string | RegExp;
-    response: any;
+    response: unknown;
     status?: number;
   }>;
 }

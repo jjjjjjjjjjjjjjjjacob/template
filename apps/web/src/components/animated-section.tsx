@@ -22,7 +22,7 @@ export function AnimatedSection({
 
   const baseClasses = {
     section: 'animate-on-scroll',
-    card: 'animate-card-on-scroll', 
+    card: 'animate-card-on-scroll',
     header: 'animate-header-on-scroll',
   };
 
@@ -34,7 +34,7 @@ export function AnimatedSection({
         isVisible && 'animate-visible',
         className
       )}
-      style={{ 
+      style={{
         transitionDelay: delay ? `${delay}ms` : undefined,
       }}
     >

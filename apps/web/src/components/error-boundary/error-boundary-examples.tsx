@@ -9,7 +9,6 @@ import {
   DataErrorBoundary,
   InlineErrorFallback,
   CompactErrorFallback,
-  ModalErrorFallback,
   ErrorDisplay,
   ErrorMessage,
   errorLogger,
@@ -129,8 +128,12 @@ export function ErrorBoundaryExamples() {
             <CardContent>
               <ErrorMessage
                 message="this is a simple error message"
-                onRetry={() => console.log('retry clicked')}
-                onDismiss={() => console.log('dismiss clicked')}
+                onRetry={() => {
+                  /* console.log('retry clicked') */
+                }}
+                onDismiss={() => {
+                  /* console.log('dismiss clicked') */
+                }}
               />
             </CardContent>
           </Card>
@@ -144,8 +147,12 @@ export function ErrorBoundaryExamples() {
                 error={createSampleError()}
                 variant="inline"
                 showRecovery={false}
-                onRetry={() => console.log('retry clicked')}
-                onDismiss={() => console.log('dismiss clicked')}
+                onRetry={() => {
+                  /* console.log('retry clicked') */
+                }}
+                onDismiss={() => {
+                  /* console.log('dismiss clicked') */
+                }}
               />
             </CardContent>
           </Card>
@@ -168,7 +175,7 @@ export function ErrorBoundaryExamples() {
                 'medium',
                 { feature: 'examples', action: 'test_logging' }
               );
-              console.log('Error logged - check console for details');
+              // // console.log('Error logged - check console for details');
             }}
           >
             log test error
@@ -177,8 +184,8 @@ export function ErrorBoundaryExamples() {
           <Button
             variant="outline"
             onClick={() => {
-              const stats = errorLogger.getErrorStats();
-              console.log('Error statistics:', stats);
+              errorLogger.getErrorStats();
+              // // console.log('Error statistics:', stats);
             }}
           >
             show error stats
@@ -187,8 +194,8 @@ export function ErrorBoundaryExamples() {
           <Button
             variant="outline"
             onClick={() => {
-              const recent = errorLogger.getRecentErrors(5);
-              console.log('Recent errors:', recent);
+              errorLogger.getRecentErrors(5);
+              // // console.log('Recent errors:', recent);
             }}
           >
             show recent errors
@@ -198,7 +205,7 @@ export function ErrorBoundaryExamples() {
             variant="outline"
             onClick={() => {
               errorLogger.clearErrors();
-              console.log('Error log cleared');
+              // // console.log('Error log cleared');
             }}
           >
             clear error log

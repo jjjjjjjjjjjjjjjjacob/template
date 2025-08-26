@@ -5,6 +5,7 @@ This document contains proven patterns from successful implementations in this r
 ## Feature-Based Architecture
 
 ### Directory Structure
+
 ```
 src/features/[feature]/
 ├── components/     # Feature-specific React components
@@ -16,6 +17,7 @@ src/features/[feature]/
 ```
 
 ### Migration Strategy
+
 1. Create feature directory structure first
 2. Move files to appropriate subdirectories
 3. Update internal imports within feature
@@ -26,13 +28,16 @@ src/features/[feature]/
 ## Search Infrastructure
 
 ### Backend Implementation
+
 The Convex backend includes comprehensive search at `apps/convex/convex/search.ts`:
+
 - Fuzzy search algorithm
 - Query parser with operators (quotes, exclusions, filters)
 - Relevance scoring
 - Multi-type search (items, users, tags, actions, reviews)
 
 ### Frontend Integration
+
 - Use React Query with Convex for search queries
 - Debounce search queries (300ms optimal)
 - Implement client-side caching with TTL
@@ -41,12 +46,14 @@ The Convex backend includes comprehensive search at `apps/convex/convex/search.t
 ## Error Handling Strategy
 
 ### Error Boundary Hierarchy
+
 - `BaseErrorBoundary` - foundation with customizable fallbacks
 - `AuthErrorBoundary` - authentication-specific errors
 - `NetworkErrorBoundary` - connection issues
 - `DataErrorBoundary` - API/database errors
 
 ### Recovery Mechanisms
+
 - Network errors: exponential backoff with max 5 retries
 - Auth errors: prompt for re-authentication
 - Validation errors: no retry, show form feedback
@@ -54,6 +61,7 @@ The Convex backend includes comprehensive search at `apps/convex/convex/search.t
 ## Performance Optimization
 
 ### Web Vitals Tracking
+
 - LCP (Largest Contentful Paint) - Page loading
 - FID (First Input Delay) - Interactivity
 - CLS (Cumulative Layout Shift) - Visual stability
@@ -61,6 +69,7 @@ The Convex backend includes comprehensive search at `apps/convex/convex/search.t
 - TTFB (Time to First Byte) - Server response
 
 ### Bundle Optimization
+
 ```typescript
 // Manual chunks for optimal caching
 manualChunks: (id) => {
@@ -75,6 +84,7 @@ manualChunks: (id) => {
 ```
 
 ### Font Loading Strategy
+
 ```css
 @font-face {
   font-family: 'GeistSans';
@@ -90,6 +100,7 @@ manualChunks: (id) => {
 ## Testing Infrastructure
 
 ### Test Utilities
+
 ```
 test-utils/
 ├── index.ts              # Barrel exports
@@ -99,6 +110,7 @@ test-utils/
 ```
 
 ### Testing Patterns
+
 ```typescript
 // Component tests
 import { renderComponent } from '@/test-utils';
@@ -117,16 +129,19 @@ renderWithProviders(<MyPageComponent />, {
 ## Common Patterns
 
 ### Debouncing
+
 ```typescript
 const debouncedSearch = useMemo(
-  () => debounce((query: string) => {
-    search(query);
-  }, 300),
+  () =>
+    debounce((query: string) => {
+      search(query);
+    }, 300),
   [search]
 );
 ```
 
 ### Optimistic Updates
+
 ```typescript
 const mutation = useMutation({
   mutationFn: updateItem,
@@ -143,6 +158,7 @@ const mutation = useMutation({
 ```
 
 ### Permission Checks
+
 ```typescript
 export type Permission = 'users.read' | 'users.write' | 'content.moderate';
 

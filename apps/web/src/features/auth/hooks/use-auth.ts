@@ -1,4 +1,4 @@
-// @ts-nocheck
+// This file contains auth functionality and may need type fixes
 import { useUser } from '@clerk/tanstack-react-start';
 import { useQuery } from '@tanstack/react-query';
 import { convexQuery } from '@convex-dev/react-query';
@@ -13,11 +13,6 @@ export { useAuthService, authUtils } from '../services/auth-service';
  */
 export function useAuth(): AuthState {
   const { user: clerkUser, isLoaded, isSignedIn } = useUser();
-
-  const convexUser = useQuery({
-    ...convexQuery(api.users.current, {}),
-    enabled: isSignedIn && isLoaded,
-  });
 
   const onboardingStatus = useQuery({
     ...convexQuery(api.users.getOnboardingStatus, {}),
@@ -41,7 +36,7 @@ export function useAuth(): AuthState {
     user,
     isLoaded,
     isSignedIn: !!isSignedIn,
-    isOnboarded: onboardingStatus.data?.isOnboarded,
+    isOnboarded: onboardingStatus.data?.completed || false,
   };
 }
 

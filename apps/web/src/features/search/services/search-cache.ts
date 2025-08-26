@@ -5,14 +5,14 @@ class SearchCacheService {
   private maxCacheSize = 50;
   private defaultTTL = 5 * 60 * 1000; // 5 minutes
 
-  private getCacheKey(query: string, filters?: any): string {
+  private getCacheKey(query: string, filters?: unknown): string {
     return JSON.stringify({
       query: query.toLowerCase().trim(),
       filters: filters || {},
     });
   }
 
-  get(query: string, filters?: any): any | null {
+  get(query: string, filters?: unknown): unknown | null {
     const key = this.getCacheKey(query, filters);
     const cached = this.cache.get(key);
 
@@ -27,7 +27,7 @@ class SearchCacheService {
     return cached.results;
   }
 
-  set(query: string, results: any, filters?: any, ttl?: number): void {
+  set(query: string, results: unknown, filters?: unknown, ttl?: number): void {
     const key = this.getCacheKey(query, filters);
 
     // Implement LRU eviction if cache is full
@@ -61,15 +61,18 @@ class SearchCacheService {
     keysToDelete.forEach((key) => this.cache.delete(key));
   }
 
-  preload(queries: string[], fetcher: (query: string) => Promise<any>): void {
+  preload(
+    queries: string[],
+    fetcher: (query: string) => Promise<unknown>
+  ): void {
     // Preload common queries in the background
     queries.forEach(async (query) => {
       if (!this.get(query)) {
         try {
           const results = await fetcher(query);
           this.set(query, results);
-        } catch (error) {
-          console.error(`Failed to preload query "${query}":`, error);
+        } catch {
+          // Failed to preload query
         }
       }
     });

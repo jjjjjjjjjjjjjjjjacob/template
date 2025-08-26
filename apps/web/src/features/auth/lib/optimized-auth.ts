@@ -61,10 +61,14 @@ export async function getOptimizedAuth(
     }
 
     // Cache successful result
-    setCachedAuth(cacheKey, authResult.userId, authResult.token);
+    const typedAuthResult = authResult as {
+      userId: string | null;
+      token: string | null;
+    };
+    setCachedAuth(cacheKey, typedAuthResult.userId, typedAuthResult.token);
 
     return {
-      ...authResult,
+      ...typedAuthResult,
       fromCache: false,
       computeTime: Date.now() - startTime,
     };
@@ -155,10 +159,10 @@ async function getAuthWithTimeout(
 /**
  * Create a timeout promise
  */
-function createTimeoutPromise(
+function createTimeoutPromise<T>(
   ms: number,
-  value: any = 'TIMEOUT'
-): Promise<any> {
+  value: T = 'TIMEOUT' as T
+): Promise<T> {
   return new Promise((resolve) => {
     setTimeout(() => resolve(value), ms);
   });

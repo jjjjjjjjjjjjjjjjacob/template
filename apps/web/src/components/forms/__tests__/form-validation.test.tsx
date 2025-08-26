@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
@@ -325,10 +325,11 @@ describe('ValidatedInput', () => {
     );
 
     expect(screen.getByText('field is required')).toBeInTheDocument();
-    expect(screen.getByText('field is required')).toHaveAttribute(
-      'role',
-      'alert'
-    );
+
+    // The role="alert" is on the parent container, not the text element itself
+    const errorText = screen.getByText('field is required');
+    const errorContainer = errorText.closest('div[role="alert"]');
+    expect(errorContainer).toHaveAttribute('role', 'alert');
   });
 
   it('shows warnings when present and no errors', () => {

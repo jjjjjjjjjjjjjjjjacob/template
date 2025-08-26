@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
@@ -24,8 +23,14 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
     router,
     initialPath = '/',
     initialSearch = {},
-    auth = { isSignedIn: true, isLoaded: true, user: { id: 'test-user-123' } },
-    theme = 'light',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    auth: _auth = {
+      isSignedIn: true,
+      isLoaded: true,
+      user: { id: 'test-user-123' },
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    theme: _theme = 'light',
     features = {},
     additionalProviders = [],
   } = options;
@@ -40,8 +45,7 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
       },
     });
 
-  // Create default router if not provided
-  const testRouter = router || createTestRouter(initialPath, initialSearch);
+  // Router will be created inside the returned function
 
   // Mock Clerk auth provider
   const MockClerkProvider = ({ children }: { children: React.ReactNode }) => {
@@ -77,14 +81,16 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
       wrappedChildren = <Provider>{wrappedChildren}</Provider>;
     });
 
+    // Create router with the wrapped children
+    const testRouter =
+      router || createTestRouter(initialPath, initialSearch, wrappedChildren);
+
     return (
       <QueryClientProvider client={testQueryClient}>
         <MockClerkProvider>
           <MockFeatureFlagsProvider>
             <ThemeProvider>
-              <RouterProvider router={testRouter}>
-                {wrappedChildren}
-              </RouterProvider>
+              <RouterProvider router={testRouter} />
             </ThemeProvider>
           </MockFeatureFlagsProvider>
         </MockClerkProvider>
@@ -98,13 +104,12 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
  */
 function createTestRouter(
   initialPath: string,
-  initialSearch: Record<string, any>
+  initialSearch: Record<string, string | string[]>,
+  children?: React.ReactNode
 ): Router<any, any> {
   const rootRoute = createRootRoute({
     component: () => (
-      <div data-testid="test-root">
-        <div id="test-content" />
-      </div>
+      <div data-testid="test-root">{children || <div id="test-content" />}</div>
     ),
   });
 
@@ -137,11 +142,11 @@ function createTestRouter(
 
   // Navigate to initial path
   router.navigate({
-    to: initialPath as any,
+    to: initialPath as '/',
     search: initialSearch,
   });
 
-  return router;
+  return router as Router<any, any>;
 }
 
 /**
@@ -157,8 +162,14 @@ export function createSimpleTestWrapper(
   const {
     queryClient,
     queryOptions = { retry: false, staleTime: 0, gcTime: 0 },
-    auth = { isSignedIn: true, isLoaded: true, user: { id: 'test-user-123' } },
-    theme = 'light',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    auth: _auth = {
+      isSignedIn: true,
+      isLoaded: true,
+      user: { id: 'test-user-123' },
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    theme: _theme = 'light',
     features = {},
     additionalProviders = [],
   } = options;

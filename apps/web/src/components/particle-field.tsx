@@ -21,10 +21,6 @@ function Particles({
   color = '#ffffff',
 
   // Initial Distribution
-  _spreadX = 0.1,
-  _spreadY = 0.1,
-  _clusterCount = 3,
-  _clusterRadius = 0.15,
   initialVelocity = 0.3,
 
   // Physics
@@ -78,9 +74,6 @@ function Particles({
   obstacleHeat = 0.05,
 
   // Corona/Slope Controls
-  _innerBoundary = 200,
-  _outerBoundary = 800,
-  _slopeSharpness = 2.5,
 
   // Scroll Inertia
   scrollInertiaStrength = 0.5,
@@ -95,7 +88,6 @@ function Particles({
   const mesh = useRef<THREE.Points>(null);
   const mouse = useRef({ x: 0, y: 0, active: false });
   const activePointers = useRef(new Set<number>());
-  const _scrollVelocity = useRef({ x: 0, y: 0 });
   const lastScrollPosition = useRef({ x: 0, y: 0 });
   const scrollInertia = useRef({ x: 0, y: 0 });
 
@@ -138,7 +130,7 @@ function Particles({
       positions[i * 3 + 2] = 0;
     }
     return positions;
-  }, [count, containerSize, obstacleRadius]);
+  }, [count, obstacleRadius]);
 
   const velocities = useMemo(() => {
     const velocities = new Float32Array(count * 3);
@@ -242,7 +234,7 @@ function Particles({
       window.removeEventListener('pointercancel', handlePointerCancel);
       window.removeEventListener('pointerleave', handlePointerLeave);
     };
-  }, [containerSize]);
+  }, [containerSize.width, containerSize.height]);
 
   // Add scroll velocity tracking
   useEffect(() => {

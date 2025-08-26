@@ -71,9 +71,6 @@ export function MultiStepForm({
   const currentStepData = steps[currentStep];
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
-  const completedSteps = steps
-    .slice(0, currentStep)
-    .filter((step) => step.isValid !== false);
   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
 
   const handleNext = () => {
@@ -144,7 +141,7 @@ export function MultiStepForm({
                 allowStepNavigation && (index < currentStep || step.isOptional);
 
               return (
-                <div
+                <button
                   key={step.id}
                   className={cn(
                     'flex items-center gap-3 rounded-md p-2 transition-colors',
@@ -207,7 +204,7 @@ export function MultiStepForm({
                       </p>
                     )}
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -280,14 +277,19 @@ export function MultiStepForm({
 
 export function useMultiStepForm(steps: MultiStepFormStep[]) {
   const [currentStep, setCurrentStep] = React.useState(0);
-  const [stepData, setStepData] = React.useState<Record<string, any>>({});
+  const [stepData, setStepData] = React.useState<
+    Record<string, Record<string, unknown>>
+  >({});
 
-  const updateStepData = React.useCallback((stepId: string, data: any) => {
-    setStepData((prev) => ({
-      ...prev,
-      [stepId]: { ...prev[stepId], ...data },
-    }));
-  }, []);
+  const updateStepData = React.useCallback(
+    (stepId: string, data: Record<string, unknown>) => {
+      setStepData((prev) => ({
+        ...prev,
+        [stepId]: { ...prev[stepId], ...data },
+      }));
+    },
+    []
+  );
 
   const validateStep = React.useCallback(
     (stepIndex: number): boolean => {

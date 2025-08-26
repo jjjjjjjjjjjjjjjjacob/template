@@ -88,7 +88,8 @@ export function CharacterCountInput({
     return 'text-muted-foreground';
   };
 
-  const inputId = id || `character-count-input-${React.useId()}`;
+  const generatedId = React.useId();
+  const inputId = id || `character-count-input-${generatedId}`;
   const descriptionId = `${inputId}-description`;
   const countId = `${inputId}-count`;
   const fullAriaDescribedBy =

@@ -1,18 +1,20 @@
 import React from 'react';
 
 interface UserProfileViewProps {
-  user: any;
-  userItems?: any[];
+  user: {
+    name?: string;
+    username?: string;
+    email?: string;
+    bio?: string;
+    avatar?: string;
+    [key: string]: unknown;
+  };
+  userItems?: Array<{ id: string; title?: string; [key: string]: unknown }>;
   itemsLoading?: boolean;
   scopedTheme?: boolean;
 }
 
-export function UserProfileView({
-  user,
-  userItems,
-  itemsLoading,
-  scopedTheme,
-}: UserProfileViewProps) {
+export function UserProfileView({ user }: UserProfileViewProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">

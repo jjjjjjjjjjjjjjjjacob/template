@@ -39,8 +39,9 @@ export function scoreItem(
     title: string;
     description: string;
     tags?: string[];
-    createdAt: string;
-    itemCount?: number;
+    createdAt: string | number;
+    rating?: number;
+    ratingCount?: number;
   },
   query: string,
   weights: Partial<ScoringWeights> = {}
@@ -82,15 +83,18 @@ export function scoreItem(
     score += (maxTagScore / 100) * w.tagMatch;
   }
 
-  // Popularity boost (based on item count)
-  if (item.itemCount) {
-    const popularityScore = Math.min(item.itemCount / 50, 1); // Normalize to 0-1
-    score += popularityScore * w.popularity;
+  // Rating boost (if available)
+  if (item.rating && item.ratingCount) {
+    const ratingScore = (item.rating / 5) * Math.min(item.ratingCount / 10, 1);
+    score += ratingScore * w.popularity;
   }
 
   // Recency boost
-  const ageInDays =
-    (Date.now() - new Date(item.createdAt).getTime()) / (1000 * 60 * 60 * 24);
+  const createdAtTime =
+    typeof item.createdAt === 'string'
+      ? new Date(item.createdAt).getTime()
+      : item.createdAt;
+  const ageInDays = (Date.now() - createdAtTime) / (1000 * 60 * 60 * 24);
   const recencyScore = Math.max(0, 1 - ageInDays / 365); // Decay over a year
   score += recencyScore * w.recency;
 
@@ -138,7 +142,7 @@ export function scoreUser(
   }
 
   // Activity boost
-  const totalActivity = (user.itemCount || 0);
+  const totalActivity = user.itemCount || 0;
   if (totalActivity > 0) {
     const activityScore = Math.min(totalActivity / 20, 1); // Normalize to 0-1
     score += activityScore * w.popularity;

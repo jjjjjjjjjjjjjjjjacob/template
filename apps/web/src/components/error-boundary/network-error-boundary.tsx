@@ -54,8 +54,12 @@ function NetworkErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
     // Check connection speed if available
     if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
-      if (connection.effectiveType) {
+      const connection = (
+        navigator as Navigator & {
+          connection?: { effectiveType?: string };
+        }
+      ).connection;
+      if (connection?.effectiveType) {
         setConnectionSpeed(
           connection.effectiveType === '4g'
             ? 'fast'
@@ -101,10 +105,10 @@ function NetworkErrorFallback({ error, resetError }: ErrorFallbackProps) {
       setIsRetrying(false);
       resetError();
       window.location.reload();
-    } catch (retryError) {
+    } catch {
       setIsRetrying(false);
       setRetryProgress(0);
-      console.error('Retry failed:', retryError);
+      // Retry failed
     }
   };
 
@@ -128,10 +132,6 @@ function NetworkErrorFallback({ error, resetError }: ErrorFallbackProps) {
     }
 
     return 'connection issue detected. this may be a temporary server problem.';
-  };
-
-  const getRetryDelay = () => {
-    return connectionSpeed === 'slow' ? 3000 : 1000;
   };
 
   return (

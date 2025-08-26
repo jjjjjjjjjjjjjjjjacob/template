@@ -37,13 +37,17 @@ export function usePageAssetsReady() {
 
     // Use Font Loading API if available
     if ('fonts' in document) {
-      // @ts-expect-error - fonts exists in modern browsers
-      (document as any).fonts?.ready?.then?.(() => setFontsReadyFallback(true));
+      (
+        document as Document & { fonts?: { ready?: Promise<void> } }
+      ).fonts?.ready?.then?.(() => setFontsReadyFallback(true));
     }
 
     // Observe class changes as a safety net
     const observer = new MutationObserver(checkClass);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
 
     return () => observer.disconnect();
   }, []);
@@ -69,5 +73,3 @@ export function usePageAssetsReady() {
 
   return { assetsReady, markParticlesReady };
 }
-
-

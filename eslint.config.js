@@ -72,13 +72,7 @@ export default tseslint.config(
       'jsx-a11y/no-static-element-interactions': 'warn',
 
       // TypeScript rules
-      '@typescript-eslint/no-unused-vars': [
-        'error',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-        },
-      ],
+      '@typescript-eslint/no-unused-vars': ['error'],
       '@typescript-eslint/no-explicit-any': 'warn',
 
       // General JavaScript rules

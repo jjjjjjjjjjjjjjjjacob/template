@@ -17,7 +17,7 @@ async function userByExternalId(
 ) {
   return await ctx.db
     .query('users')
-    .withIndex('byExternalId', (q) => q.eq('external_id', external_id))
+    .withIndex('by_external_id', (q) => q.eq('external_id', external_id))
     .first();
 }
 
@@ -184,19 +184,6 @@ export const updateProfile = action({
     first_name: v.optional(v.string()),
     last_name: v.optional(v.string()),
     image_url: v.optional(v.string()),
-    bio: v.optional(v.string()),
-    themeColor: v.optional(v.string()), // Legacy field
-    primaryColor: v.optional(v.string()), // Primary gradient color
-    secondaryColor: v.optional(v.string()), // Secondary gradient color
-    socials: v.optional(
-      v.object({
-        twitter: v.optional(v.string()),
-        instagram: v.optional(v.string()),
-        tiktok: v.optional(v.string()),
-        youtube: v.optional(v.string()),
-        website: v.optional(v.string()),
-      })
-    ),
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handler: async (ctx, args): Promise<any> => {
@@ -221,19 +208,6 @@ export const updateProfileInternal = internalMutation({
     first_name: v.optional(v.string()),
     last_name: v.optional(v.string()),
     image_url: v.optional(v.string()),
-    bio: v.optional(v.string()),
-    themeColor: v.optional(v.string()), // Legacy field
-    primaryColor: v.optional(v.string()), // Primary gradient color
-    secondaryColor: v.optional(v.string()), // Secondary gradient color
-    socials: v.optional(
-      v.object({
-        twitter: v.optional(v.string()),
-        instagram: v.optional(v.string()),
-        tiktok: v.optional(v.string()),
-        youtube: v.optional(v.string()),
-        website: v.optional(v.string()),
-      })
-    ),
   },
   handler: async (ctx, args) => {
     const user = await userByExternalId(ctx, args.external_id);
@@ -257,21 +231,6 @@ export const updateProfileInternal = internalMutation({
       updates.image_url = args.image_url;
       updates.profile_image_url = args.image_url; // Keep both fields synced
     }
-    if (args.bio !== undefined) {
-      updates.bio = args.bio;
-    }
-    if (args.themeColor !== undefined) {
-      updates.themeColor = args.themeColor;
-    }
-    if (args.primaryColor !== undefined) {
-      updates.primaryColor = args.primaryColor;
-    }
-    if (args.secondaryColor !== undefined) {
-      updates.secondaryColor = args.secondaryColor;
-    }
-    if (args.socials !== undefined) {
-      updates.socials = args.socials;
-    }
 
     if (Object.keys(updates).length > 0) {
       await ctx.db.patch(user._id, updates);
@@ -287,7 +246,6 @@ export const updateProfileInternal = internalMutation({
 export const completeOnboarding = action({
   args: {
     username: v.optional(v.string()),
-    interests: v.optional(v.array(v.string())),
     image_url: v.optional(v.string()),
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -310,7 +268,6 @@ export const completeOnboardingInternal = internalMutation({
   args: {
     external_id: v.string(),
     username: v.optional(v.string()),
-    interests: v.optional(v.array(v.string())),
     image_url: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -334,9 +291,6 @@ export const completeOnboardingInternal = internalMutation({
     if (args.username !== undefined) {
       updates.username = args.username;
     }
-    if (args.interests !== undefined) {
-      updates.interests = args.interests;
-    }
     if (args.image_url !== undefined) {
       updates.image_url = args.image_url;
       updates.profile_image_url = args.image_url; // Keep both fields synced
@@ -353,7 +307,6 @@ export const updateOnboardingData = action({
     username: v.optional(v.string()),
     first_name: v.optional(v.string()),
     last_name: v.optional(v.string()),
-    interests: v.optional(v.array(v.string())),
     image_url: v.optional(v.string()),
   },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -387,7 +340,6 @@ export const updateOnboardingDataInternal = internalMutation({
     username: v.optional(v.string()),
     first_name: v.optional(v.string()),
     last_name: v.optional(v.string()),
-    interests: v.optional(v.array(v.string())),
     image_url: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -420,9 +372,6 @@ export const updateOnboardingDataInternal = internalMutation({
     }
     if (args.last_name !== undefined) {
       updates.last_name = args.last_name;
-    }
-    if (args.interests !== undefined) {
-      updates.interests = args.interests;
     }
     if (args.image_url !== undefined) {
       updates.image_url = args.image_url;

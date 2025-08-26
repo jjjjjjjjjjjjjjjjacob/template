@@ -82,12 +82,15 @@ export function FileUpload({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
-  const validateFile = (file: File): string | null => {
-    if (file.size > maxFileSize) {
-      return `file size exceeds ${formatFileSize(maxFileSize)} limit`;
-    }
-    return null;
-  };
+  const validateFile = React.useCallback(
+    (file: File): string | null => {
+      if (file.size > maxFileSize) {
+        return `file size exceeds ${formatFileSize(maxFileSize)} limit`;
+      }
+      return null;
+    },
+    [maxFileSize]
+  );
 
   const addFiles = React.useCallback(
     (newFiles: File[]) => {
@@ -120,10 +123,10 @@ export function FileUpload({
       }
 
       if (errors.length > 0) {
-        console.warn('file upload errors:', errors);
+        // // console.warn('file upload errors:', errors);
       }
     },
-    [files, maxFiles, maxFileSize, onFilesChange]
+    [files, maxFiles, onFilesChange, validateFile]
   );
 
   const removeFile = React.useCallback(
@@ -257,6 +260,7 @@ export function FileUpload({
           multiple={multiple}
           onChange={handleFileSelect}
           disabled={disabled}
+          aria-describedby={ariaDescribedBy}
         />
 
         <div className="flex flex-col items-center justify-center space-y-2 text-center">

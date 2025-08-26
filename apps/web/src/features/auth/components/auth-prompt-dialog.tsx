@@ -23,7 +23,6 @@ export function AuthPromptDialog({
   onOpenChange,
   title = 'sign in required',
   description = 'you must sign in to use viberater',
-  actionText: _actionText = 'this feature',
 }: AuthPromptDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

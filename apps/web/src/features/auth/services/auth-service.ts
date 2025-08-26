@@ -1,6 +1,7 @@
-// @ts-nocheck
+// This file contains auth service functionality and may need type fixes
 import { useMutation } from '@tanstack/react-query';
 import { useConvexMutation } from '@convex-dev/react-query';
+import { useAction } from 'convex/react';
 import { api } from '@template/convex';
 
 /**
@@ -11,13 +12,8 @@ export function useAuthService() {
     mutationFn: useConvexMutation(api.users.ensureUserExists),
   });
 
-  const updateUserProfile = useMutation({
-    mutationFn: useConvexMutation(api.users.updateProfile),
-  });
-
-  const completeOnboarding = useMutation({
-    mutationFn: useConvexMutation(api.users.completeOnboarding),
-  });
+  const updateUserProfile = useAction(api.users.updateProfile);
+  const completeOnboarding = useAction(api.users.completeOnboarding);
 
   return {
     ensureUserExists,

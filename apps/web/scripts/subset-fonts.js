@@ -41,14 +41,16 @@ function checkFontTools() {
     console.log('✅ pyftsubset found');
     return 'pyftsubset';
   } catch {
-    console.log('⚠️  pyftsubset not found. Install with: pip install fonttools[woff]');
+    console.log(
+      '⚠️  pyftsubset not found. Install with: pip install fonttools[woff]'
+    );
     return null;
   }
 }
 
 function optimizeGeistFonts() {
   console.log('🔧 Optimizing Geist fonts...\n');
-  
+
   const optimizedDir = join(PUBLIC_FONTS_DIR, 'optimized');
   if (!existsSync(optimizedDir)) {
     mkdirSync(optimizedDir, { recursive: true });
@@ -64,20 +66,20 @@ function optimizeGeistFonts() {
 
   for (const font of GEIST_FONTS) {
     const inputPath = join(PUBLIC_FONTS_DIR, font.file);
-    
+
     if (!existsSync(inputPath)) {
       console.log(`⚠️  ${font.file} not found, skipping...`);
       continue;
     }
 
     const outputPath = join(optimizedDir, font.file);
-    
+
     try {
       // Basic optimization - these are already WOFF2 files
       const command = `${pyftsubset} "${inputPath}" --output-file="${outputPath}" --flavor=woff2 --layout-features="*" --no-hinting --desubroutinize`;
-      
+
       execSync(command, { stdio: 'ignore' });
-      
+
       console.log(`✅ ${font.name} optimized successfully`);
       results.push(font);
     } catch (error) {
@@ -87,17 +89,17 @@ function optimizeGeistFonts() {
 
   // Generate CSS
   generateFontCSS(results);
-  
+
   console.log(`\n✅ Geist font optimization complete!`);
   console.log(`Optimized fonts saved to: ${optimizedDir}`);
 }
 
 function generateFontCSS(fonts) {
   const cssPath = join(__dirname, '../src/styles/font-optimization.css');
-  
+
   let css = `/* Geist Font Optimization - Generated */\n\n`;
-  
-  fonts.forEach(font => {
+
+  fonts.forEach((font) => {
     css += `@font-face {
   font-family: '${font.name}';
   src: url('/fonts/optimized/${font.file}') format('woff2');
@@ -109,7 +111,7 @@ function generateFontCSS(fonts) {
 
 `;
   });
-  
+
   // Add font stack variables
   css += `:root {
   --font-geist-sans: 'GeistSans', system-ui, -apple-system, sans-serif;

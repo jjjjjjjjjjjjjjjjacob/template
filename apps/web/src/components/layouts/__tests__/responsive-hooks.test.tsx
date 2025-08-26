@@ -6,12 +6,7 @@ import {
   useMobilePortrait,
   useMobileLandscape,
 } from '@/hooks/use-mobile';
-import {
-  useTablet,
-  useTabletPortrait,
-  useTabletLandscape,
-  useDesktop,
-} from '@/hooks/use-tablet';
+import { useTablet, useDesktop } from '@/hooks/use-tablet';
 import {
   useResponsive,
   useBreakpointUp,

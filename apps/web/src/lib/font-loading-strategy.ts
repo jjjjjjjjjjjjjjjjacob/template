@@ -61,7 +61,7 @@ class FontLoadingManager {
       if (document.documentElement.classList.contains('font-loading')) {
         document.documentElement.classList.remove('font-loading');
         document.documentElement.classList.add('fonts-loaded');
-        console.warn('Font loading fallback timeout triggered');
+        // Font loading fallback timeout triggered
       }
     }, this.options.fallbackTimeout || 3000);
 
@@ -87,9 +87,7 @@ class FontLoadingManager {
   preloadCriticalFonts(): void {
     if (!this.options.enablePreload || typeof document === 'undefined') return;
 
-    const criticalFonts = [
-      '/fonts/optimized/GeistSans-Variable.woff2',
-    ];
+    const criticalFonts = ['/fonts/optimized/GeistSans-Variable.woff2'];
 
     criticalFonts.forEach((fontUrl) => {
       // Skip if a preload for this href already exists (from SSR or another pass)
@@ -118,7 +116,7 @@ class FontLoadingManager {
 
     const startTime = performance.now();
 
-    const loadPromise = new Promise<void>((resolve, reject) => {
+    const loadPromise = new Promise<void>((resolve /* _reject */) => {
       if (typeof document === 'undefined') {
         resolve();
         return;
@@ -134,7 +132,7 @@ class FontLoadingManager {
       // Set up timeout for fallback
       const timeout = setTimeout(() => {
         this.recordFontMetrics(fontFamily, startTime, false, true);
-        console.warn(`Font ${fontFamily} loading timeout, using fallback`);
+        // Font loading timeout, using fallback
         resolve(); // Don't reject, just use fallback
       }, this.options.fallbackTimeout);
 
@@ -149,9 +147,9 @@ class FontLoadingManager {
             this.recordFontMetrics(fontFamily, startTime, true, false);
             resolve();
           })
-          .catch((error) => {
+          .catch(() => {
             clearTimeout(timeout);
-            console.warn(`Failed to load font ${fontFamily}:`, error);
+            // Failed to load font
             this.recordFontMetrics(fontFamily, startTime, false, true);
             resolve(); // Don't reject, just use fallback
           });
@@ -198,16 +196,16 @@ class FontLoadingManager {
     // Monitor individual font loads
     document.fonts.addEventListener('loadingdone', (event) => {
       const fontFaces = event.fontfaces;
-      console.log('Font loaded:', fontFaces);
-      fontFaces.forEach((fontFace) => {
-        console.log(`Font loaded: ${fontFace.family}`);
+      // Font loaded
+      fontFaces.forEach(() => {
+        // Font loaded
       });
     });
 
     document.fonts.addEventListener('loadingerror', (event) => {
       const fontFaces = event.fontfaces;
-      fontFaces.forEach((fontFace) => {
-        console.warn(`Font failed to load: ${fontFace.family}`);
+      fontFaces.forEach(() => {
+        // Font failed to load
       });
     });
   }
@@ -293,7 +291,13 @@ class FontLoadingManager {
     if (this.options.enablePerformanceMonitoring) {
       // Report to analytics if available
       if (typeof window !== 'undefined' && 'posthog' in window) {
-        (window as any).posthog?.capture('font_loaded', {
+        (
+          window as {
+            posthog?: {
+              capture: (event: string, props: Record<string, unknown>) => void;
+            };
+          }
+        ).posthog?.capture('font_loaded', {
           font_family: fontFamily,
           load_time: loadTime,
           success,
@@ -314,23 +318,23 @@ class FontLoadingManager {
           entries.forEach((entry) => {
             if (
               entry.entryType === 'layout-shift' &&
-              !(entry as any).hadRecentInput
+              !(entry as PerformanceEntry & { hadRecentInput?: boolean })
+                .hadRecentInput
             ) {
               // Check if layout shift might be caused by font loading
-              const fontLoadingShift = (entry as any).value;
-              if (fontLoadingShift > 0.1) {
-                console.warn(
-                  'Potential font-related layout shift detected:',
-                  fontLoadingShift
-                );
+              const fontLoadingShift = (
+                entry as PerformanceEntry & { value?: number }
+              ).value;
+              if (fontLoadingShift && fontLoadingShift > 0.1) {
+                // Layout shift warning: potential font-related layout shift detected
               }
             }
           });
         });
 
         observer.observe({ entryTypes: ['layout-shift'] });
-      } catch (error) {
-        console.warn('Could not monitor layout shifts:', error);
+      } catch {
+        // Could not monitor layout shifts
       }
     }
   }
@@ -340,18 +344,17 @@ class FontLoadingManager {
     const totalLoadTime = Math.max(...metrics.map((m) => m.loadTime));
     const failedFonts = metrics.filter((m) => !m.success);
 
-    /*
-    console.log('Font loading complete:', {
-      totalLoadTime,
-      loadedFonts: metrics.length,
-      failedFonts: failedFonts.length,
-      metrics,
-    });
-    */
+    // Font loading complete
 
     // Report to analytics
     if (typeof window !== 'undefined' && 'posthog' in window) {
-      (window as any).posthog?.capture('font_loading_complete', {
+      (
+        window as Window & {
+          posthog?: {
+            capture: (event: string, props: Record<string, unknown>) => void;
+          };
+        }
+      ).posthog?.capture('font_loading_complete', {
         total_load_time: totalLoadTime,
         loaded_fonts: metrics.length,
         failed_fonts: failedFonts.length,

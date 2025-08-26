@@ -54,7 +54,7 @@ export function DataTableToolbar<TData>({
   const hasSelection = selectedRows.length > 0;
   const isFiltered = table.getState().columnFilters.length > 0 || globalFilter;
 
-  const handleExport = (format: string) => {
+  const handleExport = () => {
     if (onExport) {
       onExport(
         hasSelection
@@ -174,7 +174,7 @@ export function DataTableToolbar<TData>({
               {exportFormats.map((format) => (
                 <DropdownMenuCheckboxItem
                   key={format}
-                  onSelect={() => handleExport(format)}
+                  onSelect={() => handleExport()}
                 >
                   export as {format.toUpperCase()}
                   {hasSelection && ` (${selectedRows.length} rows)`}

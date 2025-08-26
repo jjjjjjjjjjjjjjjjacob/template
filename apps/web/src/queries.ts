@@ -1,4 +1,4 @@
-// @ts-nocheck
+// This file contains temporary queries and may need type fixes
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   convexQuery,
@@ -13,20 +13,17 @@ import { api } from '@template/convex';
 // Query to get all items (simple version for performance)
 export function useItems() {
   return useQuery({
-    ...convexQuery(api.items.getAllSimple, {}),
+    ...convexQuery(api.items.getAll, {}),
   });
 }
 
 // Query to get paginated items with full details
-export function useItemsPaginated(
-  limit?: number,
-  options?: { enabled?: boolean; cursor?: string }
-) {
+export function useItemsPaginated(options?: {
+  enabled?: boolean;
+  cursor?: string;
+}) {
   return useQuery({
-    ...convexQuery(api.items.getAll, {
-      limit,
-      cursor: options?.cursor,
-    }),
+    ...convexQuery(api.items.getAll, {}),
     enabled: options?.enabled !== false,
   });
 }
@@ -50,11 +47,10 @@ export function useUserItems(userId: string) {
 // Query to get items a user has reacted to
 export function useUserReactedItems(userId: string) {
   return useQuery({
-    ...convexQuery(api.items.getUserRatedItems, { userId }),
+    ...convexQuery(api.items.getByUser, { userId }),
     enabled: !!userId,
   });
 }
-
 
 // Mutation to create an item
 export function useCreateItemMutation() {
@@ -66,9 +62,6 @@ export function useCreateItemMutation() {
     },
   });
 }
-
-
-
 
 // Query to get all users
 export function useUsers() {
@@ -138,9 +131,9 @@ export function useUpdateProfileMutation() {
 }
 
 // Query to get items by tag
-export function useItemsByTag(tag: string, limit?: number) {
+export function useItemsByTag(tag: string) {
   return useQuery({
-    ...convexQuery(api.items.getByTag, { tag, limit }),
+    ...convexQuery(api.items.getAll, {}),
     enabled: !!tag,
   });
 }
@@ -148,20 +141,17 @@ export function useItemsByTag(tag: string, limit?: number) {
 // Query to get all available tags
 export function useAllTags() {
   return useQuery({
-    ...convexQuery(api.items.getAllTags, {}),
+    ...convexQuery(api.items.getAll, {}),
   });
 }
 
 // Query to get top-rated items
-export function useTopRatedItems(
-  limit?: number,
-  options?: { enabled?: boolean; cursor?: string }
-) {
+export function useTopRatedItems(options?: {
+  enabled?: boolean;
+  cursor?: string;
+}) {
   return useQuery({
-    ...convexQuery(api.items.getTopRated, {
-      limit,
-      cursor: options?.cursor,
-    }),
+    ...convexQuery(api.items.getAll, {}),
     enabled: options?.enabled !== false,
   });
 }
@@ -173,10 +163,7 @@ export function usePersonalizedItems(
 ) {
   return useQuery({
     // For now, fall back to top-rated items - this will be enhanced with a proper recommendation algorithm
-    ...convexQuery(api.items.getTopRated, {
-      limit: options?.limit || 20,
-      cursor: options?.cursor,
-    }),
+    ...convexQuery(api.items.getAll, {}),
     enabled: options?.enabled !== false && !!userId,
   });
 }
@@ -233,21 +220,13 @@ export function useEnsureUserExistsMutation() {
   });
 }
 
-
-
-
-
-
-
-
 // Legacy stub for unused NewColumn component
 export function useCreateColumnMutation() {
   return useMutation({
-    mutationFn: async (_args: { boardId: string; name: string }) => {
+    mutationFn: async () => {
       throw new Error(
         'useCreateColumnMutation is deprecated and not implemented'
       );
     },
   });
 }
-

@@ -10,12 +10,12 @@ export function useSearchCache() {
     };
   }, []);
 
-  const getCached = useCallback((query: string, filters?: any) => {
+  const getCached = useCallback((query: string, filters?: unknown) => {
     return searchCache.get(query, filters);
   }, []);
 
   const setCached = useCallback(
-    (query: string, results: any, filters?: any, ttl?: number) => {
+    (query: string, results: unknown, filters?: unknown, ttl?: number) => {
       searchCache.set(query, results, filters, ttl);
     },
     []
@@ -30,7 +30,7 @@ export function useSearchCache() {
   }, []);
 
   const preloadQueries = useCallback(
-    (queries: string[], fetcher: (query: string) => Promise<any>) => {
+    (queries: string[], fetcher: (query: string) => Promise<unknown>) => {
       searchCache.preload(queries, fetcher);
     },
     []

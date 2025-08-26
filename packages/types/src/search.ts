@@ -3,11 +3,7 @@
  */
 
 // Search result types
-export type SearchResultType =
-  | 'item'
-  | 'user'
-  | 'tag'
-  | 'action';
+export type SearchResultType = 'item' | 'user' | 'tag' | 'action';
 
 export interface BaseSearchResult {
   id: string;
@@ -49,7 +45,6 @@ export interface ActionSearchResult extends BaseSearchResult {
   icon?: string;
 }
 
-
 export type SearchResult =
   | ItemSearchResult
   | UserSearchResult
@@ -75,7 +70,12 @@ export type SearchSortOption =
   | 'oldest'
   | 'name'
   | 'creation_date'
-  | 'updated_date';
+  | 'updated_date'
+  | 'rating_desc'
+  | 'rating_asc'
+  | 'top_rated'
+  | 'most_rated'
+  | 'interaction_time';
 
 // Search request/response
 export interface SearchRequest {
@@ -91,6 +91,12 @@ export interface SearchResponse {
   users: UserSearchResult[];
   tags: TagSearchResult[];
   actions: ActionSearchResult[];
+  reviews?: Array<{
+    id: string;
+    title: string;
+    itemId: string;
+    rating?: number;
+  }>;
   totalCount: number;
 }
 

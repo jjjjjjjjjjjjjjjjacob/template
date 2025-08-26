@@ -1,12 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type ErrorFallbackProps } from './base-error-boundary';
@@ -14,7 +8,6 @@ import {
   AlertTriangle,
   RefreshCw,
   Home,
-  ArrowLeft,
   Bug,
   Wifi,
   Shield,
@@ -288,9 +281,8 @@ export function FormErrorFallback({ error, resetError }: ErrorFallbackProps) {
  * Navigation error fallback for menu/navigation components
  */
 export function NavigationErrorFallback({
-  error,
   resetError,
-}: ErrorFallbackProps) {
+}: Omit<ErrorFallbackProps, 'error'>) {
   return (
     <div className="bg-destructive/5 flex items-center justify-between rounded-md p-2 text-sm">
       <div className="flex items-center gap-2">
@@ -308,9 +300,8 @@ export function NavigationErrorFallback({
  * List item error fallback for list/grid components
  */
 export function ListItemErrorFallback({
-  error,
   resetError,
-}: ErrorFallbackProps) {
+}: Omit<ErrorFallbackProps, 'error'>) {
   return (
     <div className="border-destructive/20 flex items-center justify-between rounded-md border border-dashed p-3">
       <div className="text-muted-foreground flex items-center gap-2 text-sm">

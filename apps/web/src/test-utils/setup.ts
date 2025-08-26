@@ -57,8 +57,8 @@ function mockBrowserAPIs() {
   }
 
   // Mock window.location methods
-  delete (window as any).location;
-  (window as any).location = {
+  delete (window as { location?: unknown }).location;
+  (window as { location: typeof window.location }).location = {
     assign: vi.fn(),
     replace: vi.fn(),
     reload: vi.fn(),
@@ -109,7 +109,16 @@ function setupGlobalMocks() {
 /**
  * Creates a test user object with sensible defaults
  */
-export function createTestUser(overrides: Partial<any> = {}) {
+export function createTestUser(
+  overrides: Partial<{
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    isOnboarded?: boolean;
+    role?: string;
+  }> = {}
+) {
   return {
     id: 'test-user-123',
     firstName: 'Test',
@@ -124,7 +133,16 @@ export function createTestUser(overrides: Partial<any> = {}) {
 /**
  * Creates mock emoji data for testing
  */
-export function createTestEmoji(overrides: Partial<any> = {}) {
+export function createTestEmoji(
+  overrides: Partial<{
+    emoji?: string;
+    name?: string;
+    color?: string;
+    keywords?: string[];
+    category?: string;
+    popularity?: number;
+  }> = {}
+) {
   return {
     emoji: '🔥',
     name: 'fire',
@@ -139,7 +157,14 @@ export function createTestEmoji(overrides: Partial<any> = {}) {
 /**
  * Creates mock search results for testing
  */
-export function createTestSearchResults(overrides: Partial<any> = {}) {
+export function createTestSearchResults(
+  overrides: Partial<{
+    emojis?: unknown[];
+    hasMore?: boolean;
+    page?: number;
+    totalCount?: number;
+  }> = {}
+) {
   return {
     emojis: [
       createTestEmoji(),

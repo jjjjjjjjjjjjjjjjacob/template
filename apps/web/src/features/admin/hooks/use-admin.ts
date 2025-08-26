@@ -1,15 +1,15 @@
-// @ts-nocheck
+// This file contains admin functionality and may need type fixes
 import { useQuery } from '@tanstack/react-query';
 import { convexQuery } from '@convex-dev/react-query';
 import { api } from '@template/convex';
 import { useAuth } from '../../auth';
-import type { AdminStats, AdminUser, UserManagementFilters } from '../types';
+import type { UserManagementFilters } from '../types';
 
 /**
  * Hook for checking admin permissions
  */
 export function useAdminAuth() {
-  const { user, isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth();
 
   const adminUser = useQuery({
     ...convexQuery(api.admin.getCurrentAdmin, {}),
@@ -17,13 +17,14 @@ export function useAdminAuth() {
   });
 
   return {
-    isAdmin: adminUser.data?.role === 'admin',
-    isModerator:
-      adminUser.data?.role === 'moderator' || adminUser.data?.role === 'admin',
+    isAdmin: adminUser.data ? adminUser.data.role === 'admin' : false,
+    isModerator: adminUser.data
+      ? adminUser.data.role === 'moderator' || adminUser.data.role === 'admin'
+      : false,
     adminUser: adminUser.data,
     isLoading: adminUser.isLoading,
     hasPermission: (permission: string) =>
-      adminUser.data?.permissions.includes(permission as any) || false,
+      adminUser.data?.permissions?.includes(permission) || false,
   };
 }
 

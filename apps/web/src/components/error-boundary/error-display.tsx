@@ -21,11 +21,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { type EnhancedError, errorUtils } from '@/lib/error-handling';
+import { type EnhancedError } from '@/lib/error-handling';
 import { ErrorRecovery } from './error-recovery';
 import {
   AlertTriangle,
-  Info,
   ChevronDown,
   ChevronUp,
   Copy,
@@ -111,8 +110,8 @@ export function ErrorDisplay({
       await navigator.clipboard.writeText(JSON.stringify(details, null, 2));
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
-    } catch (clipboardError) {
-      console.warn('Failed to copy to clipboard:', clipboardError);
+    } catch {
+      // // console.warn('Failed to copy to clipboard');
     }
   };
 

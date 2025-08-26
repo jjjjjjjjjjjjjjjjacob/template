@@ -6,7 +6,6 @@ import userEvent from '@testing-library/user-event';
 import {
   renderWithProviders,
   renderComponent,
-  renderRoute,
   renderWithAuth,
   renderWithoutAuth,
   renderWithDarkTheme,
@@ -138,7 +137,9 @@ describe('Test Infrastructure Integration', () => {
 
       // Component that makes API call
       function ApiComponent() {
-        const [data, setData] = React.useState<any>(null);
+        const [data, setData] = React.useState<{ message: string } | null>(
+          null
+        );
         const [loading, setLoading] = React.useState(false);
 
         const fetchData = async () => {
@@ -147,8 +148,8 @@ describe('Test Infrastructure Integration', () => {
             const response = await fetch('/api/test');
             const result = await response.json();
             setData(result);
-          } catch (error) {
-            console.error('API error:', error);
+          } catch {
+            // API error handling in test
           } finally {
             setLoading(false);
           }

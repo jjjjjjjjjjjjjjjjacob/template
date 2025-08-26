@@ -40,7 +40,6 @@ export default defineSchema({
     .index('category', ['category'])
     .index('createdAt', ['createdAt']),
 
-
   searchHistory: defineTable({
     userId: v.string(),
     query: v.string(),
@@ -73,7 +72,6 @@ export default defineSchema({
     error: v.optional(v.string()),
     filters: v.optional(v.any()),
   }).index('by_timestamp', ['timestamp']),
-
 
   tags: defineTable({
     name: v.string(),

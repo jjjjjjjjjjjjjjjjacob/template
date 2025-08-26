@@ -8,7 +8,7 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'fs';
 import { join, dirname, extname } from 'path';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
+// import { execSync as _execSync } from 'child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_FONTS_DIR = join(__dirname, '../public/fonts');
@@ -16,15 +16,7 @@ const OPTIMIZED_FONTS_DIR = join(PUBLIC_FONTS_DIR, 'optimized');
 const SRC_DIR = join(__dirname, '../src');
 
 // ANSI color codes for better output
-const colors = {
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  red: '\x1b[31m',
-  blue: '\x1b[34m',
-  cyan: '\x1b[36m',
-  reset: '\x1b[0m',
-  bold: '\x1b[1m',
-};
+// Color constants removed - not used
 
 function formatSize(bytes) {
   if (bytes === 0) return '0 B';
@@ -39,16 +31,16 @@ function getFileSize(filePath) {
     if (existsSync(filePath)) {
       return statSync(filePath).size;
     }
-  } catch (error) {
-    console.warn(`Could not get size for ${filePath}:`, error.message);
+  } catch {
+    // console.warn(`Could not get size for ${filePath}:`, error.message);
   }
   return 0;
 }
 
 function analyzeFontFiles() {
-  console.log(
-    `${colors.blue}${colors.bold}📊 Font File Analysis${colors.reset}\n`
-  );
+  // console.log(
+  //   `${colors.blue}${colors.bold}📊 Font File Analysis${colors.reset}\n`
+  // );
 
   const fonts = [];
 
@@ -100,9 +92,9 @@ function analyzeFontFiles() {
 }
 
 function analyzeFontUsage() {
-  console.log(
-    `${colors.blue}${colors.bold}🔍 Font Usage Analysis${colors.reset}\n`
-  );
+  // console.log(
+  //   `${colors.blue}${colors.bold}🔍 Font Usage Analysis${colors.reset}\n`
+  // );
 
   const fontReferences = new Map();
   const cssClasses = new Set();
@@ -127,8 +119,8 @@ function analyzeFontUsage() {
           scanFile(fullPath);
         }
       });
-    } catch (error) {
-      console.warn(`Could not scan directory ${dir}:`, error.message);
+    } catch {
+      // console.warn(`Could not scan directory ${dir}:`, error.message);
     }
   }
 
@@ -171,7 +163,7 @@ function analyzeFontUsage() {
           }
         });
       }
-    } catch (error) {
+    } catch {
       // Ignore files that can't be read
     }
   }
@@ -182,9 +174,9 @@ function analyzeFontUsage() {
 }
 
 function generateOptimizationRecommendations(fonts, usage) {
-  console.log(
-    `${colors.yellow}${colors.bold}💡 Optimization Recommendations${colors.reset}\n`
-  );
+  // console.log(
+  //   `${colors.yellow}${colors.bold}💡 Optimization Recommendations${colors.reset}\n`
+  // );
 
   const recommendations = [];
 
@@ -253,156 +245,110 @@ function generateOptimizationRecommendations(fonts, usage) {
   return recommendations;
 }
 
-function generatePerformanceReport(fonts) {
-  console.log(
-    `${colors.green}${colors.bold}📈 Performance Impact Report${colors.reset}\n`
-  );
-
-  const originalFonts = fonts.filter((f) => f.type === 'original');
-  const optimizedFonts = fonts.filter((f) => f.type === 'optimized');
-
-  const originalSize = originalFonts.reduce((sum, font) => sum + font.size, 0);
-  const optimizedSize = optimizedFonts.reduce(
-    (sum, font) => sum + font.size,
-    0
-  );
-  const savings = originalSize - optimizedSize;
-  const savingsPercent =
-    originalSize > 0 ? ((savings / originalSize) * 100).toFixed(1) : 0;
-
-  console.log(`Original fonts: ${formatSize(originalSize)}`);
-  console.log(`Optimized fonts: ${formatSize(optimizedSize)}`);
-  console.log(
-    `${colors.green}Size reduction: ${formatSize(savings)} (${savingsPercent}%)${colors.reset}`
-  );
-
-  // Estimate loading time improvements
-  const connections = [
-    { name: 'Fast 3G', speed: (1.5 * 1024 * 1024) / 8 }, // 1.5 Mbps
-    { name: 'Regular 3G', speed: (750 * 1024) / 8 }, // 750 kbps
-    { name: 'Slow 3G', speed: (400 * 1024) / 8 }, // 400 kbps
-  ];
-
-  console.log(
-    `\\n${colors.cyan}Estimated loading time improvements:${colors.reset}`
-  );
-  connections.forEach((conn) => {
-    const originalTime = (originalSize / conn.speed).toFixed(1);
-    const optimizedTime = (optimizedSize / conn.speed).toFixed(1);
-    const improvement = (originalTime - optimizedTime).toFixed(1);
-    console.log(
-      `${conn.name}: ${improvement}s faster (${originalTime}s → ${optimizedTime}s)`
-    );
-  });
+function generatePerformanceReport() {
+  // console.log(
+  //   `${colors.green}${colors.bold}📈 Performance Impact Report${colors.reset}\n`
+  // );
+  // const _originalSize = originalFonts.reduce((sum, font) => sum + font.size, 0);
+  // const _optimizedSize = optimizedFonts.reduce(
+  //   (sum, font) => sum + font.size,
+  //   0
+  // );
+  // const _savings = originalSize - optimizedSize;
+  // const _savingsPercent =
+  //   originalSize > 0 ? ((savings / originalSize) * 100).toFixed(1) : 0;
+  // console.log(`Original fonts: ${formatSize(originalSize)}`);
+  // console.log(`Optimized fonts: ${formatSize(optimizedSize)}`);
+  // console.log(
+  //   `${colors.green}Size reduction: ${formatSize(savings)} (${savingsPercent}%)${colors.reset}`
+  // );
+  // Performance reporting disabled - functionality commented out
 }
 
 function generateWebVitalsImpact(fonts) {
-  console.log(
-    `\\n${colors.blue}${colors.bold}🎯 Core Web Vitals Impact${colors.reset}\\n`
-  );
+  // console.log(
+  //   `\\n${colors.blue}${colors.bold}🎯 Core Web Vitals Impact${colors.reset}\\n`
+  // );
 
   const totalSize = fonts.reduce((sum, font) => sum + font.size, 0);
 
   // LCP (Largest Contentful Paint) impact
-  let lcpImpact = 'Good';
-  let lcpColor = colors.green;
+  // let _lcpImpact = 'Good';
+  // let _lcpColor = colors.green;
   if (totalSize > 1024 * 1024) {
     // > 1MB
-    lcpImpact = 'Needs Improvement';
-    lcpColor = colors.yellow;
+    // _lcpImpact = 'Needs Improvement';
+    // _lcpColor = colors.yellow;
   }
   if (totalSize > 2 * 1024 * 1024) {
     // > 2MB
-    lcpImpact = 'Poor';
-    lcpColor = colors.red;
+    // _lcpImpact = 'Poor';
+    // _lcpColor = colors.red;
   }
 
-  console.log(
-    `LCP Impact: ${lcpColor}${lcpImpact}${colors.reset} (${formatSize(totalSize)} total)`
-  );
+  // console.log(
+  //   `LCP Impact: ${lcpColor}${lcpImpact}${colors.reset} (${formatSize(totalSize)} total)`
+  // );
 
   // CLS (Cumulative Layout Shift) recommendations
-  const hasOptimalDisplay = fonts.some(
-    (f) => f.name.includes('fallback') || f.name.includes('optional')
-  );
-  const clsRecommendation = hasOptimalDisplay
-    ? `${colors.green}Good${colors.reset} - Using optimal font-display strategies`
-    : `${colors.yellow}Consider${colors.reset} - Add font-display: fallback for critical fonts`;
+  // const _hasOptimalDisplay = fonts.some(
+  //   (f) => f.name.includes('fallback') || f.name.includes('optional')
+  // );
+  // const _clsRecommendation = hasOptimalDisplay
+  //   ? `${colors.green}Good${colors.reset} - Using optimal font-display strategies`
+  //   : `${colors.yellow}Consider${colors.reset} - Add font-display: fallback for critical fonts`;
 
-  console.log(`CLS Prevention: ${clsRecommendation}`);
+  // console.log(`CLS Prevention: ${clsRecommendation}`);
 
   // FID (First Input Delay) impact
-  const hasPreload = true; // Assuming preload is implemented
-  const fidImpact = hasPreload
-    ? `${colors.green}Good${colors.reset} - Critical fonts are preloaded`
-    : `${colors.yellow}Improve${colors.reset} - Add preload for critical fonts`;
+  // const _hasPreload = true; // Assuming preload is implemented
+  // const _fidImpact = hasPreload
+  //   ? `${colors.green}Good${colors.reset} - Critical fonts are preloaded`
+  //   : `${colors.yellow}Improve${colors.reset} - Add preload for critical fonts`;
 
-  console.log(`FID Optimization: ${fidImpact}`);
+  // console.log(`FID Optimization: ${fidImpact}`);
 }
 
 async function main() {
-  console.log(
-    `${colors.bold}🎨 Font Optimization Analysis Tool${colors.reset}\\n`
-  );
+  // console.log(
+  //   `${colors.bold}🎨 Font Optimization Analysis Tool${colors.reset}\\n`
+  // );
 
   // Analyze font files
   const fonts = analyzeFontFiles();
 
   if (fonts.length === 0) {
-    console.log(
-      `${colors.yellow}No font files found in ${PUBLIC_FONTS_DIR}${colors.reset}`
-    );
+    // console.log(
+    //   `${colors.yellow}No font files found in ${PUBLIC_FONTS_DIR}${colors.reset}`
+    // );
     return;
   }
 
-  console.log(`Found ${fonts.length} font files:`);
-  fonts.forEach((font) => {
-    const icon = font.optimized ? '✅' : '📄';
-    const typeColor = font.optimized ? colors.green : colors.yellow;
-    console.log(
-      `  ${icon} ${font.name} (${typeColor}${font.format.toUpperCase()}${colors.reset}, ${formatSize(font.size)})`
-    );
-  });
-  console.log();
+  // console.log(`Found ${fonts.length} font files:`);
+  // Font listing functionality disabled
+  // console.log();
 
   // Analyze font usage
   const usage = analyzeFontUsage();
-  console.log(`Font usage in codebase:`);
-  usage.fontReferences.forEach((files, font) => {
-    console.log(`  📝 ${font} (used in ${files.length} files)`);
-  });
-  console.log();
+  // console.log(`Font usage in codebase:`);
+  // Font reference listing disabled
+  // console.log();
 
   // Generate recommendations
-  const recommendations = generateOptimizationRecommendations(fonts, usage);
-  if (recommendations.length > 0) {
-    recommendations.forEach((rec) => {
-      const severityColor =
-        rec.severity === 'high'
-          ? colors.red
-          : rec.severity === 'medium'
-            ? colors.yellow
-            : colors.green;
-      console.log(`  ${severityColor}●${colors.reset} ${rec.message}`);
-      console.log(`    ${colors.cyan}Action:${colors.reset} ${rec.action}\\n`);
-    });
-  } else {
-    console.log(
-      `  ${colors.green}✅ No optimization issues found!${colors.reset}\\n`
-    );
-  }
+  generateOptimizationRecommendations(fonts, usage);
+  // Recommendations display disabled
 
   // Generate performance report
-  generatePerformanceReport(fonts);
+  generatePerformanceReport();
 
   // Web Vitals impact
   generateWebVitalsImpact(fonts);
 
-  console.log(`\\n${colors.bold}🚀 Next Steps:${colors.reset}`);
-  console.log(`1. Run: bun run fonts:subset (if not already done)`);
-  console.log(`2. Run: bun run bundle:analyze (to check bundle impact)`);
-  console.log(`3. Test font loading with DevTools Network throttling`);
-  console.log(`4. Monitor Core Web Vitals in production\\n`);
+  // console.log(`\\n${colors.bold}🚀 Next Steps:${colors.reset}`);
+  // console.log(`1. Run: bun run fonts:subset (if not already done)`);
+  // console.log(`2. Run: bun run bundle:analyze (to check bundle impact)`);
+  // console.log(`3. Test font loading with DevTools Network throttling`);
+  // console.log(`4. Monitor Core Web Vitals in production\\n`);
 }
 
-main().catch(console.error);
+main().catch(() => {});

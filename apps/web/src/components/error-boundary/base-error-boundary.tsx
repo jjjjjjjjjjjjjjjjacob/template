@@ -42,7 +42,7 @@ export class BaseErrorBoundary extends Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+  static getDerivedStateFromError(): ErrorBoundaryState {
     return {
       hasError: true,
     };
@@ -200,8 +200,8 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
                 try {
                   action.action();
                   resetError();
-                } catch (actionError) {
-                  console.error('Recovery action failed:', actionError);
+                } catch {
+                  // console.error('Recovery action failed');
                 }
               }}
               className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -247,7 +247,7 @@ export function withErrorBoundary<P extends object>(
  * Hook for manual error reporting within components
  */
 export function useErrorBoundary() {
-  return (error: Error, context?: ErrorContext) => {
+  return (error: Error) => {
     throw error;
   };
 }

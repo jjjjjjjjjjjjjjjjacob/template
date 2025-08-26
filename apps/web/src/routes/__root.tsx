@@ -18,7 +18,7 @@ import {
 import { SearchProvider } from '@/features/search';
 import { ThemeProvider } from '@/components/theme-provider';
 import appCss from '@/styles/app.css?url';
-import fontsCss from '@/styles/fonts.css?url';
+// import _fontsCss from '@/styles/fonts.css?url';
 import { ConvexReactClient, ConvexProvider } from 'convex/react';
 import { ConvexQueryClient } from '@convex-dev/react-query';
 

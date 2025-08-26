@@ -1,5 +1,5 @@
 import { cn } from '@/utils';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -27,8 +27,6 @@ export function ProjectSlideshow({
 }: ProjectSlideshowProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [showDialog, setShowDialog] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -83,8 +81,12 @@ export function ProjectSlideshow({
         `drop-shadow-muted/10 relative overflow-hidden transition perspective-dramatic`,
         className
       )}
+      role="region"
+      tabIndex={0}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
       // onTouchStart={onTouchStart}
       // onTouchMove={onTouchMove}
       // onTouchEnd={onTouchEnd}
@@ -119,7 +121,7 @@ export function ProjectSlideshow({
             pointerEvents: isMobile ? 'none' : 'auto',
           }}
         />
-        
+
         {/* Mobile overlay to catch clicks and prevent iframe interaction */}
         {isMobile && (
           <button
@@ -157,7 +159,7 @@ export function ProjectSlideshow({
 
       {/* Mobile dialog for full iframe interaction */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="max-w-[95vw] max-h-[90vh] p-0">
+        <DialogContent className="max-h-[90vh] max-w-[95vw] p-0">
           <DialogHeader className="p-4 pb-2">
             <div className="flex items-center justify-between">
               <DialogTitle className="text-left">{title}</DialogTitle>

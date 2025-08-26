@@ -154,15 +154,11 @@ export function DynamicPlaceholderInput({
   const currentPlaceholder =
     effectivePlaceholders[currentPlaceholderIndex] || effectivePlaceholders[0];
 
-  const handleFocus = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleFocus = () => {
     setIsFocused(true);
   };
 
-  const handleBlur = (
-    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleBlur = () => {
     setIsFocused(false);
   };
 
@@ -178,7 +174,8 @@ export function DynamicPlaceholderInput({
     }
   };
 
-  const inputId = id || `dynamic-placeholder-input-${React.useId()}`;
+  const generatedId = React.useId();
+  const inputId = id || `dynamic-placeholder-input-${generatedId}`;
   const descriptionId = `${inputId}-description`;
   const fullAriaDescribedBy =
     [ariaDescribedBy, description ? descriptionId : undefined]
@@ -271,11 +268,7 @@ export function useDynamicPlaceholder(
     autoStart?: boolean;
   } = {}
 ) {
-  const {
-    rotationInterval = 3000,
-    pauseOnFocus = true,
-    autoStart = true,
-  } = options;
+  const { rotationInterval = 3000, autoStart = true } = options;
 
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [isRunning, setIsRunning] = React.useState(autoStart);

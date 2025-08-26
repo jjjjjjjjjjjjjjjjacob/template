@@ -23,9 +23,23 @@ import {
   CommandSeparator,
 } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/utils/tailwind-utils';
+// import { cn } from '@/utils/tailwind-utils';
 import { useSearch } from '@/features/search/hooks/use-search';
 import { useSearchCache } from '@/features/search/hooks/use-search-cache';
+import type {
+  ItemSearchResult,
+  UserSearchResult,
+  TagSearchResult,
+  ActionSearchResult,
+} from '@template/types';
+
+interface ReviewSearchResult {
+  id: string;
+  title: string;
+  subtitle?: string;
+  itemId: string;
+  rating?: number;
+}
 
 interface CommandPaletteProps {
   open: boolean;
@@ -56,7 +70,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   // Preload common queries on mount
   React.useEffect(() => {
     const commonQueries = ['create', 'profile', 'settings', 'help'];
-    preloadQueries(commonQueries, async (q) => {
+    preloadQueries(commonQueries, async () => {
       // This would be replaced with actual API call
       return { items: [], users: [], tags: [] };
     });
@@ -75,14 +89,16 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
       switch (type) {
         case 'item':
-          if (id) navigate({ to: '/search', search: { q: id } });
+          // TODO: Implement search page with query params
+          navigate({ to: '/' });
           break;
         case 'user':
-          if (id)
-            navigate({ to: `/users/$username`, params: { username: id } });
+          // TODO: Implement user profile pages
+          navigate({ to: '/' });
           break;
         case 'tag':
-          if (id) navigate({ to: '/search', search: { tags: [id] } });
+          // TODO: Implement search page with tag filtering
+          navigate({ to: '/' });
           break;
         case 'action':
           switch (action) {
@@ -90,15 +106,18 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
               navigate({ to: '/' });
               break;
             case 'profile':
-              navigate({ to: '/profile' });
+              // TODO: Implement profile page
+              navigate({ to: '/' });
               break;
             case 'settings':
-              navigate({ to: '/profile' });
+              // TODO: Implement settings page
+              navigate({ to: '/' });
               break;
           }
           break;
         case 'review':
-          if (id) navigate({ to: '/search', search: { q: id } });
+          // TODO: Implement search page for reviews
+          navigate({ to: '/' });
           break;
       }
     },
@@ -217,11 +236,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         )}
 
         {/* Search results - Items */}
-        {results?.items?.length > 0 && (
+        {results?.items && results.items.length > 0 && (
           <>
             <CommandSeparator />
             <CommandGroup heading="items">
-              {results.items.map((item: any) => (
+              {results.items.map((item: ItemSearchResult) => (
                 <CommandItem
                   key={item.id}
                   value={item.title}
@@ -237,9 +256,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                         </span>
                       )}
                     </div>
-                    {item.rating && (
+                    {item.score && (
                       <Badge variant="secondary" className="ml-2">
-                        ⭐ {item.rating.toFixed(1)}
+                        ⭐ {item.score.toFixed(1)}
                       </Badge>
                     )}
                   </div>
@@ -250,11 +269,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         )}
 
         {/* Search results - Users */}
-        {results?.users?.length > 0 && (
+        {results?.users && results.users.length > 0 && (
           <>
             <CommandSeparator />
             <CommandGroup heading="users">
-              {results.users.map((user: any) => (
+              {results.users.map((user: UserSearchResult) => (
                 <CommandItem
                   key={user.id}
                   value={user.username}
@@ -270,7 +289,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                         </span>
                       )}
                     </div>
-                    {user.itemCount > 0 && (
+                    {user.itemCount && user.itemCount > 0 && (
                       <Badge variant="secondary" className="ml-2">
                         {user.itemCount} items
                       </Badge>
@@ -283,11 +302,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         )}
 
         {/* Search results - Tags */}
-        {results?.tags?.length > 0 && (
+        {results?.tags && results.tags.length > 0 && (
           <>
             <CommandSeparator />
             <CommandGroup heading="tags">
-              {results.tags.map((tag: any) => (
+              {results.tags.map((tag: TagSearchResult) => (
                 <CommandItem
                   key={tag.id}
                   value={tag.title}
@@ -307,11 +326,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         )}
 
         {/* Search results - Actions */}
-        {results?.actions?.length > 0 && (
+        {results?.actions && results.actions.length > 0 && (
           <>
             <CommandSeparator />
             <CommandGroup heading="actions">
-              {results.actions.map((action: any) => {
+              {results.actions.map((action: ActionSearchResult) => {
                 const Icon = getActionIcon(action.action);
                 return (
                   <CommandItem
@@ -338,11 +357,11 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         )}
 
         {/* Search results - Reviews */}
-        {results?.reviews?.length > 0 && (
+        {results?.reviews && results.reviews.length > 0 && (
           <>
             <CommandSeparator />
             <CommandGroup heading="reviews">
-              {results.reviews.map((review: any) => (
+              {results.reviews.map((review: ReviewSearchResult) => (
                 <CommandItem
                   key={review.id}
                   value={review.title}

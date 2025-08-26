@@ -1,18 +1,16 @@
 import React from 'react';
 
 interface MasonryFeedProps {
-  items: any[];
+  items: Array<{ id: string; title?: string; [key: string]: unknown }>;
   isLoading?: boolean;
-  variant?: string;
-  showLoadMoreTarget?: boolean;
+  _variant?: string;
+  _showLoadMoreTarget?: boolean;
 }
 
 export function MasonryFeed({
   items,
   isLoading,
-  variant,
-  showLoadMoreTarget,
-}: MasonryFeedProps) {
+}: Omit<MasonryFeedProps, 'variant' | 'showLoadMoreTarget'>) {
   if (isLoading) {
     return (
       <div className="space-y-4">

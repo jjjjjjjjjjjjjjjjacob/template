@@ -1,6 +1,6 @@
 export interface SearchCache {
   query: string;
-  results: any;
+  results: unknown;
   timestamp: number;
   ttl: number;
 }
@@ -35,10 +35,10 @@ export interface SearchState {
   query: string;
   filters: SearchFilters;
   isSearching: boolean;
-  results: any | null;
+  results: import('@template/types').SearchResponse | null;
   error: Error | null;
   history: string[];
-  suggestions: any[];
+  suggestions: import('@template/types').SearchSuggestionsResponse | null;
   activeCategory: string | null;
 }
 

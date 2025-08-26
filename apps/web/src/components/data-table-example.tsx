@@ -3,7 +3,7 @@ import { type ColumnDef } from '@tanstack/react-table';
 import { VirtualDataTable } from '@/components/ui/virtual-data-table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Trash2, Edit, Copy } from 'lucide-react';
+import { Edit, Copy } from 'lucide-react';
 import { cn } from '@/utils/tailwind-utils';
 
 // Example data type
@@ -152,13 +152,15 @@ export function DataTableExample() {
     {
       id: 'actions',
       header: 'actions',
-      cell: ({ row }) => (
+      cell: () => (
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => console.log('Edit', row.original)}
+            onClick={() => {
+              /* Edit functionality */
+            }}
           >
             <Edit className="h-4 w-4" />
           </Button>
@@ -166,7 +168,9 @@ export function DataTableExample() {
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={() => console.log('Copy', row.original)}
+            onClick={() => {
+              /* Copy functionality */
+            }}
           >
             <Copy className="h-4 w-4" />
           </Button>
@@ -177,24 +181,24 @@ export function DataTableExample() {
     },
   ];
 
-  const handleExport = (selectedRows: User[]) => {
-    console.log('Exporting:', selectedRows.length, 'rows');
+  const handleExport = () => {
+    // console.log('Exporting:', selectedRows.length, 'rows');
     // Implement actual export logic here
   };
 
-  const handleBulkDelete = (selectedRows: User[]) => {
-    console.log(
-      'Bulk delete:',
-      selectedRows.map((row) => row.id)
-    );
+  const handleBulkDelete = () => {
+    // console.log(
+    //   'Bulk delete:',
+    //   selectedRows.map((row) => row.id)
+    // );
     // Implement bulk delete logic here
   };
 
-  const handleBulkStatusChange = (selectedRows: User[]) => {
-    console.log(
-      'Bulk status change:',
-      selectedRows.map((row) => row.id)
-    );
+  const handleBulkStatusChange = () => {
+    // console.log(
+    //   'Bulk status change:',
+    //   selectedRows.map((row) => row.id)
+    // );
     // Implement bulk status change logic here
   };
 

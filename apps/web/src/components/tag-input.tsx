@@ -174,7 +174,7 @@ export function TagInput({
         role="list"
         aria-label="selected tags"
       >
-        {tags.map((tag, index) => (
+        {tags.map((tag) => (
           <Badge
             key={tag}
             variant="secondary"

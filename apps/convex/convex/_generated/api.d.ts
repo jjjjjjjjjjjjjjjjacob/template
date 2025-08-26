@@ -13,8 +13,10 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as admin from "../admin.js";
 import type * as analytics_search_metrics from "../analytics/search_metrics.js";
 import type * as http from "../http.js";
+import type * as items from "../items.js";
 import type * as lib_emojiColors from "../lib/emojiColors.js";
 import type * as search_fuzzy_search from "../search/fuzzy_search.js";
 import type * as search_search_scorer from "../search/search_scorer.js";
@@ -31,7 +33,6 @@ import type * as seed_emojis_travel from "../seed/emojis/travel.js";
 import type * as seed from "../seed.js";
 import type * as tags from "../tags.js";
 import type * as users from "../users.js";
-import type * as vibes from "../vibes.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -42,8 +43,10 @@ import type * as vibes from "../vibes.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  admin: typeof admin;
   "analytics/search_metrics": typeof analytics_search_metrics;
   http: typeof http;
+  items: typeof items;
   "lib/emojiColors": typeof lib_emojiColors;
   "search/fuzzy_search": typeof search_fuzzy_search;
   "search/search_scorer": typeof search_search_scorer;
@@ -60,7 +63,6 @@ declare const fullApi: ApiFromModules<{
   seed: typeof seed;
   tags: typeof tags;
   users: typeof users;
-  vibes: typeof vibes;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

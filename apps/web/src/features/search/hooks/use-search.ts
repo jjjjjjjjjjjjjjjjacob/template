@@ -1,6 +1,6 @@
-// @ts-nocheck
-import { useState, useCallback, useRef, useEffect } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+// This file contains search functionality and may need type fixes
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
 import { api } from '@template/convex';
 import { searchCache } from '../services/search-cache';
@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS: SearchOptions = {
 };
 
 export function useSearch(options: SearchOptions = {}) {
-  const opts = { ...DEFAULT_OPTIONS, ...options };
+  const opts = useMemo(() => ({ ...DEFAULT_OPTIONS, ...options }), [options]);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const [state, setState] = useState<SearchState>({
@@ -27,7 +27,7 @@ export function useSearch(options: SearchOptions = {}) {
     results: null,
     error: null,
     history: [],
-    suggestions: [],
+    suggestions: null,
     activeCategory: null,
   });
 
@@ -78,13 +78,18 @@ export function useSearch(options: SearchOptions = {}) {
           (searchQuery.data.actions?.length || 0) +
           (searchQuery.data.reviews?.length || 0);
 
-        trackSearchMutation.mutate({
+        trackSearchMutation({
           query: debouncedQuery,
           resultCount: totalResults,
         });
       }
     }
-  }, [searchQuery.data, debouncedQuery, opts.trackHistory]);
+  }, [
+    searchQuery.data,
+    debouncedQuery,
+    opts.trackHistory,
+    trackSearchMutation,
+  ]);
 
   // Update suggestions
   useEffect(() => {
@@ -134,7 +139,7 @@ export function useSearch(options: SearchOptions = {}) {
             ...prev,
             query,
             filters: filters || {},
-            results: cached,
+            results: cached as import('@template/types').SearchResponse,
             isSearching: false,
             error: null,
           }));
@@ -168,6 +173,7 @@ export function useSearch(options: SearchOptions = {}) {
       ...prev,
       query: '',
       results: null,
+      suggestions: null,
       error: null,
       isSearching: false,
     }));

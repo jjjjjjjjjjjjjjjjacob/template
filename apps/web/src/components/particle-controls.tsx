@@ -207,7 +207,7 @@ export function ParticleControls({
   };
 
   return (
-    <Card className="max-h-[800px] w-full overflow-y-auto bg-transparent backdrop-blur-sm border-none ">
+    <Card className="max-h-[800px] w-full overflow-y-auto border-none bg-transparent backdrop-blur-sm">
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-medium">particle controls</h3>
@@ -274,7 +274,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('basic')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.basic ? (
               <ChevronDown size={16} />
@@ -287,7 +287,7 @@ export function ParticleControls({
           {openSections.basic && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   count: {config.count}
                   {config.count !== defaultParticleConfig.count && (
                     <span className="ml-2 text-yellow-400">
@@ -307,7 +307,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   size: {config.size}
                 </Label>
                 <Slider
@@ -321,7 +321,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   speed: {config.speed.toFixed(3)}
                 </Label>
                 <Slider
@@ -335,7 +335,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   opacity: {config.opacity.toFixed(2)}
                 </Label>
                 <Slider
@@ -349,7 +349,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   color: {config.color}
                 </Label>
                 <input
@@ -367,7 +367,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('distribution')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.distribution ? (
               <ChevronDown size={16} />
@@ -380,7 +380,7 @@ export function ParticleControls({
           {openSections.distribution && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   spread x: {config.spreadX.toFixed(2)}
                 </Label>
                 <Slider
@@ -394,7 +394,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   spread y: {config.spreadY.toFixed(2)}
                 </Label>
                 <Slider
@@ -408,7 +408,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   clusters: {config.clusterCount}
                 </Label>
                 <Slider
@@ -422,7 +422,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   cluster radius: {config.clusterRadius.toFixed(2)}
                 </Label>
                 <Slider
@@ -436,7 +436,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   initial velocity: {config.initialVelocity.toFixed(2)}
                 </Label>
                 <Slider
@@ -456,7 +456,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('physics')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.physics ? (
               <ChevronDown size={16} />
@@ -469,7 +469,7 @@ export function ParticleControls({
           {openSections.physics && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   damping: {config.damping.toFixed(3)}
                 </Label>
                 <Slider
@@ -483,7 +483,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   turbulence: {config.turbulence.toFixed(3)}
                 </Label>
                 <Slider
@@ -497,7 +497,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   turbulence scale: {config.turbulenceScale.toFixed(2)}
                 </Label>
                 <Slider
@@ -517,7 +517,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('convection')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.convection ? (
               <ChevronDown size={16} />
@@ -530,7 +530,7 @@ export function ParticleControls({
           {openSections.convection && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   strength: {config.convectionStrength.toFixed(2)}
                 </Label>
                 <Slider
@@ -544,7 +544,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   speed x: {config.convectionSpeedX.toFixed(2)}
                 </Label>
                 <Slider
@@ -558,7 +558,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   speed y: {config.convectionSpeedY.toFixed(2)}
                 </Label>
                 <Slider
@@ -572,7 +572,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   scale x: {config.convectionScaleX.toFixed(3)}
                 </Label>
                 <Slider
@@ -586,7 +586,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   scale y: {config.convectionScaleY.toFixed(3)}
                 </Label>
                 <Slider
@@ -600,7 +600,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   buoyancy: {config.buoyancy.toFixed(3)}
                 </Label>
                 <Slider
@@ -614,7 +614,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   temp diffusion: {config.temperatureDiffusion.toFixed(3)}
                 </Label>
                 <Slider
@@ -634,7 +634,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('mouse')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.mouse ? (
               <ChevronDown size={16} />
@@ -647,7 +647,7 @@ export function ParticleControls({
           {openSections.mouse && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   radius: {config.mouseRadius}px
                 </Label>
                 <Slider
@@ -661,7 +661,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   force: {config.mouseForce.toFixed(1)}
                 </Label>
                 <Slider
@@ -675,7 +675,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   heat: {config.mouseHeat.toFixed(2)}
                 </Label>
                 <Slider
@@ -695,7 +695,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('boundaries')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.boundaries ? (
               <ChevronDown size={16} />
@@ -708,7 +708,7 @@ export function ParticleControls({
           {openSections.boundaries && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   damping: {config.boundaryDamping.toFixed(2)}
                 </Label>
                 <Slider
@@ -722,7 +722,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   padding: {config.boundaryPadding}px
                 </Label>
                 <Slider
@@ -736,7 +736,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   roundness: {config.boundaryRoundness}px
                 </Label>
                 <Slider
@@ -756,7 +756,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('temperature')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.temperature ? (
               <ChevronDown size={16} />
@@ -769,7 +769,7 @@ export function ParticleControls({
           {openSections.temperature && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   cooling rate: {config.coolingRate.toFixed(2)}
                 </Label>
                 <Slider
@@ -783,7 +783,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   heating rate: {config.heatingRate.toFixed(2)}
                 </Label>
                 <Slider
@@ -803,7 +803,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('forces')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.forces ? (
               <ChevronDown size={16} />
@@ -816,7 +816,7 @@ export function ParticleControls({
           {openSections.forces && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   wind x: {config.windX.toFixed(3)}
                 </Label>
                 <Slider
@@ -830,7 +830,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   wind y: {config.windY.toFixed(3)}
                 </Label>
                 <Slider
@@ -844,7 +844,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   wind variation: {config.windVariation.toFixed(3)}
                 </Label>
                 <Slider
@@ -858,7 +858,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   gravity x: {config.gravityX.toFixed(3)}
                 </Label>
                 <Slider
@@ -872,7 +872,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   gravity y: {config.gravityY.toFixed(3)}
                 </Label>
                 <Slider
@@ -886,7 +886,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   gravity range: {config.gravityRange}px
                 </Label>
                 <Slider
@@ -900,7 +900,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   vortex strength: {config.vortexStrength.toFixed(3)}
                 </Label>
                 <Slider
@@ -914,7 +914,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   vortex radius: {config.vortexRadius}px
                 </Label>
                 <Slider
@@ -934,7 +934,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('obstacle')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.obstacle ? (
               <ChevronDown size={16} />
@@ -947,7 +947,7 @@ export function ParticleControls({
           {openSections.obstacle && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">enabled</Label>
+                <Label className="text-primary/60 text-xs">enabled</Label>
                 <input
                   type="checkbox"
                   checked={config.obstacleEnabled}
@@ -962,7 +962,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   position x: {config.obstacleX.toFixed(0)}
                 </Label>
                 <Slider
@@ -976,7 +976,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   position y: {config.obstacleY.toFixed(0)}
                 </Label>
                 <Slider
@@ -990,7 +990,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   radius: {config.obstacleRadius}px
                 </Label>
                 <Slider
@@ -1004,7 +1004,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   force: {config.obstacleForce.toFixed(1)}
                 </Label>
                 <Slider
@@ -1018,7 +1018,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   heat: {config.obstacleHeat.toFixed(2)}
                 </Label>
                 <Slider
@@ -1038,7 +1038,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('corona')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.corona ? (
               <ChevronDown size={16} />
@@ -1051,7 +1051,7 @@ export function ParticleControls({
           {openSections.corona && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   inner boundary: {config.innerBoundary}px
                 </Label>
                 <Slider
@@ -1065,7 +1065,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   outer boundary: {config.outerBoundary}px
                 </Label>
                 <Slider
@@ -1079,7 +1079,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   slope sharpness: {config.slopeSharpness.toFixed(1)}
                 </Label>
                 <Slider
@@ -1099,7 +1099,7 @@ export function ParticleControls({
         <div className="mb-4">
           <button
             onClick={() => toggleSection('scroll')}
-            className="mb-2 flex w-full items-center gap-2 text-left hover:text-primary/80"
+            className="hover:text-primary/80 mb-2 flex w-full items-center gap-2 text-left"
           >
             {openSections.scroll ? (
               <ChevronDown size={16} />
@@ -1112,7 +1112,7 @@ export function ParticleControls({
           {openSections.scroll && (
             <div className="space-y-3 pl-6">
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   strength: {config.scrollInertiaStrength.toFixed(2)}
                 </Label>
                 <Slider
@@ -1128,7 +1128,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   damping: {config.scrollInertiaDamping.toFixed(3)}
                 </Label>
                 <Slider
@@ -1142,7 +1142,7 @@ export function ParticleControls({
               </div>
 
               <div>
-                <Label className="text-xs text-primary/60">
+                <Label className="text-primary/60 text-xs">
                   max velocity: {config.scrollInertiaMax.toFixed(2)}
                 </Label>
                 <Slider

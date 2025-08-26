@@ -8,7 +8,12 @@
  */
 
 import { execSync } from 'child_process';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import {
+  existsSync,
+  mkdirSync,
+  // readFileSync as _readFileSync,
+  writeFileSync,
+} from 'fs';
 import { join, dirname, basename, extname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -59,16 +64,16 @@ function checkDependencies() {
     ),
   };
 
-  const missing = Object.entries(deps).filter(([_, available]) => !available);
+  const missing = Object.entries(deps).filter(([, available]) => !available);
   if (missing.length > 0) {
-    console.log('⚠️  Missing dependencies:');
-    missing.forEach(([tool]) => {
-      console.log(`   - ${tool}: Install with: ${deps[tool]}`);
+    // console.log('⚠️  Missing dependencies:');
+    missing.forEach(() => {
+      // console.log(`   - ${tool}: Install with: ${deps[tool]}`);
     });
 
     // Use pyftsubset as fallback if available
     if (deps.pyftsubset) {
-      console.log('\n✅ Using pyftsubset for optimization');
+      // console.log('\n✅ Using pyftsubset for optimization');
       return 'pyftsubset';
     }
     return false;
@@ -150,13 +155,13 @@ function subsetFont(inputPath, outputPath, options = {}) {
   );
 
   const cmd = args.join(' ');
-  console.log(`Subsetting ${basename(inputPath)} -> ${basename(outputPath)}`);
+  // console.log(`Subsetting ${basename(inputPath)} -> ${basename(outputPath)}`);
 
   try {
     execSync(cmd, { stdio: 'inherit' });
     return true;
-  } catch (error) {
-    console.error(`Failed to subset ${inputPath}:`, error.message);
+  } catch {
+    // console.error(`Failed to subset ${inputPath}:`, error.message);
     return false;
   }
 }
@@ -187,18 +192,10 @@ function generateFontFaceCSS(fonts) {
   return css;
 }
 
-function generatePreloadLinks() {
-  const links = [];
+// Function removed - generatePreloadLinks not used
 
-  // Preload critical fonts (Geist Sans is likely the primary font)
-  links.push(
-    `<link rel="preload" href="/fonts/optimized/GeistSans-Variable.woff2" as="font" type="font/woff2" crossorigin>`
-  );
-
-  return links;
-}
-
-function getFileSize(filePath) {
+/*
+function _getFileSize(filePath) {
   try {
     if (!existsSync(filePath)) return 'N/A';
     const stats = execSync(`ls -lh "${filePath}"`, { encoding: 'utf8' });
@@ -208,16 +205,17 @@ function getFileSize(filePath) {
     return 'unknown';
   }
 }
+*/
 
 async function main() {
-  console.log('🚀 Starting comprehensive font optimization...\n');
+  // console.log('🚀 Starting comprehensive font optimization...\n');
 
   // Check dependencies
   const toolsAvailable = checkDependencies();
   if (!toolsAvailable) {
-    console.error(
-      '❌ Required tools not available. Please install dependencies.'
-    );
+    // console.error(
+    //   '❌ Required tools not available. Please install dependencies.'
+    // );
     process.exit(1);
   }
 
@@ -227,11 +225,11 @@ async function main() {
   const optimizedFonts = [];
 
   // Process text fonts
-  console.log('📝 Optimizing text fonts...\n');
+  // console.log('📝 Optimizing text fonts...\n');
   for (const font of FONTS) {
     const inputPath = join(PUBLIC_FONTS_DIR, font.file);
     if (!existsSync(inputPath)) {
-      console.warn(`⚠️  Font not found: ${font.file}`);
+      // console.warn(`⚠️  Font not found: ${font.file}`);
       continue;
     }
 
@@ -246,28 +244,30 @@ async function main() {
     if (success) {
       font.output = outputName;
       optimizedFonts.push(font);
-      console.log(
-        `✅ ${font.name}: ${getFileSize(inputPath)} -> ${getFileSize(outputPath)}\n`
-      );
+      // console.log(
+      //   `✅ ${font.name}: ${getFileSize(inputPath)} -> ${getFileSize(outputPath)}\n`
+      // );
     }
   }
 
   // Generate optimized CSS
-  console.log('🎨 Generating optimized CSS...');
+  // console.log('🎨 Generating optimized CSS...');
   const css = generateFontFaceCSS(optimizedFonts);
   writeFileSync(CSS_OUTPUT, css);
-  console.log(`✅ CSS written to: ${CSS_OUTPUT}`);
+  // console.log(`✅ CSS written to: ${CSS_OUTPUT}`);
 
   // Generate preload links
-  console.log('\n📋 Add these preload links to your HTML <head>:');
-  const preloadLinks = generatePreloadLinks();
-  preloadLinks.forEach((link) => console.log(`   ${link}`));
+  // console.log('\n📋 Add these preload links to your HTML <head>:');
+  // const _preloadLinks = generatePreloadLinks();
+  // preloadLinks.forEach((link) => console.log(`   ${link}`));
 
-  console.log('\n✅ Font optimization complete!');
-  console.log('📊 Next steps:');
-  console.log('   1. Import the generated CSS: @import "./fonts.css";');
-  console.log('   2. Add preload links to your HTML head');
-  console.log('   3. Use CSS variables: font-family: var(--font-sans);');
+  // console.log('\n✅ Font optimization complete!');
+  // console.log('📊 Next steps:');
+  // console.log('   1. Import the generated CSS: @import "./fonts.css";');
+  // console.log('   2. Add preload links to your HTML head');
+  // console.log('   3. Use CSS variables: font-family: var(--font-sans);');
 }
 
-main().catch(console.error);
+main().catch(() => {
+  // console.error(err);
+});

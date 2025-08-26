@@ -1,7 +1,6 @@
 /// <reference lib="dom" />
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import {
   DynamicPlaceholderInput,
   useDynamicPlaceholder,
@@ -42,19 +41,12 @@ describe('DynamicPlaceholderInput', () => {
     const input = screen.getByRole('textbox');
     expect(input).toHaveAttribute('placeholder', 'start typing...');
 
-    // Advance timer to trigger rotation
+    // Advance timer to trigger rotation (1000ms + animation duration)
     act(() => {
-      vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1250); // 1000ms interval + 250ms animation
     });
 
-    // Wait for animation
-    act(() => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      expect(input).toHaveAttribute('placeholder', "what's on your mind?");
-    });
+    expect(input).toHaveAttribute('placeholder', "what's on your mind?");
   });
 
   it('shows visual indicators for multiple placeholders', () => {
@@ -81,15 +73,15 @@ describe('DynamicPlaceholderInput', () => {
     expect(indicators).toHaveLength(0);
   });
 
-  it('pauses rotation on focus when pauseOnFocus is true', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
+  it('pauses rotation on focus when pauseOnFocus is true', () => {
     render(<DynamicPlaceholderInput {...defaultProps} pauseOnFocus={true} />);
 
     const input = screen.getByRole('textbox');
 
-    // Focus the input
-    await user.click(input);
+    // Focus the input using fireEvent instead of userEvent
+    act(() => {
+      input.focus();
+    });
 
     // Advance timer - should not rotate while focused
     act(() => {
@@ -99,15 +91,15 @@ describe('DynamicPlaceholderInput', () => {
     expect(input).toHaveAttribute('placeholder', 'start typing...');
   });
 
-  it('pauses rotation on hover when pauseOnHover is true', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
+  it('pauses rotation on hover when pauseOnHover is true', () => {
     render(<DynamicPlaceholderInput {...defaultProps} pauseOnHover={true} />);
 
     const input = screen.getByRole('textbox');
 
-    // Hover the input
-    await user.hover(input);
+    // Hover the input using fireEvent
+    act(() => {
+      fireEvent.mouseEnter(input);
+    });
 
     // Advance timer - should not rotate while hovered
     act(() => {
@@ -117,15 +109,15 @@ describe('DynamicPlaceholderInput', () => {
     expect(input).toHaveAttribute('placeholder', 'start typing...');
   });
 
-  it('stops rotation when user starts typing', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
+  it('stops rotation when user starts typing', () => {
     render(<DynamicPlaceholderInput {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
 
-    // Type some text
-    await user.type(input, 'hello');
+    // Type some text using fireEvent
+    act(() => {
+      fireEvent.change(input, { target: { value: 'hello' } });
+    });
 
     // Advance timer - should not rotate when there's text
     act(() => {
@@ -160,8 +152,7 @@ describe('DynamicPlaceholderInput', () => {
     expect(screen.getByText('*')).toBeInTheDocument(); // Required indicator
   });
 
-  it('works in controlled mode', async () => {
-    const user = userEvent.setup();
+  it('works in controlled mode', () => {
     const onChange = vi.fn();
 
     render(
@@ -175,17 +166,23 @@ describe('DynamicPlaceholderInput', () => {
     const input = screen.getByRole('textbox');
     expect(input).toHaveValue('controlled');
 
-    await user.type(input, ' value');
+    // Type text using fireEvent
+    act(() => {
+      fireEvent.change(input, { target: { value: 'controlled value' } });
+    });
+
     expect(onChange).toHaveBeenCalledWith('controlled value');
   });
 
-  it('works in uncontrolled mode', async () => {
-    const user = userEvent.setup();
-
+  it('works in uncontrolled mode', () => {
     render(<DynamicPlaceholderInput {...defaultProps} />);
 
     const input = screen.getByRole('textbox');
-    await user.type(input, 'uncontrolled');
+
+    // Type text using fireEvent
+    act(() => {
+      fireEvent.change(input, { target: { value: 'uncontrolled' } });
+    });
 
     expect(input).toHaveValue('uncontrolled');
   });
@@ -214,22 +211,16 @@ describe('DynamicPlaceholderInput', () => {
   it('announces placeholder changes to screen readers', async () => {
     render(<DynamicPlaceholderInput {...defaultProps} />);
 
-    // Advance timer to trigger rotation
+    // Advance timer to trigger rotation and complete animation
     act(() => {
-      vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1250);
     });
 
-    act(() => {
-      vi.advanceTimersByTime(500);
-    });
-
-    await waitFor(() => {
-      const announcement = screen.getByText(
-        "placeholder changed to: what's on your mind?"
-      );
-      expect(announcement).toBeInTheDocument();
-      expect(announcement).toHaveClass('sr-only');
-    });
+    const announcement = screen.getByText(
+      "placeholder changed to: what's on your mind?"
+    );
+    expect(announcement).toBeInTheDocument();
+    expect(announcement).toHaveClass('sr-only');
   });
 });
 
@@ -276,10 +267,12 @@ describe('useDynamicPlaceholder', () => {
 
   beforeEach(() => {
     vi.clearAllTimers();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   it('initializes with first placeholder', () => {
@@ -302,79 +295,85 @@ describe('useDynamicPlaceholder', () => {
 
     expect(screen.getByTestId('placeholder')).toHaveTextContent('first');
 
-    // Advance timer
+    // Advance timer beyond interval + animation
     act(() => {
-      vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(1250);
     });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('placeholder')).toHaveTextContent('second');
-      expect(screen.getByTestId('index')).toHaveTextContent('1');
-    });
+    expect(screen.getByTestId('placeholder')).toHaveTextContent('second');
+    expect(screen.getByTestId('index')).toHaveTextContent('1');
   });
 
   it('cycles back to first placeholder after reaching the end', async () => {
     render(<TestComponent placeholders={placeholders} />);
 
-    // Advance through all placeholders
+    // Advance through all placeholders (3 placeholders * 1250ms each)
     act(() => {
-      vi.advanceTimersByTime(3000); // 3 rotations
+      vi.advanceTimersByTime(3750); // 3 full rotations
     });
 
-    await waitFor(() => {
-      expect(screen.getByTestId('placeholder')).toHaveTextContent('first');
-      expect(screen.getByTestId('index')).toHaveTextContent('0');
-    });
+    expect(screen.getByTestId('placeholder')).toHaveTextContent('first');
+    expect(screen.getByTestId('index')).toHaveTextContent('0');
   });
 
-  it('can be manually controlled', async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
-
+  it('can be manually controlled', () => {
     render(<TestComponent placeholders={placeholders} autoStart={false} />);
 
     // Start rotation
-    await user.click(screen.getByText('start'));
+    act(() => {
+      fireEvent.click(screen.getByText('start'));
+    });
     expect(screen.getByTestId('running')).toHaveTextContent('true');
 
     // Pause rotation
-    await user.click(screen.getByText('pause'));
+    act(() => {
+      fireEvent.click(screen.getByText('pause'));
+    });
     expect(screen.getByTestId('paused')).toHaveTextContent('true');
 
     // Resume rotation
-    await user.click(screen.getByText('resume'));
+    act(() => {
+      fireEvent.click(screen.getByText('resume'));
+    });
     expect(screen.getByTestId('paused')).toHaveTextContent('false');
 
     // Stop rotation
-    await user.click(screen.getByText('stop'));
+    act(() => {
+      fireEvent.click(screen.getByText('stop'));
+    });
     expect(screen.getByTestId('running')).toHaveTextContent('false');
   });
 
-  it('can be manually rotated', async () => {
-    const user = userEvent.setup();
-
+  it('can be manually rotated', () => {
     render(<TestComponent placeholders={placeholders} autoStart={false} />);
 
     expect(screen.getByTestId('placeholder')).toHaveTextContent('first');
 
-    await user.click(screen.getByText('rotate'));
+    act(() => {
+      fireEvent.click(screen.getByText('rotate'));
+    });
     expect(screen.getByTestId('placeholder')).toHaveTextContent('second');
 
-    await user.click(screen.getByText('rotate'));
+    act(() => {
+      fireEvent.click(screen.getByText('rotate'));
+    });
     expect(screen.getByTestId('placeholder')).toHaveTextContent('third');
   });
 
-  it('can be reset to first placeholder', async () => {
-    const user = userEvent.setup();
-
+  it('can be reset to first placeholder', () => {
     render(<TestComponent placeholders={placeholders} autoStart={false} />);
 
     // Rotate to third placeholder
-    await user.click(screen.getByText('rotate'));
-    await user.click(screen.getByText('rotate'));
+    act(() => {
+      fireEvent.click(screen.getByText('rotate'));
+      fireEvent.click(screen.getByText('rotate'));
+    });
     expect(screen.getByTestId('placeholder')).toHaveTextContent('third');
 
     // Reset to first
-    await user.click(screen.getByText('reset'));
+    act(() => {
+      fireEvent.click(screen.getByText('reset'));
+    });
     expect(screen.getByTestId('placeholder')).toHaveTextContent('first');
     expect(screen.getByTestId('index')).toHaveTextContent('0');
   });

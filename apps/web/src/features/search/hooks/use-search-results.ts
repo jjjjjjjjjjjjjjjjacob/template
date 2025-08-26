@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
 export function useSearchResults() {
-  const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [results] = useState(null);
+  const [loading] = useState(false);
+  const [error] = useState(null);
 
   const onRetry = () => {
     // Retry logic would go here
-    console.log('Retrying search...');
   };
 
   return {

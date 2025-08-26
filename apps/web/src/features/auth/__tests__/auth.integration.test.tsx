@@ -1,7 +1,6 @@
 /// <reference lib="dom" />
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test-utils';
 import { useAuth } from '../hooks/use-auth';
 import {
@@ -33,10 +32,7 @@ function TestAuthComponent() {
 }
 
 describe('Auth Feature Integration', () => {
-  let user: ReturnType<typeof userEvent.setup>;
-
   beforeEach(() => {
-    user = userEvent.setup();
     vi.clearAllMocks();
   });
 

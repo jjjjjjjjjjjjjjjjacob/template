@@ -117,6 +117,14 @@ export function SidebarLayout({
         <div
           className="fixed inset-0 z-20 bg-black/50"
           onClick={() => handleCollapsedChange(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              handleCollapsedChange(true);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close sidebar"
         />
       )}
 

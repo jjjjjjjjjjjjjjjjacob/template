@@ -38,9 +38,9 @@ export function supportsFontLoading(): boolean {
 export function getConnectionSpeed(): 'slow' | 'fast' {
   // Navigator.connection is experimental - use type assertion for compatibility
   const connection =
-    (navigator as any).connection ||
-    (navigator as any).mozConnection ||
-    (navigator as any).webkitConnection;
+    (navigator as { connection?: NetworkInformation }).connection ||
+    (navigator as { mozConnection?: NetworkInformation }).mozConnection ||
+    (navigator as { webkitConnection?: NetworkInformation }).webkitConnection;
 
   if (!connection) return 'fast';
 

@@ -1,9 +1,9 @@
 /// <reference lib="dom" />
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '@/test-utils';
 import { useAdminAuth } from '../hooks/use-admin';
+import { AdminGuard } from '../components/admin-guard';
 import {
   setupAuthForIntegrationTest,
   testData,
@@ -36,8 +36,6 @@ function TestAdminComponent() {
 
 // Test component with admin guard
 function TestAdminGuardComponent() {
-  const { AdminGuard } = require('../components/admin-guard');
-
   return (
     <div>
       <AdminGuard
@@ -51,10 +49,7 @@ function TestAdminGuardComponent() {
 }
 
 describe('Admin Feature Integration', () => {
-  let user: ReturnType<typeof userEvent.setup>;
-
   beforeEach(() => {
-    user = userEvent.setup();
     vi.clearAllMocks();
   });
 

@@ -5,16 +5,18 @@ import { resumeProfile } from '@/data/resume-profile';
 export async function exportToPDF(resumeData: FilteredResumeData) {
   // Create a new window with the resume content
   const printWindow = window.open('', '_blank', 'width=800,height=600');
-  
+
   if (!printWindow) {
-    throw new Error('Unable to open print window. Please allow popups for this site.');
+    throw new Error(
+      'Unable to open print window. Please allow popups for this site.'
+    );
   }
 
   const htmlContent = generateResumeHTML(resumeData);
-  
+
   printWindow.document.write(htmlContent);
   printWindow.document.close();
-  
+
   // Wait for content to load, then print
   printWindow.onload = () => {
     printWindow.focus();
@@ -200,7 +202,9 @@ function generateResumeHTML(resumeData: FilteredResumeData): string {
       
       <div class="section">
         <h2>Experience</h2>
-        ${projects.map(project => `
+        ${projects
+          .map(
+            (project) => `
           <div class="project">
             <div class="project-header">
               <div class="project-title">${project.title}</div>
@@ -211,9 +215,14 @@ function generateResumeHTML(resumeData: FilteredResumeData): string {
             <div class="achievements">
               <div class="label">Key Achievements:</div>
               <ul>
-                ${project.achievements.slice(0, 6).map(achievement => `
+                ${project.achievements
+                  .slice(0, 6)
+                  .map(
+                    (achievement) => `
                   <li>${achievement.description}</li>
-                `).join('')}
+                `
+                  )
+                  .join('')}
               </ul>
             </div>
             
@@ -223,29 +232,44 @@ function generateResumeHTML(resumeData: FilteredResumeData): string {
                 ${[
                   ...project.technologies.frontend,
                   ...project.technologies.backend,
-                  ...project.technologies.infrastructure
-                ].slice(0, 10).map(tech => `
+                  ...project.technologies.infrastructure,
+                ]
+                  .slice(0, 10)
+                  .map(
+                    (tech) => `
                   <span class="tech-tag">${tech}</span>
-                `).join('')}
+                `
+                  )
+                  .join('')}
               </div>
             </div>
           </div>
-        `).join('')}
+        `
+          )
+          .join('')}
       </div>
       
       <div class="section">
         <h2>Skills</h2>
         <div class="skills-grid">
-          ${skills.map(skillCategory => `
+          ${skills
+            .map(
+              (skillCategory) => `
             <div class="skill-category">
               <h3>${skillCategory.category}</h3>
               <div class="skill-tags">
-                ${skillCategory.skills.map(skill => `
+                ${skillCategory.skills
+                  .map(
+                    (skill) => `
                   <span class="skill-tag">${skill}</span>
-                `).join('')}
+                `
+                  )
+                  .join('')}
               </div>
             </div>
-          `).join('')}
+          `
+            )
+            .join('')}
         </div>
       </div>
     </body>
@@ -254,10 +278,12 @@ function generateResumeHTML(resumeData: FilteredResumeData): string {
 }
 
 // Generate URL for sharing filtered resume
-export function generateShareableURL(filters: any): string {
+export function generateShareableURL(
+  filters: Record<string, string | string[] | number | boolean>
+): string {
   const baseUrl = window.location.origin + window.location.pathname;
   const params = new URLSearchParams();
-  
+
   Object.entries(filters).forEach(([key, value]) => {
     if (value && key !== 'format') {
       if (Array.isArray(value)) {
@@ -267,15 +293,17 @@ export function generateShareableURL(filters: any): string {
       }
     }
   });
-  
+
   return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 }
 
 // Copy resume content as formatted text
-export async function copyResumeText(resumeData: FilteredResumeData): Promise<void> {
+export async function copyResumeText(
+  resumeData: FilteredResumeData
+): Promise<void> {
   const { projects, skills, summary } = resumeData;
   const { personal } = resumeProfile;
-  
+
   const textContent = `
 ${personal.name}
 ${personal.title}
@@ -285,27 +313,40 @@ SUMMARY
 ${summary}
 
 EXPERIENCE
-${projects.map(project => `
+${projects
+  .map(
+    (project) => `
 ${project.title}
 ${project.role} • ${project.timeline}
 ${project.description}
 
 Key Achievements:
-${project.achievements.slice(0, 6).map(achievement => `• ${achievement.description}`).join('\n')}
+${project.achievements
+  .slice(0, 6)
+  .map((achievement) => `• ${achievement.description}`)
+  .join('\n')}
 
 Technologies: ${[
-  ...project.technologies.frontend,
-  ...project.technologies.backend,
-  ...project.technologies.infrastructure
-].slice(0, 10).join(', ')}
-`).join('\n---\n')}
+      ...project.technologies.frontend,
+      ...project.technologies.backend,
+      ...project.technologies.infrastructure,
+    ]
+      .slice(0, 10)
+      .join(', ')}
+`
+  )
+  .join('\n---\n')}
 
 SKILLS
-${skills.map(skillCategory => `
+${skills
+  .map(
+    (skillCategory) => `
 ${skillCategory.category}
 ${skillCategory.skills.join(', ')}
-`).join('\n')}
+`
+  )
+  .join('\n')}
   `.trim();
-  
+
   await navigator.clipboard.writeText(textContent);
 }

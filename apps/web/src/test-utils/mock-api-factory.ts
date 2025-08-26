@@ -12,7 +12,12 @@ import {
  * This provides a clean way to mock both Convex and external APIs
  */
 export class MockApiFactory {
-  private handlers: any[] = [];
+  private handlers: Array<
+    | ReturnType<typeof http.get>
+    | ReturnType<typeof http.post>
+    | ReturnType<typeof http.put>
+    | ReturnType<typeof http.delete>
+  > = [];
 
   constructor() {
     this.setupDefaultHandlers();
@@ -40,7 +45,7 @@ export class MockApiFactory {
 
         // Only log warnings for external requests, not our app routes
         if (url.startsWith('http') && !url.includes('localhost')) {
-          console.warn(`Unhandled external request: ${request.method} ${url}`);
+          // // console.warn(`Unhandled external request: ${request.method} ${url}`);
         }
 
         return HttpResponse.json({});
@@ -56,7 +61,9 @@ export class MockApiFactory {
       handlers.external.forEach(({ method, url, response, status = 200 }) => {
         const httpMethod = method.toLowerCase() as keyof typeof http;
         const handler = http[httpMethod](url, () => {
-          return HttpResponse.json(response, { status });
+          return HttpResponse.json(response as Record<string, unknown>, {
+            status,
+          });
         });
         this.handlers.push(handler);
       });
@@ -179,9 +186,13 @@ export function createErrorHandler(
 /**
  * Helper to create delayed responses for testing loading states
  */
-export function createDelayedHandler(url: string, response: any, delay = 1000) {
+export function createDelayedHandler(
+  url: string,
+  response: unknown,
+  delay = 1000
+) {
   return http.get(url, async () => {
     await new Promise((resolve) => setTimeout(resolve, delay));
-    return HttpResponse.json(response);
+    return HttpResponse.json(response as Record<string, unknown>);
   });
 }

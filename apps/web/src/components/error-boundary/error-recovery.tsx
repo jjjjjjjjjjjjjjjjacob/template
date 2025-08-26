@@ -75,11 +75,8 @@ export function ErrorRecovery({
           await strategy.action();
           recoverySuccessful = true;
           break;
-        } catch (strategyError) {
-          console.warn(
-            `Recovery strategy "${strategy.label}" failed:`,
-            strategyError
-          );
+        } catch {
+          // Recovery strategy failed, continue to next strategy
         }
       }
 
@@ -373,8 +370,8 @@ export function useErrorRecovery(error?: EnhancedError) {
           await strategy.action();
           // If we get here, recovery was successful
           return true;
-        } catch (strategyError) {
-          console.warn(`Recovery strategy failed:`, strategyError);
+        } catch {
+          // Recovery strategy failed
         }
       }
 

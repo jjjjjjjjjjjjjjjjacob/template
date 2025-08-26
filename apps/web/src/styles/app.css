@@ -173,7 +173,10 @@
   }
 
   .transition-colors-smooth {
-    transition: color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition:
+      color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      background-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      border-color 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: auto;
   }
 
@@ -489,7 +492,9 @@
 .animate-on-scroll {
   opacity: 0 !important;
   transform: translateY(40px) !important;
-  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  transition:
+    opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   will-change: opacity, transform;
 }
 
@@ -501,7 +506,9 @@
 .animate-card-on-scroll {
   opacity: 0 !important;
   transform: translateY(24px) scale(0.98) !important;
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   will-change: opacity, transform;
 }
 
@@ -513,7 +520,9 @@
 .animate-header-on-scroll {
   opacity: 0 !important;
   transform: translateY(-10px) !important;
-  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  transition:
+    opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
   will-change: opacity, transform;
 }
 

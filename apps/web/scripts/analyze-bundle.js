@@ -7,7 +7,12 @@
 
 /* eslint-disable no-console */
 
-import { existsSync, readdirSync, statSync, readFileSync } from 'fs';
+import {
+  existsSync,
+  readdirSync,
+  statSync,
+  // readFileSync as _readFileSync,
+} from 'fs';
 import { join, extname } from 'path';
 
 const DIST_DIR = './.output';

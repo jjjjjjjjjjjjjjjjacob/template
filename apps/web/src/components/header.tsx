@@ -20,7 +20,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <button
           onClick={() => scrollToSection('home')}
-          className={`text-xl font-bold transition-colors ${
+          className={`text-xl font-medium transition-colors ${
             activeSection === 'home'
               ? 'text-foreground'
               : 'text-foreground/80 hover:text-foreground'

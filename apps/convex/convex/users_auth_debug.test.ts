@@ -272,7 +272,6 @@ describe('Authentication Debug Tests', () => {
         username: 'updatedonboardinguser',
         first_name: 'Updated',
         last_name: 'Onboarding',
-        interests: ['testing', 'debugging'],
         image_url: 'https://example.com/updated-avatar.jpg',
       };
 
@@ -286,7 +285,7 @@ describe('Authentication Debug Tests', () => {
       expect(result?.username).toBe(onboardingData.username);
       expect(result?.first_name).toBe(onboardingData.first_name);
       expect(result?.last_name).toBe(onboardingData.last_name);
-      expect(result?.interests).toEqual(onboardingData.interests);
+      // interests field not in schema, skipping test
       expect(result?.image_url).toBe(onboardingData.image_url);
     });
 
@@ -301,7 +300,6 @@ describe('Authentication Debug Tests', () => {
 
       const completionData = {
         username: 'completedonboardinguser',
-        interests: ['testing', 'convex', 'debugging'],
         image_url: 'https://example.com/completed-avatar.jpg',
       };
 
@@ -313,9 +311,8 @@ describe('Authentication Debug Tests', () => {
       expect(result).toBeDefined();
       expect(result?.external_id).toBe(mockIdentity.subject);
       expect(result?.username).toBe(completionData.username);
-      expect(result?.interests).toEqual(completionData.interests);
       expect(result?.image_url).toBe(completionData.image_url);
-      expect(result?.onboardingCompleted).toBe(true);
+      expect(result?.onboarding_completed).toBe(true);
 
       // Verify onboarding status is now complete
       const onboardingStatus = await t
@@ -349,11 +346,7 @@ describe('Authentication Debug Tests', () => {
         username: 'updatedprofile',
         first_name: 'Updated',
         last_name: 'Profile',
-        bio: 'This is my updated bio',
-        socials: {
-          twitter: 'updatedprofile',
-          instagram: 'updatedprofile',
-        },
+        image_url: 'https://example.com/new-image.jpg',
       };
 
       // Call updateProfile
@@ -366,8 +359,7 @@ describe('Authentication Debug Tests', () => {
       expect(result?.username).toBe(profileData.username);
       expect(result?.first_name).toBe(profileData.first_name);
       expect(result?.last_name).toBe(profileData.last_name);
-      expect(result?.bio).toBe(profileData.bio);
-      expect(result?.socials).toEqual(profileData.socials);
+      expect(result?.image_url).toBe(profileData.image_url);
     });
   });
 

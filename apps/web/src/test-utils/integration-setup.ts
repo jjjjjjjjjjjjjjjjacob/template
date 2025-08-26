@@ -20,8 +20,8 @@ beforeAll(() => {
   });
 
   // Override console methods to reduce noise in tests
-  console.warn = () => {}; // Silence warnings in tests
-  console.error = () => {}; // Silence errors in tests (test errors will still show)
+  // // console.warn = () => {}; // Silence warnings in tests
+  // // console.error = () => {}; // Silence errors in tests (test errors will still show)
 });
 
 // Reset handlers and clear mocks after each test

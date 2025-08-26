@@ -23,7 +23,7 @@ class PostHogService {
       person_profiles: 'identified_only',
       capture_pageview: false, // We'll handle page views manually
       capture_pageleave: true,
-      loaded: (_posthog) => {
+      loaded: (/* _posthog */) => {
         if (process.env.NODE_ENV === 'development') {
           // console.log('PostHog loaded successfully');
         }
@@ -42,22 +42,27 @@ class PostHogService {
   }
 
   // User identification
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  identify(userId: string, properties?: Record<string, any>) {
+  identify(
+    userId: string,
+    properties?: Record<string, string | number | boolean | null>
+  ) {
     if (!this.initialized) return;
     posthog.identify(userId, properties);
   }
 
   // Event tracking
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  capture(event: string, properties?: Record<string, any>) {
+  capture(
+    event: string,
+    properties?: Record<string, string | number | boolean | null>
+  ) {
     if (!this.initialized) return;
     posthog.capture(event, properties);
   }
 
   // User properties
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setPersonProperties(properties: Record<string, any>) {
+  setPersonProperties(
+    properties: Record<string, string | number | boolean | null>
+  ) {
     if (!this.initialized) return;
     posthog.setPersonProperties(properties);
   }
@@ -105,7 +110,10 @@ export const trackEvents = {
 
   // Vibe-related events
   vibeCreated: (vibeId: string, tags?: string[]) =>
-    analytics.capture('vibe_created', { vibe_id: vibeId, tags }),
+    analytics.capture('vibe_created', {
+      vibe_id: vibeId,
+      tags: tags ? tags.join(',') : null,
+    }),
 
   vibeViewed: (vibeId: string) =>
     analytics.capture('vibe_viewed', { vibe_id: vibeId }),
@@ -118,14 +126,15 @@ export const trackEvents = {
 
   // Navigation
   pageViewed: (path: string, title?: string) =>
-    analytics.capture('page_viewed', { path, title }),
+    analytics.capture('page_viewed', { path, title: title || null }),
 
   // Search
   searchPerformed: (query: string, results_count: number) =>
     analytics.capture('search_performed', { query, results_count }),
 
   // Errors
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  errorOccurred: (error: string, context?: Record<string, any>) =>
-    analytics.capture('error_occurred', { error, ...context }),
+  errorOccurred: (
+    error: string,
+    context?: Record<string, string | number | boolean | null>
+  ) => analytics.capture('error_occurred', { error, ...context }),
 } as const;

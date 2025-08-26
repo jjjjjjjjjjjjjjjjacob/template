@@ -1,10 +1,6 @@
 import React from 'react';
 
-interface HomeFeedProps {
-  // TODO: Define props based on usage
-}
-
-export function HomeFeed(props: HomeFeedProps) {
+export function HomeFeed() {
   return (
     <div className="space-y-4">
       <div className="text-muted-foreground text-center">

@@ -7,7 +7,7 @@ const Table = React.forwardRef<
     variant?: 'default' | 'striped' | 'bordered';
     size?: 'sm' | 'md' | 'lg';
   }
->(({ className, variant = 'default', size = 'md', ...props }, ref) => (
+>(({ className, variant = 'default', ...props }, ref) => (
   <div className="relative w-full overflow-auto">
     <table
       ref={ref}
@@ -97,25 +97,20 @@ const TableHead = React.forwardRef<
     sorted?: 'asc' | 'desc' | false;
     align?: 'left' | 'center' | 'right';
   }
->(
-  (
-    { className, sortable = false, sorted = false, align = 'left', ...props },
-    ref
-  ) => (
-    <th
-      ref={ref}
-      className={cn(
-        'text-muted-foreground h-12 px-4 font-medium [&:has([role=checkbox])]:pr-0',
-        align === 'left' && 'text-left',
-        align === 'center' && 'text-center',
-        align === 'right' && 'text-right',
-        sortable && 'hover:text-foreground cursor-pointer select-none',
-        className
-      )}
-      {...props}
-    />
-  )
-);
+>(({ className, sortable = false, align = 'left', ...props }, ref) => (
+  <th
+    ref={ref}
+    className={cn(
+      'text-muted-foreground h-12 px-4 font-medium [&:has([role=checkbox])]:pr-0',
+      align === 'left' && 'text-left',
+      align === 'center' && 'text-center',
+      align === 'right' && 'text-right',
+      sortable && 'hover:text-foreground cursor-pointer select-none',
+      className
+    )}
+    {...props}
+  />
+));
 TableHead.displayName = 'TableHead';
 
 const TableCell = React.forwardRef<

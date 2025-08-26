@@ -84,11 +84,13 @@ function ProjectCard({ project }: { project: Project }) {
       className="group space-y-8"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      role="region"
+      aria-label="Projects showcase"
     >
       {/* 3D Preview Viewport */}
       <div className="hidden overflow-hidden">
         <div
-          className={`relative h-80 w-full overflow-hidden rounded-lg transition-transform-smooth [perspective:1000px] ${
+          className={`transition-transform-smooth relative h-80 w-full overflow-hidden rounded-lg [perspective:1000px] ${
             isHovered
               ? '[transform:rotateX(0deg)_rotateY(0deg)_scale(1.02)]'
               : '[transform:rotateX(12deg)_rotateY(-8deg)_scale(0.96)]'
@@ -102,10 +104,19 @@ function ProjectCard({ project }: { project: Project }) {
           />
           {/* Overlay */}
           <div
-            className={`absolute inset-0 flex cursor-pointer items-center justify-center transition-smooth-fast ${
+            className={`transition-smooth-fast absolute inset-0 flex cursor-pointer items-center justify-center ${
               isHovered ? 'opacity-0' : 'opacity-0 hover:opacity-100'
             }`}
             onClick={() => window.open(project.url, '_blank')}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.open(project.url, '_blank');
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label={`Open ${project.title} project`}
           />
         </div>
       </div>
@@ -123,7 +134,7 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
           <button
             onClick={() => window.open(project.url, '_blank')}
-            className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors-smooth"
+            className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
           >
             <ExternalLink className="h-4 w-4" />
             visit

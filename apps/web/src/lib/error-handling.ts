@@ -87,12 +87,12 @@ export class ErrorLogger {
 
     // Log to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.group(`🚨 Error [${severity.toUpperCase()}]`);
-      console.error('Message:', enhancedError.message);
-      console.error('Category:', category);
-      console.error('Context:', context);
-      console.error('Original Error:', error);
-      console.groupEnd();
+      // // console.group(`🚨 Error [${severity.toUpperCase()}]`);
+      // // console.error('Message:', enhancedError.message);
+      // // console.error('Category:', category);
+      // // console.error('Context:', context);
+      // // console.error('Original Error:', error);
+      // // console.groupEnd();
     }
 
     // Send to analytics
@@ -230,16 +230,16 @@ export class ErrorLogger {
         error_message: error.message,
         error_category: error.category,
         error_severity: error.severity,
-        error_context: error.context,
+        error_context: JSON.stringify(error.context),
         error_recoverable: error.recoverable,
         error_retryable: error.retryable,
-        route: error.context.route,
-        feature: error.context.feature,
-        user_id: error.context.userId,
+        route: error.context.route || null,
+        feature: error.context.feature || null,
+        user_id: error.context.userId || null,
       });
-    } catch (analyticsError) {
+    } catch {
       // Silently fail if analytics isn't available
-      console.warn('Failed to send error to analytics:', analyticsError);
+      // // console.warn('Failed to send error to analytics:', analyticsError);
     }
   }
 

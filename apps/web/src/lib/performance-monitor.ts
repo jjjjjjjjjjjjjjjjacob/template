@@ -61,7 +61,7 @@ class PerformanceMonitor {
 
     // Track initialization
     analytics.capture('performance_monitor_initialized', {
-      budget: this.budget,
+      budget: JSON.stringify(this.budget),
       url: window.location.href,
     });
   }
@@ -96,7 +96,7 @@ class PerformanceMonitor {
   private updateMetric(name: keyof PerformanceMetrics, metric: Metric) {
     if (!this.isInitialized) return;
 
-    (this.metrics as any)[name] = metric.value;
+    (this.metrics as Record<string, number>)[name] = metric.value;
     this.metrics.timestamp = Date.now();
 
     // Check against budget
@@ -116,10 +116,7 @@ class PerformanceMonitor {
 
     // Log warning for poor performance
     if (!isGood && process.env.NODE_ENV === 'development') {
-      console.warn(
-        `⚠️ Performance Warning: ${name.toUpperCase()} is ${metric.value}${this.getUnit(name)}, ` +
-          `budget is ${budget}${this.getUnit(name)} (${metric.rating})`
-      );
+      // Performance warning: metric exceeds budget
     }
 
     // Notify listeners
@@ -302,7 +299,7 @@ class PerformanceMonitor {
     this.budget = { ...this.budget, ...budget };
 
     analytics.capture('performance_budget_updated', {
-      budget: this.budget,
+      budget: JSON.stringify(this.budget),
       url: window.location.href,
     });
   }

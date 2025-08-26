@@ -1,6 +1,6 @@
 /// <reference lib="dom" />
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   MultiStepForm,
@@ -20,7 +20,31 @@ const mockSteps: MultiStepFormStep[] = [
     id: 'step2',
     title: 'preferences',
     description: 'choose your preferences',
-    isValid: false,
+    isValid: true, // Changed to true so navigation works in tests
+    content: <div>step 2 content</div>,
+  },
+  {
+    id: 'step3',
+    title: 'review',
+    description: 'review and confirm',
+    isOptional: true,
+    content: <div>step 3 content</div>,
+  },
+];
+
+const mockStepsWithInvalidStep: MultiStepFormStep[] = [
+  {
+    id: 'step1',
+    title: 'personal information',
+    description: 'enter your basic details',
+    isValid: true,
+    content: <div>step 1 content</div>,
+  },
+  {
+    id: 'step2',
+    title: 'preferences',
+    description: 'choose your preferences',
+    isValid: false, // Invalid step for testing disabled navigation
     content: <div>step 2 content</div>,
   },
   {
@@ -44,8 +68,10 @@ describe('MultiStepForm', () => {
   it('renders first step by default', () => {
     render(<MultiStepForm {...defaultProps} />);
 
-    expect(screen.getByText('personal information')).toBeInTheDocument();
-    expect(screen.getByText('enter your basic details')).toBeInTheDocument();
+    expect(screen.getAllByText('personal information')[0]).toBeInTheDocument();
+    expect(
+      screen.getAllByText('enter your basic details')[0]
+    ).toBeInTheDocument();
     expect(screen.getByText('step 1 content')).toBeInTheDocument();
   });
 
@@ -68,13 +94,21 @@ describe('MultiStepForm', () => {
   it('shows step list with correct statuses', () => {
     render(<MultiStepForm {...defaultProps} currentStep={1} />);
 
-    const step1 = screen.getByText('personal information').closest('div');
-    const step2 = screen.getByText('preferences').closest('div');
-    const step3 = screen.getByText('review').closest('div');
+    // Get step items from the step list containers
+    // First item should be the current step (step 2, index 1)
+    const currentStepItem = document.querySelector('[aria-current="step"]');
+    expect(currentStepItem).toHaveAttribute('aria-current', 'step');
 
-    expect(step1).toHaveAttribute('aria-current', null);
-    expect(step2).toHaveAttribute('aria-current', 'step');
-    expect(step3).toHaveAttribute('aria-current', null);
+    // Check that other steps don't have aria-current
+    const allStepItems = Array.from(
+      document.querySelectorAll('.space-y-1 > div')
+    );
+    const nonCurrentSteps = allStepItems.filter(
+      (item) => item !== currentStepItem
+    );
+    nonCurrentSteps.forEach((step) => {
+      expect(step).not.toHaveAttribute('aria-current');
+    });
   });
 
   it('shows optional badge for optional steps', () => {
@@ -150,7 +184,7 @@ describe('MultiStepForm', () => {
   });
 
   it('disables next button when current step is invalid', () => {
-    render(<MultiStepForm {...defaultProps} currentStep={1} />);
+    render(<MultiStepForm steps={mockStepsWithInvalidStep} currentStep={1} />);
 
     const nextButton = screen.getByRole('button', { name: /next/ });
     expect(nextButton).toBeDisabled();
@@ -169,10 +203,12 @@ describe('MultiStepForm', () => {
       />
     );
 
-    const step1Button = screen.getByText('personal information').closest('div');
-    expect(step1Button).toHaveAttribute('role', 'button');
+    // Find the clickable step button (step 0 should be clickable because index < currentStep)
+    const clickableStep = document.querySelector('[role="button"]');
+    expect(clickableStep).toHaveAttribute('role', 'button');
+    expect(clickableStep).toBeInTheDocument();
 
-    await user.click(step1Button!);
+    await user.click(clickableStep!);
     expect(onStepChange).toHaveBeenCalledWith(0);
   });
 
@@ -189,8 +225,12 @@ describe('MultiStepForm', () => {
       />
     );
 
-    const step1Button = screen.getByText('personal information').closest('div');
-    step1Button?.focus();
+    // Find the clickable step button (step 0 should be clickable because index < currentStep)
+    const clickableStep = document.querySelector(
+      '[role="button"]'
+    ) as HTMLElement;
+    expect(clickableStep).toBeInTheDocument();
+    clickableStep?.focus();
 
     await user.keyboard('{Enter}');
     expect(onStepChange).toHaveBeenCalledWith(0);
@@ -221,7 +261,6 @@ describe('useMultiStepForm', () => {
   function TestComponent() {
     const {
       currentStep,
-      stepData,
       updateStepData,
       goToNext,
       goToPrevious,
@@ -283,10 +322,12 @@ describe('useMultiStepForm', () => {
     const user = userEvent.setup();
     render(<TestComponent />);
 
-    // Navigate to last step
+    // Navigate to step 1 (index 1)
     await user.click(screen.getByText('next'));
-    await user.click(screen.getByText('next'));
+    expect(screen.getByTestId('current-step')).toHaveTextContent('1');
 
+    // Navigate to step 2 (index 2, last step)
+    await user.click(screen.getByText('next'));
     expect(screen.getByTestId('current-step')).toHaveTextContent('2');
     expect(screen.getByTestId('is-last')).toHaveTextContent('true');
     expect(screen.getByTestId('progress')).toHaveTextContent('100');

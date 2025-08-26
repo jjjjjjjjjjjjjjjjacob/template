@@ -114,6 +114,7 @@ These rules override default AI behavior when working on this codebase.
 ## Workspace-Specific Rules
 
 ### Frontend (`apps/web/`)
+
 - Use TanStack Start for routing and SSR
 - Import shadcn/ui components only in this workspace
 - Use `@/` path alias for src directory imports
@@ -121,12 +122,14 @@ These rules override default AI behavior when working on this codebase.
 - Use lowercase text in all UI elements
 
 ### Backend (`apps/convex/`)
+
 - Prefer Convex indexes over filters for queries
 - Use proper authentication checks in mutations
 - Organize functions by domain (e.g., `convex/users.ts`)
 - Export functions for API access
 
 ### Shared Packages
+
 - `@template/types`: TypeScript interfaces shared across workspaces
 - `@template/utils`: Pure utility functions with no workspace dependencies
 - Only extract to shared packages when used by 2+ workspaces
@@ -134,6 +137,7 @@ These rules override default AI behavior when working on this codebase.
 ## Command Execution
 
 ### Safe Commands
+
 ```bash
 bun run build
 bun run test
@@ -143,6 +147,7 @@ bun run quality
 ```
 
 ### Never Run Without Timeout
+
 - `bun run dev` or any dev server
 - Any watch mode commands
 - Commands that take over the terminal
@@ -159,17 +164,20 @@ bun run quality
 ## Performance & Optimization
 
 ### Bundle Size
+
 - Monitor with `bun run analyze-bundle`
 - Keep total JS under 500KB
 - Lazy load heavy components
 - Use dynamic imports for code splitting
 
 ### Font Loading
+
 - Use progressive font loading
 - Subset large font files
 - Implement proper font-display strategies
 
 ### Web Vitals
+
 - Track LCP, FID, CLS metrics
 - Use performance monitoring in development
 - Implement proper loading states
@@ -177,17 +185,20 @@ bun run quality
 ## Feature Implementation
 
 ### Search Features
+
 - Backend search already exists at `convex/search.ts`
 - Includes fuzzy matching and scoring
 - Use debouncing (300ms) for search inputs
 - Implement client-side caching
 
 ### Auth Features
+
 - Combine Clerk (authentication) with Convex (user data)
 - Use feature-based organization in `features/auth/`
 - Implement proper auth guards and permission checks
 
 ### Error Handling
+
 - Use specialized error boundaries
 - Implement retry strategies
 - Log errors to PostHog in production

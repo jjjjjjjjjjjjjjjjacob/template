@@ -187,11 +187,10 @@ interface OptimizedAvatarProps extends OptimizedImageProps {
 export function OptimizedAvatar({
   src,
   alt,
-  fallback: _fallback,
   size = 'md',
   className,
   ...props
-}: OptimizedAvatarProps) {
+}: Omit<OptimizedAvatarProps, 'fallback'>) {
   const sizeClasses = {
     sm: 'h-8 w-8',
     md: 'h-10 w-10',

@@ -229,7 +229,7 @@ export function VirtualDataTable<TData, TValue>({
     .rows.map((row) => row.original);
   const hasSelection = selectedRows.length > 0;
 
-  const handleExport = (format: string) => {
+  const handleExport = () => {
     if (onExport) {
       onExport(hasSelection ? selectedRows : data);
     }
@@ -317,7 +317,7 @@ export function VirtualDataTable<TData, TValue>({
                 {exportFormats.map((format) => (
                   <DropdownMenuCheckboxItem
                     key={format}
-                    onSelect={() => handleExport(format)}
+                    onSelect={() => handleExport()}
                   >
                     export as {format.toUpperCase()}
                   </DropdownMenuCheckboxItem>

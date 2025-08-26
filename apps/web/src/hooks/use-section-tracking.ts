@@ -9,7 +9,7 @@ export function useSectionTracking() {
     const observer = new IntersectionObserver(
       (entries) => {
         let currentActive: Section | null = null;
-        
+
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const sectionId =
@@ -22,7 +22,7 @@ export function useSectionTracking() {
             }
           }
         });
-        
+
         setActiveSection(currentActive);
       },
       {

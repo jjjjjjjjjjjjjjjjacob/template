@@ -282,8 +282,6 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
       if (userId) {
         // eslint-disable-next-line no-console
         console.log(`Removing admin status for user ${userId}`);
-        // TODO: Update admin status
-        console.log(`Removing admin status for user ${userId}`);
       }
       break;
     }
@@ -301,6 +299,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
         // This ensures we capture any new OAuth connections made during sign-in
         try {
           // Track session creation event - TODO: implement analytics
+          // eslint-disable-next-line no-console
           console.log('Session created event:', {
             userId,
             eventType: 'session_created',
@@ -328,6 +327,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
 
         try {
           // Track session ended event - TODO: implement analytics
+          // eslint-disable-next-line no-console
           console.log('Session ended event:', {
             userId,
             eventType: 'session_ended',

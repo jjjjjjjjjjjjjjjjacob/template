@@ -11,14 +11,8 @@ import type { QueryClient } from '@tanstack/react-query';
 import { DefaultCatchBoundary } from '@/components/default-catch-boundary';
 import { NotFound } from '@/components/not-found';
 import { Header } from '@/components/header';
-import {
-  FontPreloader,
-  CriticalFontPreloads,
-} from '@/components/font-preloader';
-import { SearchProvider } from '@/features/search';
 import { ThemeProvider } from '@/components/theme-provider';
 import appCss from '@/styles/app.css?url';
-// import _fontsCss from '@/styles/fonts.css?url';
 import { ConvexReactClient, ConvexProvider } from 'convex/react';
 import { ConvexQueryClient } from '@convex-dev/react-query';
 
@@ -72,13 +66,9 @@ function RootComponent() {
   return (
     <ConvexProvider client={convexClient}>
       <ThemeProvider>
-        <FontPreloader enableProgressiveLoading={true}>
-          <SearchProvider>
-            <RootDocument>
-              <Outlet />
-            </RootDocument>
-          </SearchProvider>
-        </FontPreloader>
+        <RootDocument>
+          <Outlet />
+        </RootDocument>
       </ThemeProvider>
     </ConvexProvider>
   );
@@ -91,7 +81,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="bg-background text-foreground min-h-screen transition-colors duration-300">
-        <CriticalFontPreloads />
         <Header />
         <main className="mt-16 select-none">{children}</main>
         <ReactQueryDevtools />

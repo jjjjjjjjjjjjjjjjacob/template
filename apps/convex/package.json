@@ -1,6 +1,6 @@
 {
   "name": "@template/convex",
-  "version": "0.1.0",
+  "version": "0.1.0-beta.7",
   "private": true,
   "type": "module",
   "main": "convex/_generated/api.js",
@@ -22,12 +22,12 @@
     "convex": "^1.24.8",
     "express": "^5.1.0",
     "node-fetch": "^3.3.2",
-    "svix": "^1.67.0",
+    "svix": "^1.69.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "@clerk/backend": "^2.0.0",
-    "svix": "^1.67.0",
+    "svix": "^1.69.0",
     "convex-test": "^0.0.37"
   }
 }

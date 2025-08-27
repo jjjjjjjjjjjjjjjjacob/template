@@ -798,12 +798,11 @@ function HomePage() {
     const positionsArray = Array.from(positions);
     const formattedPositions = [];
     for (let i = 0; i < positionsArray.length; i += 3) {
-      const point = [
+      formattedPositions.push([
         Math.round(positionsArray[i] * 100) / 100,
         Math.round(positionsArray[i + 1] * 100) / 100,
         Math.round(positionsArray[i + 2] * 100) / 100,
-      ];
-      formattedPositions[formattedPositions.length] = point;
+      ]);
     }
 
     const positionData = {

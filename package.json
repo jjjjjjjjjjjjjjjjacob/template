@@ -1,6 +1,8 @@
 {
   "name": "template",
+  "version": "0.1.0-beta.7",
   "private": true,
+  "packageManager": "bun@1.2.16",
   "sideEffects": false,
   "type": "module",
   "workspaces": [
@@ -16,22 +18,22 @@
     "seed:clear": "bunx convex run seed:clear",
     "build": "nx run-many --target=build --parallel=true --projects=@template/web,@template/convex,@template/types",
     "test": "nx run-many --parallel=true --target=test --projects=@template/web,@template/convex",
-    "test:watch": "nx run-many --parallel=true --target=test:watch --projects=@template/web,@template/convex",
-    "test:integration": "nx run @template/web:test:integration",
-    "test:integration:watch": "nx run @template/web:test:integration:watch",
-    "test:coverage": "nx run-many --parallel=true --target=test:coverage --projects=@template/web,@template/convex",
-    "test:all": "bun run test && bun run test:integration",
+    "test:watch": "nx run browser:test:watch",
     "lint": "nx run-many --target=lint",
     "format": "prettier --write .",
     "lint:fix": "nx run-many --target=lint --fix",
     "format:check": "prettier --check .",
     "format:staged": "prettier --write --cache --ignore-unknown",
     "typecheck": "nx run-many --target=typecheck",
-    "quality": "bun run typecheck && bun run lint && bun run format:check",
+    "quality": "bun run typecheck && bun run test && bun run format:check && bun run lint",
     "quality:fix": "bun run typecheck && bun run lint:fix && bun run format",
     "deploy": "bun run build && bun run wrangler:deploy",
     "cf-typegen": "wrangler types --env-interface Env",
-    "clean": "nx run-many --target=clean --parallel=true --projects=@template/web,@template/convex,@template/types"
+    "clean": "nx run-many --target=bun clean --parallel=true --projects=@template/web,@template/convex,@template/types",
+    "sync:tags": "bun run scripts/sync-tags.ts",
+    "sync:tags:export": "./scripts/export-dev-tags.sh",
+    "sync:tags:seed": "./scripts/seed-prod-tags.sh",
+    "sync:tags:all": "./scripts/sync-tags-to-prod.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
@@ -41,12 +43,17 @@
     "@nx/vite": "^21.2.2",
     "@nx/web": "^21.2.2",
     "@nx/workspace": "^21.2.2",
+    "@swc-node/register": "^1.10.10",
+    "@swc/core": "^1.13.3",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/bun": "^1.2.15",
+    "@types/react-window": "^1.8.8",
+    "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.20",
+    "convex": "^1.25.4",
     "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -55,10 +62,9 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "happy-dom": "^18.0.1",
     "jsdom": "^26.1.0",
-    "nx": "^21.2.2",
+    "nx": "^21.3.11",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.12",
-    "rollup-plugin-visualizer": "^6.0.3",
     "tsup": "^8.5.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.35.1",
@@ -67,9 +73,12 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@react-three/drei": "^10.7.3",
+    "@react-three/drei": "^10.7.4",
     "@react-three/fiber": "^9.3.0",
-    "framer-motion": "^12.23.6",
-    "geist": "^1.4.2"
+    "react-hook-form": "^7.62.0",
+    "three": "^0.179.1"
+  },
+  "overrides": {
+    "rollup": "^4.45.1"
   }
 }

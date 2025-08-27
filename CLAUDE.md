@@ -117,6 +117,7 @@ bun nx reset                            # Clear Nx cache
 
 - **Indentation**: 2 spaces for TypeScript/JavaScript/JSON, 4 spaces for Python/Rust
 - **No comments** unless explicitly requested
+- **ESLint Error Handling**: For unused variables that would create TypeScript or logic issues if prefixed with underscore, use `// eslint-disable-next-line @typescript-eslint/no-unused-vars` instead
 - Prefer existing utility functions over creating new ones
 
 ### Import Patterns

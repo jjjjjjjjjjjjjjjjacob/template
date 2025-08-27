@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
 /**
- * Comprehensive font optimization script
- * - Subsets fonts to include only used characters
- * - Converts to modern formats (WOFF2, WOFF)
- * - Generates optimized CSS with font-display
+ * Hybrid Font Optimization
+ * - Only processes fonts that need conversion
+ * - Skips already optimized WOFF2 files
  */
 
 import { execSync } from 'child_process';
 import {
   existsSync,
   mkdirSync,
-  // readFileSync as _readFileSync,
   writeFileSync,
+  copyFileSync,
+  // statSync,
 } from 'fs';
-import { join, dirname, basename, extname } from 'path';
+import { join, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -22,83 +22,31 @@ const PUBLIC_FONTS_DIR = join(__dirname, '../public/fonts');
 const OPTIMIZED_FONTS_DIR = join(PUBLIC_FONTS_DIR, 'optimized');
 const CSS_OUTPUT = join(__dirname, '../src/styles/fonts.css');
 
-// Font configurations - Only Geist fonts
-const FONTS = [
+const FONTS_CONFIG = [
   {
     name: 'GeistSans',
     file: 'GeistSans-Variable.woff2',
-    weight: '100 900',
-    style: 'normal',
-    unicodeRange:
-      'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
-    subset: 'latin',
-    fallback: 'system-ui, -apple-system, sans-serif',
+    skipOptimization: true, // Already WOFF2
   },
   {
     name: 'GeistMono',
     file: 'GeistMono-Variable.woff2',
-    weight: '100 900',
-    style: 'normal',
-    unicodeRange:
-      'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
-    subset: 'latin',
-    fallback: 'ui-monospace, monospace',
+    skipOptimization: true, // Already WOFF2
   },
 ];
 
-// Removed emoji fonts - only keeping Geist fonts
-
-function checkDependencies() {
-  const deps = {
-    pyftsubset: checkCommand(
-      'pyftsubset --help',
-      'pip install fonttools[woff]'
-    ),
-    glyphhanger: checkCommand(
-      'glyphhanger --version',
-      'npm install -g glyphhanger'
-    ),
-    ttf2woff2: checkCommand(
-      'woff2_compress --help 2>&1',
-      'npm install -g ttf2woff2'
-    ),
-  };
-
-  const missing = Object.entries(deps).filter(([, available]) => !available);
-  if (missing.length > 0) {
-    // console.log('⚠️  Missing dependencies:');
-    missing.forEach(() => {
-      // console.log(`   - ${tool}: Install with: ${deps[tool]}`);
-    });
-
-    // Use pyftsubset as fallback if available
-    if (deps.pyftsubset) {
-      // console.log('\n✅ Using pyftsubset for optimization');
-      return 'pyftsubset';
-    }
-    return false;
-  }
-
-  return 'all';
-}
-
-function checkCommand(cmd, installCmd) {
-  try {
-    execSync(cmd, { stdio: 'ignore' });
-    return true;
-  } catch {
-    return installCmd;
-  }
-}
-
 function getPyftsubsetPath() {
   try {
-    execSync('pyftsubset --help', { stdio: 'ignore' });
+    execSync('pyftsubset --help', {
+      stdio: 'ignore',
+      timeout: 5000, // 5 second timeout
+    });
     return 'pyftsubset';
   } catch {
     try {
       execSync('/Users/jacob/Library/Python/3.9/bin/pyftsubset --help', {
         stdio: 'ignore',
+        timeout: 5000, // 5 second timeout
       });
       return '/Users/jacob/Library/Python/3.9/bin/pyftsubset';
     } catch {
@@ -107,167 +55,129 @@ function getPyftsubsetPath() {
   }
 }
 
-function subsetFont(inputPath, outputPath, options = {}) {
+function quickSubset(inputPath, outputPath, unicodeRange) {
   const pyftsubset = getPyftsubsetPath();
   if (!pyftsubset) {
-    throw new Error('pyftsubset not found');
+    // console.warn('⚠️  pyftsubset not found, copying original file');
+    copyFileSync(inputPath, outputPath);
+    return;
   }
 
-  const {
-    unicodeRange = null,
-    text = null,
-    format = 'woff2',
-    layoutFeatures = '*',
-    hinting = false,
-  } = options;
-
-  const args = [
-    pyftsubset,
-    `"${inputPath}"`,
-    `--output-file="${outputPath}"`,
-    `--flavor=${format}`,
-    `--layout-features="${layoutFeatures}"`,
-  ];
-
-  if (unicodeRange) {
-    args.push(`--unicodes="${unicodeRange}"`);
-  }
-
-  if (text) {
-    args.push(`--text="${text}"`);
-  }
-
-  if (!hinting) {
-    args.push('--no-hinting');
-  }
-
-  args.push(
-    '--desubroutinize',
-    '--name-IDs="*"',
-    '--name-legacy',
-    '--name-languages="*"',
-    '--glyph-names',
-    '--legacy-kern',
-    '--notdef-outline',
-    '--notdef-glyph',
-    '--recommended-glyphs',
-    '--canonical-order'
-  );
-
-  const cmd = args.join(' ');
-  // console.log(`Subsetting ${basename(inputPath)} -> ${basename(outputPath)}`);
+  const cmd = `${pyftsubset} "${inputPath}" --output-file="${outputPath}" --flavor=woff2 --unicodes="${unicodeRange}" --no-hinting --desubroutinize`;
 
   try {
-    execSync(cmd, { stdio: 'inherit' });
-    return true;
-  } catch {
-    // console.error(`Failed to subset ${inputPath}:`, error.message);
-    return false;
+    execSync(cmd, {
+      stdio: 'pipe',
+      timeout: 30000, // 30 second timeout
+      encoding: 'utf8',
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    // console.warn('⚠️  Subsetting failed, copying original');
+    copyFileSync(inputPath, outputPath);
   }
 }
 
-function generateFontFaceCSS(fonts) {
-  let css = `/* Optimized Font Loading - Generated by optimize-fonts.js - Geist fonts only */\n\n`;
+function generateCSS(processedFonts) {
+  let css = `/* Hybrid Font Loading - Fast & Optimized */
 
-  // Add font-face rules for Geist fonts only
-  fonts.forEach((font) => {
-    const fontPath = `/fonts/optimized/${basename(font.output || font.file, extname(font.file))}.woff2`;
+`;
+
+  // Add font-face rules
+  processedFonts.forEach((font) => {
+    if (font.skipInCSS) return; // Skip fonts we'll add manually
+
+    const fontPath = `/fonts/optimized/${font.outputName}`;
 
     css += `@font-face {
   font-family: '${font.name}';
   src: url('${fontPath}') format('woff2');
-  font-weight: ${font.weight};
-  font-style: ${font.style};
+  font-weight: 100 900;
+  font-style: normal;
   font-display: swap;${font.unicodeRange ? `\n  unicode-range: ${font.unicodeRange};` : ''}
-}\n\n`;
+}
+
+`;
   });
 
-  // Add CSS custom properties
-  css += `/* Font Stacks */
+  css += `
+/* Font Stacks */
 :root {
   --font-sans: 'GeistSans', system-ui, -apple-system, sans-serif;
   --font-mono: 'GeistMono', ui-monospace, monospace;
-}\n`;
+}
+
+/* Apply font to common elements */
+body {
+  font-family: var(--font-sans);
+}`;
 
   return css;
 }
 
-// Function removed - generatePreloadLinks not used
-
-/*
-function _getFileSize(filePath) {
-  try {
-    if (!existsSync(filePath)) return 'N/A';
-    const stats = execSync(`ls -lh "${filePath}"`, { encoding: 'utf8' });
-    const parts = stats.trim().split(/\s+/);
-    return parts[4] || 'unknown';
-  } catch {
-    return 'unknown';
-  }
-}
-*/
+// function formatBytes(bytes) {
+//   return (bytes / 1024).toFixed(1) + ' KB';
+// }
 
 async function main() {
-  // console.log('🚀 Starting comprehensive font optimization...\n');
+  // console.log('🚀 Hybrid Font Optimization (Fast Mode)\n');
+  // const startTime = Date.now();
 
-  // Check dependencies
-  const toolsAvailable = checkDependencies();
-  if (!toolsAvailable) {
-    // console.error(
-    //   '❌ Required tools not available. Please install dependencies.'
-    // );
-    process.exit(1);
-  }
-
-  // Create output directory
   mkdirSync(OPTIMIZED_FONTS_DIR, { recursive: true });
 
-  const optimizedFonts = [];
+  const processedFonts = [];
 
-  // Process text fonts
-  // console.log('📝 Optimizing text fonts...\n');
-  for (const font of FONTS) {
+  for (const font of FONTS_CONFIG) {
     const inputPath = join(PUBLIC_FONTS_DIR, font.file);
     if (!existsSync(inputPath)) {
       // console.warn(`⚠️  Font not found: ${font.file}`);
       continue;
     }
 
-    const outputName = `${basename(font.file, extname(font.file))}.woff2`;
-    const outputPath = join(OPTIMIZED_FONTS_DIR, outputName);
+    // const inputSize = statSync(inputPath).size;
+    // console.log(`📁 ${font.name} (${formatBytes(inputSize)})`);
 
-    const success = subsetFont(inputPath, outputPath, {
-      unicodeRange: font.unicodeRange,
-      format: 'woff2',
-    });
+    if (font.skipOptimization) {
+      // Just copy WOFF2 files
+      const outputName = basename(font.file);
+      const outputPath = join(OPTIMIZED_FONTS_DIR, outputName);
 
-    if (success) {
-      font.output = outputName;
-      optimizedFonts.push(font);
+      copyFileSync(inputPath, outputPath);
+      // console.log(`   ✅ Copied (already optimized)\n`);
+
+      processedFonts.push({ ...font, outputName });
+    } else {
+      // Convert TTF to WOFF2 with subsetting
+      const outputName = basename(font.file, '.ttf') + '.woff2';
+      const outputPath = join(OPTIMIZED_FONTS_DIR, outputName);
+
+      // console.log(`   ⚙️  Converting to WOFF2...`);
+      quickSubset(inputPath, outputPath, font.unicodeRange || 'U+0000-00FF');
+
+      // const outputSize = existsSync(outputPath) ? statSync(outputPath).size : 0;
+      // const savings = ((1 - outputSize / inputSize) * 100).toFixed(1);
       // console.log(
-      //   `✅ ${font.name}: ${getFileSize(inputPath)} -> ${getFileSize(outputPath)}\n`
+      //   `   ✅ Optimized to ${formatBytes(outputSize)} (${savings}% smaller)\n`
       // );
+
+      processedFonts.push({ ...font, outputName });
     }
   }
 
-  // Generate optimized CSS
-  // console.log('🎨 Generating optimized CSS...');
-  const css = generateFontFaceCSS(optimizedFonts);
+  // Generate CSS
+  // console.log('📝 Generating CSS...');
+  const css = generateCSS(processedFonts);
   writeFileSync(CSS_OUTPUT, css);
-  // console.log(`✅ CSS written to: ${CSS_OUTPUT}`);
 
-  // Generate preload links
-  // console.log('\n📋 Add these preload links to your HTML <head>:');
-  // const _preloadLinks = generatePreloadLinks();
-  // preloadLinks.forEach((link) => console.log(`   ${link}`));
+  // const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+  // console.log(`\n✅ Complete in ${duration}s!`);
 
-  // console.log('\n✅ Font optimization complete!');
-  // console.log('📊 Next steps:');
-  // console.log('   1. Import the generated CSS: @import "./fonts.css";');
-  // console.log('   2. Add preload links to your HTML head');
-  // console.log('   3. Use CSS variables: font-family: var(--font-sans);');
+  // console.log('\n🎯 Optimizations Applied:');
+  // console.log('   • WOFF2 fonts used directly (no re-processing)');
 }
 
-main().catch(() => {
-  // console.error(err);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+main().catch((e) => {
+  // console.error(e);
+  process.exit(1);
 });

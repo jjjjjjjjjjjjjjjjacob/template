@@ -1,5 +1,3 @@
-export * from '../../vitest.setup';
-
 // Export modules for convex-test
 export const modules = {
   'convex/users.ts': () => import('./convex/users'),

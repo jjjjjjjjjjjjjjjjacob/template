@@ -11,7 +11,7 @@ export default defineConfig(() => {
   return {
     envDir: path.resolve(__dirname, '../..'), // Load .env files from root directory
     server: {
-      port: 3000,
+      port: 3030,
       hmr: {
         overlay: false,
       },

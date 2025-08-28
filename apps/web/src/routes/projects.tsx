@@ -1,6 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import { ExternalLink } from 'lucide-react';
+
+// Lazy load heavy components
+const ProjectSlideshow = lazy(
+  () => import('@/components/projects/project-slideshow')
+);
+const ProjectThumbnails = lazy(
+  () => import('@/components/projects/project-thumbnails')
+);
 
 export const Route = createFileRoute('/projects')({
   component: ProjectsPage,
@@ -77,51 +85,18 @@ const projects: Project[] = [
 ];
 
 function ProjectCard({ project }: { project: Project }) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
-    <div
-      className="group space-y-8"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      role="region"
-      aria-label="Projects showcase"
-    >
-      {/* 3D Preview Viewport */}
-      <div className="hidden overflow-hidden">
-        <div
-          className={`transition-transform-smooth relative h-80 w-full overflow-hidden rounded-lg [perspective:1000px] ${
-            isHovered
-              ? '[transform:rotateX(0deg)_rotateY(0deg)_scale(1.02)]'
-              : '[transform:rotateX(12deg)_rotateY(-8deg)_scale(0.96)]'
-          } [transform-origin:center_center]`}
-        >
-          <iframe
-            src={project.preview}
-            className="bg-background h-full w-full overflow-hidden rounded-xl border-0 shadow-2xl"
-            title={`${project.title} preview`}
-            loading="lazy"
-          />
-          {/* Overlay */}
-          <div
-            className={`transition-smooth-fast absolute inset-0 flex cursor-pointer items-center justify-center ${
-              isHovered ? 'opacity-0' : 'opacity-0 hover:opacity-100'
-            }`}
-            onClick={() => window.open(project.url, '_blank')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.open(project.url, '_blank');
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            aria-label={`Open ${project.title} project`}
-          />
-        </div>
-      </div>
+    <div className="space-y-8" role="region" aria-label="Project showcase">
+      {/* Interactive Project Preview */}
+      <Suspense
+        fallback={
+          <div className="bg-muted/20 h-80 w-full animate-pulse rounded-lg" />
+        }
+      >
+        <ProjectSlideshow project={project} isActive={true} />
+      </Suspense>
 
-      {/* Project Info */}
+      {/* Project Details */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
@@ -133,8 +108,11 @@ function ProjectCard({ project }: { project: Project }) {
             </p>
           </div>
           <button
-            onClick={() => window.open(project.url, '_blank')}
+            onClick={() =>
+              window.open(project.url, '_blank', 'noopener,noreferrer')
+            }
             className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+            aria-label={`Visit ${project.title} project`}
           >
             <ExternalLink className="h-4 w-4" />
             visit
@@ -169,7 +147,10 @@ function ProjectCard({ project }: { project: Project }) {
             </h4>
             <div className="flex flex-wrap gap-2">
               {project.technologies.map((tech) => (
-                <span key={tech} className="text-muted-foreground text-xs">
+                <span
+                  key={tech}
+                  className="bg-muted text-muted-foreground rounded-full px-2 py-1 text-xs font-medium"
+                >
                   {tech}
                 </span>
               ))}
@@ -182,10 +163,13 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 function ProjectsPage() {
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
   return (
     <div className="bg-background min-h-screen py-16">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-6xl">
+          {/* Page Header */}
           <div className="mb-16 space-y-4">
             <h1 className="text-foreground text-4xl font-medium tracking-tight">
               projects
@@ -195,10 +179,42 @@ function ProjectsPage() {
             </p>
           </div>
 
-          <div className="space-y-24">
-            {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
-            ))}
+          {/* Two-column layout for better UX */}
+          <div className="grid gap-8 lg:grid-cols-3">
+            {/* Project Thumbnails */}
+            <div className="lg:col-span-1">
+              <Suspense
+                fallback={
+                  <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="bg-muted/20 h-48 w-full animate-pulse rounded-lg"
+                      />
+                    ))}
+                  </div>
+                }
+              >
+                <ProjectThumbnails
+                  projects={projects}
+                  onProjectSelect={setSelectedProject}
+                  selectedProject={selectedProject?.id}
+                />
+              </Suspense>
+            </div>
+
+            {/* Project Details */}
+            <div className="lg:col-span-2">
+              {selectedProject ? (
+                <ProjectCard project={selectedProject} />
+              ) : (
+                <div className="space-y-24">
+                  {projects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

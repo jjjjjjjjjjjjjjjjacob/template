@@ -30,6 +30,8 @@ export function createRouter() {
       queries: {
         queryKeyHashFn: convexQueryClient.hashFn(),
         queryFn: convexQueryClient.queryFn(),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+        gcTime: 1000 * 60 * 30, // 30 minutes
       },
     },
     mutationCache: new MutationCache({
@@ -45,10 +47,16 @@ export function createRouter() {
     createTanStackRouter({
       routeTree,
       defaultPreload: 'intent',
+      defaultPreloadDelay: 100,
       defaultErrorComponent: DefaultCatchBoundary,
       defaultNotFoundComponent: () => <NotFound />,
-      context: { queryClient, convexClient, convexQueryClient },
+      context: {
+        queryClient,
+        convexClient,
+        convexQueryClient,
+      },
       scrollRestoration: false,
+      caseSensitive: false,
     }),
     queryClient
   );
@@ -59,5 +67,11 @@ export function createRouter() {
 declare module '@tanstack/react-router' {
   interface Register {
     router: ReturnType<typeof createRouter>;
+  }
+
+  interface RouteContext {
+    queryClient: QueryClient;
+    convexClient: ConvexReactClient;
+    convexQueryClient: ConvexQueryClient;
   }
 }

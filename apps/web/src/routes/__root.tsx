@@ -15,7 +15,6 @@ import { ThemeProvider } from '@/components/theme-provider';
 import appCss from '@/styles/app.css?url';
 import { ConvexReactClient, ConvexProvider } from 'convex/react';
 import { ConvexQueryClient } from '@convex-dev/react-query';
-
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexClient: ConvexReactClient;
@@ -79,12 +78,50 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  var resolvedTheme = 'light';
+                  
+                  if (theme === 'dark') {
+                    resolvedTheme = 'dark';
+                  } else if (theme === 'system' || !theme) {
+                    resolvedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  
+                  document.documentElement.classList.add(resolvedTheme);
+                  
+                  var colorTheme = localStorage.getItem('colorTheme');
+                  if (colorTheme) {
+                    document.documentElement.classList.add(colorTheme);
+                  }
+                  
+                  var secondaryColorTheme = localStorage.getItem('secondaryColorTheme');
+                  if (secondaryColorTheme) {
+                    document.documentElement.classList.add(secondaryColorTheme);
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <body className="bg-background text-foreground min-h-screen transition-colors duration-300">
         <Header />
+
         <main className="mt-16 select-none">{children}</main>
-        <ReactQueryDevtools />
-        <TanStackRouterDevtools position="bottom-left" />
+
+        {/* Development Tools */}
+        {process.env.NODE_ENV === 'development' && (
+          <>
+            <ReactQueryDevtools />
+            <TanStackRouterDevtools position="bottom-left" />
+          </>
+        )}
+
         <Scripts />
       </body>
     </html>

@@ -1,5 +1,8 @@
 # Generated files
 apps/backend/convex/_generated/
+apps/convex/convex/_generated/
+apps/web/src/routeTree.gen.ts
+apps/web/.tanstack/
 apps/**/dist/
 packages/**/dist/
 .vinxi/

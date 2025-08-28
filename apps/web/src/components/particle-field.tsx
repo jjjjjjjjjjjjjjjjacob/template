@@ -1,4 +1,11 @@
-import { useRef, useMemo, useEffect, useState } from 'react';
+import {
+  useRef,
+  useMemo,
+  useEffect,
+  useState,
+  useDeferredValue,
+  startTransition,
+} from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrthographicCamera } from '@react-three/drei';
 import * as THREE from 'three';
@@ -98,10 +105,13 @@ function Particles({
   const boundaryX = containerSize.width / 2;
   const boundaryY = containerSize.height / 2;
 
-  const positions = useMemo(() => {
-    const positions = new Float32Array(count * 3);
+  // Use deferred value to prevent blocking during heavy computations
+  const deferredCount = useDeferredValue(count);
 
-    for (let i = 0; i < count; i++) {
+  const positions = useMemo(() => {
+    const positions = new Float32Array(deferredCount * 3);
+
+    for (let i = 0; i < deferredCount; i++) {
       const angle = Math.random() * Math.PI * 2;
 
       // Spawn particles in a tight ring just outside the obstacle
@@ -130,12 +140,12 @@ function Particles({
       positions[i * 3 + 2] = 0;
     }
     return positions;
-  }, [count, obstacleRadius]);
+  }, [deferredCount, obstacleRadius]);
 
   const velocities = useMemo(() => {
-    const velocities = new Float32Array(count * 3);
+    const velocities = new Float32Array(deferredCount * 3);
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < deferredCount; i++) {
       // Give particles initial velocity away from their cluster center
       const particleX = positions[i * 3];
       const particleY = positions[i * 3 + 1];
@@ -158,15 +168,15 @@ function Particles({
       velocities[i * 3 + 2] = 0;
     }
     return velocities;
-  }, [count, positions, initialVelocity]);
+  }, [deferredCount, positions, initialVelocity]);
 
   const temperatures = useMemo(() => {
-    const temps = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
+    const temps = new Float32Array(deferredCount);
+    for (let i = 0; i < deferredCount; i++) {
       temps[i] = Math.random();
     }
     return temps;
-  }, [count]);
+  }, [deferredCount]);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -397,7 +407,7 @@ function Particles({
       currentPositionsRef.current = positionsArray;
     }
 
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < deferredCount; i++) {
       const i3 = i * 3;
 
       // Get particle position first
@@ -721,7 +731,7 @@ function Particles({
           <bufferAttribute
             attach="attributes-position"
             args={[positions, 3]}
-            count={count}
+            count={deferredCount}
             itemSize={3}
           />
         </bufferGeometry>
@@ -752,7 +762,9 @@ export function ParticleField(
   // Guard against SSR/hydration issues: react-three-fiber should only render on client
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
   const [containerSize, setContainerSize] = useState({
     width: 800,

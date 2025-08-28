@@ -159,7 +159,10 @@ export function ProjectSlideshow({
 
       {/* Mobile dialog for full iframe interaction */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="max-h-[90vh] max-w-[95vw] p-0">
+        <DialogContent
+          className="max-h-[90vh] max-w-[95vw] p-0"
+          showCloseButton={false}
+        >
           <DialogHeader className="p-4 pb-2">
             <div className="flex items-center justify-between">
               <DialogTitle className="text-left">{title}</DialogTitle>

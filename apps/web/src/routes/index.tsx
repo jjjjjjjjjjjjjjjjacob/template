@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { ParticleField } from '@/components/particle-field';
 import { defaultParticleConfig } from '@/components/particle-controls';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { useTheme } from '@/components/theme-provider';
@@ -12,6 +12,7 @@ import { ExternalLink, Calendar, MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui';
 import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
+import { Loader } from '@/components/loader';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -22,6 +23,15 @@ function HomePage() {
   const { resolvedTheme } = useTheme();
   const resumeData = useResumeFilter();
   const { scrollToSection } = useSectionTracking();
+
+  // Loader state
+  const [showLoader, setShowLoader] = useState(true);
+
+  const handleLoaderComplete = useCallback(() => {
+    setTimeout(() => {
+      setShowLoader(false);
+    }, 1000);
+  }, []);
   const gpuParticleCounts = {
     field1: 3000,
     field2: 3000,
@@ -597,202 +607,6 @@ function HomePage() {
     scrollInertiaMax: 0.2,
   });
 
-  const [initKey1, setInitKey1] = useState(0);
-  const [initKey2, setInitKey2] = useState(0);
-  const [initKey3, setInitKey3] = useState(0);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _handleReset1 = () => {
-    setParticleConfig1({
-      ...defaultParticleConfig,
-      color: primaryColor,
-      count: gpuParticleCounts.field1,
-      size: 1.5,
-      speed: 0.025,
-      opacity: 0.6,
-      spreadX: 0.1,
-      spreadY: 0.1,
-      clusterCount: 3,
-      clusterRadius: 0.15,
-      initialVelocity: 0.3,
-      damping: 0.975,
-      turbulence: 0.358,
-      turbulenceScale: 0.4,
-      convectionStrength: 0.08,
-      convectionSpeedX: 0.2,
-      convectionSpeedY: 0.25,
-      convectionScaleX: 0.013,
-      convectionScaleY: 0.013,
-      buoyancy: 0.05,
-      temperatureDiffusion: 0.008,
-      mouseRadius: 45,
-      mouseForce: 0.4,
-      mouseHeat: 0.25,
-      boundaryDamping: 1,
-      boundaryPadding: 5,
-      boundaryRoundness: isMobile
-        ? mobileBoundaryRoundness
-        : desktopBoundaryRoundness,
-      coolingRate: 1,
-      heatingRate: 1.1,
-      windX: 0,
-      windY: 0,
-      windVariation: 0.01,
-      gravityX: 0,
-      gravityY: 0.0001,
-      gravityRange: 375,
-      vortexStrength: 0.01,
-      vortexRadius: 320,
-      obstacleEnabled: true,
-      obstacleX: 0,
-      obstacleY: 0,
-      obstacleRadius: isMobile ? mobileObstacleRadius : desktopObstacleRadius,
-      obstacleForce: 1.6,
-      obstacleHeat: 0,
-      innerBoundary: 180,
-      outerBoundary: 1500,
-      slopeSharpness: 7,
-      scrollInertiaStrength: 2.7,
-      scrollInertiaDamping: 0.975,
-      scrollInertiaMax: 0.3,
-    });
-    setInitKey1((prev) => prev + 1);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleReset2 = () => {
-    setParticleConfig2({
-      ...defaultParticleConfig,
-      color: '#ff0059',
-      count: gpuParticleCounts.field2,
-      size: 1.5,
-      speed: 0.02,
-      opacity: 0.6,
-      spreadX: 0.1,
-      spreadY: 0.1,
-      clusterCount: 3,
-      clusterRadius: 0.15,
-      initialVelocity: 0.3,
-      damping: 0.975,
-      turbulence: 0.122,
-      turbulenceScale: 0.4,
-      convectionStrength: 0.05,
-      convectionSpeedX: 0.2,
-      convectionSpeedY: 0.25,
-      convectionScaleX: 0.013,
-      convectionScaleY: 0.013,
-      buoyancy: 0.05,
-      temperatureDiffusion: 0.008,
-      mouseRadius: 45,
-      mouseForce: 0.8,
-      mouseHeat: 0.25,
-      boundaryDamping: 1,
-      boundaryPadding: 5,
-      boundaryRoundness: isMobile
-        ? mobileBoundaryRoundness
-        : desktopBoundaryRoundness,
-      coolingRate: 1,
-      heatingRate: 1.1,
-      windX: 0,
-      windY: 0,
-      windVariation: 0.01,
-      gravityX: 0,
-      gravityY: 0.0001,
-      gravityRange: 375,
-      vortexStrength: 0.01,
-      vortexRadius: 320,
-      obstacleEnabled: true,
-      obstacleX: 0,
-      obstacleY: 0,
-      obstacleRadius: isMobile ? mobileObstacleRadius : desktopObstacleRadius,
-      obstacleForce: 1.2,
-      obstacleHeat: 0,
-      innerBoundary: 180,
-      outerBoundary: 1500,
-      slopeSharpness: 7,
-      scrollInertiaStrength: 2.6,
-      scrollInertiaDamping: 0.97,
-      scrollInertiaMax: 0.2,
-    });
-    setInitKey2((prev) => prev + 1);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleReset3 = () => {
-    setParticleConfig3({
-      ...defaultParticleConfig,
-      color: secondaryColor,
-      count: gpuParticleCounts.field3,
-      size: 1.5,
-      speed: 0.005,
-      opacity: 0.4,
-      spreadX: 0.1,
-      spreadY: 0.1,
-      clusterCount: 3,
-      clusterRadius: 0.15,
-      initialVelocity: 0.3,
-      damping: 0.975,
-      turbulence: 0.23,
-      turbulenceScale: 2,
-      convectionStrength: 0.12,
-      convectionSpeedX: 0.2,
-      convectionSpeedY: 0.25,
-      convectionScaleX: 0.013,
-      convectionScaleY: 0.013,
-      buoyancy: 0.05,
-      temperatureDiffusion: 0.008,
-      mouseRadius: 45,
-      mouseForce: 0.5,
-      mouseHeat: 0.25,
-      boundaryDamping: 1,
-      boundaryPadding: 5,
-      boundaryRoundness: isMobile
-        ? mobileBoundaryRoundness
-        : desktopBoundaryRoundness,
-      coolingRate: 1,
-      heatingRate: 1.1,
-      windX: 0,
-      windY: 0,
-      windVariation: 0.01,
-      gravityX: 0,
-      gravityY: 0.0001,
-      gravityRange: 375,
-      vortexStrength: 0.01,
-      vortexRadius: 320,
-      obstacleEnabled: true,
-      obstacleX: 0,
-      obstacleY: 0,
-      obstacleRadius: isMobile ? mobileObstacleRadius : desktopObstacleRadius,
-      obstacleForce: 1.6,
-      obstacleHeat: 0,
-      innerBoundary: 180,
-      outerBoundary: 1500,
-      slopeSharpness: 7,
-      scrollInertiaStrength: 3,
-      scrollInertiaDamping: 0.99,
-      scrollInertiaMax: 0.2,
-    });
-    setInitKey3((prev) => prev + 1);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleInitialize1 = () => {
-    setInitKey1((prev) => prev + 1);
-    // Temporarily disable obstacle and re-enable after delay
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleInitialize2 = () => {
-    setInitKey2((prev) => prev + 1);
-    // Temporarily disable obstacle and re-enable after delay
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleInitialize3 = () => {
-    setInitKey3((prev) => prev + 1);
-    // Temporarily disable obstacle and re-enable after delay
-  };
-
   const handleCopyPositions = (positions: Float32Array) => {
     // Convert positions to a more readable format
     const positionsArray = Array.from(positions);
@@ -848,9 +662,9 @@ function HomePage() {
   };
 
   // Use keys that change when we need to reinitialize
-  const particleKey1 = `particle1-${initKey1}-${particleConfig1.count}-${particleConfig1.clusterCount}`;
-  const particleKey2 = `particle2-${initKey2}-${particleConfig2.count}-${particleConfig2.clusterCount}`;
-  const particleKey3 = `particle3-${initKey3}-${particleConfig3.count}-${particleConfig3.clusterCount}`;
+  const particleKey1 = `particle1-${particleConfig1.count}-${particleConfig1.clusterCount}`;
+  const particleKey2 = `particle2-${particleConfig2.count}-${particleConfig2.clusterCount}`;
+  const particleKey3 = `particle3-${particleConfig3.count}-${particleConfig3.clusterCount}`;
 
   return (
     <div
@@ -859,20 +673,22 @@ function HomePage() {
     >
       <div className="relative flex min-h-[90vh] flex-grow flex-col items-center justify-center">
         <div className="relative flex h-full w-full flex-grow flex-col items-center justify-center overflow-hidden p-0">
-          {/* Single particle field with combined configurations */}
-          <ParticleField
-            key={`combined-${particleKey1}-${particleKey2}-${particleKey3}`}
-            configs={[config1, config2, config3]}
-            onCopyPositions={handleCopyPositions}
-            onReady={markParticlesReady}
-          />
-          <div className="pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4">
-            <h1
-              data-visible={assetsReady}
-              className="animate-in fade-in text-foreground transition-colors-smooth text-4xl font-medium tracking-tight opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100 sm:text-5xl"
-            >
-              jacob stein
-            </h1>
+          {/* Single particle field with combined configurations - direct load for testing */}
+          {!showLoader && (
+            <ParticleField
+              key={`combined-${particleKey1}-${particleKey2}-${particleKey3}`}
+              configs={[config1, config2, config3]}
+              onCopyPositions={handleCopyPositions}
+              onReady={markParticlesReady}
+            />
+          )}
+
+          {/* Hero content - hidden while loader is active */}
+          <div
+            className={`pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4 transition-opacity duration-300`}
+          >
+            {/* Loader - renders in exact hero position */}
+            <Loader onComplete={handleLoaderComplete} />
 
             <p
               data-visible={assetsReady}
@@ -949,10 +765,10 @@ function HomePage() {
               <div className="space-y-6 text-center">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
+                    <h1 className="text-foreground text-4xl font-medium tracking-tight sm:text-5xl">
+                      jacob stein
+                    </h1>
                     <AnimatedSection animationType="header" delay={200}>
-                      <h1 className="text-foreground text-4xl font-medium tracking-tight sm:text-5xl">
-                        jacob stein
-                      </h1>
                       <p className="text-muted-foreground mt-2 text-xl">
                         full-stack developer & ui/ux designer
                       </p>

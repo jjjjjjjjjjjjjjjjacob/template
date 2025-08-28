@@ -14,6 +14,7 @@ export default tseslint.config(
       '**/.output',
       '**/.tanstack',
       '**/packages/backend/_generated',
+      '**/apps/convex/convex/_generated/**',
       '**/node_modules',
       'bun.lock',
       'yarn.lock',
@@ -87,6 +88,34 @@ export default tseslint.config(
       react: {
         version: 'detect',
       },
+    },
+  },
+  // Allow console statements in utility and script files
+  {
+    files: [
+      '**/performance.config.js',
+      '**/scripts/**/*.js',
+      '**/bundle-analyzer.js',
+      '**/src/client.tsx',
+      '**/route-performance.ts',
+      '**/vite.config.ts',
+    ],
+    rules: {
+      'no-console': 'off',
+    },
+  },
+  // Allow any types in test utilities and development files
+  {
+    files: [
+      '**/test-utils/**/*.ts',
+      '**/test-utils/**/*.tsx',
+      '**/src/client.tsx',
+      '**/use-route-hydration.tsx',
+      '**/route-performance.ts',
+      '**/vite.config.ts',
+    ],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   }
 );

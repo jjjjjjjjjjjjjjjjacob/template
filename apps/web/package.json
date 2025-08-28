@@ -14,7 +14,11 @@
     "wrangler:deploy": "wrangler deploy",
     "clean": "rm -rf .turbo node_modules dist",
     "fonts:optimize": "scripts/optimize-fonts.js",
-    "fonts:check": "ls -lh public/fonts/optimized/"
+    "fonts:check": "ls -lh public/fonts/optimized/",
+    "analyze:bundle": "PERF_MONITOR=true vite build && node scripts/bundle-analyzer.js",
+    "analyze:chunks": "node scripts/bundle-analyzer.js --chunks-only",
+    "perf:build": "node -e \"console.time('build'); process.on('exit', () => console.timeEnd('build'));\" && npm run build",
+    "perf:monitor": "node scripts/bundle-analyzer.js --monitor"
   },
   "dependencies": {
     "@clerk/backend": "^2.0.0",

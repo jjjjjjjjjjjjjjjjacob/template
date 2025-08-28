@@ -71,6 +71,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
               className={cn(
                 'w-[94px] overflow-hidden whitespace-pre transition-all duration-800',
                 'sm:w-[125px]',
+                'data-[state=undefined]:w-2 sm:data-[state=undefined]:w-[0.6rem]',
                 'data-[state=hidden]:w-2 sm:data-[state=hidden]:w-[0.6rem]',
                 'data-[state=loading]:w-2 sm:data-[state=loading]:w-[0.6rem]',
                 'data-[state=expanding]:w-2 sm:data-[state=expanding]:w-[0.6rem]',
@@ -97,6 +98,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
               className={cn(
                 'w-[78px] overflow-hidden whitespace-pre transition-all duration-800',
                 'sm:w-[107px]',
+                'data-[state=undefined]:w-[1.25rem] sm:data-[state=undefined]:w-6',
                 'data-[state=hidden]:w-[1.25rem] sm:data-[state=hidden]:w-6',
                 'data-[state=loading]:w-[1.25rem] sm:data-[state=loading]:w-6',
                 'data-[state=expanding]:w-[1.25rem] sm:data-[state=expanding]:w-6',

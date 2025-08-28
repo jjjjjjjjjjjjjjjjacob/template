@@ -25,26 +25,34 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
   const completeDurationClass = `data-[state=complete]:duration-800`;
 
   React.useEffect(() => {
-    setAnimationStage('loading');
-    // Animation sequence timing
-    const timer = setTimeout(() => {
-      setAnimationStage('expanding');
-      const timer2 = setTimeout(() => {
-        setAnimationStage('revealing');
-        const timer3 = setTimeout(() => {
-          return setTimeout(() => {
-            setAnimationStage('complete');
-            onComplete();
-          }, completeDuration);
-        }, revealingDuration);
-        return timer3;
-      }, expandingDuration);
-      return timer2;
-    }, loadingDuration);
+    // Use double requestAnimationFrame to ensure the initial 'hidden' state is painted
+    // before transitioning to 'loading'. This prevents the loading stage from being skipped
+    // in production builds where React batches state updates.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setAnimationStage('loading');
 
-    return () => {
-      clearTimeout(timer);
-    };
+        // Animation sequence timing
+        const timer = setTimeout(() => {
+          setAnimationStage('expanding');
+          const timer2 = setTimeout(() => {
+            setAnimationStage('revealing');
+            const timer3 = setTimeout(() => {
+              return setTimeout(() => {
+                setAnimationStage('complete');
+                onComplete();
+              }, completeDuration);
+            }, revealingDuration);
+            return timer3;
+          }, expandingDuration);
+          return timer2;
+        }, loadingDuration);
+
+        return () => {
+          clearTimeout(timer);
+        };
+      });
+    });
   }, [onComplete]);
 
   return (

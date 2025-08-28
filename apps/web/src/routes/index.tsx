@@ -34,7 +34,7 @@ function HomePage() {
       return setTimeout(() => {
         setShowParticleField(true);
       }, 1400);
-    }, 1000);
+    }, 200);
   }, []);
 
   const gpuParticleCounts = {
@@ -698,14 +698,14 @@ function HomePage() {
 
             <p
               data-visible={!showLoader}
-              className="text-muted-foreground max-w-md text-center text-[14px] tracking-tight opacity-0 transition-all delay-800 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
+              className="text-muted-foreground max-w-md text-center text-[14px] tracking-tight opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
               ui/ux | fullstack | product
             </p>
 
             <div
               data-visible={!showLoader}
-              className="flex gap-2 opacity-0 transition-all delay-1200 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
+              className="flex gap-2 opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
               <Button
                 className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"

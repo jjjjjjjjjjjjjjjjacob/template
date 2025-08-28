@@ -17,7 +17,7 @@ interface ProjectSlideshowProps {
   isMobile?: boolean;
 }
 
-export function ProjectSlideshow({
+function ProjectSlideshow({
   previews,
   title,
   projectUrl,
@@ -78,7 +78,7 @@ export function ProjectSlideshow({
     <div
       ref={containerRef}
       className={cn(
-        `drop-shadow-muted/10 relative overflow-hidden transition perspective-dramatic`,
+        `drop-shadow-muted/10 relative min-h-96 overflow-hidden transition perspective-dramatic`,
         className
       )}
       role="region"
@@ -190,3 +190,6 @@ export function ProjectSlideshow({
     </div>
   );
 }
+
+export { ProjectSlideshow };
+export default ProjectSlideshow;

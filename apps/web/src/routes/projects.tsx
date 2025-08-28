@@ -3,9 +3,7 @@ import { useState, Suspense, lazy } from 'react';
 import { ExternalLink } from 'lucide-react';
 
 // Lazy load heavy components
-const ProjectSlideshow = lazy(
-  () => import('@/components/projects/project-slideshow')
-);
+const ProjectSlideshow = lazy(() => import('@/components/project-slideshow'));
 const ProjectThumbnails = lazy(
   () => import('@/components/projects/project-thumbnails')
 );
@@ -23,7 +21,7 @@ interface Project {
   responsibilities: string[];
   technologies: string[];
   timeline: string;
-  preview: string;
+  previews: string[];
 }
 
 const projects: Project[] = [
@@ -53,7 +51,7 @@ const projects: Project[] = [
       'AWS',
     ],
     timeline: '2022 - 2025',
-    preview: 'https://heat.tech',
+    previews: ['https://heat.tech'],
   },
   {
     id: 'vibechecc',
@@ -80,7 +78,7 @@ const projects: Project[] = [
       'Terraform',
     ],
     timeline: '2025 - present',
-    preview: 'https://vibechecc.io',
+    previews: ['https://vibechecc.io'],
   },
 ];
 
@@ -93,7 +91,12 @@ function ProjectCard({ project }: { project: Project }) {
           <div className="bg-muted/20 h-80 w-full animate-pulse rounded-lg" />
         }
       >
-        <ProjectSlideshow project={project} isActive={true} />
+        <ProjectSlideshow
+          previews={project.previews}
+          title={project.title}
+          projectUrl={project.url}
+          className="relative h-80 w-full"
+        />
       </Suspense>
 
       {/* Project Details */}

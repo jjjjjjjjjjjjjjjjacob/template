@@ -33,6 +33,71 @@ const FONTS_CONFIG = [
     file: 'GeistMono-Variable.woff2',
     skipOptimization: true, // Already WOFF2
   },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Hairline.ttf',
+    weight: 'hairline',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Thin.ttf',
+    weight: 'thin',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-ExtraLight.ttf',
+    weight: 'extralight',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Light.ttf',
+    weight: 'light',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Regular.ttf',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Medium.ttf',
+    weight: 'medium',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Semibold.ttf',
+    weight: 'semibold',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Bold.ttf',
+    weight: 'bold',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-ExtraBold.ttf',
+    weight: 'extrabold',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-Black.ttf',
+    weight: 'black',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
+  {
+    name: 'Utendo',
+    file: 'Utendo-ExtraBlack.ttf',
+    weight: 'extrablack',
+    unicodeRange: 'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD',
+  },
 ];
 
 function getPyftsubsetPath() {
@@ -88,11 +153,25 @@ function generateCSS(processedFonts) {
     if (font.skipInCSS) return; // Skip fonts we'll add manually
 
     const fontPath = `/fonts/optimized/${font.outputName}`;
+    
+    // Determine font-weight based on weight property or default
+    let fontWeight = '100 900';
+    if (font.weight === 'hairline') fontWeight = '100';
+    else if (font.weight === 'thin') fontWeight = '100';
+    else if (font.weight === 'extralight') fontWeight = '200';
+    else if (font.weight === 'light') fontWeight = '300';
+    else if (font.weight === 'medium') fontWeight = '500';
+    else if (font.weight === 'semibold') fontWeight = '600';
+    else if (font.weight === 'bold') fontWeight = '700';
+    else if (font.weight === 'extrabold') fontWeight = '800';
+    else if (font.weight === 'black') fontWeight = '900';
+    else if (font.weight === 'extrablack') fontWeight = '950';
+    else if (font.name === 'Utendo' && !font.weight) fontWeight = '400';
 
     css += `@font-face {
   font-family: '${font.name}';
   src: url('${fontPath}') format('woff2');
-  font-weight: 100 900;
+  font-weight: ${fontWeight};
   font-style: normal;
   font-display: swap;${font.unicodeRange ? `\n  unicode-range: ${font.unicodeRange};` : ''}
 }
@@ -103,7 +182,7 @@ function generateCSS(processedFonts) {
   css += `
 /* Font Stacks */
 :root {
-  --font-sans: 'GeistSans', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Utendo', 'GeistSans', system-ui, -apple-system, sans-serif;
   --font-mono: 'GeistMono', ui-monospace, monospace;
 }
 

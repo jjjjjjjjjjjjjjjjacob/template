@@ -21,12 +21,12 @@ export function Loader({ onComplete }: LoaderProps) {
           return setTimeout(() => {
             setAnimationStage('complete');
             onComplete();
-          }, 1000);
-        }, 1000);
+          }, 800);
+        }, 500);
         return timer3;
-      });
+      }, 500);
       return timer2;
-    }, 1000);
+    }, 50);
 
     return () => {
       clearTimeout(timer);
@@ -44,26 +44,29 @@ export function Loader({ onComplete }: LoaderProps) {
           <div
             data-state={animationStage}
             className={cn(
-              'relative flex items-center justify-between gap-1 transition-all duration-1200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] sm:gap-2',
-              'data-[state=*]:opacity-100 data-[state=expanding]:gap-[1px] data-[state=hidden]:opacity-0 sm:data-[state=expanding]:gap-[2px]'
+              'relative flex items-center justify-between gap-1 transition-all sm:gap-2',
+              'data-[state=*]:opacity-100 data-[state=*]:duration-800',
+              'data-[state=hidden]:translate-y-[2px] data-[state=hidden]:scale-x-95 data-[state=hidden]:scale-y-0 data-[state=hidden]:gap-[1px] data-[state=hidden]:opacity-0 data-[state=hidden]:duration-200',
+              'data-[state=loading]:gap-[1px] data-[state=loading]:duration-600',
+              'data-[state=expanding]:gap-[1px] data-[state=expanding]:duration-600'
             )}
           >
             {/* J letter */}
             <span
               data-state={animationStage}
               className={cn(
-                'w-23 overflow-hidden whitespace-pre transition-all duration-1000',
+                'w-23 overflow-hidden whitespace-pre transition-all duration-800',
                 'sm:w-30',
                 'data-[state=hidden]:w-2 sm:data-[state=hidden]:w-[0.6rem]',
-                'data-[state=loading]:w-2 sm:data-[state=loading]:w-[0.6rem]',
-                'data-[state=expanding]:w-2 sm:data-[state=expanding]:w-[0.6rem]'
+                'data-[state=loading]:w-2 data-[state=loading]:duration-50 sm:data-[state=loading]:w-[0.6rem]',
+                'data-[state=expanding]:w-2 data-[state=expanding]:duration-500 sm:data-[state=expanding]:w-[0.6rem]'
               )}
             >
               <span className="inline-block">j</span>
               <span
                 data-state={animationStage}
                 className={cn(
-                  'inline-block opacity-0 transition-opacity duration-1000',
+                  'inline-block opacity-0 transition-opacity duration-800',
                   'data-[state=complete]:opacity-100'
                 )}
               >
@@ -75,18 +78,18 @@ export function Loader({ onComplete }: LoaderProps) {
             <span
               data-state={animationStage}
               className={cn(
-                'w-20 overflow-hidden whitespace-pre transition-all duration-1000',
+                'w-20 overflow-hidden whitespace-pre transition-all duration-800',
                 'sm:w-[6.5rem]',
-                'data-[state=hidden]:w-5 sm:data-[state=hidden]:w-6',
-                'data-[state=loading]:w-5 sm:data-[state=loading]:w-6',
-                'data-[state=expanding]:w-5 sm:data-[state=expanding]:w-6'
+                'data-[state=hidden]:w-[1.25rem] sm:data-[state=hidden]:w-6',
+                'data-[state=loading]:w-[1.25rem] data-[state=loading]:duration-50 sm:data-[state=loading]:w-6',
+                'data-[state=expanding]:w-[1.25rem] data-[state=expanding]:duration-500 sm:data-[state=expanding]:w-6'
               )}
             >
               <span className="inline-block">s</span>
               <span
                 data-state={animationStage}
                 className={cn(
-                  'inline-block opacity-0 transition-opacity duration-1000',
+                  'inline-block opacity-0 transition-opacity duration-800',
                   'data-[state=complete]:opacity-100'
                 )}
               >

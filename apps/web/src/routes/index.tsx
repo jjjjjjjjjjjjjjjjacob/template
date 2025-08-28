@@ -28,10 +28,11 @@ function HomePage() {
   const [showLoader, setShowLoader] = useState(true);
 
   const handleLoaderComplete = useCallback(() => {
-    setTimeout(() => {
+    return setTimeout(() => {
       setShowLoader(false);
     }, 1000);
   }, []);
+
   const gpuParticleCounts = {
     field1: 3000,
     field2: 3000,
@@ -66,6 +67,7 @@ function HomePage() {
   const mobileObstacleRadius = 256;
   const desktopBoundaryRoundness = 0;
   const desktopObstacleRadius = 280;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { assetsReady, markParticlesReady } = usePageAssetsReady();
 
   useEffect(() => {
@@ -691,15 +693,15 @@ function HomePage() {
             <Loader onComplete={handleLoaderComplete} />
 
             <p
-              data-visible={assetsReady}
-              className="text-muted-foreground text-md transition-colors-smooth max-w-md text-center tracking-tight opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100 sm:text-lg"
+              data-visible={!showLoader}
+              className="text-muted-foreground text-md max-w-md text-center tracking-tight opacity-0 transition-all delay-800 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
               ui/ux - fullstack - product
             </p>
 
             <div
-              data-visible={assetsReady}
-              className="flex gap-2 opacity-0 transition-opacity duration-1500 data-[visible=true]:opacity-100"
+              data-visible={!showLoader}
+              className="flex gap-2 opacity-0 transition-all delay-1200 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
               <Button
                 className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-6 py-3 text-[10px] backdrop-blur-sm sm:text-sm"

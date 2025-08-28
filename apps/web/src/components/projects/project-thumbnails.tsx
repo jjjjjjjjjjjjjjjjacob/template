@@ -10,7 +10,7 @@ interface Project {
   responsibilities: string[];
   technologies: string[];
   timeline: string;
-  preview: string;
+  previews: string[];
 }
 
 interface ProjectThumbnailsProps {

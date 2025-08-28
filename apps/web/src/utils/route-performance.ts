@@ -116,7 +116,7 @@ export class RoutePreloader {
     try {
       switch (componentName) {
         case 'ProjectSlideshow':
-          await import('../components/projects/project-slideshow');
+          await import('../components/project-slideshow');
           break;
         case 'ProjectThumbnails':
           await import('../components/projects/project-thumbnails');
@@ -285,7 +285,7 @@ export class RouteTransitionOptimizer {
         try {
           switch (componentName) {
             case 'ProjectSlideshow':
-              await import('../components/projects/project-slideshow');
+              await import('../components/project-slideshow');
               break;
             case 'ResumeCharts':
               await import('../components/resume/resume-charts');

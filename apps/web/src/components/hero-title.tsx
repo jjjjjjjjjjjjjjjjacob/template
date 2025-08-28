@@ -10,13 +10,16 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
     'hidden' | 'loading' | 'expanding' | 'revealing' | 'complete'
   >('hidden');
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hiddenDuration = 200;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hiddenDurationClass = `data-[state=hidden]:duration-200`;
   const loadingDuration = 50;
   const loadingDurationClass = `data-[state=loading]:duration-50`;
   const expandingDuration = 400;
   const expandingDurationClass = `data-[state=expanding]:duration-400`;
   const revealingDuration = 400;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const revealingDurationClass = `data-[state=revealing]:duration-400`;
   const completeDuration = 800;
   const completeDurationClass = `data-[state=complete]:duration-800`;
@@ -72,7 +75,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
                 'data-[state=loading]:w-2 sm:data-[state=loading]:w-[0.6rem]',
                 'data-[state=expanding]:w-2 sm:data-[state=expanding]:w-[0.6rem]',
                 loadingDurationClass,
-                expandingDurationClass,
+                expandingDurationClass
               )}
             >
               <span className="inline-block">j</span>
@@ -81,7 +84,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
                 className={cn(
                   'inline-block opacity-0 transition-opacity',
                   'data-[state=complete]:opacity-100',
-                  completeDurationClass,
+                  completeDurationClass
                 )}
               >
                 acob
@@ -98,7 +101,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
                 'data-[state=loading]:w-[1.25rem] sm:data-[state=loading]:w-6',
                 'data-[state=expanding]:w-[1.25rem] sm:data-[state=expanding]:w-6',
                 loadingDurationClass,
-                expandingDurationClass,
+                expandingDurationClass
               )}
             >
               <span className="inline-block">s</span>
@@ -107,7 +110,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
                 className={cn(
                   'inline-block opacity-0 transition-opacity',
                   'data-[state=complete]:opacity-100',
-                  completeDurationClass,
+                  completeDurationClass
                 )}
               >
                 tein

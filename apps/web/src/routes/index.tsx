@@ -12,7 +12,7 @@ import { ExternalLink, Calendar, MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui';
 import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
-import { Loader } from '@/components/loader';
+import { HeroTitle } from '@/components/hero-title';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -26,10 +26,14 @@ function HomePage() {
 
   // Loader state
   const [showLoader, setShowLoader] = useState(true);
+  const [showParticleField, setShowParticleField] = useState(false);
 
   const handleLoaderComplete = useCallback(() => {
     return setTimeout(() => {
       setShowLoader(false);
+      return setTimeout(() => {
+        setShowParticleField(true);
+      }, 1400);
     }, 1000);
   }, []);
 
@@ -676,7 +680,7 @@ function HomePage() {
       <div className="relative flex min-h-[90vh] flex-grow flex-col items-center justify-center">
         <div className="relative flex h-full w-full flex-grow flex-col items-center justify-center overflow-hidden p-0">
           {/* Single particle field with combined configurations - direct load for testing */}
-          {!showLoader && (
+          {showParticleField && (
             <ParticleField
               key={`combined-${particleKey1}-${particleKey2}-${particleKey3}`}
               configs={[config1, config2, config3]}
@@ -690,13 +694,13 @@ function HomePage() {
             className={`pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4 transition-opacity duration-300`}
           >
             {/* Loader - renders in exact hero position */}
-            <Loader onComplete={handleLoaderComplete} />
+            <HeroTitle onComplete={handleLoaderComplete} />
 
             <p
               data-visible={!showLoader}
-              className="text-muted-foreground text-md max-w-md text-center tracking-tight opacity-0 transition-all delay-800 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
+              className="text-muted-foreground max-w-md text-center text-[14px] tracking-tight opacity-0 transition-all delay-800 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
-              ui/ux - fullstack - product
+              ui/ux | fullstack | product
             </p>
 
             <div
@@ -704,14 +708,14 @@ function HomePage() {
               className="flex gap-2 opacity-0 transition-all delay-1200 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
               <Button
-                className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-6 py-3 text-[10px] backdrop-blur-sm sm:text-sm"
+                className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
                 size="sm"
                 onClick={() => scrollToSection('projects')}
               >
                 projects
               </Button>
               <Button
-                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-6 py-3 text-[10px] sm:text-sm"
+                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] sm:px-5 sm:py-3 sm:text-sm"
                 onClick={() => scrollToSection('resume')}
                 size="sm"
               >

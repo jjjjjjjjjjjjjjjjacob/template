@@ -1,14 +1,25 @@
 import * as React from 'react';
 import { cn } from '@/utils';
 
-interface LoaderProps {
+interface HeroTitleProps {
   onComplete: () => void;
 }
 
-export function Loader({ onComplete }: LoaderProps) {
+export function HeroTitle({ onComplete }: HeroTitleProps) {
   const [animationStage, setAnimationStage] = React.useState<
     'hidden' | 'loading' | 'expanding' | 'revealing' | 'complete'
   >('hidden');
+
+  const hiddenDuration = 200;
+  const hiddenDurationClass = `data-[state=hidden]:duration-200`;
+  const loadingDuration = 50;
+  const loadingDurationClass = `data-[state=loading]:duration-50`;
+  const expandingDuration = 400;
+  const expandingDurationClass = `data-[state=expanding]:duration-400`;
+  const revealingDuration = 400;
+  const revealingDurationClass = `data-[state=revealing]:duration-400`;
+  const completeDuration = 800;
+  const completeDurationClass = `data-[state=complete]:duration-800`;
 
   React.useEffect(() => {
     setAnimationStage('loading');
@@ -21,12 +32,12 @@ export function Loader({ onComplete }: LoaderProps) {
           return setTimeout(() => {
             setAnimationStage('complete');
             onComplete();
-          }, 800);
-        }, 500);
+          }, completeDuration);
+        }, revealingDuration);
         return timer3;
-      }, 500);
+      }, expandingDuration);
       return timer2;
-    }, 50);
+    }, loadingDuration);
 
     return () => {
       clearTimeout(timer);
@@ -44,8 +55,8 @@ export function Loader({ onComplete }: LoaderProps) {
           <div
             data-state={animationStage}
             className={cn(
-              'relative flex items-center justify-between gap-1 transition-all sm:gap-2',
-              'data-[state=*]:opacity-100 data-[state=*]:duration-800',
+              'relative flex items-center justify-between gap-[10px] tracking-wide transition-all sm:gap-4',
+              'duration-800',
               'data-[state=hidden]:translate-y-[2px] data-[state=hidden]:scale-x-95 data-[state=hidden]:scale-y-0 data-[state=hidden]:gap-[1px] data-[state=hidden]:opacity-0 data-[state=hidden]:duration-200',
               'data-[state=loading]:gap-[1px] data-[state=loading]:duration-600',
               'data-[state=expanding]:gap-[1px] data-[state=expanding]:duration-600'
@@ -55,19 +66,22 @@ export function Loader({ onComplete }: LoaderProps) {
             <span
               data-state={animationStage}
               className={cn(
-                'w-23 overflow-hidden whitespace-pre transition-all duration-800',
-                'sm:w-30',
+                'w-[94px] overflow-hidden whitespace-pre transition-all duration-800',
+                'sm:w-[125px]',
                 'data-[state=hidden]:w-2 sm:data-[state=hidden]:w-[0.6rem]',
-                'data-[state=loading]:w-2 data-[state=loading]:duration-50 sm:data-[state=loading]:w-[0.6rem]',
-                'data-[state=expanding]:w-2 data-[state=expanding]:duration-500 sm:data-[state=expanding]:w-[0.6rem]'
+                'data-[state=loading]:w-2 sm:data-[state=loading]:w-[0.6rem]',
+                'data-[state=expanding]:w-2 sm:data-[state=expanding]:w-[0.6rem]',
+                loadingDurationClass,
+                expandingDurationClass,
               )}
             >
               <span className="inline-block">j</span>
               <span
                 data-state={animationStage}
                 className={cn(
-                  'inline-block opacity-0 transition-opacity duration-800',
-                  'data-[state=complete]:opacity-100'
+                  'inline-block opacity-0 transition-opacity',
+                  'data-[state=complete]:opacity-100',
+                  completeDurationClass,
                 )}
               >
                 acob
@@ -78,19 +92,22 @@ export function Loader({ onComplete }: LoaderProps) {
             <span
               data-state={animationStage}
               className={cn(
-                'w-20 overflow-hidden whitespace-pre transition-all duration-800',
-                'sm:w-[6.5rem]',
+                'w-[78px] overflow-hidden whitespace-pre transition-all duration-800',
+                'sm:w-[107px]',
                 'data-[state=hidden]:w-[1.25rem] sm:data-[state=hidden]:w-6',
-                'data-[state=loading]:w-[1.25rem] data-[state=loading]:duration-50 sm:data-[state=loading]:w-6',
-                'data-[state=expanding]:w-[1.25rem] data-[state=expanding]:duration-500 sm:data-[state=expanding]:w-6'
+                'data-[state=loading]:w-[1.25rem] sm:data-[state=loading]:w-6',
+                'data-[state=expanding]:w-[1.25rem] sm:data-[state=expanding]:w-6',
+                loadingDurationClass,
+                expandingDurationClass,
               )}
             >
               <span className="inline-block">s</span>
               <span
                 data-state={animationStage}
                 className={cn(
-                  'inline-block opacity-0 transition-opacity duration-800',
-                  'data-[state=complete]:opacity-100'
+                  'inline-block opacity-0 transition-opacity',
+                  'data-[state=complete]:opacity-100',
+                  completeDurationClass,
                 )}
               >
                 tein

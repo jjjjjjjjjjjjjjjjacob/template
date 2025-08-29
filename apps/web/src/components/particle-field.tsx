@@ -361,14 +361,14 @@ function Particles({
         cycle = 0.5 + (1 - Math.pow(2 - rawCycle * 2, 3)) * 0.5; // inverted cubic
       }
 
-      // Use hsl(339, 100.00%, 50.00%) actual color values (pink-magenta)
-      const FF0059_H = 355; // degrees
-      const FF0059_S = 1.0;
-      const FF0059_L = 0.5;
-
-      const CYAN_H = 200; // degrees
+      // Start with cyan values, end with magenta
+      const CYAN_H = 200; // degrees - start color
       const CYAN_S = 1.0;
       const CYAN_L = 0.5;
+
+      const FF0059_H = 355; // degrees - end color (magenta)
+      const FF0059_S = 1.0;
+      const FF0059_L = 0.5;
 
       // Only desaturate during the brief transition periods
       let saturationCurve = 1.0;
@@ -378,12 +378,12 @@ function Particles({
         saturationCurve = 1 - Math.sin(transitionProgress * Math.PI) * 0.8; // 0.2 to 1.0
       }
 
-      // Lerp hue taking shorter path around color wheel
-      const h1 = FF0059_H;
-      let h2 = CYAN_H;
+      // Lerp hue taking shorter path around color wheel (cyan to magenta)
+      const h1 = CYAN_H; // Start with cyan
+      let h2 = FF0059_H; // End with magenta
       const hueDiff = h2 - h1;
 
-      // Take shorter path (328° to 180° goes forward)
+      // Take shorter path around color wheel
       if (hueDiff > 180) {
         h2 -= 360;
       } else if (hueDiff < -180) {
@@ -391,9 +391,9 @@ function Particles({
       }
 
       const h = h1 + (h2 - h1) * cycle;
-      const s = Math.min(FF0059_S, CYAN_S) * saturationCurve;
+      const s = Math.min(CYAN_S, FF0059_S) * saturationCurve;
       const l =
-        FF0059_L + (CYAN_L - FF0059_L) * cycle + (1 - saturationCurve) * 0.2;
+        CYAN_L + (FF0059_L - CYAN_L) * cycle + (1 - saturationCurve) * 0.2;
 
       const target = new THREE.Color();
       target.setHSL((h < 0 ? h + 360 : h) / 360, s, l);

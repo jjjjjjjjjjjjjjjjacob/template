@@ -90,7 +90,7 @@
   /* Begin animation immediately on mount */
   animation:
     hero-title-initial-transform 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards,
-    hero-title-gap-expand 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms forwards;
+    hero-title-gap-expand 600ms cubic-bezier(0.4, 0, 0.2, 1) 600ms forwards;
 }
 
 @media (min-width: 640px) {
@@ -98,7 +98,7 @@
     gap: 3px;
     animation:
       hero-title-initial-transform 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards,
-      hero-title-gap-expand-sm 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms forwards;
+      hero-title-gap-expand-sm 600ms cubic-bezier(0.4, 0, 0.2, 1) 600ms forwards;
   }
 }
 
@@ -107,14 +107,14 @@
   width: 8px;
 
   /* Width expansion: 600ms delay, 400ms duration */
-  animation: hero-title-j-expand 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+  animation: hero-title-j-expand 600ms cubic-bezier(0.4, 0, 0.2, 1) 600ms
     forwards;
 }
 
 @media (min-width: 640px) {
   .hero-title-j-animate {
     width: 0.6rem;
-    animation: hero-title-j-expand-sm 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+    animation: hero-title-j-expand-sm 600ms cubic-bezier(0.4, 0, 0.2, 1) 600ms
       forwards;
   }
 }
@@ -124,14 +124,14 @@
   width: 1.25rem;
 
   /* Width expansion: 600ms delay, 400ms duration */
-  animation: hero-title-s-expand 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+  animation: hero-title-s-expand 600ms cubic-bezier(0.4, 0, 0.2, 1) 600ms
     forwards;
 }
 
 @media (min-width: 640px) {
   .hero-title-s-animate {
     width: 1.5rem;
-    animation: hero-title-s-expand-sm 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+    animation: hero-title-s-expand-sm 600ms cubic-bezier(0.4, 0, 0.2, 1) 600ms
       forwards;
   }
 }
@@ -141,6 +141,6 @@
   opacity: 0;
 
   /* Text reveal: 1000ms delay, 400ms duration */
-  animation: hero-title-text-reveal 400ms cubic-bezier(0.4, 0, 0.2, 1) 1200ms
+  animation: hero-title-text-reveal 400ms cubic-bezier(0.4, 0, 0.2, 1) 1500ms
     forwards;
 }

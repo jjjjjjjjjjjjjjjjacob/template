@@ -5,15 +5,15 @@ apps/web/src/routeTree.gen.ts
 apps/web/.tanstack/
 apps/**/dist/
 packages/**/dist/
-.vinxi/
-.output/
 
 # Build outputs
-dist/
-build/
+.output/
+.wrangler/
+.nitro/
 
 # Cache and temporary files
 .nx/
+.tanstack/
 node_modules/
 bun.lock
 yarn.lock

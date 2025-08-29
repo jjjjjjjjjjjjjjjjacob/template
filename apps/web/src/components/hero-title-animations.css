@@ -1,0 +1,146 @@
+/* Hero Title Animation Keyframes */
+
+/* Initial transform animation (hidden -> loading) */
+@keyframes hero-title-initial-transform {
+  0%,
+  0.01% {
+    transform: translateY(2px) scaleX(0.95) scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scaleX(1) scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* Gap expansion animation (expanding -> revealing) */
+@keyframes hero-title-gap-expand {
+  0% {
+    gap: 1px;
+  }
+  100% {
+    gap: 0.75rem;
+  }
+}
+
+@keyframes hero-title-gap-expand-sm {
+  0% {
+    gap: 3px;
+  }
+  100% {
+    gap: 1rem;
+  }
+}
+
+/* J letter width expansion (revealing -> complete) */
+@keyframes hero-title-j-expand {
+  0% {
+    width: 8px;
+  }
+  100% {
+    width: 94px;
+  }
+}
+
+@keyframes hero-title-j-expand-sm {
+  0% {
+    width: 0.6rem;
+  }
+  100% {
+    width: 125px;
+  }
+}
+
+/* S letter width expansion (revealing -> complete) */
+@keyframes hero-title-s-expand {
+  0% {
+    width: 1.25rem;
+  }
+  100% {
+    width: 78px;
+  }
+}
+
+@keyframes hero-title-s-expand-sm {
+  0% {
+    width: 1.5rem;
+  }
+  100% {
+    width: 107px;
+  }
+}
+
+/* Text reveal animation (revealing -> complete) */
+@keyframes hero-title-text-reveal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Animation classes with proper delays and durations */
+.hero-title-animate {
+  /* Initial hidden state - will be enforced by keyframe */
+  transform: translateY(2px) scaleX(0.95) scaleY(0);
+  opacity: 0;
+  gap: 1px;
+
+  /* Begin animation immediately on mount */
+  animation:
+    hero-title-initial-transform 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards,
+    hero-title-gap-expand 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms forwards;
+}
+
+@media (min-width: 640px) {
+  .hero-title-animate {
+    gap: 3px;
+    animation:
+      hero-title-initial-transform 600ms cubic-bezier(0.4, 0, 0.2, 1) forwards,
+      hero-title-gap-expand-sm 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms forwards;
+  }
+}
+
+.hero-title-j-animate {
+  /* Initial state */
+  width: 8px;
+
+  /* Width expansion: 600ms delay, 400ms duration */
+  animation: hero-title-j-expand 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+    forwards;
+}
+
+@media (min-width: 640px) {
+  .hero-title-j-animate {
+    width: 0.6rem;
+    animation: hero-title-j-expand-sm 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+      forwards;
+  }
+}
+
+.hero-title-s-animate {
+  /* Initial state */
+  width: 1.25rem;
+
+  /* Width expansion: 600ms delay, 400ms duration */
+  animation: hero-title-s-expand 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+    forwards;
+}
+
+@media (min-width: 640px) {
+  .hero-title-s-animate {
+    width: 1.5rem;
+    animation: hero-title-s-expand-sm 400ms cubic-bezier(0.4, 0, 0.2, 1) 300ms
+      forwards;
+  }
+}
+
+.hero-title-text-animate {
+  /* Initial state */
+  opacity: 0;
+
+  /* Text reveal: 1000ms delay, 400ms duration */
+  animation: hero-title-text-reveal 400ms cubic-bezier(0.4, 0, 0.2, 1) 1200ms
+    forwards;
+}

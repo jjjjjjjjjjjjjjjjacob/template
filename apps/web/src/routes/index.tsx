@@ -33,7 +33,7 @@ function HomePage() {
       setShowLoader(false);
       return setTimeout(() => {
         setShowParticleField(true);
-      }, 1400);
+      }, 1200);
     }, 200);
   }, []);
 

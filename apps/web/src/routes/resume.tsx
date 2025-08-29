@@ -276,7 +276,7 @@ function ResumePage() {
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                 <div className="text-muted-foreground flex items-center gap-1">
                   <Mail className="h-4 w-4" />
-                  <span>jacob@example.com</span>
+                  <span>jjjjjjjjjjjjjjjjacob@gmail.com</span>
                 </div>
                 <div className="text-muted-foreground flex items-center gap-1">
                   <MapPin className="h-4 w-4" />

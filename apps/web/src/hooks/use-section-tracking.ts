@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export type Section = 'home' | 'projects' | 'resume';
+export type Section = 'home' | 'projects' | 'resume' | 'contact';
 
 export function useSectionTracking() {
   const [activeSection, setActiveSection] = useState<Section | null>(null);
@@ -16,7 +16,7 @@ export function useSectionTracking() {
               entry.target.getAttribute('data-section') || entry.target.id;
             if (
               sectionId &&
-              ['home', 'projects', 'resume'].includes(sectionId)
+              ['home', 'projects', 'resume', 'contact'].includes(sectionId)
             ) {
               currentActive = sectionId as Section;
             }
@@ -36,10 +36,12 @@ export function useSectionTracking() {
       const homeElement = document.querySelector('[data-section="home"]');
       const projectsElement = document.getElementById('projects');
       const resumeElement = document.getElementById('resume');
+      const contactElement = document.getElementById('contact');
 
       if (homeElement) observer.observe(homeElement);
       if (projectsElement) observer.observe(projectsElement);
       if (resumeElement) observer.observe(resumeElement);
+      if (contactElement) observer.observe(contactElement);
     }, 1500); // Delay after our scroll prevention ends
 
     return () => {

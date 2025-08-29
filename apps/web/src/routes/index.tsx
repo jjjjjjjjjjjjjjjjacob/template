@@ -8,7 +8,19 @@ import { useTheme } from '@/components/theme-provider';
 import { ProjectSlideshow } from '@/components/project-slideshow';
 import { AnimatedSection } from '@/components/animated-section';
 import { useResumeFilter } from '@/hooks/use-resume-filter';
-import { ExternalLink, Calendar, MapPin } from 'lucide-react';
+import { ExternalLink, Calendar, MapPin, Github } from 'lucide-react';
+
+// Custom X (Twitter) icon component
+const XIcon = ({ className }: { className?: string }) => (
+  <svg
+    viewBox="0 0 24 24"
+    className={className}
+    fill="currentColor"
+    aria-hidden="true"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 import { Separator } from '@/components/ui';
 import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
@@ -449,6 +461,12 @@ function HomePage() {
             >
               resume
             </a>
+            <a
+              href="#contact"
+              className="hover:text-foreground transition-colors-smooth"
+            >
+              contact
+            </a>
           </div>
         </div>
       </div>
@@ -799,6 +817,90 @@ function HomePage() {
           </div>
         </div>
       </AnimatedSection>
+
+      {/* Contact Section */}
+      <AnimatedSection animationType="section">
+        <div id="contact" className="bg-background py-24">
+          <div className="container mx-auto px-4">
+            <div className="mx-auto max-w-2xl text-center">
+              <AnimatedSection animationType="header">
+                <h2 className="text-foreground mb-8 text-4xl font-medium tracking-tight">
+                  let's connect
+                </h2>
+              </AnimatedSection>
+
+              <AnimatedSection animationType="section" delay={200}>
+                <p className="text-muted-foreground mb-12 text-lg">
+                  interested in collaborating or have a project in mind? i'd
+                  love to hear from you.
+                </p>
+              </AnimatedSection>
+
+              <div className="flex justify-center">
+                <AnimatedSection animationType="card" delay={400}>
+                  <div className="border-border bg-background/50 flex items-center gap-6 rounded-lg border px-8 py-6 backdrop-blur-sm">
+                    {/* Email Section */}
+                    <a
+                      href="mailto:jjjjjjjjjjjjjjjjacob@gmail.com"
+                      className="group flex items-center gap-3 transition-colors hover:opacity-80"
+                    >
+                      <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
+                        <svg
+                          className="text-primary h-5 w-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <p className="text-foreground text-sm font-medium">
+                          email
+                        </p>
+                        <p className="text-muted-foreground group-hover:text-foreground text-sm transition-colors">
+                          jjjjjjjjjjjjjjjjacob@gmail.com
+                        </p>
+                      </div>
+                    </a>
+
+                    {/* Divider */}
+                    <div className="bg-border h-12 w-px"></div>
+
+                    {/* Social Links */}
+                    <div className="flex gap-3">
+                      <a
+                        href="https://github.com/jjjjjjjjjjjjjjjjacob"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+                        aria-label="GitHub"
+                      >
+                        <Github className="h-5 w-5" />
+                      </a>
+                      <a
+                        href="https://x.com/jaequbh"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors"
+                        aria-label="X (Twitter)"
+                      >
+                        <XIcon className="h-5 w-5" />
+                      </a>
+                    </div>
+                  </div>
+                </AnimatedSection>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AnimatedSection>
+
       <Separator className="w-full" />
       <SiteFooter />
     </div>

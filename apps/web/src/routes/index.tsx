@@ -82,20 +82,18 @@ function HomePage() {
   const mobileBoundaryRoundness = 0;
   const mobileObstacleRadius = 256;
   const desktopBoundaryRoundness = 0;
-  const desktopObstacleRadius = 280;
+  const desktopObstacleRadius = 320;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { assetsReady, markParticlesReady } = usePageAssetsReady();
 
   useEffect(() => {
-    if (isMobile) {
-      setSharedConfig((prev) => ({
-        ...prev,
-        boundaryRoundness: isMobile
-          ? mobileBoundaryRoundness
-          : desktopBoundaryRoundness,
-        obstacleRadius: isMobile ? mobileObstacleRadius : desktopObstacleRadius,
-      }));
-    }
+    setSharedConfig((prev) => ({
+      ...prev,
+      boundaryRoundness: isMobile
+        ? mobileBoundaryRoundness
+        : desktopBoundaryRoundness,
+      obstacleRadius: isMobile ? mobileObstacleRadius : desktopObstacleRadius,
+    }));
   }, [isMobile]);
 
   // Update particle colors when theme changes

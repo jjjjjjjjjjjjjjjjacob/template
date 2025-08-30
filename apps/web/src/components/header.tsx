@@ -53,7 +53,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
           jacob stein
         </button>
 
-        <nav className="flex items-center gap-6">
+        <nav className="flex items-center gap-4">
           {/* Social Links */}
           <div className="flex items-center gap-2">
             <a
@@ -96,20 +96,10 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
           >
             resume
           </button>
-          <button
-            onClick={() => scrollToSection('contact')}
-            className={`text-sm transition-colors ${
-              activeSection === 'contact'
-                ? 'text-foreground font-medium'
-                : 'text-muted-foreground hover:text-foreground hover:font-medium'
-            }`}
-          >
-            contact
-          </button>
 
           <button
             onClick={toggleTheme}
-            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground ml-2 rounded-lg p-2 transition-colors"
+            className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-lg p-2 transition-colors"
             aria-label="Toggle theme"
           >
             {mounted ? (

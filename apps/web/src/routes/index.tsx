@@ -25,6 +25,7 @@ import { Separator } from '@/components/ui';
 import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
 import { HeroTitle } from '@/components/hero-title';
+import { PDFDownloadPopover } from '@/components/pdf-download-popover';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -309,6 +310,37 @@ function HomePage() {
 
   // Use filtered data from resume hook
   const { skills, summary } = resumeData;
+
+  // Prepare resume data for export
+  const resumeExportData = {
+    name: 'jacob stein',
+    title: 'full-stack developer & ui/ux designer',
+    summary,
+    experiences: projects.map((project) => ({
+      company: project.company,
+      role: project.role,
+      timeline: project.timeline,
+      location: 'Remote',
+      description: project.description,
+      achievements: project.achievements
+        .slice(0, 5)
+        .map((achievement) => achievement.description),
+      technologies: [
+        ...project.technologies.frontend.slice(0, 3),
+        ...project.technologies.backend.slice(0, 3),
+        ...project.technologies.infrastructure.slice(0, 2),
+      ],
+    })),
+    skills: skills.map((skillCategory) => ({
+      category: skillCategory.category,
+      skills: skillCategory.skills,
+    })),
+    contact: {
+      email: 'jacob@jacobstein.me',
+      github: 'https://github.com/jjjjjjjjjjjjjjjjacob',
+      website: 'https://jacobstein.dev',
+    },
+  };
 
   // Transform projects for experience section
   const experiences = projects.map((project) => ({
@@ -714,7 +746,7 @@ function HomePage() {
 
             <p
               data-visible={!showLoader}
-              className="text-muted-foreground max-w-md text-center text-[14px] tracking-tight opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
+              className="text-muted-foreground max-w-md text-center text-[14px] tracking-wide opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
               ui/ux | fullstack | product
             </p>
@@ -751,7 +783,7 @@ function HomePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <AnimatedSection animationType="header" delay={200}>
-                    <h1 className="text-foreground text-4xl font-medium tracking-tight">
+                    <h1 className="text-foreground text-4xl font-medium tracking-wide">
                       projects
                     </h1>
                   </AnimatedSection>
@@ -785,9 +817,9 @@ function HomePage() {
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-4xl space-y-16">
               <div className="space-y-6 text-center">
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h1 className="text-foreground text-4xl font-medium tracking-tight sm:text-5xl">
+                    <h1 className="text-foreground text-4xl font-medium tracking-wide sm:text-5xl">
                       jacob stein
                     </h1>
                     <AnimatedSection animationType="header" delay={200}>
@@ -795,6 +827,12 @@ function HomePage() {
                         full-stack developer & ui/ux designer
                       </p>
                     </AnimatedSection>
+                    <div className="flex-shrink-0">
+                      <PDFDownloadPopover
+                        resumeData={resumeExportData}
+                        className="mt-2"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -822,7 +860,7 @@ function HomePage() {
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-2xl text-center">
               <AnimatedSection animationType="header">
-                <h2 className="text-foreground mb-8 text-4xl font-medium tracking-tight">
+                <h2 className="text-foreground mb-8 text-4xl font-medium tracking-wide">
                   let's connect
                 </h2>
               </AnimatedSection>
@@ -839,7 +877,7 @@ function HomePage() {
                   <div className="border-border bg-background/50 flex items-center gap-6 rounded-lg border px-8 py-6 backdrop-blur-sm">
                     {/* Email Section */}
                     <a
-                      href="mailto:jjjjjjjjjjjjjjjjacob@gmail.com"
+                      href="mailto:jacob@jacobstein.me"
                       className="group flex items-center gap-3 transition-colors hover:opacity-80"
                     >
                       <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
@@ -862,7 +900,7 @@ function HomePage() {
                           email
                         </p>
                         <p className="text-muted-foreground group-hover:text-foreground text-sm transition-colors">
-                          jjjjjjjjjjjjjjjjacob@gmail.com
+                          jacob@jacobstein.me
                         </p>
                       </div>
                     </a>

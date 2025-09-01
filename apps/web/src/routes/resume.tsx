@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Download, Mail, MapPin, Calendar, ExternalLink } from 'lucide-react';
+import { Mail, MapPin, Calendar, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Suspense, lazy } from 'react';
 
@@ -32,7 +32,7 @@ interface Education {
 
 const experiences: Experience[] = [
   {
-    company: 'Heat.tech',
+    company: 'HEAT.tech',
     role: 'Senior Full-Stack Developer & UI/UX Designer',
     location: 'Remote',
     timeline: '2022 - 2025',
@@ -173,7 +173,10 @@ function ExperienceCard({
               {experience.company}
             </p>
           </div>
-          <div className="text-muted-foreground flex items-center gap-4 text-sm">
+          <div
+            className="text-muted-foreground flex items-center text-sm"
+            style={{ gap: '0.25rem' }}
+          >
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {experience.timeline}
@@ -262,9 +265,15 @@ function ResumePage() {
   return (
     <div className="bg-background min-h-screen py-16">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-4xl space-y-16">
+        <div
+          className="mx-auto max-w-4xl"
+          style={{ display: 'flex', flexDirection: 'column', gap: '6rem' }}
+        >
           <div>
-            <div className="space-y-6 text-center">
+            <div
+              className="text-center"
+              style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
+            >
               <div>
                 <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl">
                   jacob stein
@@ -276,21 +285,12 @@ function ResumePage() {
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
                 <div className="text-muted-foreground flex items-center gap-1">
                   <Mail className="h-4 w-4" />
-                  <span>jjjjjjjjjjjjjjjjacob@gmail.com</span>
+                  <span>jacob@jacobstein.me</span>
                 </div>
                 <div className="text-muted-foreground flex items-center gap-1">
                   <MapPin className="h-4 w-4" />
                   <span>San Francisco, CA</span>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2"
-                  onClick={() => window.print()}
-                >
-                  <Download className="h-4 w-4" />
-                  download pdf
-                </Button>
               </div>
               <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed">
                 Passionate full-stack developer and designer with 5+ years of
@@ -380,7 +380,10 @@ function ResumePage() {
                           {edu.institution}
                         </p>
                       </div>
-                      <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                      <div
+                        className="text-muted-foreground flex items-center text-sm"
+                        style={{ gap: '0.25rem' }}
+                      >
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
                           {edu.timeline}

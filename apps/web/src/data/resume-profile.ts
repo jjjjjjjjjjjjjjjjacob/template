@@ -127,7 +127,7 @@ export const resumeProfile: ResumeProfile = {
       id: 'heat-tech',
       title: 'HEAT.tech',
       url: 'https://heat.tech',
-      company: 'Heat.tech',
+      company: 'HEAT.tech',
       timeline: '2022 - 2025',
       role: 'Senior Full-Stack Developer & Technical Lead',
       description:

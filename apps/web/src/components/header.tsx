@@ -44,7 +44,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <button
           onClick={() => scrollToSection('home')}
-          className={`text-xl font-medium transition-colors ${
+          className={`text-xl font-medium tracking-wide transition-colors ${
             activeSection === 'home'
               ? 'text-foreground'
               : 'text-foreground/80 hover:text-foreground'

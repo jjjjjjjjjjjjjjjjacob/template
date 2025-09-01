@@ -15,24 +15,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Settings, Filter, Download, Eye, Share, Copy } from 'lucide-react';
+import { Settings, Filter, Eye } from 'lucide-react';
 import {
   type ResumeFilters,
   type FocusArea,
   type Domain,
   type Technology,
-  type FilteredResumeData,
   useResumeFilterNavigation,
 } from '@/hooks/use-resume-filter';
-import {
-  exportToPDF,
-  generateShareableURL,
-  copyResumeText,
-} from '@/utils/resume-export';
 
 interface ResumeFilterControlsProps {
   currentFilters: ResumeFilters;
-  resumeData?: FilteredResumeData;
   className?: string;
 }
 
@@ -159,7 +152,6 @@ const quickPresets: { name: string; filters: Partial<ResumeFilters> }[] = [
 
 export function ResumeFilterControls({
   currentFilters,
-  resumeData,
   className = '',
 }: ResumeFilterControlsProps) {
   const navigate = useNavigate();
@@ -404,34 +396,6 @@ export function ResumeFilterControls({
             <Button variant="outline" onClick={clearFilters}>
               clear filters
             </Button>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => resumeData && exportToPDF(resumeData)}
-                disabled={!resumeData}
-              >
-                <Download className="mr-2 h-4 w-4" />
-                export pdf
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const url = generateShareableURL(localFilters);
-                  navigator.clipboard.writeText(url);
-                }}
-              >
-                <Share className="mr-2 h-4 w-4" />
-                share url
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => resumeData && copyResumeText(resumeData)}
-                disabled={!resumeData}
-              >
-                <Copy className="mr-2 h-4 w-4" />
-                copy text
-              </Button>
-            </div>
           </div>
         </div>
       </DialogContent>

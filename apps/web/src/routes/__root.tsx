@@ -112,7 +112,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="bg-background text-foreground min-h-screen transition-colors duration-300">
         <Header />
 
-        <main className="mt-16 select-none">{children}</main>
+        <main className="mt-16">{children}</main>
 
         {/* Development Tools */}
         {process.env.NODE_ENV === 'development' && (

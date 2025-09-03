@@ -20,7 +20,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
 
   return (
     <div
-      className={`text-foreground flex items-center justify-center bg-transparent transition-opacity duration-1000`}
+      className={`text-foreground flex items-center justify-center bg-transparent transition-opacity duration-1000 select-none`}
     >
       {/* Use exact same structure as hero section */}
       <div className="pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4">

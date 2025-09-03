@@ -50,13 +50,16 @@ function HomePage() {
     }, 200);
   }, []);
 
-  const gpuParticleCounts = {
-    field1: 3000,
-    field2: 3000,
-    field3: 14000,
-    isLoading: false,
-    gpuTier: 'high' as const,
-  };
+  const gpuParticleCounts = useMemo(
+    () => ({
+      field1: !isMobile ? 3000 : 800,
+      field2: !isMobile ? 3000 : 600,
+      field3: !isMobile ? 14000 : 4000,
+      isLoading: false,
+      gpuTier: 'high' as const,
+    }),
+    [isMobile]
+  );
 
   // Dynamic colors based on theme
   const primaryColor = useMemo(() => {
@@ -508,7 +511,7 @@ function HomePage() {
     ...defaultParticleConfig,
     color: secondaryColor,
     count: gpuParticleCounts.field1,
-    size: 1.5,
+    size: !isMobile ? 1.5 : 1,
     speed: 0.025,
     opacity: 0.6,
     spreadX: 0.1,
@@ -560,7 +563,7 @@ function HomePage() {
     ...defaultParticleConfig,
     color: '#ff0059', // Magenta for field 2 - lerps between H 137 & H 340
     count: gpuParticleCounts.field2,
-    size: 1.5,
+    size: !isMobile ? 1.5 : 1,
     speed: 0.02,
     opacity: 0.6,
     spreadX: 0.1,
@@ -612,7 +615,7 @@ function HomePage() {
     ...defaultParticleConfig,
     color: secondaryColor, // Secondary color particles
     count: gpuParticleCounts.field3,
-    size: 1.5,
+    size: !isMobile ? 1.5 : 1,
     speed: 0.005,
     opacity: 0.4,
     spreadX: 0.1,

@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Mail, MapPin, Calendar, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Suspense, lazy } from 'react';
+import { trackEvents } from '@/lib/track-events';
 
 // Lazy load heavy data visualization components
 const ResumeCharts = lazy(() => import('@/components/resume/resume-charts'));
@@ -283,10 +284,20 @@ function ResumePage() {
                 </p>
               </div>
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                <div className="text-muted-foreground flex items-center gap-1">
+                <a
+                  href="mailto:jacob@jacobstein.me"
+                  className="text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
+                  onClick={() =>
+                    trackEvents.contactInitiated(
+                      'email',
+                      'resume_page',
+                      'mailto:jacob@jacobstein.me'
+                    )
+                  }
+                >
                   <Mail className="h-4 w-4" />
                   <span>jacob@jacobstein.me</span>
-                </div>
+                </a>
                 <div className="text-muted-foreground flex items-center gap-1">
                   <MapPin className="h-4 w-4" />
                   <span>San Francisco, CA</span>
@@ -411,7 +422,18 @@ function ResumePage() {
                   projects
                 </p>
                 <Button asChild>
-                  <a href="/projects" className="gap-2">
+                  <a
+                    href="/projects"
+                    className="gap-2"
+                    onClick={() =>
+                      trackEvents.navLinkClicked(
+                        'projects',
+                        'resume',
+                        'projects',
+                        window.scrollY
+                      )
+                    }
+                  >
                     <ExternalLink className="h-4 w-4" />
                     see projects
                   </a>

@@ -2,6 +2,7 @@ import { Sun, Moon, Github } from 'lucide-react';
 import * as React from 'react';
 import { useTheme } from './theme-provider';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
+import { trackEvents } from '@/lib/track-events';
 
 // Custom X (Twitter) icon component
 const XIcon = ({ className }: { className?: string }) => (
@@ -32,7 +33,29 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
   const { activeSection, scrollToSection } = useSectionTracking();
 
   const toggleTheme = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
+    const fromTheme = resolvedTheme || 'light';
+    const toTheme = fromTheme === 'dark' ? 'light' : 'dark';
+
+    // Track theme toggle interaction
+    trackEvents.themeToggleClicked(fromTheme, toTheme, 'header');
+
+    setTheme(toTheme);
+  };
+
+  const handleNavClick = (section: 'home' | 'projects' | 'resume') => {
+    // Track navigation clicks
+    trackEvents.navLinkClicked(
+      section,
+      activeSection || 'unknown',
+      section,
+      window.scrollY
+    );
+    scrollToSection(section);
+  };
+
+  const handleSocialClick = (platform: 'github' | 'twitter', url: string) => {
+    // Track social media clicks
+    trackEvents.socialLinkClicked(platform, 'header', url);
   };
 
   return (
@@ -43,7 +66,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <button
-          onClick={() => scrollToSection('home')}
+          onClick={() => handleNavClick('home')}
           className={`text-xl font-medium tracking-wide transition-colors ${
             activeSection === 'home'
               ? 'text-foreground'
@@ -62,6 +85,12 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground p-2 transition-colors"
               aria-label="GitHub"
+              onClick={() =>
+                handleSocialClick(
+                  'github',
+                  'https://github.com/jjjjjjjjjjjjjjjjacob'
+                )
+              }
             >
               <Github className="h-4 w-4" />
             </a>
@@ -71,13 +100,16 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-foreground p-2 transition-colors"
               aria-label="X (Twitter)"
+              onClick={() =>
+                handleSocialClick('twitter', 'https://x.com/jaequbh')
+              }
             >
               <XIcon className="h-4 w-4" />
             </a>
           </div>
 
           <button
-            onClick={() => scrollToSection('projects')}
+            onClick={() => handleNavClick('projects')}
             className={`text-sm transition-colors ${
               activeSection === 'projects'
                 ? 'text-foreground font-medium'
@@ -87,7 +119,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
             projects
           </button>
           <button
-            onClick={() => scrollToSection('resume')}
+            onClick={() => handleNavClick('resume')}
             className={`text-sm transition-colors ${
               activeSection === 'resume'
                 ? 'text-foreground font-medium'

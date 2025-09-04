@@ -1,6 +1,6 @@
 import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';
-import { analytics } from './posthog';
 import { useEffect, useState } from 'react';
+import posthog from 'posthog-js';
 
 export interface PerformanceMetrics {
   cls: number | null;
@@ -60,7 +60,7 @@ class PerformanceMonitor {
     this.isInitialized = true;
 
     // Track initialization
-    analytics.capture('performance_monitor_initialized', {
+    posthog.capture('performance_monitor_initialized', {
       budget: JSON.stringify(this.budget),
       url: window.location.href,
     });
@@ -104,7 +104,7 @@ class PerformanceMonitor {
     const isGood = this.isMetricGood(name, metric.value, budget);
 
     // Track metric with PostHog
-    analytics.capture('web_vital_measured', {
+    posthog.capture('web_vital_measured', {
       metric_name: name,
       value: metric.value,
       budget,
@@ -227,7 +227,7 @@ class PerformanceMonitor {
 
   // Manual tracking for custom performance metrics
   trackCustomMetric(name: string, value: number, unit = 'ms') {
-    analytics.capture('custom_performance_metric', {
+    posthog.capture('custom_performance_metric', {
       metric_name: name,
       value,
       unit,
@@ -253,7 +253,7 @@ class PerformanceMonitor {
       total_load_time: navigation.loadEventEnd - navigation.startTime,
     };
 
-    analytics.capture('navigation_timing', {
+    posthog.capture('navigation_timing', {
       ...timings,
       url: window.location.href,
     });
@@ -286,7 +286,7 @@ class PerformanceMonitor {
       ),
     };
 
-    analytics.capture('resource_timing', {
+    posthog.capture('resource_timing', {
       ...resourceMetrics,
       url: window.location.href,
     });
@@ -298,7 +298,7 @@ class PerformanceMonitor {
   updateBudget(budget: Partial<PerformanceBudget>) {
     this.budget = { ...this.budget, ...budget };
 
-    analytics.capture('performance_budget_updated', {
+    posthog.capture('performance_budget_updated', {
       budget: JSON.stringify(this.budget),
       url: window.location.href,
     });

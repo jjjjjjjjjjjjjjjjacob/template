@@ -12,10 +12,13 @@ import {
   type ResumeData,
 } from '@/hooks/use-story-canvas';
 import { useMediaQuery } from '@/hooks/use-media-query';
+import { trackEvents } from '@/lib/track-events';
+import { useTheme } from '@/components/theme-provider';
 
 export interface PDFDownloadPopoverProps {
   resumeData: ResumeData;
   className?: string;
+  source?: string; // Track where the download was initiated from
 }
 
 const exportFormats: ResumeExportFormat[] = [
@@ -36,28 +39,60 @@ const exportFormats: ResumeExportFormat[] = [
 export function PDFDownloadPopover({
   resumeData,
   className,
+  source = 'unknown',
 }: PDFDownloadPopoverProps) {
   const [open, setOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const { resolvedTheme } = useTheme();
   const { isGenerating, generateResumeImage, downloadImage } = useStoryCanvas({
     filename: 'jacob-stein-resume',
   });
 
   const handleExport = async (format: ResumeExportFormat) => {
+    // Track download attempt
+    trackEvents.resumeDownloadAttempted(format.value, source, false);
+
     try {
       const blob = await generateResumeImage(resumeData, format);
       if (blob) {
         downloadImage(blob, format);
+
+        // Track successful download - KEY CONVERSION EVENT
+        trackEvents.resumeDownloaded(
+          format.value,
+          resolvedTheme || 'light',
+          source
+        );
+
+        // Update attempt to successful
+        trackEvents.resumeDownloadAttempted(format.value, source, true);
+
         setOpen(false);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      // Silent failure - export error handling
+      // Track failed download attempt
+      trackEvents.resumeDownloadAttempted(
+        format.value,
+        source,
+        false,
+        error instanceof Error ? error.message : 'unknown_error'
+      );
     }
   };
 
+  const handlePopoverOpenChange = (newOpen: boolean) => {
+    if (newOpen) {
+      // Track when download popover is opened
+      trackEvents.popoverOpened('resume_download', source);
+    } else {
+      // Track when download popover is closed
+      trackEvents.popoverClosed('resume_download', source);
+    }
+    setOpen(newOpen);
+  };
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handlePopoverOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"

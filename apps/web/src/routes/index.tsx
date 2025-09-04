@@ -26,6 +26,7 @@ import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
 import { HeroTitle } from '@/components/hero-title';
 import { PDFDownloadPopover } from '@/components/pdf-download-popover';
+import { trackEvents } from '@/lib/track-events';
 
 export const Route = createFileRoute('/')({
   component: HomePage,
@@ -36,6 +37,25 @@ function HomePage() {
   const { resolvedTheme } = useTheme();
   const resumeData = useResumeFilter();
   const { scrollToSection } = useSectionTracking();
+
+  // Track project interactions
+  const handleProjectVisit = (
+    projectName: string,
+    projectUrl: string | undefined
+  ) => {
+    if (projectUrl) {
+      trackEvents.projectVisited(projectName, projectUrl, 'homepage');
+      window.open(projectUrl, '_blank');
+    }
+  };
+
+  // Track contact button clicks
+  const handleContactClick = (
+    contactType: 'email' | 'github' | 'twitter',
+    url: string
+  ) => {
+    trackEvents.contactInitiated(contactType, 'homepage', url);
+  };
 
   // Loader state
   const [showLoader, setShowLoader] = useState(true);
@@ -164,7 +184,7 @@ function HomePage() {
                 </p>
               </div>
               <button
-                onClick={() => window.open(project.url, '_blank')}
+                onClick={() => handleProjectVisit(project.title, project.url)}
                 className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
               >
                 <ExternalLink className="h-4 w-4" />
@@ -251,7 +271,7 @@ function HomePage() {
                 </p>
               </div>
               <button
-                onClick={() => window.open(project.url, '_blank')}
+                onClick={() => handleProjectVisit(project.title, project.url)}
                 className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
               >
                 <ExternalLink className="h-4 w-4" />
@@ -834,6 +854,7 @@ function HomePage() {
                       <PDFDownloadPopover
                         resumeData={resumeExportData}
                         className="mt-2"
+                        source="homepage"
                       />
                     </div>
                   </div>
@@ -882,6 +903,12 @@ function HomePage() {
                     <a
                       href="mailto:jacob@jacobstein.me"
                       className="group flex items-center gap-3 transition-colors hover:opacity-80"
+                      onClick={() =>
+                        handleContactClick(
+                          'email',
+                          'mailto:jacob@jacobstein.me'
+                        )
+                      }
                     >
                       <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
                         <svg
@@ -919,6 +946,12 @@ function HomePage() {
                         rel="noopener noreferrer"
                         className="text-muted-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors"
                         aria-label="GitHub"
+                        onClick={() =>
+                          handleContactClick(
+                            'github',
+                            'https://github.com/jjjjjjjjjjjjjjjjacob'
+                          )
+                        }
                       >
                         <Github className="h-5 w-5" />
                       </a>
@@ -928,6 +961,9 @@ function HomePage() {
                         rel="noopener noreferrer"
                         className="text-muted-foreground hover:text-primary flex h-10 w-10 items-center justify-center rounded-full transition-colors"
                         aria-label="X (Twitter)"
+                        onClick={() =>
+                          handleContactClick('twitter', 'https://x.com/jaequbh')
+                        }
                       >
                         <XIcon className="h-5 w-5" />
                       </a>

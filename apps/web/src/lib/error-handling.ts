@@ -1,4 +1,4 @@
-import { analytics } from './posthog';
+import { trackEvents } from './track-events';
 
 export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
 
@@ -225,9 +225,8 @@ export class ErrorLogger {
 
   private sendToAnalytics(error: EnhancedError): void {
     try {
-      analytics.capture('error_occurred', {
+      trackEvents.errorOccurred(error.message, {
         error_id: error.id,
-        error_message: error.message,
         error_category: error.category,
         error_severity: error.severity,
         error_context: JSON.stringify(error.context),

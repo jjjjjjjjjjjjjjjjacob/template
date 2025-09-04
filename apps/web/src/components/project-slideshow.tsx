@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { ExternalLink } from 'lucide-react';
+import { trackEvents } from '@/lib/track-events';
 
 interface ProjectSlideshowProps {
   previews: string[];
@@ -68,7 +69,29 @@ function ProjectSlideshow({
 
   const handleMobileIframeClick = () => {
     if (isMobile) {
+      trackEvents.projectSlideshowInteracted(
+        title,
+        'dialog_opened',
+        currentIndex
+      );
       setShowDialog(true);
+    }
+  };
+
+  const handleHover = (isHovering: boolean) => {
+    if (isHovering) {
+      trackEvents.projectSlideshowInteracted(title, 'hover', currentIndex);
+      setIsHovered(true);
+    } else {
+      setIsHovered(false);
+    }
+  };
+
+  const handleIframeClick = () => {
+    trackEvents.projectSlideshowInteracted(title, 'click', currentIndex);
+    if (projectUrl) {
+      trackEvents.projectVisited(title, projectUrl, 'slideshow');
+      window.open(projectUrl, '_blank');
     }
   };
 
@@ -83,10 +106,10 @@ function ProjectSlideshow({
       )}
       role="region"
       tabIndex={0}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocus={() => setIsHovered(true)}
-      onBlur={() => setIsHovered(false)}
+      onMouseEnter={() => handleHover(true)}
+      onMouseLeave={() => handleHover(false)}
+      onFocus={() => handleHover(true)}
+      onBlur={() => handleHover(false)}
       // onTouchStart={onTouchStart}
       // onTouchMove={onTouchMove}
       // onTouchEnd={onTouchEnd}
@@ -121,6 +144,16 @@ function ProjectSlideshow({
             pointerEvents: isMobile ? 'none' : 'auto',
           }}
         />
+
+        {/* Desktop overlay to catch clicks for tracking */}
+        {!isMobile && (
+          <button
+            onClick={handleIframeClick}
+            className="absolute inset-0 z-10 cursor-pointer bg-transparent opacity-0 hover:opacity-100"
+            aria-label={`Visit ${title} project`}
+            style={{ pointerEvents: 'auto' }}
+          />
+        )}
 
         {/* Mobile overlay to catch clicks and prevent iframe interaction */}
         {isMobile && (

@@ -1,7 +1,0 @@
-Pickle Candidate Bullet Points - Jacob Stein
-
-• Full-Stack Expertise in Social Commerce: Your experience building Vibechecc (an innovative social platform with emoji-based rating system) and HEAT.tech (a sophisticated marketplace platform) demonstrates proven ability to architect and deliver exactly the type of real-time, social-first commerce experiences that Pickle specializes in - combining engaging UI/UX with robust marketplace infrastructure.
-
-• Technical Leadership in Complex Marketplaces: You've architected full-stack TypeScript ecosystems with real-time 3D animation processing, Stripe marketplace integration with subscription management, and scalable React/Node.js platforms - critical skills for building Pickle's next-generation shopping experiences that need to handle complex payment flows, creator payouts, and engaging interactive features.
-
-• Modern Tech Stack Alignment: Your expertise in React, TypeScript, TanStack ecosystem, Convex (real-time backend), and infrastructure tools like Terraform and AWS directly aligns with the technical requirements of a modern social commerce platform, while your UI/UX design skills ensure you can create the delightful, consumer-grade experiences that social shopping demands.

@@ -10,7 +10,7 @@ interface MarkdownRendererProps {
   content: string;
 }
 
-export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
+const MarkdownContent = React.memo(({ content }: { content: string }) => {
   const [plugins, setPlugins] = React.useState<{
     remarkPlugins: any[];
     rehypePlugins: any[];
@@ -74,4 +74,10 @@ export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
       {content}
     </ReactMarkdown>
   );
+});
+
+MarkdownContent.displayName = 'MarkdownContent';
+
+export default function MarkdownRenderer({ content }: MarkdownRendererProps) {
+  return <MarkdownContent content={content} />;
 }

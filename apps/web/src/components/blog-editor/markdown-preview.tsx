@@ -11,10 +11,7 @@ interface MarkdownPreviewProps {
   className?: string;
 }
 
-export default function MarkdownPreview({
-  content,
-  className,
-}: MarkdownPreviewProps) {
+const PreviewContent = React.memo(({ content, className }: { content: string; className?: string }) => {
   const [plugins, setPlugins] = React.useState<{
     remarkPlugins: any[];
     rehypePlugins: any[];
@@ -80,4 +77,13 @@ export default function MarkdownPreview({
       </ReactMarkdown>
     </div>
   );
+});
+
+PreviewContent.displayName = 'PreviewContent';
+
+export default function MarkdownPreview({
+  content,
+  className,
+}: MarkdownPreviewProps) {
+  return <PreviewContent content={content} className={className} />;
 }

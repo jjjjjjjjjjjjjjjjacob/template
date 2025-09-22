@@ -446,6 +446,9 @@ export function BlogShareModal({
             <DialogTitle className="line-clamp-1 text-base sm:text-lg">
               {post.title} - {selectedLayout} layout
             </DialogTitle>
+            <DialogDescription className="sr-only">
+              full size preview of the {selectedLayout} layout for {post.title}
+            </DialogDescription>
           </DialogHeader>
 
           {currentPreviewUrl && (

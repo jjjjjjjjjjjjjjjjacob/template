@@ -5,6 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ExternalLink } from 'lucide-react';
@@ -193,6 +194,9 @@ function ProjectSlideshow({
                 </button>
               )}
             </div>
+            <DialogDescription className="sr-only">
+              interactive preview of {title} project in a dialog window
+            </DialogDescription>
           </DialogHeader>
           <div className="relative h-[70vh] w-full px-4 pb-4">
             {/* Dialog skeleton loader */}

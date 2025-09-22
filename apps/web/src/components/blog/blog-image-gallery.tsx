@@ -2,7 +2,13 @@ import * as React from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@template/convex';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { Image as ImageIcon, Expand } from 'lucide-react';
 import { Id } from '@template/convex/dataModel';
 
@@ -42,6 +48,10 @@ export function BlogImageGallery({
             </div>
           </DialogTrigger>
           <DialogContent className="w-full max-w-7xl">
+            <DialogTitle className="sr-only">full size image view</DialogTitle>
+            <DialogDescription className="sr-only">
+              enlarged view of the image for better visibility
+            </DialogDescription>
             <ImageCard storageId={images[0]} className="w-full" showFullSize />
           </DialogContent>
         </Dialog>
@@ -67,6 +77,12 @@ export function BlogImageGallery({
                 </div>
               </DialogTrigger>
               <DialogContent className="w-full max-w-7xl">
+                <DialogTitle className="sr-only">
+                  full size image view
+                </DialogTitle>
+                <DialogDescription className="sr-only">
+                  enlarged view of the image for better visibility
+                </DialogDescription>
                 <ImageCard
                   storageId={storageId}
                   className="w-full"

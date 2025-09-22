@@ -144,11 +144,11 @@ export function PerformanceDashboard() {
         <Card className="max-h-96 w-96 overflow-auto border bg-white/95 shadow-lg backdrop-blur-sm">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-light">
                 performance monitor
               </CardTitle>
               <div className="flex items-center gap-2">
-                <div className={`text-lg font-bold ${getScoreColor(score)}`}>
+                <div className={`text-lg font-light ${getScoreColor(score)}`}>
                   {score}/100
                 </div>
                 <Button
@@ -181,7 +181,7 @@ export function PerformanceDashboard() {
                   {/* LCP */}
                   {metrics.lcp !== null && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">lcp</span>
+                      <span className="text-xs font-light">lcp</span>
                       <div className="flex items-center gap-2">
                         <Badge
                           variant={getRatingBadgeVariant(
@@ -198,7 +198,7 @@ export function PerformanceDashboard() {
                   {/* FCP */}
                   {metrics.fcp !== null && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">fcp</span>
+                      <span className="text-xs font-light">fcp</span>
                       <div className="flex items-center gap-2">
                         <Badge
                           variant={getRatingBadgeVariant(
@@ -215,7 +215,7 @@ export function PerformanceDashboard() {
                   {/* INP */}
                   {metrics.inp !== null && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">inp</span>
+                      <span className="text-xs font-light">inp</span>
                       <div className="flex items-center gap-2">
                         <Badge
                           variant={getRatingBadgeVariant(
@@ -232,7 +232,7 @@ export function PerformanceDashboard() {
                   {/* CLS */}
                   {metrics.cls !== null && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">cls</span>
+                      <span className="text-xs font-light">cls</span>
                       <div className="flex items-center gap-2">
                         <Badge
                           variant={getRatingBadgeVariant(
@@ -249,7 +249,7 @@ export function PerformanceDashboard() {
                   {/* TTFB */}
                   {metrics.ttfb !== null && (
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium">ttfb</span>
+                      <span className="text-xs font-light">ttfb</span>
                       <div className="flex items-center gap-2">
                         <Badge
                           variant={getRatingBadgeVariant(
@@ -267,9 +267,9 @@ export function PerformanceDashboard() {
                 {/* Overall Score */}
                 <div className="border-t pt-2">
                   <div className="mb-1 flex items-center justify-between">
-                    <span className="text-xs font-medium">score</span>
+                    <span className="text-xs font-light">score</span>
                     <span
-                      className={`text-xs font-bold ${getScoreColor(score)}`}
+                      className={`text-xs font-light ${getScoreColor(score)}`}
                     >
                       {score}/100
                     </span>
@@ -307,7 +307,7 @@ export function PerformanceDashboard() {
                         {Math.round(navigationTiming.dom_processing)}ms
                       </span>
                     </div>
-                    <div className="flex justify-between border-t pt-2 text-xs font-medium">
+                    <div className="flex justify-between border-t pt-2 text-xs font-light">
                       <span>total load time</span>
                       <span>
                         {Math.round(navigationTiming.total_load_time)}ms

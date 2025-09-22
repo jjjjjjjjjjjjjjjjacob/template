@@ -235,7 +235,7 @@ export function ResumeFilterControls({
         <div className="space-y-6">
           {/* Quick Presets */}
           <div>
-            <h3 className="mb-3 font-medium">quick presets</h3>
+            <h3 className="mb-3 font-light">quick presets</h3>
             <div className="flex flex-wrap gap-2">
               {quickPresets.map((preset) => (
                 <Button
@@ -252,7 +252,7 @@ export function ResumeFilterControls({
 
           {/* Focus Areas */}
           <div>
-            <h3 className="mb-3 font-medium">focus areas</h3>
+            <h3 className="mb-3 font-light">focus areas</h3>
             <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
               {focusAreaOptions.map((option) => (
                 <div
@@ -275,7 +275,7 @@ export function ResumeFilterControls({
                     option.value
                   )}
                 >
-                  <div className="text-sm font-medium">{option.label}</div>
+                  <div className="text-sm font-light">{option.label}</div>
                   <div className="text-muted-foreground mt-1 text-xs">
                     {option.description}
                   </div>
@@ -286,7 +286,7 @@ export function ResumeFilterControls({
 
           {/* Technologies */}
           <div>
-            <h3 className="mb-3 font-medium">key technologies</h3>
+            <h3 className="mb-3 font-light">key technologies</h3>
             <div className="flex flex-wrap gap-2">
               {technologyOptions.map((tech) => (
                 <Badge
@@ -307,7 +307,7 @@ export function ResumeFilterControls({
 
           {/* Domains */}
           <div>
-            <h3 className="mb-3 font-medium">domains</h3>
+            <h3 className="mb-3 font-light">domains</h3>
             <div className="flex flex-wrap gap-2">
               {domainOptions.map((domain) => (
                 <Badge
@@ -328,7 +328,7 @@ export function ResumeFilterControls({
 
           {/* Priority Level */}
           <div>
-            <h3 className="mb-3 font-medium">experience level</h3>
+            <h3 className="mb-3 font-light">experience level</h3>
             <div className="flex gap-2">
               {[
                 { value: 6, label: 'all experience' },
@@ -356,7 +356,7 @@ export function ResumeFilterControls({
 
           {/* Format Options */}
           <div>
-            <h3 className="mb-3 font-medium">format</h3>
+            <h3 className="mb-3 font-light">format</h3>
             <div className="flex gap-2">
               {[
                 { value: 'web', label: 'interactive web' },
@@ -416,7 +416,7 @@ export function ResumeFilterControls({
       <PopoverContent className="w-80">
         <div className="space-y-4">
           <div>
-            <h4 className="mb-2 font-medium">quick presets</h4>
+            <h4 className="mb-2 font-light">quick presets</h4>
             <div className="space-y-1">
               {quickPresets.slice(0, 3).map((preset) => (
                 <Button

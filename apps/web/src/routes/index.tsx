@@ -172,14 +172,13 @@ function HomePage() {
             slideDirection={slideDirection}
             isMobile={true}
           />
-
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="text-foreground text-2xl font-medium">
+                <h3 className="text-foreground text-2xl font-[200]">
                   {project.title}
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground font-[200]">
                   {project.timeline} • {project.role}
                 </p>
               </div>
@@ -192,13 +191,13 @@ function HomePage() {
               </button>
             </div>
 
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed font-[200]">
               {project.description}
             </p>
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-foreground mb-2 text-sm font-medium">
+                <h4 className="text-foreground mb-2 text-sm font-[200]">
                   key contributions
                 </h4>
                 <ul className="space-y-1">
@@ -209,7 +208,7 @@ function HomePage() {
                         key={achIndex}
                         className="text-muted-foreground flex items-start gap-2 text-sm"
                       >
-                        <span className="bg-muted-foreground mt-2 h-1 w-1 flex-shrink-0 rounded-full" />
+                        <span className="bg-muted-foreground mt-2 h-1 w-1 flex-shrink-0 rounded-full font-[200]" />
                         {achievement.description}
                       </li>
                     ))}
@@ -217,7 +216,7 @@ function HomePage() {
               </div>
 
               <div>
-                <h4 className="text-foreground mb-2 text-sm font-medium">
+                <h4 className="text-foreground mb-2 text-sm font-[200]">
                   technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -230,7 +229,7 @@ function HomePage() {
                     .map((tech) => (
                       <span
                         key={tech}
-                        className="text-muted-foreground text-xs"
+                        className="text-muted-foreground text-xs font-[200]"
                       >
                         {tech}
                       </span>
@@ -263,29 +262,33 @@ function HomePage() {
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="text-foreground text-3xl font-medium">
-                  {project.title}
-                </h3>
-                <p className="text-muted-foreground">
+                <div className="flex justify-between">
+                  <h3 className="text-foreground text-3xl font-[200]">
+                    {project.title}
+                  </h3>
+                  <button
+                    onClick={() =>
+                      handleProjectVisit(project.title, project.url)
+                    }
+                    className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    visit
+                  </button>
+                </div>
+                <p className="text-muted-foreground font-[200]">
                   {project.timeline} • {project.role}
                 </p>
               </div>
-              <button
-                onClick={() => handleProjectVisit(project.title, project.url)}
-                className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
-              >
-                <ExternalLink className="h-4 w-4" />
-                visit
-              </button>
             </div>
 
-            <p className="text-muted-foreground text-lg leading-relaxed">
+            <p className="text-muted-foreground text-lg leading-relaxed font-[200]">
               {project.description}
             </p>
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-foreground mb-3 text-sm font-medium">
+                <h4 className="text-foreground mb-3 text-sm font-[200]">
                   key contributions
                 </h4>
                 <ul className="space-y-2">
@@ -294,9 +297,9 @@ function HomePage() {
                     .map((achievement, achIndex) => (
                       <li
                         key={achIndex}
-                        className="text-muted-foreground flex items-start gap-3 text-sm"
+                        className="text-muted-foreground flex items-start gap-3 text-sm font-[200]"
                       >
-                        <span className="bg-muted-foreground mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full" />
+                        <span className="bg-muted-foreground mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full font-[200]" />
                         {achievement.description}
                       </li>
                     ))}
@@ -304,7 +307,7 @@ function HomePage() {
               </div>
 
               <div>
-                <h4 className="text-foreground mb-3 text-sm font-medium">
+                <h4 className="text-foreground mb-3 text-sm font-[200]">
                   technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -317,7 +320,7 @@ function HomePage() {
                     .map((tech) => (
                       <span
                         key={tech}
-                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-medium"
+                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-[200]"
                       >
                         {tech}
                       </span>
@@ -385,7 +388,7 @@ function HomePage() {
   const ResumeExperience = () => (
     <section>
       <AnimatedSection animationType="header">
-        <h2 className="text-foreground mb-8 text-3xl font-bold">experience</h2>
+        <h2 className="text-foreground mb-8 text-3xl font-[200]">experience</h2>
       </AnimatedSection>
       <div className="space-y-12">
         {experiences.map((experience, index) => (
@@ -396,17 +399,19 @@ function HomePage() {
               <div className="mb-6 space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h3 className="text-foreground text-xl font-semibold">
+                    <h3 className="text-foreground text-xl font-[200]">
                       {experience.role}
                     </h3>
-                    <p className="text-primary text-lg font-medium">
+                    <p className="text-primary text-lg font-[200]">
                       {experience.company}
                     </p>
                   </div>
                   <div className="text-muted-foreground flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
-                      {experience.timeline}
+                      <span className="leading-none">
+                        {experience.timeline}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1">
                       <MapPin className="h-4 w-4" />
@@ -420,7 +425,7 @@ function HomePage() {
                 </p>
 
                 <div>
-                  <h4 className="text-foreground mb-2 font-medium">
+                  <h4 className="text-foreground mb-2 font-[200]">
                     key achievements
                   </h4>
                   <ul className="space-y-1">
@@ -439,14 +444,14 @@ function HomePage() {
                 </div>
 
                 <div>
-                  <h4 className="text-foreground mb-2 font-medium">
+                  <h4 className="text-foreground mb-2 font-[200]">
                     technologies
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {experience.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-medium"
+                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-[200]"
                       >
                         {tech}
                       </span>
@@ -464,7 +469,7 @@ function HomePage() {
   const ResumeSkills = () => (
     <section>
       <AnimatedSection animationType="header">
-        <h2 className="text-foreground mb-8 text-3xl font-bold">skills</h2>
+        <h2 className="text-foreground mb-8 text-3xl font-[200]">skills</h2>
       </AnimatedSection>
       <div className="grid gap-8 md:grid-cols-2">
         {skills.map((skillCategory, index) => (
@@ -474,14 +479,14 @@ function HomePage() {
             delay={index % 2 === 0 ? 200 : 400}
           >
             <div className="space-y-3">
-              <h3 className="text-foreground font-semibold">
+              <h3 className="text-foreground font-[200]">
                 {skillCategory.category}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {skillCategory.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="bg-primary/10 text-primary rounded-lg px-3 py-2 text-sm font-medium"
+                    className="bg-primary/10 text-primary rounded-lg px-3 py-2 text-sm font-[200]"
                   >
                     {skill}
                   </span>
@@ -498,10 +503,10 @@ function HomePage() {
     <footer className="bg-background py-12">
       <div className="container mx-auto px-4">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm font-[200]">
             © {new Date().getFullYear()} jacob stein
           </p>
-          <div className="text-muted-foreground flex items-center gap-4 text-sm">
+          <div className="text-muted-foreground flex items-center gap-4 text-sm font-[200]">
             <a
               href="#projects"
               className="hover:text-foreground transition-colors-smooth"
@@ -769,24 +774,24 @@ function HomePage() {
 
             <p
               data-visible={!showLoader}
-              className="text-muted-foreground max-w-md text-center text-[14px] tracking-wide opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
+              className="text-muted-foreground max-w-md text-center text-[14px] font-[200] tracking-wide opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
               ui/ux | fullstack | product
             </p>
 
             <div
               data-visible={!showLoader}
-              className="flex gap-2 opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
+              className="flex gap-2 font-[200] opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
               <Button
-                className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
+                className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] font-[200] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
                 size="sm"
                 onClick={() => scrollToSection('projects')}
               >
                 projects
               </Button>
               <Button
-                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] sm:px-5 sm:py-3 sm:text-sm"
+                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] font-[200] sm:px-5 sm:py-3 sm:text-sm"
                 onClick={() => scrollToSection('resume')}
                 size="sm"
               >
@@ -806,12 +811,12 @@ function HomePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <AnimatedSection animationType="header" delay={200}>
-                    <h1 className="text-foreground text-4xl font-medium tracking-wide">
+                    <h1 className="text-foreground text-4xl font-[200] tracking-wide">
                       projects
                     </h1>
                   </AnimatedSection>
                   <AnimatedSection animationType="header" delay={400}>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground font-[200]">
                       recent work in full-stack development and product design
                     </p>
                   </AnimatedSection>
@@ -842,11 +847,11 @@ function HomePage() {
               <div className="space-y-6 text-center">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h1 className="text-foreground text-4xl font-medium tracking-wide sm:text-5xl">
+                    <h1 className="text-foreground text-4xl font-[200] tracking-wide sm:text-5xl">
                       jacob stein
                     </h1>
                     <AnimatedSection animationType="header" delay={200}>
-                      <p className="text-muted-foreground mt-2 text-xl">
+                      <p className="text-muted-foreground mt-2 text-xl font-[200]">
                         full-stack developer & ui/ux designer
                       </p>
                     </AnimatedSection>
@@ -861,7 +866,7 @@ function HomePage() {
                 </div>
 
                 <AnimatedSection animationType="section" delay={400}>
-                  <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed">
+                  <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed font-[200]">
                     {summary}
                   </p>
                 </AnimatedSection>
@@ -884,7 +889,7 @@ function HomePage() {
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-2xl text-center">
               <AnimatedSection animationType="header">
-                <h2 className="text-foreground mb-8 text-4xl font-medium tracking-wide">
+                <h2 className="text-foreground mb-8 text-4xl font-[200] tracking-wide">
                   let's connect
                 </h2>
               </AnimatedSection>
@@ -926,10 +931,10 @@ function HomePage() {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <p className="text-foreground text-sm font-medium">
+                        <p className="text-foreground text-sm font-[200]">
                           email
                         </p>
-                        <p className="text-muted-foreground group-hover:text-foreground text-sm transition-colors">
+                        <p className="text-muted-foreground group-hover:text-foreground text-sm font-[200] transition-colors">
                           jacob@jacobstein.me
                         </p>
                       </div>

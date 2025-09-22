@@ -1,37 +1,31 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.matchMedia(query).matches;
-    }
-    return false;
-  });
+  const [matches, setMatches] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
     const mediaQuery = window.matchMedia(query);
+    setMatches(mediaQuery.matches);
+
     const handler = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
 
-    // Set initial value
-    setMatches(mediaQuery.matches);
-
-    // Modern browsers
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handler);
-      return () => mediaQuery.removeEventListener('change', handler);
-    }
-    // Fallback for older browsers
-    else {
-      mediaQuery.addListener(handler);
-      return () => mediaQuery.removeListener(handler);
-    }
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
   }, [query]);
 
   return matches;
+}
+
+export function useIsMobile(): boolean {
+  return useMediaQuery('(max-width: 639px)');
+}
+
+export function useIsTablet(): boolean {
+  return useMediaQuery('(min-width: 640px) and (max-width: 767px)');
+}
+
+export function useIsDesktop(): boolean {
+  return useMediaQuery('(min-width: 768px)');
 }

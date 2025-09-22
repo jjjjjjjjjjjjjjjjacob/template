@@ -11,10 +11,10 @@ export function AuthTest() {
 
   return (
     <div className="space-y-4 rounded-lg bg-gray-100 p-4">
-      <h2 className="text-xl font-bold">auth test panel</h2>
+      <h2 className="text-xl font-light">auth test panel</h2>
 
       <div className="space-y-2">
-        <h3 className="font-semibold">clerk status:</h3>
+        <h3 className="font-light">clerk status:</h3>
         <p>loaded: {isLoaded ? 'yes' : 'no'}</p>
         <p>signed in: {isSignedIn ? 'yes' : 'no'}</p>
         <p>user id: {user?.id || 'none'}</p>
@@ -26,7 +26,7 @@ export function AuthTest() {
       </div>
 
       <div className="space-y-2">
-        <h3 className="font-semibold">ensure user exists mutation:</h3>
+        <h3 className="font-light">ensure user exists mutation:</h3>
         <Button
           onClick={handleEnsureUser}
           disabled={ensureUserExists.isPending}

@@ -5,13 +5,15 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// Simple performance monitoring plugin
+// Performance monitoring plugin with proper error detection
 const performancePlugin = () => {
   let buildStart = 0;
+  let buildSuccess = false;
   return {
     name: 'performance-monitor',
     buildStart() {
       buildStart = Date.now();
+      buildSuccess = false;
       console.log('🏗️  Build started with performance monitoring');
     },
     writeBundle(_options: any, bundle: any) {
@@ -23,8 +25,10 @@ const performancePlugin = () => {
         0
       );
 
-      console.log(`⚡ Build completed in ${buildTime.toFixed(2)}s`);
+      // Only log completion for this phase, not overall success
+      console.log(`⚡ Client build completed in ${buildTime.toFixed(2)}s`);
       console.log(`📦 Bundle size: ${(bundleSize / 1024).toFixed(1)}KB`);
+      buildSuccess = true;
 
       // Save basic metrics
       if (process.env.PERF_MONITOR === 'true') {
@@ -47,6 +51,18 @@ const performancePlugin = () => {
         }
       }
     },
+    buildEnd(error?: Error) {
+      if (error) {
+        console.error('❌ Build failed during bundle generation');
+        buildSuccess = false;
+      }
+    },
+    closeBundle() {
+      // Note: This only indicates Vite build completion, not Nitro
+      if (buildSuccess) {
+        console.log('✅ Vite build phase completed successfully');
+      }
+    },
   };
 };
 
@@ -60,6 +76,10 @@ export default defineConfig(() => {
       hmr: {
         overlay: false,
       },
+      watch: {
+        usePolling: true,
+        ignore: ['**/node_modules/**', '**/.git/**', '**/.next/**'],
+      },
     },
     plugins: [
       tsConfigPaths({
@@ -69,8 +89,11 @@ export default defineConfig(() => {
       tanstackStart({
         target: 'cloudflare-module',
         customViteReactPlugin: true,
+        autoCodeSplitting: true,
       }),
-      react(),
+      react({
+        include: '**/*.tsx',
+      }),
       // Add performance monitoring in production builds
       ...(isProduction ? [performancePlugin()] : []),
     ],
@@ -89,75 +112,6 @@ export default defineConfig(() => {
           /vitest/,
           /@testing-library/,
         ],
-        // Manual chunk splitting for optimal loading
-        manualChunks: {
-          // Core React chunk - always needed for SSR
-          'react-vendor': ['react', 'react-dom'],
-
-          // TanStack routing and state management
-          'tanstack-vendor': [
-            '@tanstack/react-router',
-            '@tanstack/react-query',
-            '@tanstack/react-start',
-            '@tanstack/react-router-with-query',
-          ],
-
-          // Three.js and 3D graphics - lazy loaded
-          'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
-
-          // Radix UI components - loaded on demand
-          'radix-vendor': [
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-label',
-            '@radix-ui/react-navigation-menu',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-tooltip',
-          ],
-
-          // Utilities and small libraries
-          'utils-vendor': [
-            '@template/utils',
-            'clsx',
-            'tailwind-merge',
-            'class-variance-authority',
-            'zod',
-            'tiny-invariant',
-          ],
-
-          // Data visualization - lazy loaded for admin
-          'charts-vendor': [
-            'recharts',
-            '@tanstack/react-table',
-            '@tanstack/react-virtual',
-          ],
-
-          // Client-only features
-          'client-vendor': [
-            'posthog-js',
-            'lucide-react',
-            'next-themes',
-            'sonner',
-            'vaul',
-            'zustand',
-          ],
-
-          // Form handling
-          'forms-vendor': ['react-hook-form', '@hookform/resolvers'],
-        },
         output: {
           // Optimize asset file names and paths
           assetFileNames: (assetInfo) => {
@@ -203,7 +157,45 @@ export default defineConfig(() => {
     ssr: {
       noExternal: ['posthog-js', 'posthog-js/react', 'qrcode'],
       // Externalize heavy client-only dependencies for SSR
-      external: ['next-themes', 'zustand', 'recharts'],
+      external: [
+        'next-themes',
+        'zustand',
+        'recharts',
+        // Markdown processing libraries - should be client-only
+        'react-markdown',
+        'remark-gfm',
+        'rehype-raw',
+        'react-syntax-highlighter',
+        'react-syntax-highlighter/dist/esm/styles/prism',
+        'unist-util-visit',
+        'remark-parse',
+        'remark-stringify',
+        'unified',
+        'mdast',
+        'mdast-util-from-markdown',
+        'mdast-util-to-markdown',
+        'micromark',
+        'vfile',
+        'hast',
+        'rehype-parse',
+        'rehype-stringify',
+        // All prism-related syntax highlighting
+        'prismjs',
+        'refractor',
+        'lowlight',
+        // Heavy UI libraries
+        'lucide-react',
+        'three',
+        '@react-three/fiber',
+        '@react-three/drei',
+        // Additional markdown dependencies
+        'markdown-it',
+        'marked',
+        'highlight.js',
+        // Emoji and other content processors
+        '@emoji-mart/data',
+        '@emoji-mart/react',
+      ],
     },
 
     // Optimize dependencies
@@ -246,6 +238,23 @@ export default defineConfig(() => {
         'next-themes',
         'sonner',
         'vaul',
+        // Markdown processing libraries - lazy loaded for blog
+        'react-markdown',
+        'remark-gfm',
+        'rehype-raw',
+        'react-syntax-highlighter',
+        'unist-util-visit',
+        'remark-parse',
+        'remark-stringify',
+        'unified',
+        'mdast',
+        'mdast-util-from-markdown',
+        'mdast-util-to-markdown',
+        'micromark',
+        'vfile',
+        'hast',
+        'rehype-parse',
+        'rehype-stringify',
       ],
     },
 

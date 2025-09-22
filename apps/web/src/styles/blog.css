@@ -1,0 +1,258 @@
+/* Highlight.js theme - using a neutral theme that works with both light and dark modes */
+@import 'highlight.js/styles/github.css';
+
+/* Dark mode highlight.js styles */
+@media (prefers-color-scheme: dark) {
+  @import 'highlight.js/styles/github-dark.css';
+}
+
+/* Blog markdown content styles - Substack inspired */
+.markdown-content {
+  color: var(--color-foreground);
+}
+
+.markdown-content h1 {
+  font-size: 2rem; /* Slightly larger */
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: 0.025em; /* Wider tracking */
+  line-height: 1.2;
+}
+
+.markdown-content h1:first-child {
+  margin-top: 0;
+}
+
+.markdown-content h2 {
+  font-size: 1.625rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.015em; /* Wider tracking */
+  line-height: 1.3;
+}
+
+.markdown-content h3 {
+  font-size: 1.375rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.01em; /* Wider tracking */
+  line-height: 1.4;
+}
+
+.markdown-content h4 {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 300; /* font-light */
+  margin-top: 1rem; /* mt-4 */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.markdown-content h5 {
+  font-size: 1rem; /* text-base */
+  font-weight: 300; /* font-light */
+  margin-top: 0.75rem; /* mt-3 */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.markdown-content h6 {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 300; /* font-light */
+  margin-top: 0.75rem; /* mt-3 */
+  margin-bottom: 0.5rem; /* mb-2 */
+}
+
+.markdown-content p {
+  margin-bottom: 1.5rem;
+  line-height: 1.8; /* More spacious like Substack */
+  font-size: 1.125rem; /* Slightly larger for readability */
+}
+
+.markdown-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem; /* pl-6 */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.markdown-content ul > li {
+  margin-top: 0.25rem; /* space-y-1 */
+}
+
+.markdown-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem; /* pl-6 */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.markdown-content ol > li {
+  margin-top: 0.25rem; /* space-y-1 */
+}
+
+.markdown-content li {
+  line-height: 1.75; /* leading-7 */
+}
+
+.markdown-content blockquote {
+  border-left-width: 3px;
+  border-color: var(--color-border);
+  padding-left: 1.25rem;
+  margin: 1.5rem 0;
+  color: var(--color-muted-foreground);
+  font-style: italic;
+  font-size: 1.125rem;
+  line-height: 1.75;
+}
+
+.markdown-content code {
+  background-color: var(--color-muted);
+  padding: 0.125rem 0.375rem; /* px-1.5 py-0.5 */
+  border-radius: 0.25rem; /* rounded */
+  font-size: 0.875rem; /* text-sm */
+  font-family: var(--font-family-mono);
+}
+
+.markdown-content pre {
+  background-color: var(--color-muted);
+  padding: 1rem; /* p-4 */
+  border-radius: 0.5rem; /* rounded-lg */
+  margin-bottom: 1rem; /* mb-4 */
+  overflow-x: auto;
+}
+
+.markdown-content pre code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.875rem; /* text-sm */
+}
+
+.markdown-content a {
+  color: var(--color-primary);
+}
+
+.markdown-content a:hover {
+  text-decoration: underline;
+}
+
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem; /* rounded-lg */
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--color-border);
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  text-align: left;
+}
+
+.markdown-content th {
+  background-color: var(--color-muted);
+  font-weight: 300; /* font-light */
+}
+
+.markdown-content hr {
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0; /* my-8 */
+}
+
+/* Override highlight.js styles to work with our theme */
+.markdown-content .hljs {
+  background-color: var(--color-muted);
+  color: var(--color-foreground);
+  padding: 1rem; /* p-4 */
+  border-radius: 0.5rem; /* rounded-lg */
+}
+
+/* Ensure code blocks have proper spacing */
+.markdown-content pre code.hljs {
+  background-color: transparent;
+}
+
+/* Inline image positioning styles */
+.markdown-content .float-left {
+  shape-outside: margin-box;
+}
+
+.markdown-content .float-right {
+  shape-outside: margin-box;
+}
+
+/* Clear floats after floating images */
+.markdown-content p:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Full width image container */
+.full-width-image-container {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
+/* Mobile responsiveness - stack all positioned images */
+@media (max-width: 640px) {
+  .markdown-content .float-left,
+  .markdown-content .float-right {
+    float: none !important;
+    margin: 1.5rem auto !important;
+    max-width: 100% !important;
+    display: block;
+  }
+
+  /* Reduce full-width image overflow on mobile */
+  .full-width-image-container {
+    width: calc(100vw - 2rem);
+    margin-left: calc(-50vw + 1rem);
+    margin-right: calc(-50vw + 1rem);
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .markdown-content .float-left,
+  .markdown-content .float-right {
+    max-width: 50% !important;
+  }
+}
+
+/* Desktop - ensure floating images don't get too large */
+@media (min-width: 1025px) {
+  .markdown-content .float-left,
+  .markdown-content .float-right {
+    max-width: 45%;
+  }
+}
+
+/* Clearfix utility for sections with floating images */
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Enhanced article content container for better image handling */
+.article-content {
+  overflow-wrap: break-word;
+}
+
+.article-content::after {
+  content: '';
+  display: table;
+  clear: both;
+}

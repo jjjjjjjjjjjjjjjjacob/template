@@ -12,7 +12,10 @@ import { routeTree } from './routeTree.gen';
 import { DefaultCatchBoundary } from './components/default-catch-boundary';
 import { NotFound } from './components/not-found';
 
-export function createRouter() {
+export function createRouter(loadContext?: {
+  request?: Request;
+  auth?: { userId: string | null };
+}) {
   if (typeof document !== 'undefined') {
     notifyManager.setScheduler(window.requestAnimationFrame);
   }
@@ -54,6 +57,8 @@ export function createRouter() {
         queryClient,
         convexClient,
         convexQueryClient,
+        ssrAuth: loadContext?.auth,
+        request: loadContext?.request,
       },
       scrollRestoration: false,
       caseSensitive: false,
@@ -73,5 +78,7 @@ declare module '@tanstack/react-router' {
     queryClient: QueryClient;
     convexClient: ConvexReactClient;
     convexQueryClient: ConvexQueryClient;
+    ssrAuth?: { userId: string | null };
+    request?: Request;
   }
 }

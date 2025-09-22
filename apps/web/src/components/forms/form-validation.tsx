@@ -374,7 +374,7 @@ export function ValidatedInput({
   return (
     <div className={cn('space-y-2', className)}>
       {label && (
-        <Label htmlFor={inputId} className="text-sm font-medium">
+        <Label htmlFor={inputId} className="text-sm font-light">
           {label}
         </Label>
       )}

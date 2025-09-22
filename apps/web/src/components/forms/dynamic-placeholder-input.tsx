@@ -211,7 +211,7 @@ export function DynamicPlaceholderInput({
   return (
     <div className={cn('space-y-2', className)}>
       {label && (
-        <Label htmlFor={inputId} className="text-sm font-medium">
+        <Label htmlFor={inputId} className="text-sm font-light">
           {label}
           {required && <span className="text-destructive ml-1">*</span>}
         </Label>

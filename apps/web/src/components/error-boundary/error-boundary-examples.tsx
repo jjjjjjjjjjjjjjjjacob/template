@@ -26,7 +26,7 @@ export function ErrorBoundaryExamples() {
   return (
     <div className="max-w-4xl space-y-6 p-6">
       <div>
-        <h2 className="mb-2 text-2xl font-bold">error boundary examples</h2>
+        <h2 className="mb-2 text-2xl font-light">error boundary examples</h2>
         <p className="text-muted-foreground">
           interactive examples of the error boundary system (development only)
         </p>
@@ -118,7 +118,7 @@ export function ErrorBoundaryExamples() {
 
       {/* Error Display Examples */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold">error display components</h3>
+        <h3 className="text-xl font-light">error display components</h3>
 
         <div className="grid gap-4 md:grid-cols-2">
           <Card>
@@ -163,7 +163,7 @@ export function ErrorBoundaryExamples() {
 
       {/* Error Logging Examples */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold">error logging</h3>
+        <h3 className="text-xl font-light">error logging</h3>
 
         <div className="flex gap-2">
           <Button

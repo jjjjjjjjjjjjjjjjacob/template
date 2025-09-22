@@ -1,8 +1,12 @@
 import { Sun, Moon, Github } from 'lucide-react';
 import * as React from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '@template/convex';
 import { useTheme } from './theme-provider';
 import { useSectionTracking } from '@/hooks/use-section-tracking';
 import { trackEvents } from '@/lib/track-events';
+import { Link } from '@tanstack/react-router';
+import { useAdminAuth } from '@/features/admin/hooks/use-admin';
 
 // Custom X (Twitter) icon component
 const XIcon = ({ className }: { className?: string }) => (
@@ -20,6 +24,8 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
   const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
   const [isFading, setIsFading] = React.useState(true);
+  const { isAdmin } = useAdminAuth();
+  const hasPublishedPosts = useQuery(api.blog.hasPublishedPosts);
 
   React.useEffect(() => {
     setMounted(true);
@@ -67,7 +73,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <button
           onClick={() => handleNavClick('home')}
-          className={`text-xl font-medium tracking-wide transition-colors ${
+          className={`text-xl font-[200] tracking-wider transition-colors ${
             activeSection === 'home'
               ? 'text-foreground'
               : 'text-foreground/80 hover:text-foreground'
@@ -110,24 +116,40 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
 
           <button
             onClick={() => handleNavClick('projects')}
-            className={`text-sm transition-colors ${
+            className={`text-sm tracking-wider transition-colors ${
               activeSection === 'projects'
-                ? 'text-foreground font-medium'
-                : 'text-muted-foreground hover:text-foreground hover:font-medium'
+                ? 'text-foreground font-[200]'
+                : 'text-muted-foreground hover:text-foreground font-[200]'
             }`}
           >
             projects
           </button>
           <button
             onClick={() => handleNavClick('resume')}
-            className={`text-sm transition-colors ${
+            className={`text-sm tracking-wider transition-colors ${
               activeSection === 'resume'
-                ? 'text-foreground font-medium'
-                : 'text-muted-foreground hover:text-foreground hover:font-medium'
+                ? 'text-foreground font-[200]'
+                : 'text-muted-foreground hover:text-foreground font-[200]'
             }`}
           >
             resume
           </button>
+          {hasPublishedPosts && (
+            <Link
+              to="/blog"
+              className="text-muted-foreground hover:text-foreground text-sm font-[200] tracking-wider transition-colors"
+            >
+              blog
+            </Link>
+          )}
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="text-muted-foreground hover:text-foreground text-sm font-[200] tracking-wide transition-colors hover:font-light"
+            >
+              admin
+            </Link>
+          )}
 
           <button
             onClick={toggleTheme}

@@ -50,7 +50,7 @@ function ProjectThumbnail({
         {/* Project Header */}
         <div className="flex items-start justify-between">
           <div className="flex-1 space-y-1">
-            <h3 className="text-foreground group-hover:text-primary text-lg font-semibold transition-colors">
+            <h3 className="text-foreground group-hover:text-primary text-lg font-light transition-colors">
               {project.title}
             </h3>
             <div className="text-muted-foreground flex items-center gap-3 text-sm">
@@ -86,7 +86,7 @@ function ProjectThumbnail({
           {project.technologies.slice(0, 4).map((tech) => (
             <span
               key={tech}
-              className="bg-muted text-muted-foreground rounded px-2 py-1 text-xs font-medium"
+              className="bg-muted text-muted-foreground rounded px-2 py-1 text-xs font-light"
             >
               {tech}
             </span>
@@ -119,7 +119,7 @@ function ProjectThumbnails({
   return (
     <div className="space-y-6" role="region" aria-label="Project thumbnails">
       <div className="space-y-1">
-        <h2 className="text-foreground text-xl font-semibold">
+        <h2 className="text-foreground text-xl font-light">
           featured projects
         </h2>
         <p className="text-muted-foreground text-sm">

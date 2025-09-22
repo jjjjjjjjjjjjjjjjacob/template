@@ -129,7 +129,7 @@ export function CharacterCountInput({
   return (
     <div className={cn('space-y-2', className)}>
       {label && (
-        <Label htmlFor={inputId} className="text-sm font-medium">
+        <Label htmlFor={inputId} className="text-sm font-light">
           {label}
           {required && <span className="text-destructive ml-1">*</span>}
         </Label>
@@ -148,7 +148,7 @@ export function CharacterCountInput({
           <div
             id={countId}
             className={cn(
-              'pointer-events-none absolute right-2 bottom-2 text-xs font-medium',
+              'pointer-events-none absolute right-2 bottom-2 text-xs font-light',
               'bg-background/80 rounded px-1.5 py-0.5 backdrop-blur-sm',
               getCountColor()
             )}

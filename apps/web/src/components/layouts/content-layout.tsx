@@ -124,7 +124,7 @@ export function ContentSection({
       {(title || description) && (
         <div className="mb-6">
           {title && (
-            <h2 className="text-foreground mb-2 text-2xl font-semibold">
+            <h2 className="text-foreground mb-2 text-2xl font-light">
               {title}
             </h2>
           )}

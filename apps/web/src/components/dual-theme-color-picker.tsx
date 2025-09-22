@@ -45,7 +45,7 @@ export function DualThemeColorPicker({
       )}
     >
       <CardHeader className="pb-4">
-        <CardTitle className="themed-gradient-text flex items-center gap-2 text-lg font-bold lowercase">
+        <CardTitle className="themed-gradient-text flex items-center gap-2 text-lg font-light lowercase">
           profile theme
         </CardTitle>
         <p className="text-muted-foreground/80 text-sm">
@@ -57,7 +57,7 @@ export function DualThemeColorPicker({
         <div className="space-y-3">
           <div className="themed-gradient-button relative h-16 overflow-hidden rounded-xl">
             <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-            <div className="absolute bottom-2 left-3 text-xs font-medium text-white/80 lowercase">
+            <div className="absolute bottom-2 left-3 text-xs font-light text-white/80 lowercase">
               live preview
             </div>
           </div>
@@ -84,7 +84,7 @@ export function DualThemeColorPicker({
 
           <TabsContent value="primary" className="mt-4 space-y-3">
             <div className="text-center">
-              <h4 className="text-muted-foreground mb-1 text-sm font-medium lowercase">
+              <h4 className="text-muted-foreground mb-1 text-sm font-light lowercase">
                 choose primary color
               </h4>
               <p className="text-muted-foreground/60 text-xs">
@@ -111,7 +111,7 @@ export function DualThemeColorPicker({
 
           <TabsContent value="secondary" className="mt-4 space-y-3">
             <div className="text-center">
-              <h4 className="text-muted-foreground mb-1 text-sm font-medium lowercase">
+              <h4 className="text-muted-foreground mb-1 text-sm font-light lowercase">
                 choose secondary color
               </h4>
               <p className="text-muted-foreground/60 text-xs">

@@ -196,7 +196,7 @@ export function ErrorRecovery({
     <div className="bg-card space-y-3 rounded-lg border p-4">
       <div className="flex items-center gap-2">
         {getStatusIcon()}
-        <span className="text-sm font-medium">error recovery</span>
+        <span className="text-sm font-light">error recovery</span>
       </div>
 
       <div className="space-y-2">

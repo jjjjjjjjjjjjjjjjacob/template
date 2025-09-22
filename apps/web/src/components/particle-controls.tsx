@@ -210,7 +210,7 @@ export function ParticleControls({
     <Card className="max-h-[800px] w-full overflow-y-auto border-none bg-transparent backdrop-blur-sm">
       <div className="p-4">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-medium">particle controls</h3>
+          <h3 className="text-lg font-light">particle controls</h3>
           <div className="flex gap-1">
             <Button
               variant="ghost"
@@ -281,7 +281,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">basic</span>
+            <span className="text-sm font-light">basic</span>
           </button>
 
           {openSections.basic && (
@@ -374,7 +374,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">initial distribution</span>
+            <span className="text-sm font-light">initial distribution</span>
           </button>
 
           {openSections.distribution && (
@@ -463,7 +463,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">physics</span>
+            <span className="text-sm font-light">physics</span>
           </button>
 
           {openSections.physics && (
@@ -524,7 +524,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">convection</span>
+            <span className="text-sm font-light">convection</span>
           </button>
 
           {openSections.convection && (
@@ -641,7 +641,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">mouse interaction</span>
+            <span className="text-sm font-light">mouse interaction</span>
           </button>
 
           {openSections.mouse && (
@@ -702,7 +702,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">boundaries</span>
+            <span className="text-sm font-light">boundaries</span>
           </button>
 
           {openSections.boundaries && (
@@ -763,7 +763,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">temperature</span>
+            <span className="text-sm font-light">temperature</span>
           </button>
 
           {openSections.temperature && (
@@ -810,7 +810,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">forces</span>
+            <span className="text-sm font-light">forces</span>
           </button>
 
           {openSections.forces && (
@@ -941,7 +941,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">center obstacle</span>
+            <span className="text-sm font-light">center obstacle</span>
           </button>
 
           {openSections.obstacle && (
@@ -1045,7 +1045,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">corona/slope</span>
+            <span className="text-sm font-light">corona/slope</span>
           </button>
 
           {openSections.corona && (
@@ -1106,7 +1106,7 @@ export function ParticleControls({
             ) : (
               <ChevronRight size={16} />
             )}
-            <span className="text-sm font-medium">scroll inertia</span>
+            <span className="text-sm font-light">scroll inertia</span>
           </button>
 
           {openSections.scroll && (

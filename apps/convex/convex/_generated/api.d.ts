@@ -15,6 +15,8 @@ import type {
 } from "convex/server";
 import type * as admin from "../admin.js";
 import type * as analytics_search_metrics from "../analytics/search_metrics.js";
+import type * as blog from "../blog.js";
+import type * as blog_utils from "../blog_utils.js";
 import type * as http from "../http.js";
 import type * as items from "../items.js";
 import type * as lib_emojiColors from "../lib/emojiColors.js";
@@ -45,6 +47,8 @@ import type * as users from "../users.js";
 declare const fullApi: ApiFromModules<{
   admin: typeof admin;
   "analytics/search_metrics": typeof analytics_search_metrics;
+  blog: typeof blog;
+  blog_utils: typeof blog_utils;
   http: typeof http;
   items: typeof items;
   "lib/emojiColors": typeof lib_emojiColors;

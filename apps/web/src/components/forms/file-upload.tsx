@@ -93,7 +93,7 @@ export function FileUpload({
   );
 
   const addFiles = React.useCallback(
-    (newFiles: File[]) => {
+    async (newFiles: File[]) => {
       const validFiles: FileUploadFile[] = [];
       const errors: string[] = [];
 
@@ -113,20 +113,38 @@ export function FileUpload({
           id: generateFileId(),
           file,
           progress: 0,
-          status: 'pending',
+          status: onUpload ? 'uploading' : 'pending', // Start as uploading if auto-upload is enabled
         });
       }
 
       if (validFiles.length > 0) {
         const updatedFiles = [...files, ...validFiles];
         onFilesChange?.(updatedFiles);
+
+        // Auto-upload immediately if onUpload is provided
+        if (onUpload) {
+          // Use immediate execution instead of setTimeout to prevent race conditions
+          (async () => {
+            try {
+              await onUpload(validFiles.map((f) => f.file));
+            } catch {
+              // Update failed files to error status
+              const errorFiles = [...files, ...validFiles].map((f) =>
+                validFiles.some((vf) => vf.id === f.id)
+                  ? { ...f, status: 'error' as const, error: 'upload failed' }
+                  : f
+              );
+              onFilesChange?.(errorFiles);
+            }
+          })();
+        }
       }
 
       if (errors.length > 0) {
         // // console.warn('file upload errors:', errors);
       }
     },
-    [files, maxFiles, onFilesChange, validateFile]
+    [files, maxFiles, onFilesChange, validateFile, onUpload]
   );
 
   const removeFile = React.useCallback(
@@ -266,7 +284,7 @@ export function FileUpload({
         <div className="flex flex-col items-center justify-center space-y-2 text-center">
           <Upload className="text-muted-foreground h-8 w-8" />
           <div className="space-y-1">
-            <p className="text-sm font-medium">
+            <p className="text-sm font-light">
               {isDragOver
                 ? 'drop files here'
                 : 'click to upload or drag and drop'}
@@ -284,7 +302,7 @@ export function FileUpload({
       {hasFiles && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">
+            <h4 className="text-sm font-light">
               files ({files.length}/{maxFiles})
             </h4>
             {canUpload && (
@@ -307,7 +325,7 @@ export function FileUpload({
 
                       <div className="min-w-0 flex-1 space-y-1">
                         <div className="flex items-center justify-between">
-                          <p className="truncate text-sm font-medium">
+                          <p className="truncate text-sm font-light">
                             {fileData.file.name}
                           </p>
                           <div className="flex items-center gap-2">

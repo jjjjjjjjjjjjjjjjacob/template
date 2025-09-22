@@ -19,8 +19,8 @@ function safeCapture(eventName: string, properties?: Record<string, unknown>) {
   if (typeof window !== 'undefined' && posthog.__loaded) {
     try {
       posthog.capture(eventName, properties);
-    } catch (error) {
-      console.error('PostHog event capture failed:', error);
+    } catch {
+      // PostHog event capture failed
     }
   }
 }

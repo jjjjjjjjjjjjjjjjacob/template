@@ -116,7 +116,7 @@ export function MultiStepForm({
       {showProgress && (
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="font-medium">
+            <span className="font-light">
               step {currentStep + 1} of {steps.length}
             </span>
             <span className="text-muted-foreground">
@@ -133,7 +133,7 @@ export function MultiStepForm({
 
       {showStepList && (
         <div className="space-y-2">
-          <h3 className="text-muted-foreground text-sm font-medium">steps</h3>
+          <h3 className="text-muted-foreground text-sm font-light">steps</h3>
           <div className="space-y-1">
             {steps.map((step, index) => {
               const status = getStepStatus(index, step);
@@ -162,7 +162,7 @@ export function MultiStepForm({
                 >
                   <div
                     className={cn(
-                      'flex h-6 w-6 items-center justify-center rounded-full text-xs font-medium transition-colors',
+                      'flex h-6 w-6 items-center justify-center rounded-full text-xs font-light transition-colors',
                       status === 'completed' &&
                         'bg-primary text-primary-foreground',
                       status === 'current' &&
@@ -183,7 +183,7 @@ export function MultiStepForm({
                     <div className="flex items-center gap-2">
                       <span
                         className={cn(
-                          'text-sm font-medium',
+                          'text-sm font-light',
                           status === 'current' && 'text-foreground',
                           status === 'completed' && 'text-foreground',
                           status === 'error' && 'text-destructive',

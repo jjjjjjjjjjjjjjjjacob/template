@@ -100,7 +100,7 @@ function SkillRadar({
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <span className="text-2xl">{categoryInfo.icon}</span>
-        <h3 className="text-foreground text-lg font-semibold">{category}</h3>
+        <h3 className="text-foreground text-lg font-light">{category}</h3>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -124,7 +124,7 @@ function SkillRadar({
               {/* Content */}
               <div className="relative space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-foreground truncate text-sm font-medium">
+                  <span className="text-foreground truncate text-sm font-light">
                     {skill}
                   </span>
                   <span className="text-muted-foreground text-xs">
@@ -168,7 +168,7 @@ function TechStackOverview() {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-foreground text-xl font-semibold">
+      <h3 className="text-foreground text-xl font-light">
         tech stack overview
       </h3>
 
@@ -191,7 +191,7 @@ function TechStackOverview() {
               <div className="flex items-center justify-between">
                 <span className="text-2xl">{category.icon}</span>
                 <div className="text-right">
-                  <div className="text-foreground text-lg font-bold">
+                  <div className="text-foreground text-lg font-light">
                     {category.avgLevel.toFixed(1)}
                   </div>
                   <div className="text-muted-foreground text-xs">avg level</div>
@@ -199,7 +199,7 @@ function TechStackOverview() {
               </div>
 
               <div>
-                <h4 className="text-foreground text-sm font-semibold">
+                <h4 className="text-foreground text-sm font-light">
                   {category.category}
                 </h4>
                 <p className="text-muted-foreground text-xs">

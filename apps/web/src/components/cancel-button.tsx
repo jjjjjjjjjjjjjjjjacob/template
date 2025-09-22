@@ -10,7 +10,7 @@ export const CancelButton = forwardRef<
       type="button"
       tabIndex={0}
       {...props}
-      className="rounded-lg p-2 text-left text-sm font-medium hover:bg-slate-200 focus:bg-slate-200"
+      className="rounded-lg p-2 text-left text-sm font-light hover:bg-slate-200 focus:bg-slate-200"
     />
   );
 });

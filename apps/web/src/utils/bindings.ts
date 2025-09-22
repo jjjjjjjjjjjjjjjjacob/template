@@ -12,8 +12,8 @@ function initDevEnv() {
         const { getPlatformProxy } = await import('wrangler');
         const proxy = await getPlatformProxy();
         devEnv = proxy.env as Record<string, string | undefined>;
-      } catch (error) {
-        console.warn('Failed to initialize Wrangler proxy:', error);
+      } catch {
+        // Failed to initialize Wrangler proxy
       }
     })();
   }

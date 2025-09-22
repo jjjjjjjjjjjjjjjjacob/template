@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import { ExternalLink } from 'lucide-react';
 import { trackEvents } from '@/lib/track-events';
 
@@ -26,9 +27,11 @@ function ProjectSlideshow({
   slideDirection = 'left-to-right',
   isMobile = false,
 }: ProjectSlideshowProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dialogLoading, setDialogLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
   /*
@@ -74,6 +77,7 @@ function ProjectSlideshow({
         'dialog_opened',
         currentIndex
       );
+      setDialogLoading(true);
       setShowDialog(true);
     }
   };
@@ -87,12 +91,12 @@ function ProjectSlideshow({
     }
   };
 
-  const handleIframeClick = () => {
-    trackEvents.projectSlideshowInteracted(title, 'click', currentIndex);
-    if (projectUrl) {
-      trackEvents.projectVisited(title, projectUrl, 'slideshow');
-      window.open(projectUrl, '_blank');
-    }
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
+
+  const handleDialogIframeLoad = () => {
+    setDialogLoading(false);
   };
 
   if (previews.length === 0) return null;
@@ -133,29 +137,34 @@ function ProjectSlideshow({
           !isMobile && isHovered && 'slideshow-hover'
         )}
       >
+        {/* Skeleton loader */}
+        {isLoading && <Skeleton className="h-full w-full rounded-2xl" />}
+
         <iframe
           src={previews[currentIndex]}
-          className="bg-background h-full w-full overflow-y-hidden rounded-2xl border-0 shadow-2xl"
+          className={cn(
+            'bg-background h-full w-full overflow-y-hidden rounded-2xl border-0 shadow-2xl transition-opacity duration-300',
+            isLoading ? 'opacity-0' : 'opacity-100'
+          )}
           title={`${title} preview - ${currentIndex + 1}`}
           loading="lazy"
           scrolling=""
-          tabIndex={-1}
+          onLoad={handleIframeLoad}
+          onMouseEnter={() => {
+            if (!isMobile) {
+              trackEvents.projectSlideshowInteracted(
+                title,
+                'hover',
+                currentIndex
+              );
+            }
+          }}
           style={{
             pointerEvents: isMobile ? 'none' : 'auto',
           }}
         />
 
-        {/* Desktop overlay to catch clicks for tracking */}
-        {!isMobile && (
-          <button
-            onClick={handleIframeClick}
-            className="absolute inset-0 z-10 cursor-pointer bg-transparent opacity-0 hover:opacity-100"
-            aria-label={`Visit ${title} project`}
-            style={{ pointerEvents: 'auto' }}
-          />
-        )}
-
-        {/* Mobile overlay to catch clicks and prevent iframe interaction */}
+        {/* Mobile overlay to open dialog */}
         {isMobile && (
           <button
             onClick={handleMobileIframeClick}
@@ -164,31 +173,6 @@ function ProjectSlideshow({
           />
         )}
       </div>
-
-      {previews.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-          {previews.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? 'bg-white/80'
-                  : 'bg-white/30 hover:bg-white/50'
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Swipe indicators for mobile */}
-      {isMobile && previews.length > 1 && (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-between px-4">
-          <div className="text-xs text-white/50">← swipe</div>
-          <div className="text-xs text-white/50">swipe →</div>
-        </div>
-      )}
 
       {/* Mobile dialog for full iframe interaction */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -210,12 +194,19 @@ function ProjectSlideshow({
               )}
             </div>
           </DialogHeader>
-          <div className="h-[70vh] w-full px-4 pb-4">
+          <div className="relative h-[70vh] w-full px-4 pb-4">
+            {/* Dialog skeleton loader */}
+            {dialogLoading && <Skeleton className="h-full w-full rounded-lg" />}
+
             <iframe
               src={previews[currentIndex]}
-              className="bg-background h-full w-full rounded-lg border shadow-lg"
+              className={cn(
+                'bg-background h-full w-full rounded-lg border shadow-lg transition-opacity duration-300',
+                dialogLoading ? 'opacity-0' : 'opacity-100'
+              )}
               title={`${title} preview - ${currentIndex + 1}`}
               loading="lazy"
+              onLoad={handleDialogIframeLoad}
             />
           </div>
         </DialogContent>

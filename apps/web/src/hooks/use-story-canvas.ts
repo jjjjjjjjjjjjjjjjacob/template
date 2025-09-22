@@ -1,6 +1,17 @@
 import { useState, useCallback } from 'react';
 import jsPDF from 'jspdf';
 
+// Type for checking roundRect support
+type CanvasWithRoundRect = CanvasRenderingContext2D & {
+  roundRect?: (
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: number | number[]
+  ) => void;
+};
+
 interface UseStoryCanvasOptions {
   filename?: string;
 }
@@ -43,19 +54,17 @@ const ensureFontsLoaded = async () => {
 
     // Load specific Utendo fonts we'll use
     const fontPromises = [
+      document.fonts.load('200 16px Utendo'),
+      document.fonts.load('300 16px Utendo'),
       document.fonts.load('400 16px Utendo'),
-      document.fonts.load('500 16px Utendo'),
-      document.fonts.load('600 16px Utendo'),
-      document.fonts.load('700 16px Utendo'),
-      document.fonts.load('800 16px Utendo'),
     ];
 
     await Promise.all(fontPromises);
 
     // Give fonts a moment to be fully available
     await new Promise((resolve) => setTimeout(resolve, 100));
-  } catch (error) {
-    console.warn('Failed to load fonts:', error);
+  } catch {
+    // Failed to load fonts
   }
 };
 
@@ -69,8 +78,9 @@ const drawRoundedRect = (
   radius: number
 ) => {
   ctx.beginPath(); // Always start with a fresh path
-  if (typeof (ctx as any).roundRect === 'function') {
-    (ctx as any).roundRect(x, y, width, height, radius);
+  const extendedCtx = ctx as CanvasWithRoundRect;
+  if (typeof extendedCtx.roundRect === 'function') {
+    extendedCtx.roundRect(x, y, width, height, radius);
   } else {
     // Fallback implementation
     ctx.moveTo(x + radius, y);
@@ -173,7 +183,6 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
         mimeType: 'image/png',
       }
     ): Promise<Blob | null> => {
-      console.log('[useStoryCanvas] Starting resume generation');
       setIsGenerating(true);
 
       try {
@@ -182,8 +191,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
         } else {
           return await generateCanvas(resumeData, format);
         }
-      } catch (error) {
-        console.error('[useStoryCanvas] Failed to generate resume:', error);
+      } catch {
         return null;
       } finally {
         setIsGenerating(false);
@@ -205,30 +213,39 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
       return null;
     }
 
-    // Create PDF with the PNG image
-    const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'px',
-      format: [816, Math.min(2112, 1400)], // Use canvas dimensions, max reasonable height
-    });
+    // Get the actual canvas dimensions for proper PDF sizing
+    const tempImg = new Image();
 
     return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = function () {
-        const imgData = reader.result as string;
+      tempImg.onload = function () {
+        // Create PDF with actual content dimensions
+        const pdf = new jsPDF({
+          orientation: 'portrait',
+          unit: 'px',
+          format: [tempImg.width / 2, tempImg.height / 2], // Divide by 2 because canvas uses 2x scale
+        });
 
-        // Calculate dimensions to fit the PDF
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const reader = new FileReader();
+        reader.onload = function () {
+          const imgData = reader.result as string;
 
-        // Add the image to PDF
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          // Use the full PDF dimensions without arbitrary limits
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
 
-        const pdfBlob = pdf.output('blob');
-        setGeneratedBlob(pdfBlob);
-        resolve(pdfBlob);
+          // Add the image to PDF
+          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+          const pdfBlob = pdf.output('blob');
+          setGeneratedBlob(pdfBlob);
+          resolve(pdfBlob);
+        };
+        reader.readAsDataURL(pngBlob);
       };
-      reader.readAsDataURL(pngBlob);
+
+      // Load image to get dimensions
+      const blobUrl = URL.createObjectURL(pngBlob);
+      tempImg.src = blobUrl;
     });
   };
 
@@ -243,7 +260,8 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     const canvas = document.createElement('canvas');
     const scale = 2; // 2x for crisp rendering
     canvas.width = 816 * scale; // 8.5 inches at 96 DPI
-    canvas.height = 2112 * scale; // Two full pages (11 inches × 2 × 96 DPI)
+    // Start with generous height, will crop to content later
+    canvas.height = 3000 * scale; // Large initial height to accommodate all content
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
@@ -281,7 +299,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     const headerStartY = y;
 
     // Name at top-left
-    ctx.font = '700 28px Utendo, system-ui, sans-serif';
+    ctx.font = '200 28px Utendo, system-ui, sans-serif';
     ctx.fillStyle = resumeColors.text;
     ctx.fillText('jacob stein', leftMargin, y);
     y += 40;
@@ -369,7 +387,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     }
 
     // Experience section header
-    ctx.font = '700 20px Utendo, system-ui, sans-serif';
+    ctx.font = '200 20px Utendo, system-ui, sans-serif';
     ctx.fillStyle = resumeColors.text;
     ctx.fillText('experience', leftMargin, y);
     y += 30;
@@ -388,7 +406,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
       ctx.fill();
 
       // Role and company
-      ctx.font = '600 16px Utendo, system-ui, sans-serif';
+      ctx.font = '200 16px Utendo, system-ui, sans-serif';
       ctx.fillStyle = resumeColors.text;
       ctx.fillText(exp.role, contentStartX, y);
       y += 22;
@@ -438,7 +456,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
 
       // Key achievements
       if (exp.achievements && exp.achievements.length > 0) {
-        ctx.font = '500 14px Utendo, system-ui, sans-serif';
+        ctx.font = '200 14px Utendo, system-ui, sans-serif';
         ctx.fillStyle = resumeColors.text;
         ctx.fillText('key achievements', contentStartX, y);
         y += 20;
@@ -480,7 +498,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
 
       // Technologies
       if (exp.technologies && exp.technologies.length > 0) {
-        ctx.font = '500 14px Utendo, system-ui, sans-serif';
+        ctx.font = '200 14px Utendo, system-ui, sans-serif';
         ctx.fillStyle = resumeColors.text;
         ctx.fillText('technologies', contentStartX, y);
         y += 25;
@@ -534,7 +552,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
 
     // Skills section header
     y += 10;
-    ctx.font = '700 20px Utendo, system-ui, sans-serif';
+    ctx.font = '200 20px Utendo, system-ui, sans-serif';
     ctx.fillStyle = resumeColors.text;
     ctx.fillText('skills', leftMargin, y);
     y += 35;
@@ -624,7 +642,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
       const x = leftMargin + col * (columnWidth + 40);
 
       // Category header
-      ctx.font = '600 14px Utendo, system-ui, sans-serif';
+      ctx.font = '200 14px Utendo, system-ui, sans-serif';
       ctx.fillStyle = resumeColors.text;
       ctx.fillText(category, x, columnY[col]);
       columnY[col] += 25;
@@ -663,26 +681,37 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
       columnY[col] = pillY + 40;
     });
 
-    // Calculate final content height and resize canvas if needed
+    // Calculate final content height and crop canvas to fit content exactly
     const finalY = Math.max(columnY[0], columnY[1]) + 50; // Add padding at bottom
     const contentHeight = Math.ceil(finalY);
 
-    // If content is smaller than canvas, resize to fit content
-    if (contentHeight < canvas.height / scale) {
-      const newCanvas = document.createElement('canvas');
-      newCanvas.width = canvas.width;
-      newCanvas.height = contentHeight * scale;
-      const newCtx = newCanvas.getContext('2d');
+    // Crop canvas to content height for optimal file size
+    const croppedCanvas = document.createElement('canvas');
+    croppedCanvas.width = canvas.width;
+    croppedCanvas.height = contentHeight * scale;
+    const croppedCtx = croppedCanvas.getContext('2d');
 
-      if (newCtx) {
-        // Copy the content from original canvas
-        newCtx.drawImage(canvas, 0, 0);
-        canvas.width = newCanvas.width;
-        canvas.height = newCanvas.height;
+    if (croppedCtx) {
+      // Copy only the content area from the original canvas
+      croppedCtx.drawImage(
+        canvas,
+        0,
+        0,
+        canvas.width,
+        contentHeight * scale, // Source: full width, content height
+        0,
+        0,
+        croppedCanvas.width,
+        croppedCanvas.height // Destination: exact fit
+      );
 
-        // Clear and redraw on original canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(newCanvas, 0, 0);
+      // Replace the original canvas with the cropped version
+      canvas.width = croppedCanvas.width;
+      canvas.height = croppedCanvas.height;
+      const finalCtx = canvas.getContext('2d');
+      if (finalCtx) {
+        finalCtx.clearRect(0, 0, canvas.width, canvas.height);
+        finalCtx.drawImage(croppedCanvas, 0, 0);
       }
     }
 
@@ -694,7 +723,6 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
             setGeneratedBlob(blob);
             resolve(blob);
           } else {
-            console.error('Failed to generate resume image');
             resolve(null);
           }
         },

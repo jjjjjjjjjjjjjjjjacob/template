@@ -19,7 +19,7 @@ export function UserProfileView({ user }: UserProfileViewProps) {
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-6">
         <div className="text-center">
-          <h1 className="text-3xl font-bold">{user.name || user.username}</h1>
+          <h1 className="text-3xl font-light">{user.name || user.username}</h1>
           <p className="text-muted-foreground">@{user.username}</p>
         </div>
 

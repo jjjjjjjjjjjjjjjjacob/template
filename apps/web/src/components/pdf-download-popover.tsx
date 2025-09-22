@@ -116,7 +116,7 @@ export function PDFDownloadPopover({
       >
         <div className="space-y-3">
           <div>
-            <h3 className="text-sm leading-none font-medium">export resume</h3>
+            <h3 className="text-sm leading-none font-light">export resume</h3>
             <p className="text-muted-foreground mt-1 text-xs">
               choose your preferred format
             </p>
@@ -140,7 +140,7 @@ export function PDFDownloadPopover({
                   )}
                 </div>
                 <div className="flex-1 text-left">
-                  <div className="text-sm font-medium">{format.label}</div>
+                  <div className="text-sm font-light">{format.label}</div>
                   <div className="text-muted-foreground text-xs">
                     {format.description}
                   </div>

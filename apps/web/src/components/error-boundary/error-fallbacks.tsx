@@ -57,7 +57,7 @@ export function CompactErrorFallback({
             {getIcon()}
           </div>
           <div className="flex-1 space-y-2">
-            <p className="text-sm font-medium">something went wrong</p>
+            <p className="text-sm font-light">something went wrong</p>
             <p className="text-muted-foreground text-xs">{error.userMessage}</p>
             <div className="flex gap-1">
               <Button size="sm" variant="outline" onClick={resetError}>
@@ -94,7 +94,7 @@ export function FullPageErrorFallback({
           <div className="bg-destructive/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
             <Bug className="text-destructive h-8 w-8" />
           </div>
-          <h1 className="text-2xl font-semibold">oops! something went wrong</h1>
+          <h1 className="text-2xl font-light">oops! something went wrong</h1>
           <p className="text-muted-foreground mt-2">
             we encountered an unexpected error while loading this page
           </p>
@@ -109,7 +109,7 @@ export function FullPageErrorFallback({
 
             {process.env.NODE_ENV === 'development' && (
               <details className="mt-4">
-                <summary className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium">
+                <summary className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-light">
                   technical details (development only)
                 </summary>
                 <div className="mt-2 space-y-2 text-xs">
@@ -194,7 +194,7 @@ export function SkeletonErrorFallback({
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <AlertTriangle className="text-destructive h-4 w-4" />
-            <span className="text-sm font-medium">failed to load</span>
+            <span className="text-sm font-light">failed to load</span>
           </div>
           <p className="text-muted-foreground text-xs">{error.userMessage}</p>
           <Button
@@ -224,7 +224,7 @@ export function ModalErrorFallback({ error, resetError }: ErrorFallbackProps) {
         </div>
 
         <div>
-          <h3 className="font-medium">error in modal</h3>
+          <h3 className="font-light">error in modal</h3>
           <p className="text-muted-foreground mt-1 text-sm">
             {error.userMessage}
           </p>
@@ -327,7 +327,7 @@ export function WidgetErrorFallback({ error, resetError }: ErrorFallbackProps) {
             <AlertTriangle className="text-destructive h-5 w-5" />
           </div>
           <div>
-            <p className="text-sm font-medium">widget error</p>
+            <p className="text-sm font-light">widget error</p>
             <p className="text-muted-foreground text-xs">{error.userMessage}</p>
           </div>
           <Button size="sm" variant="outline" onClick={resetError}>

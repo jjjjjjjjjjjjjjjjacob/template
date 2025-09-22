@@ -178,7 +178,7 @@ export function ErrorDisplay({
         </div>
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <h3 className="font-medium">
+            <h3 className="font-light">
               {error.category === 'network'
                 ? 'connection problem'
                 : error.category === 'auth'
@@ -378,7 +378,7 @@ export function ErrorDisplay({
 
               {process.env.NODE_ENV === 'development' && error.stack && (
                 <details className="text-xs">
-                  <summary className="cursor-pointer font-medium">
+                  <summary className="cursor-pointer font-light">
                     stack trace (development)
                   </summary>
                   <pre className="bg-muted mt-2 max-h-32 overflow-auto rounded p-2">

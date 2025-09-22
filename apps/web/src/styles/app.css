@@ -4,6 +4,30 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom utility classes for wider letter-spacing */
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+
+.tracking-wider {
+  letter-spacing: 0.05em;
+}
+
+/* Line clamp utilities for text truncation */
+.line-clamp-1 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 :root {
   color-scheme: dark;
 }
@@ -133,9 +157,17 @@
 @layer base {
   * {
     @apply border-border outline-ring/50 cursor-default;
+    font-weight: 200; /* Global font-[200] */
   }
   body {
     @apply bg-background text-foreground font-sans;
+  }
+
+  /* Preserve specific font weights where needed */
+  .font-normal,
+  .font-light,
+  .font-[200] {
+    font-weight: revert;
   }
 }
 
@@ -270,6 +302,183 @@
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
     will-change: transform;
   }
+}
+
+/* Basic prose styles for markdown preview */
+.prose {
+  @apply text-foreground max-w-none leading-7;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  @apply text-foreground mt-6 mb-4 font-light first:mt-0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose h1 {
+  @apply text-3xl;
+}
+
+.prose h2 {
+  @apply text-2xl;
+}
+
+.prose h3 {
+  @apply text-xl;
+}
+
+.prose h4 {
+  @apply text-lg;
+}
+
+.prose p {
+  @apply mb-4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose ul,
+.prose ol {
+  @apply mb-4 pl-6;
+}
+
+.prose ul {
+  @apply list-disc;
+}
+
+.prose ol {
+  @apply list-decimal;
+}
+
+.prose li {
+  @apply mb-1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose strong {
+  @apply font-light;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose em {
+  @apply italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose code {
+  @apply bg-muted text-foreground rounded px-1 py-0.5 font-mono text-sm;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.prose pre {
+  @apply bg-muted text-foreground mb-4 overflow-x-auto rounded-md p-4;
+  max-width: 100%;
+  overflow-y: hidden;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0;
+  word-break: break-all;
+  white-space: pre-wrap;
+  max-width: 100%;
+  display: block;
+}
+
+.prose blockquote {
+  @apply border-border text-muted-foreground mb-4 border-l-4 pl-4 italic;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.prose a {
+  @apply text-primary hover:text-primary/80 underline;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+.prose table {
+  @apply mb-4 w-full border-collapse;
+  max-width: 100%;
+  overflow-x: auto;
+  display: block;
+  white-space: nowrap;
+}
+
+.prose th,
+.prose td {
+  @apply border-border border px-4 py-2 text-left;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.prose th {
+  @apply bg-muted font-light;
+}
+
+.prose-sm {
+  @apply text-sm;
+}
+
+.prose-sm h1 {
+  @apply text-2xl;
+}
+
+.prose-sm h2 {
+  @apply text-xl;
+}
+
+.prose-sm h3 {
+  @apply text-lg;
+}
+
+.prose-sm h4 {
+  @apply text-base;
+}
+
+.prose-lg {
+  @apply text-lg;
+}
+
+.prose-lg h1 {
+  @apply text-4xl;
+}
+
+.prose-lg h2 {
+  @apply text-3xl;
+}
+
+.prose-lg h3 {
+  @apply text-2xl;
+}
+
+.prose-lg h4 {
+  @apply text-xl;
 }
 
 /* Accordion animations */
@@ -690,7 +899,7 @@
 
 .cl-formButtonPrimary,
 .cl-socialButtonsBlockButton {
-  @apply bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md px-3 font-medium whitespace-nowrap !shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
+  @apply bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md px-3 font-light whitespace-nowrap !shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
 }
 
 .cl-card,
@@ -750,7 +959,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 .cl-formFieldInput[type='text'],
 .cl-formFieldInput[type='email'],
 .cl-formFieldInput[type='password'] {
-  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 file:border-0 file:bg-transparent file:text-sm file:font-light focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-footerActionLink {
@@ -766,7 +975,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 }
 
 .cl-selectSearchInput__countryCode {
-  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border border-b file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border border-b file:border-0 file:bg-transparent file:text-sm file:font-light focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-selectOptionsContainer__countryCode {

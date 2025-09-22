@@ -9,10 +9,31 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignUpRouteImport } from './routes/sign-up'
+import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog/index'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as SignUpSsoCallbackRouteImport } from './routes/sign-up/sso-callback'
+import { Route as SignInSsoCallbackRouteImport } from './routes/sign-in/sso-callback'
+import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as AdminBlogRouteImport } from './routes/admin/blog'
+import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog.index'
+import { Route as AdminBlogNewRouteImport } from './routes/admin/blog.new'
+import { Route as AdminBlogPostIdRouteImport } from './routes/admin/blog.$postId'
 
+const SignUpRoute = SignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResumeRoute = ResumeRouteImport.update({
   id: '/resume',
   path: '/resume',
@@ -28,39 +49,182 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/blog/index.lazy').then((d) => d.Route))
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignUpSsoCallbackRoute = SignUpSsoCallbackRouteImport.update({
+  id: '/sso-callback',
+  path: '/sso-callback',
+  getParentRoute: () => SignUpRoute,
+} as any)
+const SignInSsoCallbackRoute = SignInSsoCallbackRouteImport.update({
+  id: '/sso-callback',
+  path: '/sso-callback',
+  getParentRoute: () => SignInRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/blog/$slug.lazy').then((d) => d.Route))
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/admin/blog',
+  path: '/admin/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminBlogRoute,
+} as any)
+const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminBlogRoute,
+} as any).lazy(() =>
+  import('./routes/admin/blog.new.lazy').then((d) => d.Route),
+)
+const AdminBlogPostIdRoute = AdminBlogPostIdRouteImport.update({
+  id: '/$postId',
+  path: '/$postId',
+  getParentRoute: () => AdminBlogRoute,
+} as any).lazy(() =>
+  import('./routes/admin/blog.$postId.lazy').then((d) => d.Route),
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
+  '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
+  '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
+  '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
+  '/admin/blog/$postId': typeof AdminBlogPostIdRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
+  '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
+  '/admin': typeof AdminIndexRoute
+  '/blog': typeof BlogIndexRoute
+  '/admin/blog/$postId': typeof AdminBlogPostIdRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/blog': typeof AdminBlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
+  '/sign-in': typeof SignInRouteWithChildren
+  '/sign-up': typeof SignUpRouteWithChildren
+  '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
+  '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
+  '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
+  '/admin/': typeof AdminIndexRoute
+  '/blog/': typeof BlogIndexRoute
+  '/admin/blog/$postId': typeof AdminBlogPostIdRoute
+  '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/blog/': typeof AdminBlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/projects' | '/resume'
+  fullPaths:
+    | '/'
+    | '/projects'
+    | '/resume'
+    | '/sign-in'
+    | '/sign-up'
+    | '/admin/blog'
+    | '/blog/$slug'
+    | '/sign-in/sso-callback'
+    | '/sign-up/sso-callback'
+    | '/admin'
+    | '/blog'
+    | '/admin/blog/$postId'
+    | '/admin/blog/new'
+    | '/admin/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/projects' | '/resume'
-  id: '__root__' | '/' | '/projects' | '/resume'
+  to:
+    | '/'
+    | '/projects'
+    | '/resume'
+    | '/sign-in'
+    | '/sign-up'
+    | '/blog/$slug'
+    | '/sign-in/sso-callback'
+    | '/sign-up/sso-callback'
+    | '/admin'
+    | '/blog'
+    | '/admin/blog/$postId'
+    | '/admin/blog/new'
+    | '/admin/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/projects'
+    | '/resume'
+    | '/sign-in'
+    | '/sign-up'
+    | '/admin/blog'
+    | '/blog/$slug'
+    | '/sign-in/sso-callback'
+    | '/sign-up/sso-callback'
+    | '/admin/'
+    | '/blog/'
+    | '/admin/blog/$postId'
+    | '/admin/blog/new'
+    | '/admin/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProjectsRoute: typeof ProjectsRoute
   ResumeRoute: typeof ResumeRoute
+  SignInRoute: typeof SignInRouteWithChildren
+  SignUpRoute: typeof SignUpRouteWithChildren
+  AdminBlogRoute: typeof AdminBlogRouteWithChildren
+  BlogSlugRoute: typeof BlogSlugRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sign-up': {
+      id: '/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof SignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/resume': {
       id: '/resume'
       path: '/resume'
@@ -82,13 +246,120 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-up/sso-callback': {
+      id: '/sign-up/sso-callback'
+      path: '/sso-callback'
+      fullPath: '/sign-up/sso-callback'
+      preLoaderRoute: typeof SignUpSsoCallbackRouteImport
+      parentRoute: typeof SignUpRoute
+    }
+    '/sign-in/sso-callback': {
+      id: '/sign-in/sso-callback'
+      path: '/sso-callback'
+      fullPath: '/sign-in/sso-callback'
+      preLoaderRoute: typeof SignInSsoCallbackRouteImport
+      parentRoute: typeof SignInRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/admin/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/blog/': {
+      id: '/admin/blog/'
+      path: '/'
+      fullPath: '/admin/blog/'
+      preLoaderRoute: typeof AdminBlogIndexRouteImport
+      parentRoute: typeof AdminBlogRoute
+    }
+    '/admin/blog/new': {
+      id: '/admin/blog/new'
+      path: '/new'
+      fullPath: '/admin/blog/new'
+      preLoaderRoute: typeof AdminBlogNewRouteImport
+      parentRoute: typeof AdminBlogRoute
+    }
+    '/admin/blog/$postId': {
+      id: '/admin/blog/$postId'
+      path: '/$postId'
+      fullPath: '/admin/blog/$postId'
+      preLoaderRoute: typeof AdminBlogPostIdRouteImport
+      parentRoute: typeof AdminBlogRoute
+    }
   }
 }
+
+interface SignInRouteChildren {
+  SignInSsoCallbackRoute: typeof SignInSsoCallbackRoute
+}
+
+const SignInRouteChildren: SignInRouteChildren = {
+  SignInSsoCallbackRoute: SignInSsoCallbackRoute,
+}
+
+const SignInRouteWithChildren =
+  SignInRoute._addFileChildren(SignInRouteChildren)
+
+interface SignUpRouteChildren {
+  SignUpSsoCallbackRoute: typeof SignUpSsoCallbackRoute
+}
+
+const SignUpRouteChildren: SignUpRouteChildren = {
+  SignUpSsoCallbackRoute: SignUpSsoCallbackRoute,
+}
+
+const SignUpRouteWithChildren =
+  SignUpRoute._addFileChildren(SignUpRouteChildren)
+
+interface AdminBlogRouteChildren {
+  AdminBlogPostIdRoute: typeof AdminBlogPostIdRoute
+  AdminBlogNewRoute: typeof AdminBlogNewRoute
+  AdminBlogIndexRoute: typeof AdminBlogIndexRoute
+}
+
+const AdminBlogRouteChildren: AdminBlogRouteChildren = {
+  AdminBlogPostIdRoute: AdminBlogPostIdRoute,
+  AdminBlogNewRoute: AdminBlogNewRoute,
+  AdminBlogIndexRoute: AdminBlogIndexRoute,
+}
+
+const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
+  AdminBlogRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProjectsRoute: ProjectsRoute,
   ResumeRoute: ResumeRoute,
+  SignInRoute: SignInRouteWithChildren,
+  SignUpRoute: SignUpRouteWithChildren,
+  AdminBlogRoute: AdminBlogRouteWithChildren,
+  BlogSlugRoute: BlogSlugRoute,
+  AdminIndexRoute: AdminIndexRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

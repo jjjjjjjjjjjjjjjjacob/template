@@ -195,7 +195,7 @@ function DataErrorFallback({ error, resetError, context }: ErrorFallbackProps) {
             <div className="bg-muted rounded-lg p-3">
               <div className="flex items-center justify-between text-sm">
                 <span>server status:</span>
-                <span className="flex items-center gap-1 font-medium text-red-600">
+                <span className="flex items-center gap-1 font-light text-red-600">
                   <div className="h-2 w-2 rounded-full bg-red-600"></div>
                   unavailable
                 </span>
@@ -227,7 +227,7 @@ function DataErrorFallback({ error, resetError, context }: ErrorFallbackProps) {
             </div>
 
             <details className="text-sm">
-              <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-medium">
+              <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-light">
                 what can i do?
               </summary>
               <div className="text-muted-foreground mt-2 space-y-1 text-xs">
@@ -278,7 +278,7 @@ function DataErrorFallback({ error, resetError, context }: ErrorFallbackProps) {
 
           {process.env.NODE_ENV === 'development' && !isRetrying && (
             <details className="text-sm">
-              <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-medium">
+              <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-light">
                 error details (development)
               </summary>
               <div className="text-muted-foreground mt-2 space-y-1 text-xs">

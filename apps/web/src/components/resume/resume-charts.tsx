@@ -22,14 +22,12 @@ const chartData = {
 function SkillsChart() {
   return (
     <div className="space-y-4">
-      <h3 className="text-foreground text-lg font-semibold">
-        skills proficiency
-      </h3>
+      <h3 className="text-foreground text-lg font-light">skills proficiency</h3>
       <div className="space-y-4">
         {chartData.skillsProgress.map((skill, index) => (
           <div key={skill.skill} className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-foreground font-medium">{skill.skill}</span>
+              <span className="text-foreground font-light">{skill.skill}</span>
               <span className="text-muted-foreground">{skill.level}%</span>
             </div>
             <div className="bg-muted h-2 overflow-hidden rounded-full">
@@ -55,9 +53,7 @@ function ExperienceChart() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-foreground text-lg font-semibold">
-        project timeline
-      </h3>
+      <h3 className="text-foreground text-lg font-light">project timeline</h3>
       <div className="space-y-6">
         <div className="flex h-48 items-end justify-between gap-2">
           {chartData.experienceYears.map((year, index) => (
@@ -89,7 +85,7 @@ function ExperienceChart() {
               </div>
 
               {/* Year Label */}
-              <div className="text-foreground text-sm font-medium">
+              <div className="text-foreground text-sm font-light">
                 {year.year}
               </div>
             </div>

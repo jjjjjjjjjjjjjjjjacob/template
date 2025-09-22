@@ -28,7 +28,7 @@ const projects: Project[] = [
   {
     id: 'heat-tech',
     title: 'heat.tech',
-    url: 'https://heat.tech',
+    url: 'https://heat.tech/search/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73',
     description:
       'Motion capture marketplace connecting viral movements with gaming. Artists upload mocap content, developers integrate via plugins for Blender, Unity, Unreal, and Maya.',
     role: 'Senior Full-Stack Developer',
@@ -103,7 +103,7 @@ function ProjectCard({ project }: { project: Project }) {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <h3 className="text-foreground text-2xl font-medium">
+            <h3 className="text-foreground text-2xl font-light">
               {project.title}
             </h3>
             <p className="text-muted-foreground">
@@ -128,7 +128,7 @@ function ProjectCard({ project }: { project: Project }) {
 
         <div className="space-y-4">
           <div>
-            <h4 className="text-foreground mb-2 text-sm font-medium">
+            <h4 className="text-foreground mb-2 text-sm font-light">
               key contributions
             </h4>
             <ul className="space-y-1">
@@ -145,14 +145,14 @@ function ProjectCard({ project }: { project: Project }) {
           </div>
 
           <div>
-            <h4 className="text-foreground mb-2 text-sm font-medium">
+            <h4 className="text-foreground mb-2 text-sm font-light">
               technologies
             </h4>
             <div className="flex flex-wrap gap-2">
               {project.technologies.map((tech) => (
                 <span
                   key={tech}
-                  className="bg-muted text-muted-foreground rounded-full px-2 py-1 text-xs font-medium"
+                  className="bg-muted text-muted-foreground rounded-full px-2 py-1 text-xs font-light"
                 >
                   {tech}
                 </span>
@@ -174,7 +174,7 @@ function ProjectsPage() {
         <div className="mx-auto max-w-6xl">
           {/* Page Header */}
           <div className="mb-16 space-y-4">
-            <h1 className="text-foreground text-4xl font-medium tracking-tight">
+            <h1 className="text-foreground text-4xl font-light tracking-tight">
               projects
             </h1>
             <p className="text-muted-foreground">

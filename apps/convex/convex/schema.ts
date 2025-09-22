@@ -91,4 +91,31 @@ export default defineSchema({
   // appleIdConnections: defineTable({...}),
   // sessionEvents: defineTable({...}),
   // adminUsers: defineTable({...}),
+
+  // Blog posts
+  blogPosts: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    markdown: v.string(),
+    excerpt: v.optional(v.string()), // Optional custom excerpt for preview
+    readingTime: v.optional(v.number()), // Estimated reading time in minutes
+    authorId: v.string(), // users.external_id (Clerk user id)
+    authorEmail: v.optional(v.string()),
+    published: v.boolean(),
+    images: v.optional(v.array(v.id('_storage'))), // Array of storage IDs for uploaded images
+    thumbnailId: v.optional(v.id('_storage')), // Storage ID for the selected thumbnail
+    // Collection and project fields
+    collection: v.optional(v.string()), // 'general', 'project', or custom collection name
+    projectName: v.optional(v.string()), // Name of the project (for project posts)
+    githubUrl: v.optional(v.string()), // GitHub repository URL
+    liveUrl: v.optional(v.string()), // Live deployment URL
+    projectTags: v.optional(v.array(v.string())), // Project-specific tags
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_slug', ['slug'])
+    .index('by_createdAt', ['createdAt'])
+    .index('by_author', ['authorId'])
+    .index('by_collection', ['collection'])
+    .index('by_published_collection', ['published', 'collection']),
 });

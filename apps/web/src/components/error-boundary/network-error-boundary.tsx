@@ -161,7 +161,7 @@ function NetworkErrorFallback({ error, resetError }: ErrorFallbackProps) {
             <div className="flex items-center justify-between text-sm">
               <span>connection status:</span>
               <span
-                className={`font-medium ${isOnline ? 'text-green-600' : 'text-red-600'}`}
+                className={`font-light ${isOnline ? 'text-green-600' : 'text-red-600'}`}
               >
                 {isOnline ? 'online' : 'offline'}
               </span>
@@ -221,7 +221,7 @@ function NetworkErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
           {/* Network tips */}
           <details className="text-sm">
-            <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-medium">
+            <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-light">
               troubleshooting tips
             </summary>
             <div className="text-muted-foreground mt-2 space-y-1 text-xs">
@@ -238,7 +238,7 @@ function NetworkErrorFallback({ error, resetError }: ErrorFallbackProps) {
           {/* Development info */}
           {process.env.NODE_ENV === 'development' && (
             <details className="text-sm">
-              <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-medium">
+              <summary className="text-muted-foreground hover:text-foreground cursor-pointer font-light">
                 error details (development)
               </summary>
               <div className="text-muted-foreground mt-2 space-y-1 text-xs">

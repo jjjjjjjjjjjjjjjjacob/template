@@ -72,7 +72,6 @@ export function extractThemeColors(): ExtractedColors {
     const rawValue = getComputedStyle(root).getPropertyValue(cssVar).trim();
 
     if (!rawValue) {
-      console.warn(`CSS variable ${cssVar} not found`);
       return '#000000';
     }
 
@@ -86,9 +85,6 @@ export function extractThemeColors(): ExtractedColors {
     const hexColor = parseColorValue(computedColor);
 
     if (!hexColor) {
-      console.warn(
-        `Failed to parse color for ${cssVar}: ${rawValue} -> ${computedColor}`
-      );
       return '#000000';
     }
 
@@ -121,7 +117,6 @@ export function extractThemeColors(): ExtractedColors {
 export function hexToRgba(hex: string, alpha: number = 1): string {
   // Validate hex color
   if (!hex || !hex.startsWith('#')) {
-    console.warn(`Invalid hex color: ${hex}`);
     return `rgba(0, 0, 0, ${alpha})`;
   }
 
@@ -133,7 +128,6 @@ export function hexToRgba(hex: string, alpha: number = 1): string {
 
   // Ensure we have a valid 6-digit hex
   if (fullHex.length !== 7) {
-    console.warn(`Invalid hex length: ${hex}`);
     return `rgba(0, 0, 0, ${alpha})`;
   }
 
@@ -142,7 +136,6 @@ export function hexToRgba(hex: string, alpha: number = 1): string {
   const b = parseInt(fullHex.slice(5, 7), 16);
 
   if (isNaN(r) || isNaN(g) || isNaN(b)) {
-    console.warn(`Failed to parse hex: ${hex}`);
     return `rgba(0, 0, 0, ${alpha})`;
   }
 

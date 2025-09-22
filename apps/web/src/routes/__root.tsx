@@ -1,26 +1,70 @@
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools/production';
 import {
   Outlet,
   createRootRouteWithContext,
   HeadContent,
   Scripts,
+  useNavigate,
+  useLocation,
 } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { createServerFn } from '@tanstack/react-start';
+import { getWebRequest } from '@tanstack/react-start/server';
 import * as React from 'react';
-import type { QueryClient } from '@tanstack/react-query';
+
+// Lazy load devtools only in development
+const ReactQueryDevtools = import.meta.env.DEV
+  ? React.lazy(() =>
+      import('@tanstack/react-query-devtools').then((m) => ({
+        default: m.ReactQueryDevtools,
+      }))
+    )
+  : () => null;
+
+const TanStackRouterDevtools = import.meta.env.DEV
+  ? React.lazy(() =>
+      import('@tanstack/react-router-devtools').then((m) => ({
+        default: m.TanStackRouterDevtools,
+      }))
+    )
+  : () => null;
+
+import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { DefaultCatchBoundary } from '@/components/default-catch-boundary';
 import { NotFound } from '@/components/not-found';
 import { Header } from '@/components/header';
+import { BlogHeader } from '@/components/blog-header';
 import { ThemeProvider } from '@/components/theme-provider';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { PostHogPageTracker } from '@/components/posthog-page-tracker';
 import appCss from '@/styles/app.css?url';
-import { ConvexReactClient, ConvexProvider } from 'convex/react';
+import blogCss from '@/styles/blog.css?url';
+import { ConvexReactClient } from 'convex/react';
+import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexQueryClient } from '@convex-dev/react-query';
+import { ClerkProvider, useAuth } from '@clerk/tanstack-react-start';
+
+// Optimized server function with caching and mobile optimizations
+const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
+  const request = getWebRequest();
+  if (!request) {
+    return {
+      userId: null,
+      token: null,
+      fromCache: false,
+      computeTime: 0,
+    };
+  }
+
+  // Use optimized auth with caching
+  const { getOptimizedAuth } = await import('@/lib/optimized-auth');
+  return await getOptimizedAuth(request);
+});
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexClient: ConvexReactClient;
   convexQueryClient: ConvexQueryClient;
+  ssrAuth?: { userId: string | null };
+  request?: Request;
 }>()({
   head: () => ({
     meta: [
@@ -39,6 +83,7 @@ export const Route = createRootRouteWithContext<{
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
+      { rel: 'stylesheet', href: blogCss },
       { rel: 'icon', href: '/favicon.ico' },
       // Critical font preloads
       {
@@ -50,36 +95,134 @@ export const Route = createRootRouteWithContext<{
       },
     ],
   }),
+  beforeLoad: async (ctx) => {
+    try {
+      const auth = await fetchClerkAuth();
+      const { userId, token } = auth;
+
+      // During SSR, set the Clerk auth token for authenticated Convex requests
+      if (token && ctx.context.convexQueryClient.serverHttpClient) {
+        // Set auth on the convex client for server-side requests
+        ctx.context.convexQueryClient.serverHttpClient.setAuth(token);
+      }
+
+      return {
+        userId,
+        token,
+      };
+    } catch {
+      // Error in beforeLoad
+      // Return empty auth state on error
+      return {
+        userId: null,
+        token: null,
+      };
+    }
+  },
   errorComponent: (props) => {
     return (
-      <RootDocument>
-        <DefaultCatchBoundary {...props} />
-      </RootDocument>
+      <ClerkProviderWrapper>
+        <RootDocument>
+          <DefaultCatchBoundary {...props} />
+        </RootDocument>
+      </ClerkProviderWrapper>
     );
   },
   notFoundComponent: () => <NotFound />,
   component: RootComponent,
 });
 
-function RootComponent() {
-  const { convexClient } = Route.useRouteContext();
+function ClerkProviderWrapper({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+  const [clerkError, setClerkError] = React.useState<Error | null>(null);
+
+  // Handle Clerk initialization errors
+  React.useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      if (
+        event.error?.message?.includes('Clerk') ||
+        event.error?.message?.includes('clerk')
+      ) {
+        setClerkError(event.error);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  // If Clerk fails to load, show error state but continue rendering
+  if (clerkError) {
+    // Clerk failed to initialize, continuing without auth
+  }
 
   return (
-    <ConvexProvider client={convexClient}>
-      <PostHogProvider>
-        <ThemeProvider>
+    <ClerkProvider
+      publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}
+      appearance={{
+        baseTheme: undefined,
+        elements: {
+          card: 'bg-card shadow-lg text-primary',
+          buttonPrimary: 'bg-card text-primary hover:bg-card/90',
+          footerActionLink: 'text-primary hover:text-primary/90',
+        },
+      }}
+      routerPush={(to) => navigate({ to })}
+      routerReplace={(to) => navigate({ to, replace: true })}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+    >
+      {children}
+    </ClerkProvider>
+  );
+}
+
+function RootComponent() {
+  const context = Route.useRouteContext();
+
+  return (
+    <ClerkProviderWrapper>
+      <ConvexProviderWithClerk client={context.convexClient} useAuth={useAuth}>
+        <QueryClientProvider client={context.queryClient}>
           <RootDocument>
             <Outlet />
           </RootDocument>
-        </ThemeProvider>
-      </PostHogProvider>
-    </ConvexProvider>
+        </QueryClientProvider>
+      </ConvexProviderWithClerk>
+    </ClerkProviderWrapper>
+  );
+}
+
+function HeaderWrapper() {
+  const location = useLocation();
+  const isBlogRoute = location.pathname.startsWith('/blog');
+
+  return (
+    <div className="relative">
+      {/* Regular Header */}
+      <div
+        className={`transition-opacity duration-300 ease-in-out ${
+          isBlogRoute ? 'pointer-events-none opacity-0' : 'opacity-100'
+        }`}
+      >
+        <Header />
+      </div>
+
+      {/* Blog Header */}
+      <div
+        className={`absolute inset-0 transition-opacity duration-300 ease-in-out ${
+          isBlogRoute ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+      >
+        <BlogHeader />
+      </div>
+    </div>
   );
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
         <script
@@ -114,18 +257,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body className="bg-background text-foreground min-h-screen transition-colors duration-300">
-        <PostHogPageTracker />
-        <Header />
+        <PostHogProvider>
+          <ThemeProvider>
+            <PostHogPageTracker />
+            <HeaderWrapper />
 
-        <main className="mt-16">{children}</main>
+            <main className="mt-14">{children}</main>
 
-        {/* Development Tools */}
-        {process.env.NODE_ENV === 'development' && (
-          <>
-            <ReactQueryDevtools />
-            <TanStackRouterDevtools position="bottom-left" />
-          </>
-        )}
+            {/* Development Tools */}
+            {import.meta.env.DEV && (
+              <React.Suspense fallback={null}>
+                <ReactQueryDevtools />
+                <TanStackRouterDevtools position="bottom-left" />
+              </React.Suspense>
+            )}
+          </ThemeProvider>
+        </PostHogProvider>
 
         <Scripts />
       </body>

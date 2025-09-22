@@ -154,7 +154,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
     <div className="flex min-h-96 flex-col items-center justify-center p-6 text-center">
       <div className="max-w-md space-y-4">
         <div className="space-y-2">
-          <h2 className="text-destructive text-xl font-semibold">
+          <h2 className="text-destructive text-xl font-light">
             something went wrong
           </h2>
           <p className="text-muted-foreground text-sm">{error.userMessage}</p>
@@ -162,7 +162,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
         {process.env.NODE_ENV === 'development' && (
           <details className="mt-4 text-left">
-            <summary className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-medium">
+            <summary className="text-muted-foreground hover:text-foreground cursor-pointer text-sm font-light">
               error details (development only)
             </summary>
             <div className="mt-2 space-y-2 text-xs">
@@ -204,7 +204,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
                   // console.error('Recovery action failed');
                 }
               }}
-              className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+              className={`rounded-md px-3 py-1.5 text-sm font-light transition-colors ${
                 action.primary
                   ? 'bg-primary text-primary-foreground hover:bg-primary/90'
                   : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
@@ -215,7 +215,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
           ))}
           <button
             onClick={resetError}
-            className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground rounded-md px-3 py-1.5 text-sm font-medium"
+            className="bg-muted text-muted-foreground hover:bg-muted/80 hover:text-foreground rounded-md px-3 py-1.5 text-sm font-light"
           >
             dismiss
           </button>

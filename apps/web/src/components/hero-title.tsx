@@ -24,7 +24,7 @@ export function HeroTitle({ onComplete }: HeroTitleProps) {
     >
       {/* Use exact same structure as hero section */}
       <div className="pointer-events-none relative z-10 flex flex-col items-center justify-center gap-4 px-4">
-        <h1 className="text-foreground transition-colors-smooth text-4xl font-medium tracking-tight sm:text-5xl">
+        <h1 className="text-foreground transition-colors-smooth text-4xl font-[200] tracking-tight sm:text-5xl">
           {/* Container that expands from narrow to full width */}
           <div
             className={cn(

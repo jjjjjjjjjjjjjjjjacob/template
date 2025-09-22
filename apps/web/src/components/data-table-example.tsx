@@ -70,7 +70,7 @@ export function DataTableExample() {
       accessorKey: 'name',
       header: 'name',
       cell: ({ row }) => (
-        <div className="font-medium">{row.getValue('name')}</div>
+        <div className="font-light">{row.getValue('name')}</div>
       ),
     },
     {
@@ -205,7 +205,7 @@ export function DataTableExample() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">users management</h2>
+        <h2 className="text-2xl font-light tracking-tight">users management</h2>
         <p className="text-muted-foreground">
           manage user accounts and permissions. this table demonstrates
           virtualization with {data.length} rows.

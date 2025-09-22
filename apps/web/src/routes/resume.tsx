@@ -167,10 +167,10 @@ function ExperienceCard({
       <div className="mb-6 space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h3 className="text-foreground text-xl font-semibold">
+            <h3 className="text-foreground text-xl font-[200]">
               {experience.role}
             </h3>
-            <p className="text-primary text-lg font-medium">
+            <p className="text-primary text-lg font-light">
               {experience.company}
             </p>
           </div>
@@ -192,7 +192,7 @@ function ExperienceCard({
         <p className="text-muted-foreground">{experience.description}</p>
 
         <div>
-          <h4 className="text-foreground mb-2 font-medium">key achievements</h4>
+          <h4 className="text-foreground mb-2 font-light">key achievements</h4>
           <ul className="space-y-1">
             {experience.achievements.map((achievement, achievementIndex) => (
               <li
@@ -207,12 +207,12 @@ function ExperienceCard({
         </div>
 
         <div>
-          <h4 className="text-foreground mb-2 font-medium">technologies</h4>
+          <h4 className="text-foreground mb-2 font-light">technologies</h4>
           <div className="flex flex-wrap gap-2">
             {experience.technologies.map((tech, techIndex) => (
               <span
                 key={tech}
-                className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-medium"
+                className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-light"
                 style={{
                   opacity: 0,
                   animation: `fadeInScale 0.4s ease-out forwards`,
@@ -241,12 +241,12 @@ function SkillCategory({
   return (
     <div>
       <div className="space-y-3">
-        <h3 className="text-foreground font-semibold">{title}</h3>
+        <h3 className="text-foreground font-[200]">{title}</h3>
         <div className="flex flex-wrap gap-2">
           {skillList.map((skill, skillIndex) => (
             <span
               key={skill}
-              className="bg-primary/10 text-primary rounded-lg px-3 py-2 text-sm font-medium"
+              className="bg-primary/10 text-primary rounded-lg px-3 py-2 text-sm font-light"
               style={{
                 opacity: 0,
                 animation: `fadeInScale 0.4s ease-out forwards`,
@@ -276,7 +276,7 @@ function ResumePage() {
               style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
             >
               <div>
-                <h1 className="text-foreground text-4xl font-bold tracking-tight sm:text-5xl">
+                <h1 className="text-foreground text-4xl font-[200] tracking-tight sm:text-5xl">
                   jacob stein
                 </h1>
                 <p className="text-muted-foreground mt-2 text-xl">
@@ -313,7 +313,7 @@ function ResumePage() {
 
           <section>
             <div>
-              <h2 className="text-foreground mb-8 text-3xl font-bold">
+              <h2 className="text-foreground mb-8 text-3xl font-[200]">
                 experience
               </h2>
             </div>
@@ -330,7 +330,7 @@ function ResumePage() {
 
           <section>
             <div>
-              <h2 className="text-foreground mb-8 text-3xl font-bold">
+              <h2 className="text-foreground mb-8 text-3xl font-[200]">
                 skills
               </h2>
             </div>
@@ -357,7 +357,7 @@ function ResumePage() {
 
           <section>
             <div>
-              <h2 className="text-foreground mb-8 text-3xl font-bold">
+              <h2 className="text-foreground mb-8 text-3xl font-[200]">
                 performance metrics
               </h2>
             </div>
@@ -372,7 +372,7 @@ function ResumePage() {
 
           <section>
             <div>
-              <h2 className="text-foreground mb-8 text-3xl font-bold">
+              <h2 className="text-foreground mb-8 text-3xl font-[200]">
                 education
               </h2>
               <div className="space-y-6">
@@ -384,10 +384,10 @@ function ResumePage() {
                     <div className="bg-primary absolute top-0 -left-2 h-4 w-4 rounded-full"></div>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
-                        <h3 className="text-foreground text-xl font-semibold">
+                        <h3 className="text-foreground text-xl font-[200]">
                           {edu.degree}
                         </h3>
-                        <p className="text-primary text-lg font-medium">
+                        <p className="text-primary text-lg font-light">
                           {edu.institution}
                         </p>
                       </div>
@@ -414,7 +414,7 @@ function ResumePage() {
           <div>
             <section className="text-center">
               <div className="border-border bg-card rounded-2xl border p-8">
-                <h3 className="text-foreground mb-4 text-2xl font-semibold">
+                <h3 className="text-foreground mb-4 text-2xl font-[200]">
                   view my work
                 </h3>
                 <p className="text-muted-foreground mb-6">

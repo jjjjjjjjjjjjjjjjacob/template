@@ -352,7 +352,7 @@ export function VirtualDataTable<TData, TValue>({
                     <th
                       key={header.id}
                       className={cn(
-                        'text-muted-foreground h-10 px-4 text-left align-middle font-medium',
+                        'text-muted-foreground h-10 px-4 text-left align-middle font-light',
                         enableBorders &&
                           'border-r-muted border-r last:border-r-0',
                         header.column.getCanSort() &&
@@ -495,7 +495,7 @@ export function VirtualDataTable<TData, TValue>({
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">rows per page</p>
+            <p className="text-sm font-light">rows per page</p>
             <Select
               value={`${table.getState().pagination.pageSize}`}
               onValueChange={(value) => {
@@ -516,7 +516,7 @@ export function VirtualDataTable<TData, TValue>({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          <div className="flex w-[100px] items-center justify-center text-sm font-light">
             page {table.getState().pagination.pageIndex + 1} of{' '}
             {table.getPageCount()}
           </div>

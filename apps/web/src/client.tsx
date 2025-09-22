@@ -72,7 +72,7 @@ function initializeApp() {
       hydrateRoot(document, <StartClient router={router} />, {
         // React 19 hydration options
         onRecoverableError: handleHydrationError,
-        identifierPrefix: 'app-',
+        // Use default identifierPrefix to match server output
       });
 
       // Track successful hydration

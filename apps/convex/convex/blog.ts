@@ -68,16 +68,6 @@ export const list = query({
       projectTags: p.projectTags,
     }));
 
-    // Debug logging for thumbnail issues
-    console.log(
-      'Blog list query result:',
-      result.map((p) => ({
-        title: p.title,
-        thumbnailId: p.thumbnailId,
-        hasThumbnail: !!p.thumbnailId,
-      }))
-    );
-
     return result;
   },
 });
@@ -127,14 +117,6 @@ export const upsert = mutation({
     if (!isAdminEmail(user.email)) {
       throw new Error('Unauthorized: admin access required');
     }
-
-    console.log('Upsert mutation called with:', {
-      title: args.title,
-      thumbnailId: args.thumbnailId,
-      images: args.images,
-      hasImages: !!args.images?.length,
-      hasThumbnail: !!args.thumbnailId,
-    });
 
     const now = Date.now();
 
@@ -321,14 +303,6 @@ export const autosave = mutation({
       throw new Error('Unauthorized: admin access required');
     }
 
-    console.log('Autosave mutation called with:', {
-      title: args.title,
-      thumbnailId: args.thumbnailId,
-      images: args.images,
-      hasImages: !!args.images?.length,
-      hasThumbnail: !!args.thumbnailId,
-    });
-
     const now = Date.now();
 
     // Calculate reading time and extract excerpt
@@ -443,9 +417,10 @@ export const removeImageFromPost = mutation({
     const updatedImages = currentImages.filter((id) => id !== args.storageId);
 
     // If removing the thumbnail image, clear the thumbnail
-    const patchData: any = {
+    const patchData = {
       images: updatedImages,
       updatedAt: Date.now(),
+      thumbnailId: undefined,
     };
 
     if (post.thumbnailId === args.storageId) {
@@ -515,6 +490,7 @@ export const getMultipleImageUrls = query({
         const url = await ctx.storage.getUrl(storageId);
         urls[storageId] = url;
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(`Failed to get URL for storage ID ${storageId}:`, error);
         urls[storageId] = null;
       }

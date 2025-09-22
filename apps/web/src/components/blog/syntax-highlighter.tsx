@@ -2,8 +2,21 @@ import React from 'react';
 
 // Essential languages only - will register dynamically
 const SUPPORTED_LANGUAGES = [
-  'javascript', 'typescript', 'jsx', 'tsx', 'css', 'html', 'json',
-  'bash', 'python', 'java', 'go', 'rust', 'sql', 'yaml', 'markdown'
+  'javascript',
+  'typescript',
+  'jsx',
+  'tsx',
+  'css',
+  'html',
+  'json',
+  'bash',
+  'python',
+  'java',
+  'go',
+  'rust',
+  'sql',
+  'yaml',
+  'markdown',
 ];
 
 // Dynamically import PrismLight for better bundle size
@@ -25,37 +38,69 @@ export default function CodeBlock({
   className,
 }: CodeBlockProps) {
   const [highlighterReady, setHighlighterReady] = React.useState(false);
-  const [style, setStyle] = React.useState<any>(null);
+  const [style, setStyle] = React.useState<React.CSSProperties | null>(null);
 
   React.useEffect(() => {
     const loadLanguageAndStyle = async () => {
       try {
         // Load style
-        const styleModule = await import('react-syntax-highlighter/dist/esm/styles/prism/one-dark');
+        const styleModule = await import(
+          'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
+        );
         setStyle(styleModule.default);
 
         // Load only if language is supported
         if (SUPPORTED_LANGUAGES.includes(language)) {
-          const PrismLightModule = await import('react-syntax-highlighter/dist/esm/prism-light');
+          const PrismLightModule = await import(
+            'react-syntax-highlighter/dist/esm/prism-light'
+          );
           const PrismComponent = PrismLightModule.default;
 
           // Map language to import path
-          const languageMap: Record<string, () => Promise<any>> = {
-            javascript: () => import('react-syntax-highlighter/dist/esm/languages/prism/javascript'),
-            typescript: () => import('react-syntax-highlighter/dist/esm/languages/prism/typescript'),
-            jsx: () => import('react-syntax-highlighter/dist/esm/languages/prism/jsx'),
-            tsx: () => import('react-syntax-highlighter/dist/esm/languages/prism/tsx'),
-            css: () => import('react-syntax-highlighter/dist/esm/languages/prism/css'),
-            html: () => import('react-syntax-highlighter/dist/esm/languages/prism/markup'),
-            json: () => import('react-syntax-highlighter/dist/esm/languages/prism/json'),
-            bash: () => import('react-syntax-highlighter/dist/esm/languages/prism/bash'),
-            python: () => import('react-syntax-highlighter/dist/esm/languages/prism/python'),
-            java: () => import('react-syntax-highlighter/dist/esm/languages/prism/java'),
-            go: () => import('react-syntax-highlighter/dist/esm/languages/prism/go'),
-            rust: () => import('react-syntax-highlighter/dist/esm/languages/prism/rust'),
-            sql: () => import('react-syntax-highlighter/dist/esm/languages/prism/sql'),
-            yaml: () => import('react-syntax-highlighter/dist/esm/languages/prism/yaml'),
-            markdown: () => import('react-syntax-highlighter/dist/esm/languages/prism/markdown'),
+          const languageMap: Record<
+            string,
+            () => Promise<Record<string, string>>
+          > = {
+            javascript: () =>
+              import(
+                'react-syntax-highlighter/dist/esm/languages/prism/javascript'
+              ),
+            typescript: () =>
+              import(
+                'react-syntax-highlighter/dist/esm/languages/prism/typescript'
+              ),
+            jsx: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/jsx'),
+            tsx: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/tsx'),
+            css: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/css'),
+            html: () =>
+              import(
+                'react-syntax-highlighter/dist/esm/languages/prism/markup'
+              ),
+            json: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/json'),
+            bash: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/bash'),
+            python: () =>
+              import(
+                'react-syntax-highlighter/dist/esm/languages/prism/python'
+              ),
+            java: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/java'),
+            go: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/go'),
+            rust: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/rust'),
+            sql: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/sql'),
+            yaml: () =>
+              import('react-syntax-highlighter/dist/esm/languages/prism/yaml'),
+            markdown: () =>
+              import(
+                'react-syntax-highlighter/dist/esm/languages/prism/markdown'
+              ),
           };
 
           if (languageMap[language]) {
@@ -66,7 +111,11 @@ export default function CodeBlock({
 
         setHighlighterReady(true);
       } catch (error) {
-        console.warn(`Failed to load syntax highlighting for ${language}:`, error);
+        // eslint-disable-next-line no-console
+        console.warn(
+          `Failed to load syntax highlighting for ${language}:`,
+          error
+        );
         setHighlighterReady(true); // Still set ready to show fallback
       }
     };

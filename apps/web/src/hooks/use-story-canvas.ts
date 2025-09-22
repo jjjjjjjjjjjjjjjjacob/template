@@ -197,6 +197,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
         setIsGenerating(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

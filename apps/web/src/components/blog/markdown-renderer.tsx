@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { MarkdownImage } from './blog-inline-image';
 import { loadRemarkPlugins, loadRehypePlugins } from './remark-plugins';
+import { PluggableList } from 'unified';
 
 // Lazy load the syntax highlighter component
 const CodeBlock = React.lazy(() => import('./syntax-highlighter'));
@@ -12,8 +13,8 @@ interface MarkdownRendererProps {
 
 const MarkdownContent = React.memo(({ content }: { content: string }) => {
   const [plugins, setPlugins] = React.useState<{
-    remarkPlugins: any[];
-    rehypePlugins: any[];
+    remarkPlugins: PluggableList;
+    rehypePlugins: PluggableList;
   }>({
     remarkPlugins: [],
     rehypePlugins: [],

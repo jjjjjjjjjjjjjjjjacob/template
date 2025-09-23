@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@template/convex';
 import { useTheme } from './theme-provider';
-import { useSectionTracking } from '@/hooks/use-section-tracking';
+import { useSectionStore } from '@/stores/section-store';
 import { trackEvents } from '@/lib/track-events';
 import { Link } from '@tanstack/react-router';
 import { useAdminAuth } from '@/features/admin/hooks/use-admin';
@@ -36,7 +36,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
     }, 4000);
     return () => clearTimeout(timeout);
   }, []);
-  const { activeSection, scrollToSection } = useSectionTracking();
+  const activeSection = useSectionStore((state) => state.activeSection);
 
   const toggleTheme = () => {
     const fromTheme = resolvedTheme || 'light';
@@ -56,7 +56,6 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
       section,
       window.scrollY
     );
-    scrollToSection(section);
   };
 
   const handleSocialClick = (platform: 'github' | 'twitter', url: string) => {
@@ -66,21 +65,25 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
 
   return (
     <header
-      data-fading={isFading}
+      data-fading={
+        isFading && (activeSection === 'home' || activeSection === null)
+      }
       className="border-border bg-background/50 fixed top-0 right-0 left-0 z-50 border-b backdrop-blur-md transition-opacity duration-1000 data-[fading=true]:opacity-0"
       style={style}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <button
-          onClick={() => handleNavClick('home')}
-          className={`text-xl font-[200] tracking-wider transition-colors ${
-            activeSection === 'home'
-              ? 'text-foreground'
-              : 'text-foreground/80 hover:text-foreground'
-          }`}
-        >
-          jacob stein
-        </button>
+        <a href="#">
+          <button
+            onClick={() => handleNavClick('home')}
+            className={`text-xl font-[200] tracking-wider transition-colors ${
+              activeSection === 'home'
+                ? 'text-foreground'
+                : 'text-foreground/80 hover:text-foreground'
+            }`}
+          >
+            jacob stein
+          </button>
+        </a>
 
         <nav className="flex items-center gap-4">
           {/* Social Links */}
@@ -114,26 +117,30 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
             </a>
           </div>
 
-          <button
-            onClick={() => handleNavClick('projects')}
-            className={`text-sm tracking-wider transition-colors ${
-              activeSection === 'projects'
-                ? 'text-foreground font-[200]'
-                : 'text-muted-foreground hover:text-foreground font-[200]'
-            }`}
-          >
-            projects
-          </button>
-          <button
-            onClick={() => handleNavClick('resume')}
-            className={`text-sm tracking-wider transition-colors ${
-              activeSection === 'resume'
-                ? 'text-foreground font-[200]'
-                : 'text-muted-foreground hover:text-foreground font-[200]'
-            }`}
-          >
-            resume
-          </button>
+          <a href="#projects">
+            <button
+              onClick={() => handleNavClick('projects')}
+              className={`text-sm tracking-wider transition-colors ${
+                activeSection === 'projects'
+                  ? 'text-foreground font-[200]'
+                  : 'text-muted-foreground hover:text-foreground font-[200]'
+              }`}
+            >
+              projects
+            </button>
+          </a>
+          <a href="#resume">
+            <button
+              onClick={() => handleNavClick('resume')}
+              className={`text-sm tracking-wider transition-colors ${
+                activeSection === 'resume'
+                  ? 'text-foreground font-[200]'
+                  : 'text-muted-foreground hover:text-foreground font-[200]'
+              }`}
+            >
+              resume
+            </button>
+          </a>
           {hasPublishedPosts && (
             <Link
               to="/blog"

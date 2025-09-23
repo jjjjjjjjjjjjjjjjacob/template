@@ -240,7 +240,7 @@ export const resumeProfile: ResumeProfile = {
 
       previews: [
         // Removed broken animation URL that returned 404 during load
-        'https://heat.tech/search/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73?q=boxer',
+        'https://heat.tech/marketplace/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73',
         'https://heat.tech/plugins',
         'https://heat.tech/3d-viewer',
       ],

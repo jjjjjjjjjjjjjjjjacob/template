@@ -1,3 +1,4 @@
+import { useSectionObserverById } from '@/hooks/use-section-observer';
 import { createFileRoute } from '@tanstack/react-router';
 import { ParticleField } from '@/components/particle-field';
 import { defaultParticleConfig } from '@/components/particle-controls';
@@ -23,7 +24,6 @@ const XIcon = ({ className }: { className?: string }) => (
 );
 import { Separator } from '@/components/ui';
 import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
-import { useSectionTracking } from '@/hooks/use-section-tracking';
 import { HeroTitle } from '@/components/hero-title';
 import { PDFDownloadPopover } from '@/components/pdf-download-popover';
 import { trackEvents } from '@/lib/track-events';
@@ -36,7 +36,11 @@ function HomePage() {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { resolvedTheme } = useTheme();
   const resumeData = useResumeFilter();
-  const { scrollToSection } = useSectionTracking();
+  // Observe all sections for intersection tracking
+  useSectionObserverById('home');
+  useSectionObserverById('projects');
+  useSectionObserverById('resume');
+  useSectionObserverById('contact');
 
   // Track project interactions
   const handleProjectVisit = (
@@ -243,7 +247,9 @@ function HomePage() {
         {/* Desktop Layout - Horizontal with Alternating */}
         <div className="hidden md:flex md:min-h-[500px] md:items-stretch md:gap-16">
           {/* Preview Section */}
-          <div
+          <AnimatedSection
+            animationType="section"
+            delay={0}
             className={`flex-1 overflow-hidden ${isEven ? 'md:order-2' : 'md:order-1'}`}
           >
             <ProjectSlideshow
@@ -254,7 +260,7 @@ function HomePage() {
               slideDirection={slideDirection}
               isMobile={false}
             />
-          </div>
+          </AnimatedSection>
 
           {/* Info Section */}
           <div
@@ -519,12 +525,9 @@ function HomePage() {
             >
               resume
             </a>
-            <a
-              href="#contact"
-              className="hover:text-foreground transition-colors-smooth"
-            >
+            <div className="hover:text-foreground transition-colors-smooth">
               contact
-            </a>
+            </div>
           </div>
         </div>
       </div>
@@ -783,20 +786,22 @@ function HomePage() {
               data-visible={!showLoader}
               className="flex gap-2 font-[200] opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
-              <Button
-                className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] font-[200] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
-                size="sm"
-                onClick={() => scrollToSection('projects')}
-              >
-                projects
-              </Button>
-              <Button
-                className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] font-[200] sm:px-5 sm:py-3 sm:text-sm"
-                onClick={() => scrollToSection('resume')}
-                size="sm"
-              >
-                resume
-              </Button>
+              <a href="#projects">
+                <Button
+                  className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] font-[200] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
+                  size="sm"
+                >
+                  projects
+                </Button>
+              </a>
+              <a href="#resume">
+                <Button
+                  className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] font-[200] sm:px-5 sm:py-3 sm:text-sm"
+                  size="sm"
+                >
+                  resume
+                </Button>
+              </a>
             </div>
           </div>
         </div>

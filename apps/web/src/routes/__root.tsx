@@ -41,6 +41,7 @@ import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexQueryClient } from '@convex-dev/react-query';
 import { ClerkProvider, useAuth } from '@clerk/tanstack-react-start';
+import { useSectionStore } from '@/stores/section-store';
 
 // Optimized server function with caching and mobile optimizations
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
@@ -221,6 +222,18 @@ function HeaderWrapper() {
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const { initializeObserver, cleanup } = useSectionStore();
+
+  // Initialize section observer once at app mount
+  React.useEffect(() => {
+    initializeObserver();
+
+    // Cleanup on app unmount
+    return () => {
+      cleanup();
+    };
+  }, [initializeObserver, cleanup]);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>

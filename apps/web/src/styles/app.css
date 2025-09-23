@@ -155,6 +155,9 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border outline-ring/50 cursor-default;
     font-weight: 200; /* Global font-[200] */

@@ -21,22 +21,26 @@ export function AnimatedSection({
   });
 
   const baseClasses = {
-    section: 'animate-on-scroll',
-    card: 'animate-card-on-scroll',
-    header: 'animate-header-on-scroll',
+    section:
+      'data-[visible=false]:translate-y-40px data-[visible=false]:scale-98 data-[visible=false]:opacity-0 duration-800',
+    card: 'data-[visbile=false]:translate-y-24px data-[visible=false]:scale-95 data-[visible=false]:opacity-0 duration-600',
+
+    header:
+      'data-[visible=false]:translate-y-10px data-[visible=false]:scale-102 data-[visible=false]:opacity-0 duration-300',
   };
+
+  const transitionDelay = delay ? `delay-${delay}ms` : undefined;
 
   return (
     <div
       ref={elementRef}
+      data-visible={isVisible}
       className={cn(
+        'transition-all',
         baseClasses[animationType],
-        isVisible && 'animate-visible',
+        transitionDelay,
         className
       )}
-      style={{
-        transitionDelay: delay ? `${delay}ms` : undefined,
-      }}
     >
       {children}
     </div>

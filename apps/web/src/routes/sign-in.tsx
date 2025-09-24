@@ -11,6 +11,8 @@ function SignInPage() {
       <h1 className="mb-6 text-2xl font-light">sign in</h1>
       <div className="bg-card w-full rounded-lg border p-2">
         <SignIn
+          path="/sign-in"
+          routing="path"
           signUpUrl="/sign-up"
           appearance={{ variables: { colorPrimary: '#222' } }}
         />

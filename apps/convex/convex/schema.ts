@@ -14,6 +14,7 @@ export default defineSchema({
     image_url: v.optional(v.string()),
     profile_image_url: v.optional(v.string()),
     onboarding_completed: v.optional(v.boolean()),
+    isAdmin: v.optional(v.boolean()),
     created_at: v.number(),
     updated_at: v.number(),
   })

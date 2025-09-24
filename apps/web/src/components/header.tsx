@@ -72,7 +72,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
       style={style}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <a href="#">
+        <a href="/#">
           <button
             onClick={() => handleNavClick('home')}
             className={`text-xl font-[200] tracking-wider transition-colors ${
@@ -117,7 +117,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
             </a>
           </div>
 
-          <a href="#projects">
+          <a href="/#projects">
             <button
               onClick={() => handleNavClick('projects')}
               className={`text-sm tracking-wider transition-colors ${
@@ -129,7 +129,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
               projects
             </button>
           </a>
-          <a href="#resume">
+          <a href="/#resume">
             <button
               onClick={() => handleNavClick('resume')}
               className={`text-sm tracking-wider transition-colors ${

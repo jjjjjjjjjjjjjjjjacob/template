@@ -2,16 +2,7 @@ import { query, mutation } from './_generated/server';
 import { v } from 'convex/values';
 import { getCurrentUserOrThrow, getCurrentUser } from './users';
 import { extractExcerpt, calculateReadingTime } from './blog_utils';
-
-function isAdminEmail(email?: string | null) {
-  if (!email) return false;
-  const env = process.env.ADMIN_EMAILS || process.env.ADMIN_EMAIL || '';
-  const allow = env
-    .split(',')
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean);
-  return allow.includes(email.toLowerCase());
-}
+import { AuthUtils } from './lib/auth';
 
 export const hasPublishedPosts = query({
   args: {},
@@ -113,8 +104,9 @@ export const upsert = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
 
-    // Only admin emails can create/update posts
-    if (!isAdminEmail(user.email)) {
+    // Only admin users can create/update posts
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
 
@@ -203,9 +195,8 @@ export const upsert = mutation({
 export const remove = mutation({
   args: { slug: v.string() },
   handler: async (ctx, { slug }) => {
-    const user = await getCurrentUserOrThrow(ctx);
-
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
     const existing = await ctx.db
@@ -231,7 +222,8 @@ export const listAll = query({
     }
 
     // Check if user is admin
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       return [];
     }
 
@@ -270,7 +262,8 @@ export const getById = query({
     }
 
     // Check if user is admin
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       return null;
     }
 
@@ -299,7 +292,8 @@ export const autosave = mutation({
   handler: async (ctx, args) => {
     const user = await getCurrentUserOrThrow(ctx);
 
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
 
@@ -355,9 +349,8 @@ export const autosave = mutation({
 export const generateUploadUrl = mutation({
   args: {},
   handler: async (ctx) => {
-    const user = await getCurrentUserOrThrow(ctx);
-
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
 
@@ -372,9 +365,8 @@ export const addImageToPost = mutation({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
-
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
 
@@ -402,9 +394,8 @@ export const removeImageFromPost = mutation({
     storageId: v.id('_storage'),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
-
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
 
@@ -443,9 +434,8 @@ export const setPostThumbnail = mutation({
     thumbnailId: v.optional(v.id('_storage')),
   },
   handler: async (ctx, args) => {
-    const user = await getCurrentUserOrThrow(ctx);
-
-    if (!isAdminEmail(user.email)) {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
       throw new Error('Unauthorized: admin access required');
     }
 

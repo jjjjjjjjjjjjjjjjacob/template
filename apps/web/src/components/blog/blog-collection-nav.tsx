@@ -4,7 +4,7 @@ import { api } from '@template/convex';
 import { Link } from '@tanstack/react-router';
 import { Plus } from 'lucide-react';
 import { Button } from '../ui/button';
-import { useUser, useOrganization } from '@clerk/tanstack-react-start';
+import { useIsAdmin } from '../../features/auth/hooks/use-admin';
 
 interface BlogCollectionNavProps {
   activeCollection?: string;
@@ -18,22 +18,7 @@ export function BlogCollectionNav({
   className = '',
 }: BlogCollectionNavProps) {
   const collections = useQuery(api.blog.getCollections);
-  const { user } = useUser();
-  const { organization, membership } = useOrganization();
-
-  // Check admin status based on Clerk organization membership
-  const isAdmin = React.useMemo(() => {
-    if (!user) return false;
-
-    // If user is in an organization, check their role
-    if (organization && membership) {
-      return membership.role === 'org:admin' || membership.role === 'org:owner';
-    }
-
-    // Fallback: if no organization setup, treat the user as admin
-    // This allows for single-user blogs without requiring organization setup
-    return true;
-  }, [user, organization, membership]);
+  const isAdmin = useIsAdmin();
 
   if (!collections || collections.length === 0) {
     return null;

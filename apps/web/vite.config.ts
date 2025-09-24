@@ -161,37 +161,11 @@ export default defineConfig(() => {
         'next-themes',
         'zustand',
         'recharts',
-        // Markdown processing libraries - should be client-only
-        'react-markdown',
-        'remark-gfm',
-        'rehype-raw',
-        'react-syntax-highlighter',
-        'react-syntax-highlighter/dist/esm/styles/prism',
-        'unist-util-visit',
-        'remark-parse',
-        'remark-stringify',
-        'unified',
-        'mdast',
-        'mdast-util-from-markdown',
-        'mdast-util-to-markdown',
-        'micromark',
-        'vfile',
-        'hast',
-        'rehype-parse',
-        'rehype-stringify',
-        // All prism-related syntax highlighting
-        'prismjs',
-        'refractor',
-        'lowlight',
         // Heavy UI libraries
         'lucide-react',
         'three',
         '@react-three/fiber',
         '@react-three/drei',
-        // Additional markdown dependencies
-        'markdown-it',
-        'marked',
-        'highlight.js',
         // Emoji and other content processors
         '@emoji-mart/data',
         '@emoji-mart/react',
@@ -219,6 +193,15 @@ export default defineConfig(() => {
         '@clerk/tanstack-react-start',
         // Essential UI components
         'class-variance-authority',
+        // Markdown processing dependencies (fix module resolution)
+        'style-to-js',
+        'rehype-raw',
+        'hast-util-parse-selector',
+        'property-information',
+        'debug',
+        // Fix CommonJS/ESM compatibility for extend module
+        'extend',
+        'unified',
       ],
       exclude: [
         // Heavy dependencies that should be lazy loaded
@@ -241,12 +224,10 @@ export default defineConfig(() => {
         // Markdown processing libraries - lazy loaded for blog
         'react-markdown',
         'remark-gfm',
-        'rehype-raw',
         'react-syntax-highlighter',
         'unist-util-visit',
         'remark-parse',
         'remark-stringify',
-        'unified',
         'mdast',
         'mdast-util-from-markdown',
         'mdast-util-to-markdown',

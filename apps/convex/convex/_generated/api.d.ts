@@ -19,6 +19,7 @@ import type * as blog from "../blog.js";
 import type * as blog_utils from "../blog_utils.js";
 import type * as http from "../http.js";
 import type * as items from "../items.js";
+import type * as lib_auth from "../lib/auth.js";
 import type * as lib_emojiColors from "../lib/emojiColors.js";
 import type * as search_fuzzy_search from "../search/fuzzy_search.js";
 import type * as search_search_scorer from "../search/search_scorer.js";
@@ -51,6 +52,7 @@ declare const fullApi: ApiFromModules<{
   blog_utils: typeof blog_utils;
   http: typeof http;
   items: typeof items;
+  "lib/auth": typeof lib_auth;
   "lib/emojiColors": typeof lib_emojiColors;
   "search/fuzzy_search": typeof search_fuzzy_search;
   "search/search_scorer": typeof search_search_scorer;

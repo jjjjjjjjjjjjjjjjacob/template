@@ -11,7 +11,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
     title: 'Senior Full-Stack Developer & UI/UX Designer',
     location: 'Remote',
     summary:
-      'Full-stack developer and UI/UX designer with experience building scalable web applications and intuitive user experiences. Proven track record of architecting complex systems and delivering high-impact products.',
+      'Full-stack developer and UI/UX designer with experience building scalable web applications and intuitive user experiences. Proven track record of architecting complex systems and delivering high-impact products. Graduated from UCLA in 2015.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
       github: 'https://github.com/jacobstein',
@@ -44,7 +44,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
     title: 'Product & Growth Lead',
     location: 'Remote',
     summary:
-      'Product strategist and technical founder focused on shipping high-impact social and 3D creator products. Proven track record of launching platforms from zero-to-one, aligning product vision with GTM, and scaling cross-functional teams.',
+      'Product strategist and technical founder focused on shipping high-impact social and 3D creator products. Proven track record of launching platforms from zero-to-one, aligning product vision with GTM, and scaling cross-functional teams. Graduated from UCLA in 2015.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
       github: 'https://github.com/jacobstein',
@@ -70,7 +70,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
     title: 'Principal Frontend Engineer & Product Designer',
     location: 'Remote',
     summary:
-      'Frontend engineer and product designer focused on building immersive web experiences, real-time interfaces, and visually polished design systems. Experienced shipping high-impact UI work from concept through production.',
+      'Frontend engineer and product designer focused on building immersive web experiences, real-time interfaces, and visually polished design systems. Experienced shipping high-impact UI work from concept through production. Graduated from UCLA in 2015.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
       github: 'https://github.com/jacobstein',

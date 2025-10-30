@@ -119,4 +119,65 @@ export default defineSchema({
     .index('by_author', ['authorId'])
     .index('by_collection', ['collection'])
     .index('by_published_collection', ['published', 'collection']),
+
+  resume_profiles: defineTable({
+    slug: v.string(),
+    name: v.string(),
+    title: v.string(),
+    location: v.string(),
+    summary: v.string(),
+    contact: v.object({
+      email: v.optional(v.string()),
+      linkedin: v.optional(v.string()),
+      github: v.optional(v.string()),
+      website: v.optional(v.string()),
+    }),
+    defaults: v.object({
+      focusAreas: v.array(v.string()),
+      topTechnologies: v.array(v.string()),
+      priorityDomains: v.array(v.string()),
+    }),
+    order: v.number(),
+  }).index('by_slug', ['slug']),
+
+  resume_projects: defineTable({
+    profileSlug: v.string(),
+    projectId: v.string(),
+    priority: v.number(),
+    title: v.string(),
+    url: v.optional(v.string()),
+    company: v.string(),
+    timeline: v.string(),
+    role: v.string(),
+    description: v.string(),
+    focusAreas: v.array(v.string()),
+    domains: v.array(v.string()),
+    achievements: v.array(
+      v.object({
+        description: v.string(),
+        impact: v.optional(v.string()),
+        technologies: v.array(v.string()),
+        domains: v.array(v.string()),
+        type: v.string(),
+        priority: v.number(),
+      })
+    ),
+    technologies: v.object({
+      frontend: v.array(v.string()),
+      backend: v.array(v.string()),
+      infrastructure: v.array(v.string()),
+      databases: v.array(v.string()),
+      tools: v.array(v.string()),
+    }),
+    previews: v.array(v.string()),
+  }).index('by_profile_priority', ['profileSlug', 'priority']),
+
+  resume_skills: defineTable({
+    profileSlug: v.string(),
+    priority: v.number(),
+    category: v.string(),
+    skills: v.array(v.string()),
+    proficiency: v.string(),
+    domains: v.array(v.string()),
+  }).index('by_profile_priority', ['profileSlug', 'priority']),
 });

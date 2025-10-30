@@ -8,3 +8,8 @@ Learnings:
 Helpful in:
 - Adding small UI sections to the home page without creating new shared components.
 - Ensuring anchors and minor UI follow the project's formatting and class naming conventions.
+- Resume data now comes from Convex via `api.resume.getProfile`; rely on Convex schemas for field names and keep variants in the database, not static files.
+- When adding tests for Convex-backed hooks, mock both `useSearch` and `useQuery`, and stub the namespace in `@template/convex` as needed.
+- Maintain resume variant content in `apps/convex/convex/resumeData.ts`, update copy there (e.g., investor notes for HEAT), and rerun `npx convex dev` + `npx convex run seed:seed` to refresh the deployment data.
+- Use `replaceProfilesData` in `apps/convex/convex/resume.ts` when seeding or mutating batches; avoid calling Convex functions from other Convex functions (no `.handler` chaining).
+- Control resume job ordering by adjusting the `priority` field in `resumeProjects` for each slug; lower priority values surface first after reseeding.

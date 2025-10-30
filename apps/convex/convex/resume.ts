@@ -1,5 +1,9 @@
-import { internalMutation, mutation, query } from './_generated/server';
-import type { MutationCtx } from './_generated/server';
+import {
+  internalMutation,
+  mutation,
+  query,
+  type MutationCtx,
+} from './_generated/server';
 import { v } from 'convex/values';
 import { AuthUtils } from './lib/auth';
 
@@ -202,7 +206,7 @@ const resumeSkillInput = v.object({
   domains: v.array(v.string()),
 });
 
-type ResumeProfileRecord = {
+export type ResumeProfileRecord = {
   slug: string;
   name: string;
   title: string;
@@ -222,7 +226,7 @@ type ResumeProfileRecord = {
   order: number;
 };
 
-type ResumeProjectRecord = {
+export type ResumeProjectRecord = {
   projectId: string;
   priority: number;
   title: string;
@@ -251,7 +255,7 @@ type ResumeProjectRecord = {
   previews: string[];
 };
 
-type ResumeSkillRecord = {
+export type ResumeSkillRecord = {
   priority: number;
   category: string;
   skills: string[];
@@ -431,4 +435,3 @@ export const deleteProfile = mutation({
     return null;
   },
 });
-

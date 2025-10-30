@@ -84,4 +84,3 @@ describe('useResumeFilter', () => {
     expect(result.current.variant).toBe('default');
   });
 });
-

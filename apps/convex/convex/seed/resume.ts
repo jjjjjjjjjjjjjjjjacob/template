@@ -1,11 +1,7 @@
 import { v } from 'convex/values';
 import { internalMutation } from '../_generated/server';
 import { replaceProfilesData } from '../resume';
-import {
-  resumeProfiles,
-  resumeProjects,
-  resumeSkills,
-} from '../resumeData';
+import { resumeProfiles, resumeProjects, resumeSkills } from '../resumeData';
 
 export const seedAllResumes = internalMutation({
   args: {},

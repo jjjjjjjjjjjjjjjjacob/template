@@ -1,4 +1,10 @@
-export const resumeProfiles = [
+import type {
+  ResumeProfileRecord,
+  ResumeProjectRecord,
+  ResumeSkillRecord,
+} from './resume';
+
+export const resumeProfiles: ResumeProfileRecord[] = [
   {
     slug: 'default',
     name: 'Jacob Stein',
@@ -84,36 +90,9 @@ export const resumeProfiles = [
     },
     order: 2,
   },
-] as const;
+];
 
-export const resumeProjects: Record<string, Array<{
-  projectId: string;
-  priority: number;
-  title: string;
-  url?: string;
-  company: string;
-  timeline: string;
-  role: string;
-  description: string;
-  focusAreas: string[];
-  domains: string[];
-  achievements: Array<{
-    description: string;
-    impact?: string;
-    technologies: string[];
-    domains: string[];
-    type: string;
-    priority: number;
-  }>;
-  technologies: {
-    frontend: string[];
-    backend: string[];
-    infrastructure: string[];
-    databases: string[];
-    tools: string[];
-  };
-  previews: string[];
-}>> = {
+export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
   default: [
     {
       projectId: 'heat-tech',
@@ -131,8 +110,16 @@ export const resumeProjects: Record<string, Array<{
         {
           description:
             'Architected monorepo platform with real-time 3D animation marketplace using Nx workspace',
-          impact: 'Created scalable foundation for motion capture creator economy',
-          technologies: ['React', 'Three.js', 'NestJS', 'PostgreSQL', 'AWS', 'Nx'],
+          impact:
+            'Created scalable foundation for motion capture creator economy',
+          technologies: [
+            'React',
+            'Three.js',
+            'NestJS',
+            'PostgreSQL',
+            'AWS',
+            'Nx',
+          ],
           domains: ['marketplace', '3d', 'infrastructure'],
           type: 'architecture',
           priority: 10,
@@ -150,7 +137,8 @@ export const resumeProjects: Record<string, Array<{
         {
           description:
             'Integrated Stripe marketplace with subscription management and creator payout system',
-          impact: 'Enabled sustainable revenue model for platform and content creators',
+          impact:
+            'Enabled sustainable revenue model for platform and content creators',
           technologies: ['Stripe', 'Stripe Connect', 'NestJS', 'PostgreSQL'],
           domains: ['payments', 'backend'],
           type: 'integration',
@@ -159,7 +147,8 @@ export const resumeProjects: Record<string, Array<{
         {
           description:
             'Developed plugin ecosystem for Blender, Unity, Unreal Engine, and Maya',
-          impact: 'Extended platform reach across major 3D software applications',
+          impact:
+            'Extended platform reach across major 3D software applications',
           technologies: ['Python', 'C#', 'C++', 'MEL', 'AWS S3'],
           domains: ['3d', 'integration'],
           type: 'development',
@@ -184,9 +173,15 @@ export const resumeProjects: Record<string, Array<{
           priority: 7,
         },
         {
-          description: 'Implemented comprehensive testing strategy across full stack',
+          description:
+            'Implemented comprehensive testing strategy across full stack',
           impact: 'Established quality gates with automated testing pipeline',
-          technologies: ['Jest', 'React Testing Library', 'Cypress', 'GitHub Actions'],
+          technologies: [
+            'Jest',
+            'React Testing Library',
+            'Cypress',
+            'GitHub Actions',
+          ],
           domains: ['testing', 'devops'],
           type: 'development',
           priority: 6,
@@ -202,7 +197,13 @@ export const resumeProjects: Record<string, Array<{
           'Radix UI',
         ],
         backend: ['NestJS', 'TypeORM', 'PostgreSQL', 'Auth0', 'Stripe'],
-        infrastructure: ['AWS ECS', 'Terraform', 'CloudFront', 'S3', 'RDS Aurora'],
+        infrastructure: [
+          'AWS ECS',
+          'Terraform',
+          'CloudFront',
+          'S3',
+          'RDS Aurora',
+        ],
         databases: ['PostgreSQL', 'Redis'],
         tools: ['Nx', 'Docker', 'GitHub Actions', 'ESLint', 'Prettier'],
       },
@@ -230,13 +231,19 @@ export const resumeProjects: Record<string, Array<{
             'Architected real-time social platform with TanStack Start and Convex backend',
           impact:
             'Created novel social interaction patterns with emoji-based rating system',
-          technologies: ['TanStack Start', 'Convex', 'TypeScript', 'Tailwind CSS'],
+          technologies: [
+            'TanStack Start',
+            'Convex',
+            'TypeScript',
+            'Tailwind CSS',
+          ],
           domains: ['social', 'realtime', 'frontend'],
           type: 'architecture',
           priority: 9,
         },
         {
-          description: 'Designed innovative emoji rating system replacing traditional star ratings',
+          description:
+            'Designed innovative emoji rating system replacing traditional star ratings',
           impact: 'Pioneered unique UX patterns for social content evaluation',
           technologies: ['React', 'TypeScript', 'CSS Animations', 'emoji-mart'],
           domains: ['social', 'frontend'],
@@ -244,7 +251,8 @@ export const resumeProjects: Record<string, Array<{
           priority: 9,
         },
         {
-          description: 'Implemented real-time subscriptions with optimistic UI updates',
+          description:
+            'Implemented real-time subscriptions with optimistic UI updates',
           impact: 'Delivered seamless user experience with instant feedback',
           technologies: ['Convex', 'TanStack Query', 'WebSocket'],
           domains: ['realtime', 'frontend'],
@@ -252,7 +260,8 @@ export const resumeProjects: Record<string, Array<{
           priority: 8,
         },
         {
-          description: 'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
+          description:
+            'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
           impact: 'Created scalable deployment pipeline with automated CI/CD',
           technologies: ['Terraform', 'Cloudflare Workers', 'GitHub Actions'],
           domains: ['infrastructure', 'devops'],
@@ -260,7 +269,8 @@ export const resumeProjects: Record<string, Array<{
           priority: 7,
         },
         {
-          description: 'Created extensive test suite with Vitest and Convex testing framework',
+          description:
+            'Created extensive test suite with Vitest and Convex testing framework',
           impact: 'Ensured reliability with comprehensive testing strategy',
           technologies: ['Vitest', 'Testing Library', 'Convex Test'],
           domains: ['testing'],
@@ -268,8 +278,10 @@ export const resumeProjects: Record<string, Array<{
           priority: 6,
         },
         {
-          description: 'Integrated Clerk authentication with real-time user synchronization',
-          impact: 'Streamlined onboarding with multi-provider social authentication',
+          description:
+            'Integrated Clerk authentication with real-time user synchronization',
+          impact:
+            'Streamlined onboarding with multi-provider social authentication',
           technologies: ['Clerk', 'Convex', 'WebHooks'],
           domains: ['auth', 'realtime'],
           type: 'integration',
@@ -318,7 +330,11 @@ export const resumeProjects: Record<string, Array<{
             'Defined product north star metrics (DAU/WAU, reaction depth) and built analytics instrumentation to drive weekly roadmap decisions.',
           impact:
             'Improved onboarding conversion through iterative experimentation on signup flow, social proof placements, and personalized activation nudges.',
-          technologies: ['Convex Analytics', 'Product Analytics', 'A/B Testing'],
+          technologies: [
+            'Convex Analytics',
+            'Product Analytics',
+            'A/B Testing',
+          ],
           domains: ['social', 'realtime'],
           type: 'innovation',
           priority: 10,
@@ -345,11 +361,7 @@ export const resumeProjects: Record<string, Array<{
         },
       ],
       technologies: {
-        frontend: [
-          'Product Strategy',
-          'User Research',
-          'Experience Mapping',
-        ],
+        frontend: ['Product Strategy', 'User Research', 'Experience Mapping'],
         backend: ['Experiment Design', 'Retention Analysis'],
         infrastructure: ['Growth Experimentation'],
         databases: ['Cohort Analytics'],
@@ -375,7 +387,11 @@ export const resumeProjects: Record<string, Array<{
             'Conducted customer development with AAA studios, indie creators, and esports partners to validate marketplace features and pricing.',
           impact:
             'Secured 3 pilot customers and guided subscription packaging that unlocked $250k ARR pipeline.',
-          technologies: ['Customer Discovery', 'Pricing Strategy', 'Partnerships'],
+          technologies: [
+            'Customer Discovery',
+            'Pricing Strategy',
+            'Partnerships',
+          ],
           domains: ['marketplace', 'payments'],
           type: 'integration',
           priority: 10,
@@ -395,7 +411,11 @@ export const resumeProjects: Record<string, Array<{
             'Chaired weekly product strategy syncs with engineering, design, sales, and marketing to prioritize roadmap trade-offs.',
           impact:
             'Maintained cross-team alignment on enterprise feature milestones while delivering on community-driven requests.',
-          technologies: ['Stakeholder Management', 'OKR Planning', 'Product Communication'],
+          technologies: [
+            'Stakeholder Management',
+            'OKR Planning',
+            'Product Communication',
+          ],
           domains: ['payments', 'infrastructure'],
           type: 'leadership',
           priority: 8,
@@ -527,21 +547,15 @@ export const resumeProjects: Record<string, Array<{
         databases: ['PostgreSQL'],
         tools: ['Storybook', 'Jest'],
       },
-      previews: ['https://heat.tech/3d-viewer', 'https://heat.tech/marketplace'],
+      previews: [
+        'https://heat.tech/3d-viewer',
+        'https://heat.tech/marketplace',
+      ],
     },
   ],
 };
 
-export const resumeSkills: Record<
-  string,
-  Array<{
-    priority: number;
-    category: string;
-    skills: string[];
-    proficiency: string;
-    domains: string[];
-  }>
-> = {
+export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
   default: [
     {
       priority: 10,
@@ -784,5 +798,3 @@ export const resumeSkills: Record<
     },
   ],
 };
-
-

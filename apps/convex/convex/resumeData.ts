@@ -8,14 +8,14 @@ export const resumeProfiles: ResumeProfileRecord[] = [
   {
     slug: 'default',
     name: 'Jacob Stein',
-    title: 'Senior Full-Stack Developer & UI/UX Designer',
+    title: 'Founding Engineer & UI/UX',
     location: 'Remote',
     summary:
-      'Full-stack developer and UI/UX designer with experience building scalable web applications and intuitive user experiences. Proven track record of architecting complex systems and delivering high-impact products. Graduated from UCLA in 2015.',
+      'Technical leader and architect with 4+ years of experience building cross-platform software systems that bridge legacy applications with modern infrastructure. Proven track record integrating disparate APIs, deploying ML models to production, and managing technical partnerships with major platform vendors. Experience across TypeScript, Python, and C++ in complex multi-platform environments.',
     contact: {
-      linkedin: 'https://linkedin.com/in/jacobstein',
-      github: 'https://github.com/jacobstein',
-      website: 'https://jacobstein.dev',
+      email: 'jacob@jacobstein.me',
+      github: 'https://github.com/jjjjjjjjjjjjjjacob',
+      website: 'https://x.com/jaequbh',
     },
     defaults: {
       focusAreas: ['fullstack', 'leadership'],
@@ -44,7 +44,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
     title: 'Product & Growth Lead',
     location: 'Remote',
     summary:
-      'Product strategist and technical founder focused on shipping high-impact social and 3D creator products. Proven track record of launching platforms from zero-to-one, aligning product vision with GTM, and scaling cross-functional teams. Graduated from UCLA in 2015.',
+      'Product strategist and technical founder focused on shipping high-impact social and 3D creator products. Proven track record of launching platforms from zero-to-one, aligning product vision with GTM, and scaling cross-functional teams.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
       github: 'https://github.com/jacobstein',
@@ -70,7 +70,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
     title: 'Principal Frontend Engineer & Product Designer',
     location: 'Remote',
     summary:
-      'Frontend engineer and product designer focused on building immersive web experiences, real-time interfaces, and visually polished design systems. Experienced shipping high-impact UI work from concept through production. Graduated from UCLA in 2015.',
+      'Frontend engineer and product designer focused on building immersive web experiences, real-time interfaces, and visually polished design systems. Experienced shipping high-impact UI work from concept through production.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
       github: 'https://github.com/jacobstein',
@@ -95,15 +95,102 @@ export const resumeProfiles: ResumeProfileRecord[] = [
 export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
   default: [
     {
+      projectId: 'vibechecc',
+      priority: 10,
+      title: 'vibechecc.io',
+      url: 'https://vibechecc.io',
+      company: 'vibechecc',
+      timeline: '2025 - present',
+      role: 'Founder & Lead Developer',
+      description:
+        'Founded and architected innovative social platform for sharing life experiences with emoji-based rating system. Built real-time application using the TanStack ecosystem, Convex backend, and investor-backed launch playbooks.',
+      focusAreas: ['fullstack', 'leadership', 'product', 'realtime'],
+      domains: ['social', 'realtime', 'auth', 'infrastructure'],
+      achievements: [
+        {
+          description:
+            'Architected real-time social platform with TanStack Start and Convex backend',
+          impact:
+            'Created novel social interaction patterns with emoji-based rating system',
+          technologies: [
+            'TanStack Start',
+            'Convex',
+            'TypeScript',
+            'Tailwind CSS',
+          ],
+          domains: ['social', 'realtime', 'frontend'],
+          type: 'architecture',
+          priority: 10,
+        },
+        {
+          description:
+            'Designed innovative emoji rating system replacing traditional star ratings',
+          impact: 'Pioneered unique UX patterns for social content evaluation',
+          technologies: ['React', 'TypeScript', 'CSS Animations', 'emoji-mart'],
+          domains: ['social', 'frontend'],
+          type: 'innovation',
+          priority: 9,
+        },
+        {
+          description:
+            'Implemented real-time subscriptions with optimistic UI updates',
+          impact: 'Delivered seamless user experience with instant feedback',
+          technologies: ['Convex', 'TanStack Query', 'WebSocket'],
+          domains: ['realtime', 'frontend'],
+          type: 'development',
+          priority: 8,
+        },
+        {
+          description:
+            'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
+          impact: 'Created scalable deployment pipeline with automated CI/CD',
+          technologies: ['Terraform', 'Cloudflare Workers', 'GitHub Actions'],
+          domains: ['infrastructure', 'devops'],
+          type: 'architecture',
+          priority: 7,
+        },
+        {
+          description:
+            'Created extensive test suite with Vitest and Convex testing framework',
+          impact: 'Ensured reliability with comprehensive testing strategy',
+          technologies: ['Vitest', 'Testing Library', 'Convex Test'],
+          domains: ['testing'],
+          type: 'development',
+          priority: 6,
+        },
+      ],
+      technologies: {
+        frontend: [
+          'TanStack Start',
+          'TanStack Router',
+          'TanStack Query',
+          'React',
+          'TypeScript',
+          'Tailwind CSS',
+          'shadcn/ui',
+        ],
+        backend: ['Convex', 'Clerk', 'Node.js'],
+        infrastructure: ['Cloudflare Workers', 'Terraform', 'GitHub Actions'],
+        databases: ['Convex (Real-time)'],
+        tools: ['Bun', 'Nx', 'Vitest', 'ESLint', 'Prettier'],
+      },
+      previews: [
+        'https://vibechecc.io',
+        'https://vibechecc.io/explore',
+        'https://vibechecc.io/profile',
+        'https://vibechecc.io/vibes/new',
+      ],
+    },
+    {
       projectId: 'heat-tech',
-      priority: 9,
+      priority: 8,
       title: 'HEAT.tech',
       url: 'https://heat.tech',
       company: 'HEAT.tech',
       timeline: '2022 - 2025',
       role: 'Senior Full-Stack Developer & Technical Lead',
       description:
-        'Led development of a sophisticated motion capture marketplace backed by Andreessen Horowitz (a16z) and Samsung Next, connecting viral movements with gaming. Architected full-stack TypeScript ecosystem with real-time 3D animation processing.',
+        'Led development of a sophisticated motion capture marketplace backed by Andreessen Horowitz (a16z) and Samsung Next, connecting viral movements with gaming. Architected full-stack TypeScript ecosystem with real-time 3D animation processing and cross-platform plugin system spanning multiple game engines and 3D applications.',
       focusAreas: ['fullstack', 'leadership', '3d-graphics'],
       domains: ['marketplace', '3d', 'payments', 'auth', 'infrastructure'],
       achievements: [
@@ -142,11 +229,11 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
           technologies: ['Stripe', 'Stripe Connect', 'NestJS', 'PostgreSQL'],
           domains: ['payments', 'backend'],
           type: 'integration',
-          priority: 8,
+          priority: 9,
         },
         {
           description:
-            'Developed plugin ecosystem for Blender, Unity, Unreal Engine, and Maya',
+            'Developed cross-platform plugin ecosystem for Blender, Unity, Unreal Engine, and Maya, managing compatibility across conflicting APIs',
           impact:
             'Extended platform reach across major 3D software applications',
           technologies: ['Python', 'C#', 'C++', 'MEL', 'AWS S3'],
@@ -156,35 +243,68 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
         },
         {
           description:
+            'Built Qt desktop application with custom web view layer to unify interaction patterns across disparate 3D applications',
+          impact:
+            'Unified user experience across legacy 3D software with conflicting APIs',
+          technologies: ['Qt', 'C++', 'TypeScript', 'WebView'],
+          domains: ['3d', 'cross-platform'],
+          type: 'architecture',
+          priority: 8,
+        },
+        {
+          description:
+            'Wrote Unreal Engine plugin in C++ for native engine integration',
+          impact:
+            'Enabled direct integration with Unreal Engine for game developers',
+          technologies: ['C++', 'Unreal Engine'],
+          domains: ['3d', 'integration'],
+          type: 'development',
+          priority: 8,
+        },
+        {
+          description:
+            'Trained and deployed armature-generating ML model using PyTorch and ONNX Runtime',
+          impact: 'Automated skeleton generation for motion capture assets',
+          technologies: ['PyTorch', 'ONNX Runtime', 'Python'],
+          domains: ['3d', 'ml'],
+          type: 'innovation',
+          priority: 9,
+        },
+        {
+          description:
+            "Led technical integration with Move AI's beta API program, implementing video-to-animation pipeline",
+          impact: 'Enabled AI-powered video-to-animation processing pipeline',
+          technologies: ['ONNX', 'MediaPipe', 'Python', 'REST APIs'],
+          domains: ['3d', 'realtime'],
+          type: 'integration',
+          priority: 8,
+        },
+        {
+          description:
+            'Developed Python lambdas and helper scripts for pipeline automation',
+          impact: 'Streamlined content processing and deployment workflows',
+          technologies: ['Python', 'AWS Lambda'],
+          domains: ['infrastructure', 'backend'],
+          type: 'development',
+          priority: 7,
+        },
+        {
+          description:
+            'Contributed to due diligence and implementation strategy for partnerships with Unreal, Daz 3D, and Maya',
+          impact: 'Informed partnership decisions with major platform vendors',
+          technologies: ['Technical Strategy', 'Partnership Development'],
+          domains: ['business', 'integration'],
+          type: 'leadership',
+          priority: 7,
+        },
+        {
+          description:
             'Designed and implemented AWS infrastructure with Terraform IaC',
           impact: 'Created auto-scaling, production-ready cloud architecture',
           technologies: ['Terraform', 'AWS ECS', 'CloudFront', 'RDS', 'S3'],
           domains: ['infrastructure', 'devops'],
           type: 'architecture',
           priority: 7,
-        },
-        {
-          description:
-            'Built real-time motion capture integration with Move.ai and MediaPipe',
-          impact: 'Enabled AI-powered video-to-animation processing pipeline',
-          technologies: ['ONNX', 'WebAssembly', 'MediaPipe', 'Python'],
-          domains: ['3d', 'realtime'],
-          type: 'innovation',
-          priority: 7,
-        },
-        {
-          description:
-            'Implemented comprehensive testing strategy across full stack',
-          impact: 'Established quality gates with automated testing pipeline',
-          technologies: [
-            'Jest',
-            'React Testing Library',
-            'Cypress',
-            'GitHub Actions',
-          ],
-          domains: ['testing', 'devops'],
-          type: 'development',
-          priority: 6,
         },
       ],
       technologies: {
@@ -205,7 +325,16 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
           'RDS Aurora',
         ],
         databases: ['PostgreSQL', 'Redis'],
-        tools: ['Nx', 'Docker', 'GitHub Actions', 'ESLint', 'Prettier'],
+        tools: [
+          'Nx',
+          'Docker',
+          'GitHub Actions',
+          'ESLint',
+          'Prettier',
+          'Qt',
+          'PyTorch',
+          'ONNX Runtime',
+        ],
       },
       previews: [
         'https://heat.tech/marketplace/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73',
@@ -214,101 +343,66 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       ],
     },
     {
-      projectId: 'vibechecc',
-      priority: 10,
-      title: 'vibechecc.io',
-      url: 'https://vibechecc.io',
-      company: 'vibechecc',
-      timeline: '2025 - present',
-      role: 'Founder & Lead Developer',
+      projectId: 'freelance',
+      priority: 7,
+      title: 'Freelance Development',
+      url: undefined,
+      company: 'Independent',
+      timeline: 'March 2021 - present',
+      role: 'Freelance Full-Stack Developer',
       description:
-        'Founded and architected innovative social platform for sharing life experiences with emoji-based rating system. Built real-time application using the TanStack ecosystem, Convex backend, and investor-backed launch playbooks.',
-      focusAreas: ['fullstack', 'leadership', 'product', 'realtime'],
-      domains: ['social', 'realtime', 'auth', 'infrastructure'],
+        'Providing full-stack development services to startups across healthtech, hospitality, creative industries, and early-stage ventures.',
+      focusAreas: ['fullstack', 'frontend', 'backend'],
+      domains: ['healthtech', 'hospitality', 'creative', 'startup', 'saas'],
       achievements: [
         {
           description:
-            'Architected real-time social platform with TanStack Start and Convex backend',
+            'Built platform for Biogenesis, a healthtech startup connecting clinical trial facilities with pharmaceutical companies',
           impact:
-            'Created novel social interaction patterns with emoji-based rating system',
-          technologies: [
-            'TanStack Start',
-            'Convex',
-            'TypeScript',
-            'Tailwind CSS',
-          ],
-          domains: ['social', 'realtime', 'frontend'],
-          type: 'architecture',
+            'Streamlined clinical trial facility discovery and matching process',
+          technologies: ['React', 'Next.js', 'TypeScript', 'PostgreSQL'],
+          domains: ['healthtech', 'backend'],
+          type: 'development',
           priority: 9,
         },
         {
           description:
-            'Designed innovative emoji rating system replacing traditional star ratings',
-          impact: 'Pioneered unique UX patterns for social content evaluation',
-          technologies: ['React', 'TypeScript', 'CSS Animations', 'emoji-mart'],
-          domains: ['social', 'frontend'],
-          type: 'innovation',
-          priority: 9,
-        },
-        {
-          description:
-            'Implemented real-time subscriptions with optimistic UI updates',
-          impact: 'Delivered seamless user experience with instant feedback',
-          technologies: ['Convex', 'TanStack Query', 'WebSocket'],
-          domains: ['realtime', 'frontend'],
+            "Developed event management platform for Jean's, a New York restaurant",
+          impact:
+            'Enabled seamless event booking and management for hospitality venue',
+          technologies: ['React', 'Next.js', 'TypeScript', 'Node.js'],
+          domains: ['hospitality', 'frontend'],
           type: 'development',
           priority: 8,
         },
         {
           description:
-            'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
-          impact: 'Created scalable deployment pipeline with automated CI/CD',
-          technologies: ['Terraform', 'Cloudflare Workers', 'GitHub Actions'],
-          domains: ['infrastructure', 'devops'],
-          type: 'architecture',
+            'Created portfolio websites for director and copywriter Madeline Leary',
+          impact: 'Delivered polished creative portfolio showcasing work',
+          technologies: ['React', 'Next.js', 'TypeScript'],
+          domains: ['creative', 'frontend'],
+          type: 'development',
           priority: 7,
         },
         {
           description:
-            'Created extensive test suite with Vitest and Convex testing framework',
-          impact: 'Ensured reliability with comprehensive testing strategy',
-          technologies: ['Vitest', 'Testing Library', 'Convex Test'],
-          domains: ['testing'],
-          type: 'development',
-          priority: 6,
-        },
-        {
-          description:
-            'Integrated Clerk authentication with real-time user synchronization',
+            'Built ticket and job management application for Wonder, streamlining workflow coordination',
           impact:
-            'Streamlined onboarding with multi-provider social authentication',
-          technologies: ['Clerk', 'Convex', 'WebHooks'],
-          domains: ['auth', 'realtime'],
-          type: 'integration',
+            'Improved team workflow and task coordination for startup operations',
+          technologies: ['React', 'TypeScript', 'Node.js'],
+          domains: ['saas', 'frontend'],
+          type: 'development',
           priority: 6,
         },
       ],
       technologies: {
-        frontend: [
-          'TanStack Start',
-          'TanStack Router',
-          'TanStack Query',
-          'React',
-          'TypeScript',
-          'Tailwind CSS',
-          'shadcn/ui',
-        ],
-        backend: ['Convex', 'Clerk', 'Node.js'],
-        infrastructure: ['Cloudflare Workers', 'Terraform', 'GitHub Actions'],
-        databases: ['Convex (Real-time)'],
-        tools: ['Bun', 'Nx', 'Vitest', 'ESLint', 'Prettier'],
+        frontend: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS'],
+        backend: ['Node.js', 'PostgreSQL'],
+        infrastructure: ['Vercel'],
+        databases: ['PostgreSQL'],
+        tools: ['Git', 'ESLint', 'Prettier'],
       },
-      previews: [
-        'https://vibechecc.io',
-        'https://vibechecc.io/explore',
-        'https://vibechecc.io/profile',
-        'https://vibechecc.io/vibes/new',
-      ],
+      previews: [],
     },
   ],
   product: [
@@ -559,13 +653,20 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
   default: [
     {
       priority: 10,
+      category: 'Languages',
+      skills: ['TypeScript', 'JavaScript', 'Python', 'C++', 'SQL', 'GLSL'],
+      proficiency: 'expert',
+      domains: ['frontend', 'backend', '3d'],
+    },
+    {
+      priority: 9,
       category: 'Frontend Development',
       skills: [
         'React',
-        'TypeScript',
-        'Three.js',
-        'TanStack Start',
         'Next.js',
+        'Three.js',
+        'React Three Fiber',
+        'TanStack Start',
         'Tailwind CSS',
         'shadcn/ui',
         'Radix UI',
@@ -591,22 +692,6 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
       domains: ['backend', 'realtime', 'auth'],
     },
     {
-      priority: 9,
-      category: '3D Graphics & Animation',
-      skills: [
-        'Three.js',
-        'React Three Fiber',
-        'WebGL',
-        'GLSL',
-        'Motion Capture',
-        'Animation Systems',
-        'ONNX',
-        'MediaPipe',
-      ],
-      proficiency: 'expert',
-      domains: ['3d', 'frontend'],
-    },
-    {
       priority: 8,
       category: 'Infrastructure & DevOps',
       skills: [
@@ -625,39 +710,53 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
     },
     {
       priority: 8,
-      category: 'Real-time Systems',
+      category: 'ML & 3D',
       skills: [
-        'WebSocket',
-        'Convex',
-        'TanStack Query',
-        'Optimistic Updates',
-        'Event-driven Architecture',
+        'PyTorch',
+        'ONNX Runtime',
+        'Three.js',
+        'WebGL',
+        'Motion Capture',
+        'Animation Systems',
+        'MediaPipe',
       ],
-      proficiency: 'expert',
-      domains: ['realtime', 'backend'],
+      proficiency: 'proficient',
+      domains: ['3d', 'ml'],
     },
     {
       priority: 7,
-      category: 'Payment & Marketplace',
+      category: 'Cross-Platform',
+      skills: [
+        'Qt',
+        'Unreal Engine (C++)',
+        'Unity',
+        'Blender',
+        'Maya',
+        'Daz 3D',
+      ],
+      proficiency: 'proficient',
+      domains: ['3d', 'cross-platform'],
+    },
+    {
+      priority: 7,
+      category: 'Payments',
       skills: [
         'Stripe',
         'Stripe Connect',
         'Subscription Management',
         'Marketplace Architecture',
-        'Revenue Systems',
       ],
       proficiency: 'proficient',
       domains: ['payments', 'marketplace'],
     },
     {
       priority: 6,
-      category: 'Testing & Quality',
+      category: 'Testing',
       skills: [
         'Jest',
         'Vitest',
         'React Testing Library',
         'Cypress',
-        'Convex Test',
         'E2E Testing',
       ],
       proficiency: 'proficient',
@@ -665,7 +764,7 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
     },
     {
       priority: 7,
-      category: 'UI/UX Design',
+      category: 'Design',
       skills: [
         'Figma',
         'Design Systems',
@@ -676,6 +775,13 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
       ],
       proficiency: 'proficient',
       domains: ['frontend'],
+    },
+    {
+      priority: 5,
+      category: 'Credentials',
+      skills: ['UCLA, B.A. 2015'],
+      proficiency: 'proficient',
+      domains: ['education'],
     },
   ],
   product: [
@@ -742,6 +848,13 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
       proficiency: 'proficient',
       domains: ['infrastructure'],
     },
+    {
+      priority: 5,
+      category: 'Credentials',
+      skills: ['UCLA, B.A. 2015'],
+      proficiency: 'proficient',
+      domains: ['education'],
+    },
   ],
   frontend: [
     {
@@ -795,6 +908,13 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
       ],
       proficiency: 'proficient',
       domains: ['3d', 'frontend'],
+    },
+    {
+      priority: 5,
+      category: 'Credentials',
+      skills: ['UCLA, B.A. 2015'],
+      proficiency: 'proficient',
+      domains: ['education'],
     },
   ],
 };

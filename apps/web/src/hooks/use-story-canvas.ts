@@ -47,6 +47,105 @@ export interface ResumeData {
   };
 }
 
+const FALLBACK_SKILL_GROUPS = [
+  {
+    category: 'Frontend Development',
+    skills: [
+      'React',
+      'TypeScript',
+      'Three.js',
+      'TanStack Start',
+      'Next.js',
+      'Tailwind CSS',
+      'shadcn/ui',
+      'Radix UI',
+    ],
+  },
+  {
+    category: 'Backend Development',
+    skills: [
+      'NestJS',
+      'Node.js',
+      'Convex',
+      'PostgreSQL',
+      'TypeORM',
+      'REST APIs',
+      'WebSocket',
+      'Auth0',
+      'Clerk',
+    ],
+  },
+  {
+    category: '3D Graphics & Animation',
+    skills: [
+      'Three.js',
+      'React Three Fiber',
+      'WebGL',
+      'GLSL',
+      'Motion Capture',
+      'Animation Systems',
+      'ONNX',
+      'MediaPipe',
+    ],
+  },
+  {
+    category: 'Infrastructure & DevOps',
+    skills: [
+      'AWS',
+      'Terraform',
+      'Docker',
+      'Cloudflare Workers',
+      'GitHub Actions',
+      'CI/CD',
+      'ECS',
+      'S3',
+      'CloudFront',
+    ],
+  },
+  {
+    category: 'Real-time Systems',
+    skills: [
+      'WebSocket',
+      'Convex',
+      'TanStack Query',
+      'Optimistic Updates',
+      'Event-driven Architecture',
+    ],
+  },
+  {
+    category: 'Payment & Marketplace',
+    skills: [
+      'Stripe',
+      'Stripe Connect',
+      'Subscription Management',
+      'Marketplace Architecture',
+      'Revenue Systems',
+    ],
+  },
+  {
+    category: 'UI/UX Design',
+    skills: [
+      'Figma',
+      'Design Systems',
+      'User Research',
+      'Prototyping',
+      'Accessibility',
+      'Mobile-first Design',
+    ],
+  },
+  {
+    category: 'Testing & Quality',
+    skills: [
+      'Jest',
+      'Vitest',
+      'React Testing Library',
+      'Cypress',
+      'Convex Test',
+      'E2E Testing',
+    ],
+  },
+] satisfies ResumeData['skills'];
+
 // Font loading utility
 const ensureFontsLoaded = async () => {
   try {
@@ -364,8 +463,10 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     // Summary text with proper word wrapping
     ctx.font = '400 14px Utendo, system-ui, sans-serif';
     ctx.fillStyle = resumeColors.text;
-    const summaryText =
-      'Technical leader and architect with experience founding and scaling software platforms. Proven track record of building high-performance teams and delivering complex technical products.';
+    const hasSummary = Boolean(resumeData.summary?.trim().length);
+    const summaryText = hasSummary
+      ? resumeData.summary
+      : 'Technical leader and architect with experience founding and scaling software platforms. Proven track record of building high-performance teams and delivering complex technical products.';
 
     const summaryWords = summaryText.split(' ');
     let line = '';
@@ -417,17 +518,22 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
       ctx.fillText(exp.company, contentStartX, y);
       y += 20;
 
-      // Date and location with icons
+      // Date and location with icons (inline relative spacing)
       ctx.font = '400 12px Utendo, system-ui, sans-serif';
       ctx.fillStyle = resumeColors.muted;
 
       // Calendar icon and date
       ctx.fillText('📅', contentStartX, y);
-      ctx.fillText(exp.timeline, contentStartX + 25, y);
+      const timelineText = exp.timeline;
+      ctx.fillText(timelineText, contentStartX + 20, y);
 
-      // Location icon and location
-      ctx.fillText('📍', contentStartX + 120, y);
-      ctx.fillText(exp.location, contentStartX + 145, y);
+      // Measure timeline width for relative location positioning
+      const timelineWidth = ctx.measureText(timelineText).width;
+      const locationStartX = contentStartX + 20 + timelineWidth + 20;
+
+      // Location icon and location (relative to timeline)
+      ctx.fillText('📍', locationStartX, y);
+      ctx.fillText(exp.location, locationStartX + 20, y);
       y += 25;
 
       // Description
@@ -465,7 +571,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
         ctx.font = '400 13px Utendo, system-ui, sans-serif';
         ctx.fillStyle = resumeColors.text;
 
-        for (const achievement of exp.achievements.slice(0, 5)) {
+        for (const achievement of exp.achievements.slice(0, 8)) {
           // Small bullet dot
           ctx.fillStyle = resumeColors.text;
           ctx.beginPath();
@@ -558,101 +664,30 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     ctx.fillText('skills', leftMargin, y);
     y += 35;
 
-    // Exact skills data from implementation plan
-    const skillsData = {
-      'Frontend Development': [
-        'React',
-        'TypeScript',
-        'Three.js',
-        'TanStack Start',
-        'Next.js',
-        'Tailwind CSS',
-        'shadcn/ui',
-        'Radix UI',
-      ],
-      'Backend Development': [
-        'NestJS',
-        'Node.js',
-        'Convex',
-        'PostgreSQL',
-        'TypeORM',
-        'REST APIs',
-        'WebSocket',
-        'Auth0',
-        'Clerk',
-      ],
-      '3D Graphics & Animation': [
-        'Three.js',
-        'React Three Fiber',
-        'WebGL',
-        'GLSL',
-        'Motion Capture',
-        'Animation Systems',
-        'ONNX',
-        'MediaPipe',
-      ],
-      'Infrastructure & DevOps': [
-        'AWS',
-        'Terraform',
-        'Docker',
-        'Cloudflare Workers',
-        'GitHub Actions',
-        'CI/CD',
-        'ECS',
-        'S3',
-        'CloudFront',
-      ],
-      'Real-time Systems': [
-        'WebSocket',
-        'Convex',
-        'TanStack Query',
-        'Optimistic Updates',
-        'Event-driven Architecture',
-      ],
-      'Payment & Marketplace': [
-        'Stripe',
-        'Stripe Connect',
-        'Subscription Management',
-        'Marketplace Architecture',
-        'Revenue Systems',
-      ],
-      'UI/UX Design': [
-        'Figma',
-        'Design Systems',
-        'User Research',
-        'Prototyping',
-        'Accessibility',
-        'Mobile-first Design',
-      ],
-      'Testing & Quality': [
-        'Jest',
-        'Vitest',
-        'React Testing Library',
-        'Cypress',
-        'Convex Test',
-        'E2E Testing',
-      ],
-    };
+    const skillGroups =
+      Array.isArray(resumeData.skills) && resumeData.skills.length > 0
+        ? resumeData.skills
+        : FALLBACK_SKILL_GROUPS;
 
-    // Two-column layout
+    // Two-column layout derived from current resume data
     const columnWidth = contentWidth / 2 - 20;
     const columnY = [y, y]; // Track Y position for each column
 
-    Object.entries(skillsData).forEach(([category, skills], index) => {
+    skillGroups.forEach((group, index) => {
       const col = index % 2;
       const x = leftMargin + col * (columnWidth + 40);
 
       // Category header
       ctx.font = '200 14px Utendo, system-ui, sans-serif';
       ctx.fillStyle = resumeColors.text;
-      ctx.fillText(category, x, columnY[col]);
+      ctx.fillText(group.category, x, columnY[col]);
       columnY[col] += 25;
 
       // Skill pills
       let pillX = x;
       let pillY = columnY[col];
 
-      skills.forEach((skill) => {
+      group.skills.forEach((skill) => {
         // Set font before measuring
         ctx.font = '400 12px Utendo, system-ui, sans-serif';
         const metrics = ctx.measureText(skill);

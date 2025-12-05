@@ -13,3 +13,4 @@ Helpful in:
 - Maintain resume variant content in `apps/convex/convex/resumeData.ts`, update copy there (e.g., investor notes for HEAT), and rerun `npx convex dev` + `npx convex run seed:seed` to refresh the deployment data.
 - Use `replaceProfilesData` in `apps/convex/convex/resume.ts` when seeding or mutating batches; avoid calling Convex functions from other Convex functions (no `.handler` chaining).
 - Control resume job ordering by adjusting the `priority` field in `resumeProjects` for each slug; lower priority values surface first after reseeding.
+- Add credential highlights via `resumeSkills` entries (e.g., `Credentials` category) instead of profile summaries when noting education or certifications.

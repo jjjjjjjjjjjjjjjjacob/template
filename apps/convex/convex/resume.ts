@@ -111,17 +111,8 @@ export const getProfile = query({
       .withIndex('by_profile_priority', (q) => q.eq('profileSlug', args.slug))
       .collect();
 
-    return {
-      profile: {
-        slug: profile.slug,
-        name: profile.name,
-        title: profile.title,
-        location: profile.location,
-        summary: profile.summary,
-        contact: profile.contact,
-        defaults: profile.defaults,
-      },
-      projects: projects.map((project) => ({
+    const sortedProjects = projects
+      .map((project) => ({
         projectId: project.projectId,
         priority: project.priority,
         title: project.title,
@@ -132,10 +123,32 @@ export const getProfile = query({
         description: project.description,
         focusAreas: project.focusAreas,
         domains: project.domains,
-        achievements: project.achievements,
+        achievements: [...project.achievements].sort(
+          (a, b) => b.priority - a.priority
+        ),
         technologies: project.technologies,
         previews: project.previews,
-      })),
+      }))
+      .sort((a, b) => {
+        const aHasPreviews = a.previews.length > 0 ? 1 : 0;
+        const bHasPreviews = b.previews.length > 0 ? 1 : 0;
+        if (aHasPreviews !== bHasPreviews) {
+          return bHasPreviews - aHasPreviews;
+        }
+        return b.priority - a.priority;
+      });
+
+    return {
+      profile: {
+        slug: profile.slug,
+        name: profile.name,
+        title: profile.title,
+        location: profile.location,
+        summary: profile.summary,
+        contact: profile.contact,
+        defaults: profile.defaults,
+      },
+      projects: sortedProjects,
       skills: skills.map((skill) => ({
         category: skill.category,
         skills: skill.skills,

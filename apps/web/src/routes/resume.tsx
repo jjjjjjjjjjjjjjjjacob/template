@@ -33,76 +33,77 @@ interface Education {
 
 const experiences: Experience[] = [
   {
+    company: 'vibechecc',
+    role: 'Founder & Lead Developer',
+    location: 'Remote',
+    timeline: '2025 - present',
+    description:
+      'Founded and architected innovative social platform for sharing life experiences with emoji-based rating system. Built real-time application using the TanStack ecosystem, Convex backend, and investor-backed launch playbooks.',
+    achievements: [
+      'Architected real-time social platform with TanStack Start and Convex backend',
+      'Designed innovative emoji rating system replacing traditional star ratings',
+      'Implemented real-time subscriptions with optimistic UI updates',
+      'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
+      'Created extensive test suite with Vitest and Convex testing framework',
+    ],
+    technologies: [
+      'TanStack Start',
+      'TanStack Router',
+      'TanStack Query',
+      'Convex',
+      'Clerk',
+      'Node.js',
+      'Cloudflare Workers',
+      'Terraform',
+    ],
+  },
+  {
     company: 'HEAT.tech',
-    role: 'Senior Full-Stack Developer & UI/UX Designer',
+    role: 'Senior Full-Stack Developer & Technical Lead',
     location: 'Remote',
     timeline: '2022 - 2025',
     description:
-      'Led development of comprehensive energy management platform serving enterprise clients.',
+      'Led development of a sophisticated motion capture marketplace backed by Andreessen Horowitz (a16z) and Samsung Next, connecting viral movements with gaming. Architected full-stack TypeScript ecosystem with real-time 3D animation processing and cross-platform plugin system spanning multiple game engines and 3D applications.',
     achievements: [
-      'Architected and built scalable React/Node.js platform',
-      'Designed intuitive dashboards that reduced customer onboarding time',
-      'Led frontend team of 4 developers, establishing coding standards and best practices',
-      'Optimized application performance, reducing load times by 60% through caching strategies',
+      'Architected monorepo platform with real-time 3D animation marketplace using Nx workspace',
+      'Built advanced 3D viewer with Three.js/React Three Fiber for real-time animation preview',
+      'Integrated Stripe marketplace with subscription management and creator payout system',
+      'Developed cross-platform plugin ecosystem for Blender, Unity, Unreal Engine, and Maya',
+      'Built Qt desktop application with custom web view layer to unify interaction patterns across disparate 3D applications',
+      'Wrote Unreal Engine plugin in C++ for native engine integration',
+      'Trained and deployed armature-generating ML model using PyTorch and ONNX Runtime',
+      "Led technical integration with Move AI's beta API program",
+      'Designed and implemented AWS infrastructure with Terraform IaC',
     ],
     technologies: [
       'React',
-      'TypeScript',
-      'Node.js',
+      'Three.js',
+      'React Three Fiber',
+      'NestJS',
+      'TypeORM',
       'PostgreSQL',
-      'Redis',
-      'Docker',
-      'AWS',
-      'Figma',
+      'AWS ECS',
+      'Terraform',
+      'Python',
+      'C++',
+      'Qt',
+      'PyTorch',
     ],
   },
   {
-    company: 'Vibechecc',
-    role: 'Lead Full-Stack Developer & Product Designer',
-    location: 'New York, NY',
-    timeline: '2025 - present',
+    company: 'Independent',
+    role: 'Freelance Full-Stack Developer',
+    location: 'Remote',
+    timeline: 'March 2021 - present',
     description:
-      'Spearheaded development of next-generation social platform focused on authentic connections.',
+      'Providing full-stack development services to startups across healthtech, hospitality, creative industries, and early-stage ventures.',
     achievements: [
-      'Built responsive React application using Tanstack Start, Convex, and Clerk',
-      'Created comprehensive design system reducing development time by 50%',
-      'Conducted user research and A/B testing, improving user engagement by 35%',
-      'Mentored 3 junior developers on modern React patterns and TypeScript',
+      'Built platform for Biogenesis, a healthtech startup connecting clinical trial facilities with pharmaceutical companies',
+      "Developed event management platform for Jean's, a New York restaurant",
+      'Created portfolio websites for director and copywriter Madeline Leary',
+      'Built ticket and job management application for Wonder, streamlining workflow coordination',
     ],
-    technologies: [
-      'React',
-      'Next.js',
-      'TypeScript',
-      'Tailwind CSS',
-      'Socket.io',
-      'Prisma',
-      'Vercel',
-    ],
-  },
-  {
-    company: 'Freelance',
-    role: 'Full-Stack Developer & Designer',
-    location: 'Various',
-    timeline: '2019 - 2021',
-    description:
-      'Delivered custom web applications and digital experiences for diverse clients.',
-    achievements: [
-      'Completed 25+ projects ranging from e-commerce to SaaS platforms',
-      'Maintained 5-star client rating across 20+ reviews on freelance platforms',
-      'Built custom CMS solutions reducing content management overhead by 70%',
-      'Designed responsive websites improving mobile conversion rates by 45%',
-      'Established efficient development workflows using modern tooling and CI/CD',
-    ],
-    technologies: [
-      'React',
-      'Vue.js',
-      'Laravel',
-      'WordPress',
-      'Shopify',
-      'MySQL',
-      'AWS',
-      'Stripe',
-    ],
+    technologies: ['React', 'Next.js', 'TypeScript', 'Node.js', 'PostgreSQL'],
   },
 ];
 
@@ -116,40 +117,76 @@ const education: Education[] = [
 ];
 
 const skills = {
-  'Frontend Development': [
+  Languages: ['TypeScript', 'JavaScript', 'Python', 'C++', 'SQL', 'GLSL'],
+  Frontend: [
     'React',
-    'TypeScript',
     'Next.js',
-    'Vue.js',
-    'Tailwind CSS',
     'Three.js',
-    'Framer Motion',
+    'React Three Fiber',
+    'TanStack Start',
+    'Tailwind CSS',
+    'shadcn/ui',
+    'Radix UI',
   ],
-  'Backend Development': [
+  Backend: [
+    'NestJS',
     'Node.js',
-    'Python',
-    'PHP',
+    'Convex',
     'PostgreSQL',
-    'Redis',
-    'GraphQL',
+    'TypeORM',
     'REST APIs',
+    'WebSocket',
+    'Auth0',
+    'Clerk',
   ],
-  'UI/UX Design': [
-    'Figma',
-    'Adobe Creative Suite',
-    'Prototyping',
-    'User Research',
-    'Design Systems',
-    'Accessibility',
-  ],
-  'DevOps & Tools': [
+  Infrastructure: [
     'AWS',
+    'Terraform',
     'Docker',
-    'Vercel',
-    'Git',
+    'Cloudflare Workers',
+    'GitHub Actions',
     'CI/CD',
-    'Monitoring',
-    'Performance Optimization',
+    'ECS',
+    'S3',
+    'CloudFront',
+  ],
+  'ML & 3D': [
+    'PyTorch',
+    'ONNX Runtime',
+    'Three.js',
+    'WebGL',
+    'Motion Capture',
+    'Animation Systems',
+    'MediaPipe',
+  ],
+  'Cross-Platform': [
+    'Qt',
+    'Unreal Engine (C++)',
+    'Unity',
+    'Blender',
+    'Maya',
+    'Daz 3D',
+  ],
+  Payments: [
+    'Stripe',
+    'Stripe Connect',
+    'Subscription Management',
+    'Marketplace Architecture',
+  ],
+  Testing: [
+    'Jest',
+    'Vitest',
+    'React Testing Library',
+    'Cypress',
+    'E2E Testing',
+  ],
+  Design: [
+    'Figma',
+    'Design Systems',
+    'User Research',
+    'Prototyping',
+    'Accessibility',
+    'Mobile-first Design',
   ],
 };
 
@@ -280,7 +317,7 @@ function ResumePage() {
                   jacob stein
                 </h1>
                 <p className="text-muted-foreground mt-2 text-xl">
-                  full-stack developer & ui/ux designer
+                  founding engineer & ui/ux
                 </p>
               </div>
               <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
@@ -304,9 +341,11 @@ function ResumePage() {
                 </div>
               </div>
               <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed">
-                Passionate full-stack developer and designer with 5+ years of
-                experience building scalable web applications and intuitive user
-                experiences.
+                Technical leader and architect with 4+ years of experience
+                building cross-platform software systems that bridge legacy
+                applications with modern infrastructure. Proven track record
+                integrating disparate APIs, deploying ML models to production,
+                and managing technical partnerships with major platform vendors.
               </p>
             </div>
           </div>

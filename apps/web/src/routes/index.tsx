@@ -163,6 +163,73 @@ function HomePage() {
   }) => {
     const isEven = index % 2 === 0;
     const slideDirection = isEven ? 'left-to-right' : 'right-to-left';
+    const hasPreviews = project.previews.length > 0;
+
+    if (!hasPreviews) {
+      return (
+        <div className="group">
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h3 className="text-foreground text-2xl font-[200] md:text-3xl">
+                  {project.title}
+                </h3>
+                <p className="text-muted-foreground font-[200]">
+                  {project.timeline} • {project.role}
+                </p>
+              </div>
+            </div>
+
+            <p className="text-muted-foreground max-w-3xl leading-relaxed font-[200] md:text-lg">
+              {project.description}
+            </p>
+
+            <div className="grid gap-8 md:grid-cols-2">
+              <div>
+                <h4 className="text-foreground mb-3 text-sm font-[200]">
+                  key contributions
+                </h4>
+                <ul className="space-y-2">
+                  {project.achievements
+                    .slice(0, 6)
+                    .map((achievement, achIndex) => (
+                      <li
+                        key={achIndex}
+                        className="text-muted-foreground flex items-start gap-3 text-sm font-[200]"
+                      >
+                        <span className="bg-muted-foreground mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full" />
+                        {achievement.description}
+                      </li>
+                    ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="text-foreground mb-3 text-sm font-[200]">
+                  technologies
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    ...project.technologies.frontend,
+                    ...project.technologies.backend,
+                    ...project.technologies.infrastructure,
+                  ]
+                    .slice(0, 10)
+                    .map((tech) => (
+                      <span
+                        key={tech}
+                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-[200]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
     return (
       <div className="group">
@@ -346,7 +413,7 @@ function HomePage() {
   // Prepare resume data for export
   const resumeExportData = {
     name: 'jacob stein',
-    title: 'full-stack developer & ui/ux designer',
+    title: 'founding engineer & ui/ux',
     summary,
     experiences: projects.map((project) => ({
       company: project.company,
@@ -355,11 +422,11 @@ function HomePage() {
       location: 'Remote',
       description: project.description,
       achievements: project.achievements
-        .slice(0, 5)
+        .slice(0, 8)
         .map((achievement) => achievement.description),
       technologies: [
-        ...project.technologies.frontend.slice(0, 3),
-        ...project.technologies.backend.slice(0, 3),
+        ...project.technologies.frontend.slice(0, 4),
+        ...project.technologies.backend.slice(0, 4),
         ...project.technologies.infrastructure.slice(0, 2),
       ],
     })),

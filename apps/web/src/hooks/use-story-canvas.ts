@@ -317,24 +317,29 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     const tempImg = new Image();
 
     return new Promise((resolve) => {
-      tempImg.onload = function () {
-        // Create PDF with actual content dimensions
+      tempImg.onload = () => {
+        // Fixed 8.5" width, dynamic height based on content
+        const PAGE_WIDTH_INCHES = 8.5;
+
+        // Calculate height in inches from canvas dimensions (accounting for 2x scale)
+        const canvasWidthPx = tempImg.width / 2;
+        const canvasHeightPx = tempImg.height / 2;
+        const heightInches =
+          (canvasHeightPx / canvasWidthPx) * PAGE_WIDTH_INCHES;
+
+        // Create PDF with fixed 8.5" width and dynamic height
         const pdf = new jsPDF({
           orientation: 'portrait',
-          unit: 'px',
-          format: [tempImg.width / 2, tempImg.height / 2], // Divide by 2 because canvas uses 2x scale
+          unit: 'in',
+          format: [PAGE_WIDTH_INCHES, heightInches],
         });
 
         const reader = new FileReader();
-        reader.onload = function () {
+        reader.onload = () => {
           const imgData = reader.result as string;
 
-          // Use the full PDF dimensions without arbitrary limits
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-
-          // Add the image to PDF
-          pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+          // Add the image at full page size
+          pdf.addImage(imgData, 'PNG', 0, 0, PAGE_WIDTH_INCHES, heightInches);
 
           const pdfBlob = pdf.output('blob');
           setGeneratedBlob(pdfBlob);
@@ -356,12 +361,13 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     // Ensure fonts are loaded
     await ensureFontsLoaded();
 
-    // Create canvas with proper dimensions for high quality
+    // Create canvas with fixed 8.5" width, dynamic height for content
     const canvas = document.createElement('canvas');
     const scale = 2; // 2x for crisp rendering
-    canvas.width = 816 * scale; // 8.5 inches at 96 DPI
-    // Start with generous height, will crop to content later
-    canvas.height = 3000 * scale; // Large initial height to accommodate all content
+    const DPI = 96;
+    const PAGE_WIDTH_INCHES = 8.5;
+    canvas.width = PAGE_WIDTH_INCHES * DPI * scale; // 8.5 inches at 96 DPI = 816px, scaled to 1632px
+    canvas.height = 3000 * scale; // Large initial height, will crop to actual content
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
@@ -721,7 +727,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
     const finalY = Math.max(columnY[0], columnY[1]) + 50; // Add padding at bottom
     const contentHeight = Math.ceil(finalY);
 
-    // Crop canvas to content height for optimal file size
+    // Crop canvas to content height for optimal file size (width stays at 8.5")
     const croppedCanvas = document.createElement('canvas');
     croppedCanvas.width = canvas.width;
     croppedCanvas.height = contentHeight * scale;
@@ -734,11 +740,11 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
         0,
         0,
         canvas.width,
-        contentHeight * scale, // Source: full width, content height
+        contentHeight * scale,
         0,
         0,
         croppedCanvas.width,
-        croppedCanvas.height // Destination: exact fit
+        croppedCanvas.height
       );
 
       // Replace the original canvas with the cropped version

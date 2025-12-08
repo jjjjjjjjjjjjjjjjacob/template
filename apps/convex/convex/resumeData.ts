@@ -680,7 +680,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       priority: 10,
       title: 'cookt',
       url: undefined,
-      company: 'Independent',
+      company: 'cookt',
       timeline: '2024 - present',
       role: 'Founder & Lead Developer',
       description:
@@ -753,7 +753,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       priority: 9,
       title: 'snoball',
       url: undefined,
-      company: 'Independent',
+      company: 'snoball',
       timeline: '2024 - present',
       role: 'Founder & Lead Developer',
       description:
@@ -827,7 +827,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       priority: 8,
       title: 'the market',
       url: undefined,
-      company: 'Independent',
+      company: 'the market',
       timeline: '2024',
       role: 'Lead Developer',
       description:

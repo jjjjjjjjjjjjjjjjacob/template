@@ -681,7 +681,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       title: 'cookt',
       url: undefined,
       company: 'cookt',
-      timeline: '2024 - present',
+      timeline: '2025 - present',
       role: 'Founder & Lead Developer',
       description:
         'Built AI-powered recipe generation platform using multi-LLM orchestration to create personalized cooking experiences. Implemented advanced prompt engineering patterns, structured output parsing, and evaluation frameworks for consistent recipe quality.',
@@ -754,7 +754,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       title: 'snoball',
       url: undefined,
       company: 'snoball',
-      timeline: '2024 - present',
+      timeline: '2025 - present',
       role: 'Founder & Lead Developer',
       description:
         'Developed autonomous AI agent for social media content discovery and curation. Built agent architecture with tool use, memory systems, and multi-step reasoning for independent content analysis and recommendations.',
@@ -828,7 +828,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       title: 'the market',
       url: undefined,
       company: 'the market',
-      timeline: '2024',
+      timeline: '2025 - present',
       role: 'Lead Developer',
       description:
         'Built AI-powered video analysis platform using Twelve Labs multimodal APIs for content understanding and search. Implemented video-to-text pipelines, semantic search, and intelligent content tagging.',

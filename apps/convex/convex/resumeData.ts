@@ -90,6 +90,33 @@ export const resumeProfiles: ResumeProfileRecord[] = [
     },
     order: 2,
   },
+  {
+    slug: 'fde',
+    name: 'Jacob Stein',
+    title: 'Forward Deployed Engineer',
+    location: 'Remote',
+    summary:
+      'Technical leader with 4+ years building production AI applications and cross-platform systems. Proven track record shipping LLM-powered products with multi-provider orchestration, agent architectures, and advanced prompt engineering. Experienced embedding with external partners, coordinating across engineering teams, and translating customer requirements into technical solutions.',
+    contact: {
+      email: 'jacob@jacobstein.me',
+      github: 'https://github.com/jjjjjjjjjjjjjjacob',
+      website: 'https://x.com/jaequbh',
+    },
+    defaults: {
+      focusAreas: ['ai', 'fullstack', 'customer-facing'],
+      topTechnologies: [
+        'Claude API',
+        'OpenAI API',
+        'TypeScript',
+        'Python',
+        'React',
+        'Convex',
+        'AWS',
+      ],
+      priorityDomains: ['ai', 'llm', 'integration', 'customer-success'],
+    },
+    order: 3,
+  },
 ];
 
 export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
@@ -647,6 +674,344 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       ],
     },
   ],
+  fde: [
+    {
+      projectId: 'cookt',
+      priority: 10,
+      title: 'cookt',
+      url: undefined,
+      company: 'Independent',
+      timeline: '2024 - present',
+      role: 'Founder & Lead Developer',
+      description:
+        'Built AI-powered recipe generation platform using multi-LLM orchestration to create personalized cooking experiences. Implemented advanced prompt engineering patterns, structured output parsing, and evaluation frameworks for consistent recipe quality.',
+      focusAreas: ['ai', 'fullstack', 'product'],
+      domains: ['ai', 'llm', 'consumer', 'frontend'],
+      achievements: [
+        {
+          description:
+            'Architected multi-LLM orchestration layer supporting Claude, GPT-4, and Gemini with intelligent model routing based on task complexity',
+          impact:
+            'Achieved 40% cost reduction while maintaining output quality through dynamic model selection',
+          technologies: [
+            'Claude API',
+            'OpenAI API',
+            'Gemini API',
+            'TypeScript',
+          ],
+          domains: ['ai', 'llm', 'backend'],
+          type: 'architecture',
+          priority: 10,
+        },
+        {
+          description:
+            'Developed structured output parsing system with Zod schema validation for reliable recipe data extraction',
+          impact:
+            'Eliminated malformed outputs and enabled consistent UI rendering across LLM providers',
+          technologies: ['Zod', 'TypeScript', 'JSON Schema'],
+          domains: ['ai', 'llm', 'backend'],
+          type: 'development',
+          priority: 9,
+        },
+        {
+          description:
+            'Built evaluation framework to measure recipe quality, coherence, and instruction clarity across model versions',
+          impact:
+            'Enabled data-driven prompt iteration and regression testing for LLM outputs',
+          technologies: ['Python', 'Prompt Engineering', 'Evaluation Metrics'],
+          domains: ['ai', 'llm'],
+          type: 'innovation',
+          priority: 8,
+        },
+        {
+          description:
+            'Implemented real-time streaming responses with progressive UI updates for improved perceived latency',
+          impact: 'Reduced time-to-first-token visibility to under 200ms',
+          technologies: ['Server-Sent Events', 'React', 'Streaming APIs'],
+          domains: ['ai', 'frontend'],
+          type: 'development',
+          priority: 7,
+        },
+      ],
+      technologies: {
+        frontend: ['React', 'TypeScript', 'TanStack Start', 'Tailwind CSS'],
+        backend: [
+          'Convex',
+          'Node.js',
+          'Claude API',
+          'OpenAI API',
+          'Gemini API',
+        ],
+        infrastructure: ['Cloudflare Workers', 'Vercel'],
+        databases: ['Convex (Real-time)'],
+        tools: ['Zod', 'Vitest', 'Prompt Engineering'],
+      },
+      previews: [],
+    },
+    {
+      projectId: 'snoball',
+      priority: 9,
+      title: 'snoball',
+      url: undefined,
+      company: 'Independent',
+      timeline: '2024 - present',
+      role: 'Founder & Lead Developer',
+      description:
+        'Developed autonomous AI agent for social media content discovery and curation. Built agent architecture with tool use, memory systems, and multi-step reasoning for independent content analysis and recommendations.',
+      focusAreas: ['ai', 'fullstack', 'agent'],
+      domains: ['ai', 'llm', 'agent', 'social'],
+      achievements: [
+        {
+          description:
+            'Designed and implemented autonomous agent architecture with tool calling, memory persistence, and multi-step planning',
+          impact:
+            'Created self-directed agent capable of independent research and content curation workflows',
+          technologies: [
+            'Claude API',
+            'Agent Architecture',
+            'Tool Use',
+            'TypeScript',
+          ],
+          domains: ['ai', 'agent', 'backend'],
+          type: 'architecture',
+          priority: 10,
+        },
+        {
+          description:
+            'Built conversation memory system with context window management and intelligent summarization',
+          impact:
+            'Enabled coherent multi-session interactions while staying within token limits',
+          technologies: ['Vector Embeddings', 'Context Management', 'Python'],
+          domains: ['ai', 'agent'],
+          type: 'development',
+          priority: 9,
+        },
+        {
+          description:
+            'Implemented tool ecosystem for web scraping, API integrations, and content analysis with structured outputs',
+          impact:
+            'Expanded agent capabilities across diverse data sources and interaction patterns',
+          technologies: ['Function Calling', 'REST APIs', 'Puppeteer'],
+          domains: ['ai', 'agent', 'integration'],
+          type: 'development',
+          priority: 8,
+        },
+        {
+          description:
+            'Created evaluation harness for agent behavior testing and prompt regression detection',
+          impact:
+            'Ensured consistent agent behavior across model updates and prompt changes',
+          technologies: ['Evaluation Frameworks', 'Test Harnesses', 'Python'],
+          domains: ['ai', 'agent'],
+          type: 'innovation',
+          priority: 7,
+        },
+      ],
+      technologies: {
+        frontend: ['React', 'TypeScript', 'Next.js'],
+        backend: [
+          'Python',
+          'Claude API',
+          'OpenAI API',
+          'Agent Frameworks',
+          'Tool Use',
+        ],
+        infrastructure: ['AWS Lambda', 'Vercel'],
+        databases: ['PostgreSQL', 'Vector Store'],
+        tools: ['Puppeteer', 'Evaluation Frameworks'],
+      },
+      previews: [],
+    },
+    {
+      projectId: 'the-market',
+      priority: 8,
+      title: 'the market',
+      url: undefined,
+      company: 'Independent',
+      timeline: '2024',
+      role: 'Lead Developer',
+      description:
+        'Built AI-powered video analysis platform using Twelve Labs multimodal APIs for content understanding and search. Implemented video-to-text pipelines, semantic search, and intelligent content tagging.',
+      focusAreas: ['ai', 'fullstack', 'multimodal'],
+      domains: ['ai', 'llm', 'video', 'search'],
+      achievements: [
+        {
+          description:
+            'Integrated Twelve Labs API for multimodal video understanding including scene detection, speech transcription, and visual analysis',
+          impact:
+            'Enabled semantic search across video content with natural language queries',
+          technologies: ['Twelve Labs API', 'TypeScript', 'REST APIs'],
+          domains: ['ai', 'video', 'integration'],
+          type: 'integration',
+          priority: 10,
+        },
+        {
+          description:
+            'Built video indexing pipeline with automatic content tagging and metadata extraction',
+          impact:
+            'Reduced manual content categorization time by 90% through AI-powered automation',
+          technologies: ['Python', 'Twelve Labs', 'Background Jobs'],
+          domains: ['ai', 'video', 'backend'],
+          type: 'development',
+          priority: 9,
+        },
+        {
+          description:
+            'Implemented semantic search interface with relevance ranking and temporal navigation',
+          impact:
+            'Users could find specific moments within videos using natural language descriptions',
+          technologies: ['React', 'Search APIs', 'TypeScript'],
+          domains: ['ai', 'search', 'frontend'],
+          type: 'development',
+          priority: 8,
+        },
+      ],
+      technologies: {
+        frontend: ['React', 'TypeScript', 'Tailwind CSS'],
+        backend: ['Node.js', 'Twelve Labs API', 'Python'],
+        infrastructure: ['Vercel', 'AWS S3'],
+        databases: ['PostgreSQL'],
+        tools: ['FFmpeg', 'Video Processing'],
+      },
+      previews: [],
+    },
+    {
+      projectId: 'heat-tech-fde',
+      priority: 7,
+      title: 'HEAT.tech',
+      url: 'https://heat.tech',
+      company: 'HEAT.tech',
+      timeline: '2022 - 2025',
+      role: 'Senior Engineer & Technical Integration Lead',
+      description:
+        'Led technical integrations and partnership engineering for a16z and Samsung Next-backed motion capture marketplace. Embedded with external partners during beta programs, coordinated across engineering teams, and translated customer requirements into product improvements.',
+      focusAreas: ['fullstack', 'customer-facing', 'integration'],
+      domains: ['marketplace', '3d', 'integration', 'customer-success'],
+      achievements: [
+        {
+          description:
+            'Embedded with Move AI during beta program to integrate video-to-animation pipeline, coordinating across engineering and product teams on both sides',
+          impact:
+            'Successfully launched AI-powered video-to-animation feature through close technical partnership',
+          technologies: ['ONNX', 'MediaPipe', 'Python', 'REST APIs'],
+          domains: ['integration', 'customer-success', '3d'],
+          type: 'integration',
+          priority: 10,
+        },
+        {
+          description:
+            'Contributed to implementation strategy for platform partnerships with Unreal, Daz 3D, and Maya—navigating different stakeholders and technical requirements',
+          impact:
+            'Informed partnership decisions and integration approaches across major platform vendors',
+          technologies: [
+            'Technical Strategy',
+            'Partnership Development',
+            'C++',
+            'Python',
+          ],
+          domains: ['integration', 'customer-success', 'business'],
+          type: 'leadership',
+          priority: 9,
+        },
+        {
+          description:
+            'Developed cross-platform plugin ecosystem managing compatibility across conflicting APIs in Blender, Unity, Unreal Engine, and Maya',
+          impact:
+            'Extended platform reach while maintaining consistent user experience across diverse technical environments',
+          technologies: ['Python', 'C#', 'C++', 'MEL', 'AWS S3'],
+          domains: ['3d', 'integration', 'cross-platform'],
+          type: 'development',
+          priority: 8,
+        },
+        {
+          description:
+            'Built Qt desktop application with custom web view layer to unify interaction patterns across disparate 3D applications',
+          impact:
+            'Unified user experience across legacy 3D software with conflicting APIs',
+          technologies: ['Qt', 'C++', 'TypeScript', 'WebView'],
+          domains: ['3d', 'cross-platform'],
+          type: 'architecture',
+          priority: 7,
+        },
+        {
+          description:
+            'Trained and deployed armature-generating ML model using PyTorch and ONNX Runtime',
+          impact: 'Automated skeleton generation for motion capture assets',
+          technologies: ['PyTorch', 'ONNX Runtime', 'Python'],
+          domains: ['3d', 'ml'],
+          type: 'innovation',
+          priority: 6,
+        },
+      ],
+      technologies: {
+        frontend: ['React', 'Three.js', 'TypeScript', 'Qt'],
+        backend: ['NestJS', 'Python', 'REST APIs'],
+        infrastructure: ['AWS ECS', 'Terraform', 'CloudFront', 'S3'],
+        databases: ['PostgreSQL'],
+        tools: ['PyTorch', 'ONNX Runtime', 'Blender', 'Unity', 'Unreal Engine'],
+      },
+      previews: [
+        'https://heat.tech/marketplace/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73',
+        'https://heat.tech/plugins',
+      ],
+    },
+    {
+      projectId: 'vibechecc-fde',
+      priority: 6,
+      title: 'vibechecc.io',
+      url: 'https://vibechecc.io',
+      company: 'vibechecc',
+      timeline: '2025 - present',
+      role: 'Founder & Lead Developer',
+      description:
+        'Founded and architected real-time social platform with full-stack TypeScript, demonstrating end-to-end product development from infrastructure to user experience.',
+      focusAreas: ['fullstack', 'product', 'realtime'],
+      domains: ['social', 'realtime', 'infrastructure'],
+      achievements: [
+        {
+          description:
+            'Architected real-time social platform with TanStack Start and Convex backend',
+          impact:
+            'Created novel social interaction patterns with emoji-based rating system',
+          technologies: [
+            'TanStack Start',
+            'Convex',
+            'TypeScript',
+            'Tailwind CSS',
+          ],
+          domains: ['social', 'realtime', 'frontend'],
+          type: 'architecture',
+          priority: 8,
+        },
+        {
+          description:
+            'Implemented real-time subscriptions with optimistic UI updates',
+          impact: 'Delivered seamless user experience with instant feedback',
+          technologies: ['Convex', 'TanStack Query', 'WebSocket'],
+          domains: ['realtime', 'frontend'],
+          type: 'development',
+          priority: 7,
+        },
+        {
+          description:
+            'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
+          impact: 'Created scalable deployment pipeline with automated CI/CD',
+          technologies: ['Terraform', 'Cloudflare Workers', 'GitHub Actions'],
+          domains: ['infrastructure', 'devops'],
+          type: 'architecture',
+          priority: 6,
+        },
+      ],
+      technologies: {
+        frontend: ['TanStack Start', 'React', 'TypeScript', 'Tailwind CSS'],
+        backend: ['Convex', 'Clerk', 'Node.js'],
+        infrastructure: ['Cloudflare Workers', 'Terraform', 'GitHub Actions'],
+        databases: ['Convex (Real-time)'],
+        tools: ['Bun', 'Nx', 'Vitest'],
+      },
+      previews: ['https://vibechecc.io'],
+    },
+  ],
 };
 
 export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
@@ -908,6 +1273,104 @@ export const resumeSkills: Record<string, ResumeSkillRecord[]> = {
       ],
       proficiency: 'proficient',
       domains: ['3d', 'frontend'],
+    },
+    {
+      priority: 5,
+      category: 'Credentials',
+      skills: ['UCLA, B.A. 2015'],
+      proficiency: 'proficient',
+      domains: ['education'],
+    },
+  ],
+  fde: [
+    {
+      priority: 10,
+      category: 'AI & LLM',
+      skills: [
+        'Claude API',
+        'OpenAI API',
+        'Gemini API',
+        'Twelve Labs',
+        'Prompt Engineering',
+        'Multi-LLM Orchestration',
+        'Agent Development',
+        'Evaluation Frameworks',
+        'Structured Outputs',
+      ],
+      proficiency: 'expert',
+      domains: ['ai', 'llm', 'agent'],
+    },
+    {
+      priority: 9,
+      category: 'Languages',
+      skills: ['TypeScript', 'Python', 'JavaScript', 'C++', 'SQL'],
+      proficiency: 'expert',
+      domains: ['frontend', 'backend', 'ai'],
+    },
+    {
+      priority: 9,
+      category: 'Full-Stack Development',
+      skills: [
+        'React',
+        'Next.js',
+        'TanStack Start',
+        'NestJS',
+        'Node.js',
+        'Convex',
+        'REST APIs',
+        'WebSocket',
+      ],
+      proficiency: 'expert',
+      domains: ['frontend', 'backend', 'realtime'],
+    },
+    {
+      priority: 8,
+      category: 'Customer-Facing Engineering',
+      skills: [
+        'Technical Integration',
+        'Partner Coordination',
+        'Requirements Discovery',
+        'Cross-team Communication',
+        'Implementation Strategy',
+        'Technical Documentation',
+      ],
+      proficiency: 'proficient',
+      domains: ['customer-success', 'integration'],
+    },
+    {
+      priority: 8,
+      category: 'Infrastructure & DevOps',
+      skills: [
+        'AWS',
+        'Terraform',
+        'Cloudflare Workers',
+        'Docker',
+        'GitHub Actions',
+        'CI/CD',
+      ],
+      proficiency: 'proficient',
+      domains: ['infrastructure', 'devops'],
+    },
+    {
+      priority: 7,
+      category: 'Cross-Platform Integration',
+      skills: [
+        'Qt',
+        'Unreal Engine (C++)',
+        'Unity',
+        'Blender',
+        'Maya',
+        'Plugin Development',
+      ],
+      proficiency: 'proficient',
+      domains: ['3d', 'cross-platform', 'integration'],
+    },
+    {
+      priority: 6,
+      category: 'ML & 3D',
+      skills: ['PyTorch', 'ONNX Runtime', 'Three.js', 'WebGL', 'MediaPipe'],
+      proficiency: 'proficient',
+      domains: ['3d', 'ml'],
     },
     {
       priority: 5,

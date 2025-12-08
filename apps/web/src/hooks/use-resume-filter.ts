@@ -59,7 +59,7 @@ export interface ResumeProfilePayload {
   }>;
 }
 
-const RESUME_VARIANTS = ['default', 'product', 'frontend'] as const;
+const RESUME_VARIANTS = ['default', 'product', 'frontend', 'fde'] as const;
 export type ResumeVariant = (typeof RESUME_VARIANTS)[number];
 const DEFAULT_SLUG: ResumeVariant = 'default';
 const ALLOWED_VARIANTS = new Set<ResumeVariant>(RESUME_VARIANTS);
@@ -72,6 +72,11 @@ const FOCUS_AREA_VALUES = [
   'product',
   '3d-graphics',
   'realtime',
+  'ai',
+  'customer-facing',
+  'agent',
+  'multimodal',
+  'integration',
 ] as const;
 export type FocusArea = (typeof FOCUS_AREA_VALUES)[number];
 const FOCUS_AREA_SET = new Set<FocusArea>(FOCUS_AREA_VALUES);
@@ -88,6 +93,17 @@ const DOMAIN_VALUES = [
   'social',
   'testing',
   'devops',
+  'ai',
+  'llm',
+  'agent',
+  'video',
+  'search',
+  'consumer',
+  'customer-success',
+  'integration',
+  'cross-platform',
+  'ml',
+  'business',
 ] as const;
 export type Domain = (typeof DOMAIN_VALUES)[number];
 const DOMAIN_SET = new Set<Domain>(DOMAIN_VALUES);

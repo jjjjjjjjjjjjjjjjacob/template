@@ -829,7 +829,7 @@ export const resumeProjects: Record<string, ResumeProjectRecord[]> = {
       url: undefined,
       company: 'the market',
       timeline: '2025 - present',
-      role: 'Lead Developer',
+      role: 'Founder & Lead Developer',
       description:
         'Built AI-powered video analysis platform using Twelve Labs multimodal APIs for content understanding and search. Implemented video-to-text pipelines, semantic search, and intelligent content tagging.',
       focusAreas: ['ai', 'fullstack', 'multimodal'],

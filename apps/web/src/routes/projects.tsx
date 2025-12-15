@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { useState, Suspense, lazy } from 'react';
+import { useState, Suspense, lazy, useMemo } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '@template/convex';
 import { ExternalLink } from 'lucide-react';
 
-// Lazy load heavy components
 const ProjectSlideshow = lazy(() => import('@/components/project-slideshow'));
 const ProjectThumbnails = lazy(
   () => import('@/components/projects/project-thumbnails')
@@ -24,7 +25,7 @@ interface Project {
   previews: string[];
 }
 
-const projects: Project[] = [
+const fallbackProjects: Project[] = [
   {
     id: 'vibechecc',
     title: 'vibechecc.io',
@@ -112,6 +113,35 @@ const projects: Project[] = [
   },
 ];
 
+function useProjects(): Project[] {
+  const dbProjects = useQuery(api.projects.list, { includeUnpublished: false });
+
+  return useMemo(() => {
+    if (!dbProjects || dbProjects.length === 0) {
+      return fallbackProjects;
+    }
+
+    return dbProjects.map((p) => ({
+      id: p.slug,
+      title: p.title,
+      url: p.url || '',
+      description: p.description,
+      role: p.role,
+      responsibilities: p.responsibilities,
+      technologies: p.technologies,
+      timeline: p.timeline,
+      previews: p.media
+        .filter((m) => m.type === 'iframe' && m.url)
+        .map((m) => m.url as string)
+        .concat(
+          p.media
+            .filter((m) => m.type === 'image' && m.url)
+            .map((m) => m.url as string)
+        ),
+    }));
+  }, [dbProjects]);
+}
+
 function ProjectCard({ project }: { project: Project }) {
   return (
     <div className="space-y-8" role="region" aria-label="Project showcase">
@@ -196,13 +226,13 @@ function ProjectCard({ project }: { project: Project }) {
 }
 
 function ProjectsPage() {
+  const projects = useProjects();
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   return (
     <div className="bg-background min-h-screen py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-6xl">
-          {/* Page Header */}
           <div className="mb-16 space-y-4">
             <h1 className="text-foreground text-4xl font-light tracking-tight">
               projects
@@ -212,9 +242,7 @@ function ProjectsPage() {
             </p>
           </div>
 
-          {/* Two-column layout for better UX */}
           <div className="grid gap-8 lg:grid-cols-3">
-            {/* Project Thumbnails */}
             <div className="lg:col-span-1">
               <Suspense
                 fallback={
@@ -236,7 +264,6 @@ function ProjectsPage() {
               </Suspense>
             </div>
 
-            {/* Project Details */}
             <div className="lg:col-span-2">
               {selectedProject ? (
                 <ProjectCard project={selectedProject} />

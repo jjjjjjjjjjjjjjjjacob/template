@@ -47,16 +47,89 @@ export const getStats = query({
   handler: async (ctx) => {
     await AuthUtils.requireAdmin(ctx);
 
-    // Basic stats - can be expanded later
     const users = await ctx.db.query('users').collect();
     const items = await ctx.db.query('items').collect();
     const blogPosts = await ctx.db.query('blogPosts').collect();
+    const resumeProfiles = await ctx.db.query('resume_profiles').collect();
+    const portfolioProjects = await ctx.db.query('portfolio_projects').collect();
+
+    const publishedPosts = blogPosts.filter((p) => p.published);
+    const draftPosts = blogPosts.filter((p) => !p.published);
+    const publishedProjects = portfolioProjects.filter((p) => p.published);
+    const draftProjects = portfolioProjects.filter((p) => !p.published);
+
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const oneWeek = 7 * oneDay;
+    const oneMonth = 30 * oneDay;
+
+    const recentUsers = users.filter((u) => now - u.created_at < oneWeek);
+    const recentPosts = blogPosts.filter((p) => now - p.createdAt < oneWeek);
+
+    const postsThisMonth = blogPosts.filter((p) => now - p.createdAt < oneMonth);
+    const projectsThisMonth = portfolioProjects.filter(
+      (p) => now - p.createdAt < oneMonth
+    );
+
+    const postsLast6Months = [];
+    for (let i = 5; i >= 0; i--) {
+      const monthStart = now - i * oneMonth;
+      const monthEnd = now - (i - 1) * oneMonth;
+      const count = blogPosts.filter(
+        (p) => p.createdAt >= monthStart && p.createdAt < monthEnd
+      ).length;
+      const date = new Date(monthStart);
+      postsLast6Months.push({
+        month: date.toLocaleString('default', { month: 'short' }),
+        count,
+      });
+    }
+
+    const contentByType = [
+      { name: 'blog posts', value: blogPosts.length },
+      { name: 'projects', value: portfolioProjects.length },
+      { name: 'items', value: items.length },
+    ];
 
     return {
       totalUsers: users.length,
-      activeUsers: users.length, // For now, assume all users are active
-      totalContent: items.length + blogPosts.length,
+      activeUsers: users.length,
+      newUsersThisWeek: recentUsers.length,
+      totalContent: items.length + blogPosts.length + portfolioProjects.length,
       pendingModeration: 0,
+      blog: {
+        total: blogPosts.length,
+        published: publishedPosts.length,
+        drafts: draftPosts.length,
+        thisMonth: postsThisMonth.length,
+        recentPosts: recentPosts.slice(0, 5).map((p) => ({
+          id: p._id,
+          title: p.title,
+          slug: p.slug,
+          published: p.published,
+          createdAt: p.createdAt,
+        })),
+      },
+      projects: {
+        total: portfolioProjects.length,
+        published: publishedProjects.length,
+        drafts: draftProjects.length,
+        thisMonth: projectsThisMonth.length,
+        recentProjects: portfolioProjects.slice(0, 5).map((p) => ({
+          id: p._id,
+          title: p.title,
+          slug: p.slug,
+          published: p.published,
+          createdAt: p.createdAt,
+        })),
+      },
+      resume: {
+        profiles: resumeProfiles.length,
+      },
+      charts: {
+        postsOverTime: postsLast6Months,
+        contentByType,
+      },
     };
   },
 });

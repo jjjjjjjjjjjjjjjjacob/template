@@ -180,4 +180,39 @@ export default defineSchema({
     proficiency: v.string(),
     domains: v.array(v.string()),
   }).index('by_profile_priority', ['profileSlug', 'priority']),
+
+  portfolio_projects: defineTable({
+    slug: v.string(),
+    title: v.string(),
+    url: v.optional(v.string()),
+    description: v.string(),
+    role: v.string(),
+    company: v.optional(v.string()),
+    timeline: v.string(),
+    responsibilities: v.array(v.string()),
+    technologies: v.array(v.string()),
+    order: v.number(),
+    published: v.boolean(),
+    media: v.array(
+      v.object({
+        type: v.union(
+          v.literal('image'),
+          v.literal('video'),
+          v.literal('iframe')
+        ),
+        storageId: v.optional(v.id('_storage')),
+        url: v.optional(v.string()),
+        caption: v.optional(v.string()),
+        order: v.number(),
+      })
+    ),
+    thumbnailIndex: v.optional(v.number()),
+    includeInResume: v.boolean(),
+    resumeProfileSlugs: v.optional(v.array(v.string())),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_slug', ['slug'])
+    .index('by_order', ['order'])
+    .index('by_published_order', ['published', 'order']),
 });

@@ -19,8 +19,13 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as SignUpSsoCallbackRouteImport } from './routes/sign-up/sso-callback'
 import { Route as SignInSsoCallbackRouteImport } from './routes/sign-in/sso-callback'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as AdminResumeRouteImport } from './routes/admin/resume'
+import { Route as AdminProjectsRouteImport } from './routes/admin/projects'
 import { Route as AdminBlogRouteImport } from './routes/admin/blog'
+import { Route as AdminProjectsIndexRouteImport } from './routes/admin/projects.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog.index'
+import { Route as AdminProjectsNewRouteImport } from './routes/admin/projects.new'
+import { Route as AdminProjectsProjectIdRouteImport } from './routes/admin/projects.$projectId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog.new'
 import { Route as AdminBlogPostIdRouteImport } from './routes/admin/blog.$postId'
 
@@ -74,16 +79,45 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/blog/$slug.lazy').then((d) => d.Route))
+const AdminResumeRoute = AdminResumeRouteImport.update({
+  id: '/admin/resume',
+  path: '/admin/resume',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProjectsRoute = AdminProjectsRouteImport.update({
+  id: '/admin/projects',
+  path: '/admin/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminBlogRoute = AdminBlogRouteImport.update({
   id: '/admin/blog',
   path: '/admin/blog',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AdminProjectsIndexRoute = AdminProjectsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminProjectsRoute,
 } as any)
 const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminBlogRoute,
 } as any)
+const AdminProjectsNewRoute = AdminProjectsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminProjectsRoute,
+} as any).lazy(() =>
+  import('./routes/admin/projects.new.lazy').then((d) => d.Route),
+)
+const AdminProjectsProjectIdRoute = AdminProjectsProjectIdRouteImport.update({
+  id: '/$projectId',
+  path: '/$projectId',
+  getParentRoute: () => AdminProjectsRoute,
+} as any).lazy(() =>
+  import('./routes/admin/projects.$projectId.lazy').then((d) => d.Route),
+)
 const AdminBlogNewRoute = AdminBlogNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -106,6 +140,8 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/projects': typeof AdminProjectsRouteWithChildren
+  '/admin/resume': typeof AdminResumeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
@@ -113,7 +149,10 @@ export interface FileRoutesByFullPath {
   '/blog': typeof BlogIndexRoute
   '/admin/blog/$postId': typeof AdminBlogPostIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/projects/$projectId': typeof AdminProjectsProjectIdRoute
+  '/admin/projects/new': typeof AdminProjectsNewRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/projects/': typeof AdminProjectsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -121,6 +160,7 @@ export interface FileRoutesByTo {
   '/resume': typeof ResumeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
+  '/admin/resume': typeof AdminResumeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
@@ -128,7 +168,10 @@ export interface FileRoutesByTo {
   '/blog': typeof BlogIndexRoute
   '/admin/blog/$postId': typeof AdminBlogPostIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/projects/$projectId': typeof AdminProjectsProjectIdRoute
+  '/admin/projects/new': typeof AdminProjectsNewRoute
   '/admin/blog': typeof AdminBlogIndexRoute
+  '/admin/projects': typeof AdminProjectsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -138,6 +181,8 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
+  '/admin/projects': typeof AdminProjectsRouteWithChildren
+  '/admin/resume': typeof AdminResumeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
@@ -145,7 +190,10 @@ export interface FileRoutesById {
   '/blog/': typeof BlogIndexRoute
   '/admin/blog/$postId': typeof AdminBlogPostIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
+  '/admin/projects/$projectId': typeof AdminProjectsProjectIdRoute
+  '/admin/projects/new': typeof AdminProjectsNewRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
+  '/admin/projects/': typeof AdminProjectsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -156,6 +204,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/admin/blog'
+    | '/admin/projects'
+    | '/admin/resume'
     | '/blog/$slug'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
@@ -163,7 +213,10 @@ export interface FileRouteTypes {
     | '/blog'
     | '/admin/blog/$postId'
     | '/admin/blog/new'
+    | '/admin/projects/$projectId'
+    | '/admin/projects/new'
     | '/admin/blog/'
+    | '/admin/projects/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,6 +224,7 @@ export interface FileRouteTypes {
     | '/resume'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/resume'
     | '/blog/$slug'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
@@ -178,7 +232,10 @@ export interface FileRouteTypes {
     | '/blog'
     | '/admin/blog/$postId'
     | '/admin/blog/new'
+    | '/admin/projects/$projectId'
+    | '/admin/projects/new'
     | '/admin/blog'
+    | '/admin/projects'
   id:
     | '__root__'
     | '/'
@@ -187,6 +244,8 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/sign-up'
     | '/admin/blog'
+    | '/admin/projects'
+    | '/admin/resume'
     | '/blog/$slug'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
@@ -194,7 +253,10 @@ export interface FileRouteTypes {
     | '/blog/'
     | '/admin/blog/$postId'
     | '/admin/blog/new'
+    | '/admin/projects/$projectId'
+    | '/admin/projects/new'
     | '/admin/blog/'
+    | '/admin/projects/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -204,6 +266,8 @@ export interface RootRouteChildren {
   SignInRoute: typeof SignInRouteWithChildren
   SignUpRoute: typeof SignUpRouteWithChildren
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
+  AdminProjectsRoute: typeof AdminProjectsRouteWithChildren
+  AdminResumeRoute: typeof AdminResumeRoute
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -281,6 +345,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/resume': {
+      id: '/admin/resume'
+      path: '/admin/resume'
+      fullPath: '/admin/resume'
+      preLoaderRoute: typeof AdminResumeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/projects': {
+      id: '/admin/projects'
+      path: '/admin/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/blog': {
       id: '/admin/blog'
       path: '/admin/blog'
@@ -288,12 +366,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/projects/': {
+      id: '/admin/projects/'
+      path: '/'
+      fullPath: '/admin/projects/'
+      preLoaderRoute: typeof AdminProjectsIndexRouteImport
+      parentRoute: typeof AdminProjectsRoute
+    }
     '/admin/blog/': {
       id: '/admin/blog/'
       path: '/'
       fullPath: '/admin/blog/'
       preLoaderRoute: typeof AdminBlogIndexRouteImport
       parentRoute: typeof AdminBlogRoute
+    }
+    '/admin/projects/new': {
+      id: '/admin/projects/new'
+      path: '/new'
+      fullPath: '/admin/projects/new'
+      preLoaderRoute: typeof AdminProjectsNewRouteImport
+      parentRoute: typeof AdminProjectsRoute
+    }
+    '/admin/projects/$projectId': {
+      id: '/admin/projects/$projectId'
+      path: '/$projectId'
+      fullPath: '/admin/projects/$projectId'
+      preLoaderRoute: typeof AdminProjectsProjectIdRouteImport
+      parentRoute: typeof AdminProjectsRoute
     }
     '/admin/blog/new': {
       id: '/admin/blog/new'
@@ -350,6 +449,22 @@ const AdminBlogRouteWithChildren = AdminBlogRoute._addFileChildren(
   AdminBlogRouteChildren,
 )
 
+interface AdminProjectsRouteChildren {
+  AdminProjectsProjectIdRoute: typeof AdminProjectsProjectIdRoute
+  AdminProjectsNewRoute: typeof AdminProjectsNewRoute
+  AdminProjectsIndexRoute: typeof AdminProjectsIndexRoute
+}
+
+const AdminProjectsRouteChildren: AdminProjectsRouteChildren = {
+  AdminProjectsProjectIdRoute: AdminProjectsProjectIdRoute,
+  AdminProjectsNewRoute: AdminProjectsNewRoute,
+  AdminProjectsIndexRoute: AdminProjectsIndexRoute,
+}
+
+const AdminProjectsRouteWithChildren = AdminProjectsRoute._addFileChildren(
+  AdminProjectsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProjectsRoute: ProjectsRoute,
@@ -357,6 +472,8 @@ const rootRouteChildren: RootRouteChildren = {
   SignInRoute: SignInRouteWithChildren,
   SignUpRoute: SignUpRouteWithChildren,
   AdminBlogRoute: AdminBlogRouteWithChildren,
+  AdminProjectsRoute: AdminProjectsRouteWithChildren,
+  AdminResumeRoute: AdminResumeRoute,
   BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,

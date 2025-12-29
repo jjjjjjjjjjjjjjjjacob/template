@@ -16,7 +16,6 @@ interface PortfolioProject {
   published: boolean;
   media: Array<{
     type: 'image' | 'video' | 'iframe';
-    storageId?: string;
     url?: string;
     caption?: string;
     order: number;

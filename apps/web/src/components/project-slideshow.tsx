@@ -35,42 +35,6 @@ function ProjectSlideshow({
   const [dialogLoading, setDialogLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  /*
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % previews.length);
-  }, [previews.length]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + previews.length) % previews.length);
-  }, [previews.length]);
-
-  // Touch handlers for mobile swipe
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (!isMobile) return;
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!isMobile) return;
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!isMobile || !touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
-
-    if (isLeftSwipe && previews.length > 1) {
-      nextSlide();
-    }
-    if (isRightSwipe && previews.length > 1) {
-      prevSlide();
-    }
-  };
-  */
-
   const handleMobileIframeClick = () => {
     if (isMobile) {
       trackEvents.projectSlideshowInteracted(
@@ -115,9 +79,6 @@ function ProjectSlideshow({
       onMouseLeave={() => handleHover(false)}
       onFocus={() => handleHover(true)}
       onBlur={() => handleHover(false)}
-      // onTouchStart={onTouchStart}
-      // onTouchMove={onTouchMove}
-      // onTouchEnd={onTouchEnd}
     >
       <div
         className={cn(
@@ -187,7 +148,7 @@ function ProjectSlideshow({
               {projectUrl && (
                 <button
                   onClick={() => window.open(projectUrl, '_blank')}
-                  className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+                  className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors duration-200"
                 >
                   <ExternalLink className="h-4 w-4" />
                   go to site

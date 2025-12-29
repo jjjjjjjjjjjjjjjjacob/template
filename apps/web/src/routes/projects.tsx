@@ -174,7 +174,7 @@ function ProjectCard({ project }: { project: Project }) {
             onClick={() =>
               window.open(project.url, '_blank', 'noopener,noreferrer')
             }
-            className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors duration-200"
             aria-label={`Visit ${project.title} project`}
           >
             <ExternalLink className="h-4 w-4" />

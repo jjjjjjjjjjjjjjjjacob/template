@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, forwardRef, useImperativeHandle } from 'react';
 import { cn } from '../../utils/tailwind-utils';
 
 interface EditorTextareaProps {
@@ -8,13 +8,13 @@ interface EditorTextareaProps {
   className?: string;
 }
 
-export function EditorTextarea({
-  value,
-  onChange,
-  placeholder,
-  className,
-}: EditorTextareaProps) {
+export const EditorTextarea = forwardRef<
+  HTMLTextAreaElement,
+  EditorTextareaProps
+>(function EditorTextarea({ value, onChange, placeholder, className }, ref) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useImperativeHandle(ref, () => textareaRef.current!);
 
   // Remove auto-height adjustment to prevent CSS blowout
   // The textarea will use the container's flex height instead
@@ -30,9 +30,9 @@ export function EditorTextarea({
       const newValue = beforeTab + '  ' + afterTab;
       onChange(newValue);
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         textarea.setSelectionRange(selectionStart + 2, selectionStart + 2);
-      }, 0);
+      });
     }
 
     if (e.key === 'Enter') {
@@ -59,10 +59,10 @@ export function EditorTextarea({
           beforeCursor + `\n${indent}${newMarker} ` + afterCursor;
         onChange(newValue);
 
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           const newPos = selectionStart + indent.length + newMarker.length + 2;
           textarea.setSelectionRange(newPos, newPos);
-        }, 0);
+        });
       } else if (blockquoteMatch) {
         e.preventDefault();
         const indent = blockquoteMatch[1];
@@ -71,10 +71,10 @@ export function EditorTextarea({
         const newValue = beforeCursor + `\n${indent} ` + afterCursor;
         onChange(newValue);
 
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           const newPos = selectionStart + indent.length + 2;
           textarea.setSelectionRange(newPos, newPos);
-        }, 0);
+        });
       }
     }
   };
@@ -95,4 +95,4 @@ export function EditorTextarea({
       spellCheck={false}
     />
   );
-}
+});

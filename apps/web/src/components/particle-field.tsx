@@ -19,6 +19,21 @@ interface ParticleFieldProps extends Partial<ParticleConfig> {
   onReady?: () => void;
 }
 
+function isMobileDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.matchMedia('(max-width: 768px)').matches ||
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  );
+}
+
+function getMobilePixelRatio(): number {
+  if (typeof window === 'undefined') return 1;
+  return Math.min(window.devicePixelRatio, isMobileDevice() ? 1.5 : 2);
+}
+
 function Particles({
   // Basic
   count = 10000,
@@ -97,6 +112,10 @@ function Particles({
   const activePointers = useRef(new Set<number>());
   const lastScrollPosition = useRef({ x: 0, y: 0 });
   const scrollInertia = useRef({ x: 0, y: 0 });
+  const frameCount = useRef(0);
+
+  const isMobile = useMemo(() => isMobileDevice(), []);
+  const frameSkip = isMobile ? 2 : 1;
 
   // Fade-in control
   const fadeInDuration = 5; // seconds
@@ -336,6 +355,9 @@ function Particles({
   useFrame((state) => {
     if (!mesh.current) return;
 
+    frameCount.current += 1;
+    const shouldUpdatePhysics = frameCount.current % frameSkip === 0;
+
     const geometry = mesh.current.geometry;
     const positionsArray = geometry.attributes.position.array as Float32Array;
     const time = state.clock.elapsedTime;
@@ -345,6 +367,11 @@ function Particles({
     if (material) {
       const progress = Math.min(1, time / fadeInDuration);
       material.opacity = opacity * progress;
+    }
+
+    // Skip physics update on some frames for mobile performance
+    if (!shouldUpdatePhysics) {
+      return;
     }
 
     // Smooth #ff0059 ↔ cyan cycle avoiding oversaturated intermediate colors
@@ -457,31 +484,41 @@ function Particles({
             convectionStrength -
           inwardBias;
 
-        // Multi-scale turbulence for better distribution
-        const largeScale =
-          Math.sin(
-            time * convectionSpeedX * 0.3 + particleX * convectionScaleX * 0.5
-          ) *
-          Math.cos(
-            time * convectionSpeedY * 0.4 + particleY * convectionScaleY * 0.5
-          );
-        const mediumScale =
-          Math.sin(time * convectionSpeedX + particleX * convectionScaleX) *
-          Math.cos(time * convectionSpeedY + particleY * convectionScaleY);
+        let convectionX: number;
+        let convectionY: number;
 
-        // Combine orbital and radial flows with multi-scale patterns
-        const convectionX =
-          tangentX * orbitalSpeed +
-          radialX * radialFlow +
-          largeScale * 0.008 * convectionStrength;
-        const convectionY =
-          tangentY * orbitalSpeed +
-          radialY * radialFlow +
-          mediumScale * 0.008 * convectionStrength;
+        if (isMobile) {
+          // Simplified convection for mobile - skip multi-scale turbulence
+          convectionX = tangentX * orbitalSpeed + radialX * radialFlow;
+          convectionY = tangentY * orbitalSpeed + radialY * radialFlow;
+        } else {
+          // Multi-scale turbulence for better distribution (desktop only)
+          const largeScale =
+            Math.sin(
+              time * convectionSpeedX * 0.3 + particleX * convectionScaleX * 0.5
+            ) *
+            Math.cos(
+              time * convectionSpeedY * 0.4 + particleY * convectionScaleY * 0.5
+            );
+          const mediumScale =
+            Math.sin(time * convectionSpeedX + particleX * convectionScaleX) *
+            Math.cos(time * convectionSpeedY + particleY * convectionScaleY);
 
-        // Add turbulent noise
-        const noiseX = (Math.random() - 0.5) * 0.005 * convectionStrength;
-        const noiseY = (Math.random() - 0.5) * 0.005 * convectionStrength;
+          // Combine orbital and radial flows with multi-scale patterns
+          convectionX =
+            tangentX * orbitalSpeed +
+            radialX * radialFlow +
+            largeScale * 0.008 * convectionStrength;
+          convectionY =
+            tangentY * orbitalSpeed +
+            radialY * radialFlow +
+            mediumScale * 0.008 * convectionStrength;
+        }
+
+        // Add turbulent noise (reduced on mobile)
+        const noiseFactor = isMobile ? 0.003 : 0.005;
+        const noiseX = (Math.random() - 0.5) * noiseFactor * convectionStrength;
+        const noiseY = (Math.random() - 0.5) * noiseFactor * convectionStrength;
 
         velocities[i3] += convectionX + noiseX;
         velocities[i3 + 1] += convectionY + noiseY;
@@ -745,10 +782,10 @@ function Particles({
         />
       </points>
 
-      {/* Render center obstacle */}
+      {/* Render center obstacle (fewer segments on mobile) */}
       {obstacleEnabled && (
         <mesh position={[obstacleX, obstacleY, 0]}>
-          <circleGeometry args={[obstacleRadius, 64]} />
+          <circleGeometry args={[obstacleRadius, isMobile ? 32 : 64]} />
           <meshBasicMaterial color="#444444" transparent opacity={0.0} />
         </mesh>
       )}
@@ -818,6 +855,7 @@ export function ParticleField(
       {isClient && (
         <Canvas
           orthographic
+          dpr={getMobilePixelRatio()}
           camera={{
             position: [0, 0, 100],
             zoom: 1,
@@ -829,6 +867,10 @@ export function ParticleField(
             far: 1000,
           }}
           style={{ background: 'transparent' }}
+          gl={{
+            antialias: !isMobileDevice(),
+            powerPreference: 'high-performance',
+          }}
         >
           {/* Notify once on first rendered frame */}
           {(() => {

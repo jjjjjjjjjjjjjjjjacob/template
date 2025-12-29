@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
+  useRef,
   Suspense,
 } from 'react';
 import { useQuery } from 'convex/react';
@@ -48,6 +49,7 @@ export function MarkdownEditor({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('edit');
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -76,9 +78,7 @@ export function MarkdownEditor({
 
   const handleInsertImage = useCallback(
     (syntax: string) => {
-      const textarea = document.querySelector(
-        '#markdown-editor'
-      ) as HTMLTextAreaElement;
+      const textarea = textareaRef.current;
       if (!textarea) return;
 
       const start = textarea.selectionStart;
@@ -88,22 +88,20 @@ export function MarkdownEditor({
         value.substring(0, start) + syntax + value.substring(end);
       onChange(newValue);
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         textarea.focus();
         textarea.setSelectionRange(
           start + syntax.length,
           start + syntax.length
         );
-      }, 0);
+      });
     },
     [value, onChange]
   );
 
   const handleKeyboardShortcut = useCallback(
     (action: string) => {
-      const textarea = document.querySelector(
-        '#markdown-editor'
-      ) as HTMLTextAreaElement;
+      const textarea = textareaRef.current;
       if (!textarea) return;
 
       const start = textarea.selectionStart;
@@ -167,10 +165,10 @@ export function MarkdownEditor({
         value.substring(0, start) + replacement + value.substring(end);
       onChange(newValue);
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         textarea.focus();
         textarea.setSelectionRange(newCursorPos, newCursorPos);
-      }, 0);
+      });
     },
     [value, onChange]
   );
@@ -264,6 +262,7 @@ export function MarkdownEditor({
           isTablet={isTablet}
           availableImages={availableImages}
           onInsertImage={handleInsertImage}
+          textareaRef={textareaRef}
           className="flex-1"
         />
       </div>
@@ -289,6 +288,7 @@ export function MarkdownEditor({
         isTablet={isTablet}
         availableImages={availableImages}
         onInsertImage={handleInsertImage}
+        textareaRef={textareaRef}
       />
     </Card>
   );
@@ -311,6 +311,7 @@ interface ResponsiveMarkdownEditorProps {
   isTablet: boolean;
   availableImages: Array<{ id: string; url: string; alt: string }>;
   onInsertImage: (syntax: string) => void;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   className?: string;
 }
 
@@ -331,6 +332,7 @@ function ResponsiveMarkdownEditor({
   isTablet,
   availableImages,
   onInsertImage,
+  textareaRef,
   className,
 }: ResponsiveMarkdownEditorProps) {
   const PreviewContent = () => (
@@ -351,57 +353,55 @@ function ResponsiveMarkdownEditor({
     </div>
   );
 
-  const EditorContent = React.useMemo(
-    () => (
-      <>
-        <div className="flex-shrink-0 space-y-4 p-4">
-          <div>
-            <label
-              htmlFor="post-title"
-              className="text-muted-foreground text-sm font-light"
-            >
-              title
-            </label>
-            <input
-              id="post-title"
-              type="text"
-              value={title}
-              onChange={(e) => onTitleChange(e.target.value)}
-              className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-lg font-light focus:ring-1 focus:outline-none"
-              placeholder="enter post title..."
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="post-slug"
-              className="text-muted-foreground text-sm font-light"
-            >
-              slug
-            </label>
-            <input
-              id="post-slug"
-              type="text"
-              value={slug}
-              onChange={(e) => onSlugChange(e.target.value)}
-              className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm focus:ring-1 focus:outline-none"
-              placeholder="post-slug"
-            />
-          </div>
-        </div>
-
-        <Separator className="flex-shrink-0" />
-
-        <div className="min-h-0 flex-1 overflow-hidden p-4">
-          <EditorTextarea
-            value={value}
-            onChange={onChange}
-            placeholder="write your post in markdown..."
+  const EditorContent = (
+    <>
+      <div className="flex-shrink-0 space-y-4 p-4">
+        <div>
+          <label
+            htmlFor="post-title"
+            className="text-muted-foreground text-sm font-light"
+          >
+            title
+          </label>
+          <input
+            id="post-title"
+            type="text"
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-lg font-light focus:ring-1 focus:outline-none"
+            placeholder="enter post title..."
           />
         </div>
-      </>
-    ),
-    [title, slug, value, onTitleChange, onSlugChange, onChange]
+
+        <div>
+          <label
+            htmlFor="post-slug"
+            className="text-muted-foreground text-sm font-light"
+          >
+            slug
+          </label>
+          <input
+            id="post-slug"
+            type="text"
+            value={slug}
+            onChange={(e) => onSlugChange(e.target.value)}
+            className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+            placeholder="post-slug"
+          />
+        </div>
+      </div>
+
+      <Separator className="flex-shrink-0" />
+
+      <div className="min-h-0 flex-1 overflow-hidden p-4">
+        <EditorTextarea
+          ref={textareaRef}
+          value={value}
+          onChange={onChange}
+          placeholder="write your post in markdown..."
+        />
+      </div>
+    </>
   );
 
   // Mobile Layout - Sheet for preview

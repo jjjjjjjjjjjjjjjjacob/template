@@ -46,7 +46,13 @@ interface TagInputProps {
   suggestions?: string[];
 }
 
-function TagInput({ label, tags, onTagsChange, placeholder, suggestions = [] }: TagInputProps) {
+function TagInput({
+  label,
+  tags,
+  onTagsChange,
+  placeholder,
+  suggestions = [],
+}: TagInputProps) {
   const [inputValue, setInputValue] = useState('');
 
   const handleAdd = () => {
@@ -68,7 +74,8 @@ function TagInput({ label, tags, onTagsChange, placeholder, suggestions = [] }: 
   };
 
   const filteredSuggestions = suggestions.filter(
-    (s) => !tags.includes(s) && s.toLowerCase().includes(inputValue.toLowerCase())
+    (s) =>
+      !tags.includes(s) && s.toLowerCase().includes(inputValue.toLowerCase())
   );
 
   return (
@@ -186,7 +193,9 @@ function ResumeAdminPage() {
 
   const [showNewProfileDialog, setShowNewProfileDialog] = useState(false);
   const [showEditProfileDialog, setShowEditProfileDialog] = useState(false);
-  const [editingProfileSlug, setEditingProfileSlug] = useState<string | null>(null);
+  const [editingProfileSlug, setEditingProfileSlug] = useState<string | null>(
+    null
+  );
 
   const editingProfileData = useQuery(
     api.resume.getProfile,
@@ -224,7 +233,9 @@ function ResumeAdminPage() {
         linkedin: editingProfileData.profile.contact.linkedin || '',
         github: editingProfileData.profile.contact.github || '',
         website: editingProfileData.profile.contact.website || '',
-        order: profiles?.find(p => p.slug === editingProfileData.profile.slug)?.order ?? 0,
+        order:
+          profiles?.find((p) => p.slug === editingProfileData.profile.slug)
+            ?.order ?? 0,
       });
       setFocusAreas(editingProfileData.profile.defaults.focusAreas);
       setTopTechnologies(editingProfileData.profile.defaults.topTechnologies);
@@ -705,7 +716,9 @@ function ResumeAdminPage() {
               {!editingProfileData ? (
                 <div className="flex items-center justify-center py-8">
                   <div className="border-primary h-6 w-6 animate-spin rounded-full border-b-2" />
-                  <span className="text-muted-foreground ml-2">loading profile...</span>
+                  <span className="text-muted-foreground ml-2">
+                    loading profile...
+                  </span>
                 </div>
               ) : (
                 <>
@@ -757,7 +770,10 @@ function ResumeAdminPage() {
                           id="edit-location"
                           value={formData.location}
                           onChange={(e) =>
-                            setFormData({ ...formData, location: e.target.value })
+                            setFormData({
+                              ...formData,
+                              location: e.target.value,
+                            })
                           }
                           placeholder="new york, ny"
                         />
@@ -796,7 +812,10 @@ function ResumeAdminPage() {
                           id="edit-linkedin"
                           value={formData.linkedin}
                           onChange={(e) =>
-                            setFormData({ ...formData, linkedin: e.target.value })
+                            setFormData({
+                              ...formData,
+                              linkedin: e.target.value,
+                            })
                           }
                           placeholder="linkedin.com/in/username"
                         />
@@ -821,7 +840,10 @@ function ResumeAdminPage() {
                           id="edit-website"
                           value={formData.website}
                           onChange={(e) =>
-                            setFormData({ ...formData, website: e.target.value })
+                            setFormData({
+                              ...formData,
+                              website: e.target.value,
+                            })
                           }
                           placeholder="example.com"
                         />
@@ -853,11 +875,17 @@ function ResumeAdminPage() {
                     />
 
                     <div className="rounded-lg border p-4">
-                      <h4 className="mb-2 text-sm font-medium">profile stats</h4>
+                      <h4 className="mb-2 text-sm font-medium">
+                        profile stats
+                      </h4>
                       <div className="text-muted-foreground flex gap-4 text-sm">
-                        <span>{editingProfileData.projects.length} projects</span>
+                        <span>
+                          {editingProfileData.projects.length} projects
+                        </span>
                         <span>•</span>
-                        <span>{editingProfileData.skills.length} skill categories</span>
+                        <span>
+                          {editingProfileData.skills.length} skill categories
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -879,4 +907,3 @@ function ResumeAdminPage() {
     </>
   );
 }
-

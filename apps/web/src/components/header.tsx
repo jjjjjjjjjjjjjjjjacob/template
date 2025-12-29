@@ -75,7 +75,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
         <a href="/#">
           <button
             onClick={() => handleNavClick('home')}
-            className={`text-xl font-[200] tracking-wider transition-colors ${
+            className={`text-xl font-light tracking-wider transition-colors ${
               activeSection === 'home'
                 ? 'text-foreground'
                 : 'text-foreground/80 hover:text-foreground'
@@ -122,8 +122,8 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
               onClick={() => handleNavClick('projects')}
               className={`text-sm tracking-wider transition-colors ${
                 activeSection === 'projects'
-                  ? 'text-foreground font-[200]'
-                  : 'text-muted-foreground hover:text-foreground font-[200]'
+                  ? 'text-foreground font-light'
+                  : 'text-muted-foreground hover:text-foreground font-light'
               }`}
             >
               projects
@@ -134,8 +134,8 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
               onClick={() => handleNavClick('resume')}
               className={`text-sm tracking-wider transition-colors ${
                 activeSection === 'resume'
-                  ? 'text-foreground font-[200]'
-                  : 'text-muted-foreground hover:text-foreground font-[200]'
+                  ? 'text-foreground font-light'
+                  : 'text-muted-foreground hover:text-foreground font-light'
               }`}
             >
               resume
@@ -144,7 +144,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
           {hasPublishedPosts && (
             <Link
               to="/blog"
-              className="text-muted-foreground hover:text-foreground text-sm font-[200] tracking-wider transition-colors"
+              className="text-muted-foreground hover:text-foreground text-sm font-light tracking-wider transition-colors"
             >
               blog
             </Link>
@@ -152,7 +152,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
           {isAdmin && (
             <Link
               to="/admin"
-              className="text-muted-foreground hover:text-foreground text-sm font-[200] tracking-wide transition-colors hover:font-light"
+              className="text-muted-foreground hover:text-foreground text-sm font-light tracking-wide transition-colors hover:font-light"
             >
               admin
             </Link>

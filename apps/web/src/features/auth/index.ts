@@ -8,7 +8,6 @@ export {
 } from './hooks/use-auth';
 
 // Auth components
-export { AuthTest } from './components/auth-test';
 export { AuthPromptDialog } from './components/auth-prompt-dialog';
 
 // Auth types

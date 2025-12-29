@@ -76,9 +76,9 @@ function HomePage() {
 
   const gpuParticleCounts = useMemo(
     () => ({
-      field1: !isMobile ? 3000 : 800,
-      field2: !isMobile ? 3000 : 600,
-      field3: !isMobile ? 14000 : 4000,
+      field1: !isMobile ? 3000 : 500,
+      field2: !isMobile ? 3000 : 400,
+      field3: !isMobile ? 14000 : 2000,
       isLoading: false,
       gpuTier: 'high' as const,
     }),
@@ -171,22 +171,22 @@ function HomePage() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="text-foreground text-2xl font-[200] md:text-3xl">
+                <h3 className="text-foreground text-2xl font-light md:text-3xl">
                   {project.title}
                 </h3>
-                <p className="text-muted-foreground font-[200]">
+                <p className="text-muted-foreground font-light">
                   {project.timeline} • {project.role}
                 </p>
               </div>
             </div>
 
-            <p className="text-muted-foreground max-w-3xl leading-relaxed font-[200] md:text-lg">
+            <p className="text-muted-foreground max-w-3xl leading-relaxed font-light md:text-lg">
               {project.description}
             </p>
 
             <div className="grid gap-8 md:grid-cols-2">
               <div>
-                <h4 className="text-foreground mb-3 text-sm font-[200]">
+                <h4 className="text-foreground mb-3 text-sm font-light">
                   key contributions
                 </h4>
                 <ul className="space-y-2">
@@ -195,7 +195,7 @@ function HomePage() {
                     .map((achievement, achIndex) => (
                       <li
                         key={achIndex}
-                        className="text-muted-foreground flex items-start gap-3 text-sm font-[200]"
+                        className="text-muted-foreground flex items-start gap-3 text-sm font-light"
                       >
                         <span className="bg-muted-foreground mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full" />
                         {achievement.description}
@@ -205,7 +205,7 @@ function HomePage() {
               </div>
 
               <div>
-                <h4 className="text-foreground mb-3 text-sm font-[200]">
+                <h4 className="text-foreground mb-3 text-sm font-light">
                   technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -218,7 +218,7 @@ function HomePage() {
                     .map((tech) => (
                       <span
                         key={tech}
-                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-[200]"
+                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-light"
                       >
                         {tech}
                       </span>
@@ -246,29 +246,29 @@ function HomePage() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
-                <h3 className="text-foreground text-2xl font-[200]">
+                <h3 className="text-foreground text-2xl font-light">
                   {project.title}
                 </h3>
-                <p className="text-muted-foreground font-[200]">
+                <p className="text-muted-foreground font-light">
                   {project.timeline} • {project.role}
                 </p>
               </div>
               <button
                 onClick={() => handleProjectVisit(project.title, project.url)}
-                className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+                className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors duration-200"
               >
                 <ExternalLink className="h-4 w-4" />
                 visit
               </button>
             </div>
 
-            <p className="text-muted-foreground leading-relaxed font-[200]">
+            <p className="text-muted-foreground leading-relaxed font-light">
               {project.description}
             </p>
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-foreground mb-2 text-sm font-[200]">
+                <h4 className="text-foreground mb-2 text-sm font-light">
                   key contributions
                 </h4>
                 <ul className="space-y-1">
@@ -279,7 +279,7 @@ function HomePage() {
                         key={achIndex}
                         className="text-muted-foreground flex items-start gap-2 text-sm"
                       >
-                        <span className="bg-muted-foreground mt-2 h-1 w-1 flex-shrink-0 rounded-full font-[200]" />
+                        <span className="bg-muted-foreground mt-2 h-1 w-1 flex-shrink-0 rounded-full font-light" />
                         {achievement.description}
                       </li>
                     ))}
@@ -287,7 +287,7 @@ function HomePage() {
               </div>
 
               <div>
-                <h4 className="text-foreground mb-2 text-sm font-[200]">
+                <h4 className="text-foreground mb-2 text-sm font-light">
                   technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -300,7 +300,7 @@ function HomePage() {
                     .map((tech) => (
                       <span
                         key={tech}
-                        className="text-muted-foreground text-xs font-[200]"
+                        className="text-muted-foreground text-xs font-light"
                       >
                         {tech}
                       </span>
@@ -336,32 +336,32 @@ function HomePage() {
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <div className="flex justify-between">
-                  <h3 className="text-foreground text-3xl font-[200]">
+                  <h3 className="text-foreground text-3xl font-light">
                     {project.title}
                   </h3>
                   <button
                     onClick={() =>
                       handleProjectVisit(project.title, project.url)
                     }
-                    className="text-muted-foreground hover:text-foreground transition-colors-smooth flex items-center gap-2 text-sm"
+                    className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors duration-200"
                   >
                     <ExternalLink className="h-4 w-4" />
                     visit
                   </button>
                 </div>
-                <p className="text-muted-foreground font-[200]">
+                <p className="text-muted-foreground font-light">
                   {project.timeline} • {project.role}
                 </p>
               </div>
             </div>
 
-            <p className="text-muted-foreground text-lg leading-relaxed font-[200]">
+            <p className="text-muted-foreground text-lg leading-relaxed font-light">
               {project.description}
             </p>
 
             <div className="space-y-4">
               <div>
-                <h4 className="text-foreground mb-3 text-sm font-[200]">
+                <h4 className="text-foreground mb-3 text-sm font-light">
                   key contributions
                 </h4>
                 <ul className="space-y-2">
@@ -370,9 +370,9 @@ function HomePage() {
                     .map((achievement, achIndex) => (
                       <li
                         key={achIndex}
-                        className="text-muted-foreground flex items-start gap-3 text-sm font-[200]"
+                        className="text-muted-foreground flex items-start gap-3 text-sm font-light"
                       >
-                        <span className="bg-muted-foreground mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full font-[200]" />
+                        <span className="bg-muted-foreground mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full font-light" />
                         {achievement.description}
                       </li>
                     ))}
@@ -380,7 +380,7 @@ function HomePage() {
               </div>
 
               <div>
-                <h4 className="text-foreground mb-3 text-sm font-[200]">
+                <h4 className="text-foreground mb-3 text-sm font-light">
                   technologies
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -393,7 +393,7 @@ function HomePage() {
                     .map((tech) => (
                       <span
                         key={tech}
-                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-[200]"
+                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-light"
                       >
                         {tech}
                       </span>
@@ -461,7 +461,7 @@ function HomePage() {
   const ResumeExperience = () => (
     <section>
       <AnimatedSection animationType="header">
-        <h2 className="text-foreground mb-8 text-3xl font-[200]">experience</h2>
+        <h2 className="text-foreground mb-8 text-3xl font-light">experience</h2>
       </AnimatedSection>
       <div className="space-y-12">
         {experiences.map((experience, index) => (
@@ -472,10 +472,10 @@ function HomePage() {
               <div className="mb-6 space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <h3 className="text-foreground text-xl font-[200]">
+                    <h3 className="text-foreground text-xl font-light">
                       {experience.role}
                     </h3>
-                    <p className="text-primary text-lg font-[200]">
+                    <p className="text-primary text-lg font-light">
                       {experience.company}
                     </p>
                   </div>
@@ -498,7 +498,7 @@ function HomePage() {
                 </p>
 
                 <div>
-                  <h4 className="text-foreground mb-2 font-[200]">
+                  <h4 className="text-foreground mb-2 font-light">
                     key achievements
                   </h4>
                   <ul className="space-y-1">
@@ -517,14 +517,14 @@ function HomePage() {
                 </div>
 
                 <div>
-                  <h4 className="text-foreground mb-2 font-[200]">
+                  <h4 className="text-foreground mb-2 font-light">
                     technologies
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {experience.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-[200]"
+                        className="bg-muted text-muted-foreground rounded-full px-3 py-1 text-xs font-light"
                       >
                         {tech}
                       </span>
@@ -542,7 +542,7 @@ function HomePage() {
   const ResumeSkills = () => (
     <section>
       <AnimatedSection animationType="header">
-        <h2 className="text-foreground mb-8 text-3xl font-[200]">skills</h2>
+        <h2 className="text-foreground mb-8 text-3xl font-light">skills</h2>
       </AnimatedSection>
       <div className="grid gap-8 md:grid-cols-2">
         {skills.map((skillCategory, index) => (
@@ -552,14 +552,14 @@ function HomePage() {
             delay={index % 2 === 0 ? 200 : 400}
           >
             <div className="space-y-3">
-              <h3 className="text-foreground font-[200]">
+              <h3 className="text-foreground font-light">
                 {skillCategory.category}
               </h3>
               <div className="flex flex-wrap gap-2">
                 {skillCategory.skills.map((skill) => (
                   <span
                     key={skill}
-                    className="bg-primary/10 text-primary rounded-lg px-3 py-2 text-sm font-[200]"
+                    className="bg-primary/10 text-primary rounded-lg px-3 py-2 text-sm font-light"
                   >
                     {skill}
                   </span>
@@ -576,23 +576,23 @@ function HomePage() {
     <footer className="bg-background py-12">
       <div className="container mx-auto px-4">
         <div className="mx-auto flex max-w-4xl flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-muted-foreground text-sm font-[200]">
+          <p className="text-muted-foreground text-sm font-light">
             © {new Date().getFullYear()} jacob stein
           </p>
-          <div className="text-muted-foreground flex items-center gap-4 text-sm font-[200]">
+          <div className="text-muted-foreground flex items-center gap-4 text-sm font-light">
             <a
               href="#projects"
-              className="hover:text-foreground transition-colors-smooth"
+              className="hover:text-foreground transition-colors duration-200"
             >
               projects
             </a>
             <a
               href="#resume"
-              className="hover:text-foreground transition-colors-smooth"
+              className="hover:text-foreground transition-colors duration-200"
             >
               resume
             </a>
-            <div className="hover:text-foreground transition-colors-smooth">
+            <div className="hover:text-foreground transition-colors duration-200">
               contact
             </div>
           </div>
@@ -821,7 +821,7 @@ function HomePage() {
   return (
     <div
       data-section="home"
-      className={`transition-colors-smooth relative mt-16 min-h-[80vh] overflow-hidden bg-transparent`}
+      className={`relative mt-16 min-h-[80vh] overflow-hidden bg-transparent transition-colors duration-200`}
     >
       <div className="relative flex min-h-[90vh] flex-grow flex-col items-center justify-center">
         <div className="relative flex h-full w-full flex-grow flex-col items-center justify-center overflow-hidden p-0">
@@ -844,18 +844,18 @@ function HomePage() {
 
             <p
               data-visible={!showLoader}
-              className="text-muted-foreground max-w-md text-center text-[14px] font-[200] tracking-wide opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
+              className="text-muted-foreground max-w-md text-center text-[14px] font-light tracking-wide opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
               ui/ux | fullstack | product
             </p>
 
             <div
               data-visible={!showLoader}
-              className="flex gap-2 font-[200] opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
+              className="flex gap-2 font-light opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
               <a href="#projects">
                 <Button
-                  className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] font-[200] backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
+                  className="border-border bg-primary/10 text-primary hover:bg-primary/20 transition-smooth pointer-events-auto rounded-lg border px-4 py-2 text-[10px] font-light backdrop-blur-sm sm:px-5 sm:py-3 sm:text-xs"
                   size="sm"
                 >
                   projects
@@ -863,7 +863,7 @@ function HomePage() {
               </a>
               <a href="#resume">
                 <Button
-                  className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] font-[200] sm:px-5 sm:py-3 sm:text-sm"
+                  className="border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-smooth pointer-events-auto rounded-lg border bg-transparent px-4 py-2 text-[10px] font-light sm:px-5 sm:py-3 sm:text-sm"
                   size="sm"
                 >
                   resume
@@ -883,12 +883,12 @@ function HomePage() {
               <div className="flex items-center justify-between">
                 <div>
                   <AnimatedSection animationType="header" delay={200}>
-                    <h1 className="text-foreground text-4xl font-[200] tracking-wide">
+                    <h1 className="text-foreground text-4xl font-light tracking-wide">
                       projects
                     </h1>
                   </AnimatedSection>
                   <AnimatedSection animationType="header" delay={400}>
-                    <p className="text-muted-foreground font-[200]">
+                    <p className="text-muted-foreground font-light">
                       recent work in full-stack development and product design
                     </p>
                   </AnimatedSection>
@@ -919,11 +919,11 @@ function HomePage() {
               <div className="space-y-6 text-center">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h1 className="text-foreground text-4xl font-[200] tracking-wide sm:text-5xl">
+                    <h1 className="text-foreground text-4xl font-light tracking-wide sm:text-5xl">
                       jacob stein
                     </h1>
                     <AnimatedSection animationType="header" delay={200}>
-                      <p className="text-muted-foreground mt-2 text-xl font-[200]">
+                      <p className="text-muted-foreground mt-2 text-xl font-light">
                         full-stack developer & ui/ux designer
                       </p>
                     </AnimatedSection>
@@ -938,7 +938,7 @@ function HomePage() {
                 </div>
 
                 <AnimatedSection animationType="section" delay={400}>
-                  <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed font-[200]">
+                  <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed font-light">
                     {summary}
                   </p>
                 </AnimatedSection>
@@ -961,7 +961,7 @@ function HomePage() {
           <div className="container mx-auto px-4">
             <div className="mx-auto max-w-2xl text-center">
               <AnimatedSection animationType="header">
-                <h2 className="text-foreground mb-8 text-4xl font-[200] tracking-wide">
+                <h2 className="text-foreground mb-8 text-4xl font-light tracking-wide">
                   let's connect
                 </h2>
               </AnimatedSection>
@@ -1003,10 +1003,10 @@ function HomePage() {
                         </svg>
                       </div>
                       <div className="text-left">
-                        <p className="text-foreground text-sm font-[200]">
+                        <p className="text-foreground text-sm font-light">
                           email
                         </p>
-                        <p className="text-muted-foreground group-hover:text-foreground text-sm font-[200] transition-colors">
+                        <p className="text-muted-foreground group-hover:text-foreground text-sm font-light transition-colors">
                           jacob@jacobstein.me
                         </p>
                       </div>

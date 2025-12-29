@@ -419,40 +419,45 @@ function NewProjectPage() {
                 />
               </div>
 
-              {includeInResume && resumeProfiles && resumeProfiles.length > 0 && (
-                <div className="space-y-2">
-                  <Label>profile visibility</Label>
-                  <p className="text-muted-foreground mb-2 text-xs">
-                    select which resume profiles should show this project
-                  </p>
+              {includeInResume &&
+                resumeProfiles &&
+                resumeProfiles.length > 0 && (
                   <div className="space-y-2">
-                    {resumeProfiles.map((profile) => (
-                      <div
-                        key={profile.slug}
-                        className="flex items-center justify-between gap-2"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <span className="text-sm font-medium">{profile.title}</span>
-                          <span className="text-muted-foreground ml-2 text-xs">
-                            ({profile.slug})
-                          </span>
-                        </div>
-                        <Switch
-                          checked={selectedProfiles.includes(profile.slug)}
-                          onCheckedChange={() =>
-                            handleToggleProfile(profile.slug)
-                          }
-                        />
-                      </div>
-                    ))}
-                  </div>
-                  {selectedProfiles.length === 0 && (
-                    <p className="text-muted-foreground text-xs">
-                      no profiles selected - project will appear in all profiles
+                    <Label>profile visibility</Label>
+                    <p className="text-muted-foreground mb-2 text-xs">
+                      select which resume profiles should show this project
                     </p>
-                  )}
-                </div>
-              )}
+                    <div className="space-y-2">
+                      {resumeProfiles.map((profile) => (
+                        <div
+                          key={profile.slug}
+                          className="flex items-center justify-between gap-2"
+                        >
+                          <div className="min-w-0 flex-1">
+                            <span className="text-sm font-medium">
+                              {profile.title}
+                            </span>
+                            <span className="text-muted-foreground ml-2 text-xs">
+                              ({profile.slug})
+                            </span>
+                          </div>
+                          <Switch
+                            checked={selectedProfiles.includes(profile.slug)}
+                            onCheckedChange={() =>
+                              handleToggleProfile(profile.slug)
+                            }
+                          />
+                        </div>
+                      ))}
+                    </div>
+                    {selectedProfiles.length === 0 && (
+                      <p className="text-muted-foreground text-xs">
+                        no profiles selected - project will appear in all
+                        profiles
+                      </p>
+                    )}
+                  </div>
+                )}
             </CardContent>
           </Card>
         </div>
@@ -460,5 +465,3 @@ function NewProjectPage() {
     </div>
   );
 }
-
-

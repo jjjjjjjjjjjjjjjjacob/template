@@ -24,7 +24,6 @@ import {
   ArrowRight,
   BarChart3,
   PieChart,
-  Plus,
   ExternalLink,
   Layers,
 } from 'lucide-react';
@@ -309,7 +308,9 @@ function QuickStats({ stats }: { stats: AdminStats | undefined }) {
           <CardContent className="p-4 sm:p-5">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0 space-y-1 sm:space-y-2">
-                <p className="text-muted-foreground truncate text-xs sm:text-sm">{stat.label}</p>
+                <p className="text-muted-foreground truncate text-xs sm:text-sm">
+                  {stat.label}
+                </p>
                 {stats === undefined ? (
                   <Skeleton className="h-7 w-12 sm:h-8 sm:w-16" />
                 ) : (
@@ -318,12 +319,16 @@ function QuickStats({ stats }: { stats: AdminStats | undefined }) {
                   </p>
                 )}
                 {stat.subValue && (
-                  <p className="text-muted-foreground truncate text-[10px] sm:text-xs">{stat.subValue}</p>
+                  <p className="text-muted-foreground truncate text-[10px] sm:text-xs">
+                    {stat.subValue}
+                  </p>
                 )}
                 {stat.trend && (
                   <div className="flex items-center gap-1">
                     <TrendingUp className="h-3 w-3 shrink-0 text-emerald-500" />
-                    <span className="truncate text-[10px] text-emerald-500 sm:text-xs">{stat.trend}</span>
+                    <span className="truncate text-[10px] text-emerald-500 sm:text-xs">
+                      {stat.trend}
+                    </span>
                   </div>
                 )}
               </div>
@@ -333,7 +338,9 @@ function QuickStats({ stats }: { stats: AdminStats | undefined }) {
                   stat.bg
                 )}
               >
-                <stat.icon className={cn('h-4 w-4 sm:h-5 sm:w-5', stat.color)} />
+                <stat.icon
+                  className={cn('h-4 w-4 sm:h-5 sm:w-5', stat.color)}
+                />
               </div>
             </div>
           </CardContent>
@@ -378,7 +385,7 @@ function NavigationCards() {
           <Card
             className={cn(
               'group relative h-full cursor-pointer overflow-hidden transition-all hover:-translate-y-1 hover:shadow-lg',
-              'border-transparent hover:border-primary/20'
+              'hover:border-primary/20 border-transparent'
             )}
           >
             <div
@@ -390,7 +397,7 @@ function NavigationCards() {
             <CardContent className="relative flex h-full flex-col p-5">
               <div
                 className={cn(
-                  'mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-muted transition-transform group-hover:scale-110'
+                  'bg-muted mb-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-110'
                 )}
               >
                 <item.icon className={cn('h-6 w-6', item.iconColor)} />
@@ -450,7 +457,10 @@ function ChartsSection({ stats }: { stats: AdminStats | undefined }) {
           ) : (
             <div className="flex h-40 items-end gap-1">
               {postsData.map((data, i) => (
-                <div key={i} className="flex min-w-0 flex-1 flex-col items-center gap-1">
+                <div
+                  key={i}
+                  className="flex min-w-0 flex-1 flex-col items-center gap-1"
+                >
                   <div
                     className="bg-primary/80 hover:bg-primary w-full min-w-1 rounded-t transition-all"
                     style={{
@@ -539,7 +549,9 @@ function RecentActivity({ stats }: { stats: AdminStats | undefined }) {
       <CardHeader className="pb-3">
         <div className="flex items-center gap-2">
           <Clock className="text-muted-foreground h-4 w-4 shrink-0" />
-          <CardTitle className="truncate text-sm font-medium">recent activity</CardTitle>
+          <CardTitle className="truncate text-sm font-medium">
+            recent activity
+          </CardTitle>
         </div>
       </CardHeader>
       <CardContent>
@@ -566,7 +578,9 @@ function RecentActivity({ stats }: { stats: AdminStats | undefined }) {
                 <div
                   className={cn(
                     'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
-                    item.type === 'post' ? 'bg-emerald-500/10' : 'bg-violet-500/10'
+                    item.type === 'post'
+                      ? 'bg-emerald-500/10'
+                      : 'bg-violet-500/10'
                   )}
                 >
                   {item.type === 'post' ? (
@@ -639,7 +653,9 @@ function QuickActions() {
   return (
     <Card className="min-w-0">
       <CardHeader className="pb-3">
-        <CardTitle className="truncate text-sm font-medium">quick actions</CardTitle>
+        <CardTitle className="truncate text-sm font-medium">
+          quick actions
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
@@ -669,7 +685,7 @@ function QuickActions() {
         </div>
 
         <div className="border-t pt-4">
-          <p className="text-muted-foreground mb-3 text-[10px] uppercase tracking-wider sm:text-xs">
+          <p className="text-muted-foreground mb-3 text-[10px] tracking-wider uppercase sm:text-xs">
             view live
           </p>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">

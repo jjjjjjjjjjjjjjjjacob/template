@@ -4,6 +4,13 @@ import {
   type RouteHydrationConfig,
   routeHydrationStrategy,
 } from './route-hydration-config';
+import type { Router } from '@tanstack/react-router';
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 /**
  * Get preload configuration for a specific route
@@ -40,7 +47,7 @@ export class RoutePreloader {
   private preloadedRoutes = new Set<string>();
   private preloadPromises = new Map<string, Promise<void>>();
 
-  constructor(private router: any) {}
+  constructor(private router: Router<any, any>) {}
 
   /**
    * Preload a route and its dependencies
@@ -257,9 +264,8 @@ export class RoutePerformanceBudget {
     if (violations.length > 0) {
       console.warn(`Performance budget violations for ${route}:`, violations);
 
-      // Report to analytics if available
-      if (typeof window !== 'undefined' && (window as any).gtag) {
-        (window as any).gtag('event', 'performance_budget_violation', {
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'performance_budget_violation', {
           route,
           violations: violations.join(', '),
         });
@@ -306,9 +312,8 @@ export class RouteTransitionOptimizer {
       `Route transition to ${toRoute} completed in ${transitionTime}ms`
     );
 
-    // Track transition performance
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('event', 'route_transition', {
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'route_transition', {
         to_route: toRoute,
         duration: transitionTime,
       });

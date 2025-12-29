@@ -405,5 +405,3 @@ export const listForResume = query({
     return resumeProjects.sort((a, b) => a.order - b.order);
   },
 });
-
-

@@ -144,18 +144,20 @@ export function useDeferredRouteComponent<T extends React.ComponentType<any>>(
   });
 
   const DeferredComponent = React.useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return React.forwardRef<any, any>((props, _ref) => {
-      if (!hydration.isHydrated) {
-        if (options.fallback) {
-          const FallbackComponent = options.fallback;
-          return <FallbackComponent {...props} />;
+    return React.forwardRef<HTMLElement, React.ComponentProps<T>>(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      (props, _ref) => {
+        if (!hydration.isHydrated) {
+          if (options.fallback) {
+            const FallbackComponent = options.fallback;
+            return <FallbackComponent {...props} />;
+          }
+          return null;
         }
-        return null;
-      }
 
-      return React.createElement(Component, props);
-    });
+        return React.createElement(Component, props);
+      }
+    );
   }, [Component, hydration.isHydrated, options.fallback]);
 
   DeferredComponent.displayName = `DeferredRoute(${componentName})`;
@@ -176,7 +178,7 @@ export function withRouteHydration<P extends Record<string, any>>(
   } = {}
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const WrappedComponent = React.forwardRef<any, P>((props, _ref) => {
+  const WrappedComponent = React.forwardRef<HTMLElement, P>((props, _ref) => {
     const hydration = useRouteHydration({
       componentName:
         options.componentName || Component.displayName || Component.name,

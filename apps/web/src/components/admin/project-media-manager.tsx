@@ -55,6 +55,7 @@ interface ProjectMediaManagerProps {
 }
 
 export function ProjectMediaManager({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   projectId,
   media,
   thumbnailIndex,
@@ -100,7 +101,11 @@ export function ProjectMediaManager({
 
       onMediaChange([...media, ...newMedia]);
 
-      if (media.length === 0 && newMedia.length > 0 && thumbnailIndex === undefined) {
+      if (
+        media.length === 0 &&
+        newMedia.length > 0 &&
+        thumbnailIndex === undefined
+      ) {
         onThumbnailChange(0);
         toast.success('first media item set as thumbnail');
       }
@@ -226,9 +231,7 @@ export function ProjectMediaManager({
 
       {media.length > 0 && (
         <div className="space-y-4">
-          <h4 className="text-md font-light">
-            media items ({media.length})
-          </h4>
+          <h4 className="text-md font-light">media items ({media.length})</h4>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {media.map((item, index) => (
@@ -314,7 +317,9 @@ export function ProjectMediaManager({
           </DialogHeader>
           <div className="py-4">
             <Textarea
-              value={editingIndex !== null ? media[editingIndex]?.caption || '' : ''}
+              value={
+                editingIndex !== null ? media[editingIndex]?.caption || '' : ''
+              }
               onChange={(e) => {
                 if (editingIndex !== null) {
                   handleUpdateCaption(editingIndex, e.target.value);
@@ -368,7 +373,11 @@ function MediaCard({
   const displayUrl = media.url || mediaUrl;
 
   const MediaTypeIcon =
-    media.type === 'video' ? Video : media.type === 'iframe' ? Globe : ImageIcon;
+    media.type === 'video'
+      ? Video
+      : media.type === 'iframe'
+        ? Globe
+        : ImageIcon;
 
   return (
     <Card
@@ -441,9 +450,7 @@ function MediaCard({
           )}
 
           <div className="flex items-center justify-between">
-            <span className="text-muted-foreground text-xs">
-              #{index + 1}
-            </span>
+            <span className="text-muted-foreground text-xs">#{index + 1}</span>
             <div className="flex items-center gap-1">
               <Button
                 size="sm"
@@ -491,5 +498,3 @@ function MediaCard({
     </Card>
   );
 }
-
-

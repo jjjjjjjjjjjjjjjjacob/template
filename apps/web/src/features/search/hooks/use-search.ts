@@ -59,7 +59,6 @@ export function useSearch(options: SearchOptions = {}) {
     staleTime: 30000,
   });
 
-  // Update state when search completes
   useEffect(() => {
     if (searchQuery.data) {
       setState((prev) => ({
@@ -69,7 +68,6 @@ export function useSearch(options: SearchOptions = {}) {
         error: null,
       }));
 
-      // Track search if enabled
       if (opts.trackHistory && debouncedQuery) {
         const totalResults =
           (searchQuery.data.items?.length || 0) +
@@ -84,25 +82,14 @@ export function useSearch(options: SearchOptions = {}) {
         });
       }
     }
-  }, [
-    searchQuery.data,
-    debouncedQuery,
-    opts.trackHistory,
-    trackSearchMutation,
-  ]);
 
-  // Update suggestions
-  useEffect(() => {
     if (suggestionsQuery.data) {
       setState((prev) => ({
         ...prev,
         suggestions: suggestionsQuery.data,
       }));
     }
-  }, [suggestionsQuery.data]);
 
-  // Handle search errors
-  useEffect(() => {
     if (searchQuery.error) {
       setState((prev) => ({
         ...prev,
@@ -110,7 +97,14 @@ export function useSearch(options: SearchOptions = {}) {
         error: searchQuery.error as Error,
       }));
     }
-  }, [searchQuery.error]);
+  }, [
+    searchQuery.data,
+    searchQuery.error,
+    suggestionsQuery.data,
+    debouncedQuery,
+    opts.trackHistory,
+    trackSearchMutation,
+  ]);
 
   // Search function
   const search = useCallback(

@@ -51,7 +51,9 @@ export const getStats = query({
     const items = await ctx.db.query('items').collect();
     const blogPosts = await ctx.db.query('blogPosts').collect();
     const resumeProfiles = await ctx.db.query('resume_profiles').collect();
-    const portfolioProjects = await ctx.db.query('portfolio_projects').collect();
+    const portfolioProjects = await ctx.db
+      .query('portfolio_projects')
+      .collect();
 
     const publishedPosts = blogPosts.filter((p) => p.published);
     const draftPosts = blogPosts.filter((p) => !p.published);
@@ -66,7 +68,9 @@ export const getStats = query({
     const recentUsers = users.filter((u) => now - u.created_at < oneWeek);
     const recentPosts = blogPosts.filter((p) => now - p.createdAt < oneWeek);
 
-    const postsThisMonth = blogPosts.filter((p) => now - p.createdAt < oneMonth);
+    const postsThisMonth = blogPosts.filter(
+      (p) => now - p.createdAt < oneMonth
+    );
     const projectsThisMonth = portfolioProjects.filter(
       (p) => now - p.createdAt < oneMonth
     );

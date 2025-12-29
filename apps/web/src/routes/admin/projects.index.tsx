@@ -54,7 +54,9 @@ function ProjectsIndexPage() {
 
   const handleDelete = async (id: Id<'portfolio_projects'>, title: string) => {
     if (
-      !confirm(`are you sure you want to delete "${title}"? this cannot be undone.`)
+      !confirm(
+        `are you sure you want to delete "${title}"? this cannot be undone.`
+      )
     ) {
       return;
     }
@@ -67,7 +69,9 @@ function ProjectsIndexPage() {
     }
   };
 
-  const handleTogglePublish = async (project: NonNullable<typeof projects>[0]) => {
+  const handleTogglePublish = async (
+    project: NonNullable<typeof projects>[0]
+  ) => {
     try {
       await updateMutation({
         id: project._id,
@@ -89,7 +93,9 @@ function ProjectsIndexPage() {
           resumeProfileSlugs: project.resumeProfileSlugs,
         },
       });
-      toast.success(project.published ? 'project unpublished' : 'project published');
+      toast.success(
+        project.published ? 'project unpublished' : 'project published'
+      );
     } catch {
       toast.error('failed to update project');
     }
@@ -236,7 +242,9 @@ function ProjectsIndexPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={project.published ? 'default' : 'secondary'}>
+                      <Badge
+                        variant={project.published ? 'default' : 'secondary'}
+                      >
                         {project.published ? 'published' : 'draft'}
                       </Badge>
                     </TableCell>
@@ -262,7 +270,10 @@ function ProjectsIndexPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem asChild>
-                            <Link to={`/admin/projects/${project._id}`}>
+                            <Link
+                              to="/admin/projects/$projectId"
+                              params={{ projectId: project._id }}
+                            >
                               <Edit className="mr-2 h-4 w-4" />
                               edit
                             </Link>
@@ -304,5 +315,3 @@ function ProjectsIndexPage() {
     </div>
   );
 }
-
-

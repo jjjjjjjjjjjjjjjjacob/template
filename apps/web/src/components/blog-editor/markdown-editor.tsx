@@ -336,7 +336,7 @@ function ResponsiveMarkdownEditor({
   className,
 }: ResponsiveMarkdownEditorProps) {
   const PreviewContent = () => (
-    <div className="h-full overflow-x-hidden overflow-y-auto rounded-md border">
+    <div className="h-full overflow-y-auto overflow-x-hidden rounded-md border">
       <div className="w-full p-4">
         <div className="prose prose-sm dark:prose-invert markdown-content max-w-none break-words">
           <Suspense
@@ -368,7 +368,7 @@ function ResponsiveMarkdownEditor({
             type="text"
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-lg font-light focus:ring-1 focus:outline-none"
+            className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-lg font-light focus:outline-none focus:ring-1"
             placeholder="enter post title..."
           />
         </div>
@@ -385,7 +385,7 @@ function ResponsiveMarkdownEditor({
             type="text"
             value={slug}
             onChange={(e) => onSlugChange(e.target.value)}
-            className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm focus:ring-1 focus:outline-none"
+            className="border-input focus:ring-ring mt-1 w-full rounded-md border bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-1"
             placeholder="post-slug"
           />
         </div>

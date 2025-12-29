@@ -45,7 +45,7 @@ export function FontLoadingStatus() {
 
   return (
     <div
-      className="fixed right-4 bottom-4 z-50 rounded-lg bg-black/80 p-3 font-mono text-xs text-white"
+      className="fixed bottom-4 right-4 z-50 rounded-lg bg-black/80 p-3 font-mono text-xs text-white"
       style={{ fontFamily: 'ui-monospace, monospace' }}
     >
       <div>Fonts: {isLoaded ? '✅ Loaded' : '⏳ Loading...'}</div>

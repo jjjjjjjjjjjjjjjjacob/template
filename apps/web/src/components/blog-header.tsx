@@ -29,7 +29,7 @@ export function BlogHeader() {
   };
 
   return (
-    <header className="border-border/20 bg-background fixed top-0 right-0 left-0 z-50 border-b">
+    <header className="border-border/20 bg-background fixed left-0 right-0 top-0 z-50 border-b">
       <div className="mx-auto flex h-14 max-w-[680px] items-center px-4">
         <nav className="flex flex-1 items-center gap-6">
           <Link

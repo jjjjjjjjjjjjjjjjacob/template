@@ -70,7 +70,7 @@ function ProjectSlideshow({
     <div
       ref={containerRef}
       className={cn(
-        `drop-shadow-muted/10 relative min-h-96 overflow-hidden transition perspective-dramatic`,
+        `drop-shadow-muted/10 perspective-dramatic relative min-h-96 overflow-hidden transition`,
         className
       )}
       role="region"
@@ -82,7 +82,7 @@ function ProjectSlideshow({
     >
       <div
         className={cn(
-          'relative h-full overflow-hidden opacity-100 transform-3d',
+          'transform-3d relative h-full overflow-hidden opacity-100',
           'transition-transform-smooth',
           // Mobile state - no transforms
           isMobile && 'transform-none',

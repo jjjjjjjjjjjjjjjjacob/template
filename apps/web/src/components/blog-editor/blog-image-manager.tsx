@@ -243,7 +243,7 @@ function ImageCard({
           )}
 
           {isThumbnail && (
-            <Badge className="bg-primary absolute top-2 left-2">
+            <Badge className="bg-primary absolute left-2 top-2">
               <Star className="mr-1 h-3 w-3" />
               thumbnail
             </Badge>
@@ -315,7 +315,7 @@ function ImageCard({
                     value={caption}
                     onChange={(e) => setCaption(e.target.value)}
                     placeholder="enter caption (markdown supported)"
-                    className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full resize-none rounded border px-3 py-2 text-xs focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    className="border-input bg-background placeholder:text-muted-foreground focus-visible:ring-ring w-full resize-none rounded border px-3 py-2 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                     rows={2}
                   />
                   <p className="text-muted-foreground text-xs">

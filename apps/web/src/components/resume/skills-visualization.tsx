@@ -111,7 +111,7 @@ function SkillRadar({
           return (
             <div
               key={skill}
-              className="group border-border/50 bg-card/50 hover:border-primary/30 relative overflow-hidden rounded-lg border p-3 transition-all duration-300 hover:shadow-sm"
+              className="border-border/50 bg-card/50 hover:border-primary/30 group relative overflow-hidden rounded-lg border p-3 transition-all duration-300 hover:shadow-sm"
               style={{
                 animationDelay: `${index * 50}ms`,
               }}
@@ -176,7 +176,7 @@ function TechStackOverview() {
         {categoryStats.map((category, index) => (
           <div
             key={category.category}
-            className="group border-border/50 bg-card/50 hover:border-primary/30 relative overflow-hidden rounded-lg border p-4 transition-all duration-300 hover:shadow-lg"
+            className="border-border/50 bg-card/50 hover:border-primary/30 group relative overflow-hidden rounded-lg border p-4 transition-all duration-300 hover:shadow-lg"
             style={{
               animationDelay: `${index * 100}ms`,
             }}

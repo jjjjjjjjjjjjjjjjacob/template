@@ -57,7 +57,7 @@ export function BlogCard({ post, className }: BlogCardProps) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
             {/* Title Overlay */}
-            <div className="absolute right-0 bottom-0 left-0 p-4">
+            <div className="absolute bottom-0 left-0 right-0 p-4">
               <CardTitle className="group-hover:text-primary-foreground text-xl leading-tight text-white transition-colors duration-200">
                 {post.title}
               </CardTitle>

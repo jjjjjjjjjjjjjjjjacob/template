@@ -685,7 +685,7 @@ function QuickActions() {
         </div>
 
         <div className="border-t pt-4">
-          <p className="text-muted-foreground mb-3 text-[10px] tracking-wider uppercase sm:text-xs">
+          <p className="text-muted-foreground mb-3 text-[10px] uppercase tracking-wider sm:text-xs">
             view live
           </p>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">

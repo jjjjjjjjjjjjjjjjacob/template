@@ -60,7 +60,7 @@ export function ExperienceTimelineSkeleton() {
       <div className="space-y-12">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="border-muted/20 relative border-l-2 pl-8">
-            <div className="bg-muted/20 absolute top-0 -left-2 h-4 w-4 rounded-full" />
+            <div className="bg-muted/20 absolute -left-2 top-0 h-4 w-4 rounded-full" />
             <div className="space-y-4">
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div className="space-y-2">

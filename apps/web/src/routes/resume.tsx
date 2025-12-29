@@ -199,7 +199,7 @@ function ExperienceCard({
 }) {
   return (
     <div className="border-primary/20 relative border-l-2 pl-8">
-      <div className="bg-primary absolute top-0 -left-2 h-4 w-4 rounded-full"></div>
+      <div className="bg-primary absolute -left-2 top-0 h-4 w-4 rounded-full"></div>
 
       <div className="mb-6 space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -420,7 +420,7 @@ function ResumePage() {
                     key={index}
                     className="border-primary/20 relative border-l-2 pl-8"
                   >
-                    <div className="bg-primary absolute top-0 -left-2 h-4 w-4 rounded-full"></div>
+                    <div className="bg-primary absolute -left-2 top-0 h-4 w-4 rounded-full"></div>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <h3 className="text-foreground text-xl font-[200]">

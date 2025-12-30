@@ -35,6 +35,7 @@ import {
 import { toast } from 'sonner';
 import { Id } from '@template/convex/dataModel';
 import { cn } from '@/utils/tailwind-utils';
+import { uploadWithProgress } from '@/utils/upload-with-progress';
 
 export type MediaType = 'image' | 'video' | 'iframe';
 
@@ -72,29 +73,52 @@ export function ProjectMediaManager({
 
   const generateUploadUrl = useMutation(api.projects.generateUploadUrl);
 
+  const updateFileProgress = React.useCallback(
+    (file: File, progress: number) => {
+      setUploadFiles((prev) =>
+        prev.map((f) =>
+          f.file === file
+            ? { ...f, progress: Math.min(100, Math.max(0, progress)) }
+            : f
+        )
+      );
+    },
+    []
+  );
+
+  const updateFileStatus = React.useCallback(
+    (file: File, status: FileUploadFile['status'], error?: string) => {
+      setUploadFiles((prev) =>
+        prev.map((f) => (f.file === file ? { ...f, status, error } : f))
+      );
+    },
+    []
+  );
+
   const handleFileUpload = async (files: File[]) => {
     try {
       const newMedia: MediaItem[] = [];
 
       for (const file of files) {
+        updateFileStatus(file, 'uploading');
+
         const uploadUrl = await generateUploadUrl();
 
-        const result = await fetch(uploadUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': file.type },
-          body: file,
+        const response = await uploadWithProgress({
+          url: uploadUrl,
+          file,
+          onProgress: (progress) => {
+            updateFileProgress(file, progress);
+          },
         });
 
-        if (!result.ok) {
-          throw new Error(`Upload failed: ${result.statusText}`);
-        }
+        updateFileStatus(file, 'completed');
 
-        const response = (await result.json()) as { storageId: Id<'_storage'> };
         const isVideo = file.type.startsWith('video/');
 
         newMedia.push({
           type: isVideo ? 'video' : 'image',
-          storageId: response.storageId,
+          storageId: response.storageId as Id<'_storage'>,
           order: media.length + newMedia.length,
         });
       }
@@ -115,6 +139,9 @@ export function ProjectMediaManager({
       );
       setUploadFiles([]);
     } catch {
+      files.forEach((file) => {
+        updateFileStatus(file, 'error', 'upload failed');
+      });
       toast.error('failed to upload files');
     }
   };

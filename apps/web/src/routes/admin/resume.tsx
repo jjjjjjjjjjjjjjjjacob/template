@@ -20,6 +20,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   ArrowLeft,
   Plus,
@@ -33,6 +34,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/features/auth/hooks/use-admin';
+import { ResumeProjectManager } from '@/components/admin/resume-project-manager';
 
 export const Route = createFileRoute('/admin/resume')({
   component: ResumeAdminPage,
@@ -709,7 +711,7 @@ function ResumeAdminPage() {
               if (!open) handleCloseEditDialog();
             }}
           >
-            <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+            <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>edit profile</DialogTitle>
               </DialogHeader>
@@ -721,8 +723,15 @@ function ResumeAdminPage() {
                   </span>
                 </div>
               ) : (
-                <>
-                  <div className="grid gap-4 py-4">
+                <Tabs defaultValue="details" className="w-full">
+                  <TabsList className="mb-4 grid w-full grid-cols-2">
+                    <TabsTrigger value="details">profile details</TabsTrigger>
+                    <TabsTrigger value="projects">
+                      projects ({editingProfileData.projects.length})
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="details" className="space-y-4">
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
                         <Label htmlFor="edit-slug">slug</Label>
@@ -874,31 +883,26 @@ function ResumeAdminPage() {
                       suggestions={DOMAIN_SUGGESTIONS}
                     />
 
-                    <div className="rounded-lg border p-4">
-                      <h4 className="mb-2 text-sm font-medium">
-                        profile stats
-                      </h4>
-                      <div className="text-muted-foreground flex gap-4 text-sm">
-                        <span>
-                          {editingProfileData.projects.length} projects
-                        </span>
-                        <span>•</span>
-                        <span>
-                          {editingProfileData.skills.length} skill categories
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button variant="outline" onClick={handleCloseEditDialog}>
-                      cancel
-                    </Button>
-                    <Button onClick={handleSaveEditProfile} disabled={isSaving}>
-                      <Save className="mr-2 h-4 w-4" />
-                      {isSaving ? 'saving...' : 'save changes'}
-                    </Button>
-                  </DialogFooter>
-                </>
+                    <DialogFooter className="pt-4">
+                      <Button variant="outline" onClick={handleCloseEditDialog}>
+                        cancel
+                      </Button>
+                      <Button
+                        onClick={handleSaveEditProfile}
+                        disabled={isSaving}
+                      >
+                        <Save className="mr-2 h-4 w-4" />
+                        {isSaving ? 'saving...' : 'save changes'}
+                      </Button>
+                    </DialogFooter>
+                  </TabsContent>
+
+                  <TabsContent value="projects">
+                    {editingProfileSlug && (
+                      <ResumeProjectManager profileSlug={editingProfileSlug} />
+                    )}
+                  </TabsContent>
+                </Tabs>
               )}
             </DialogContent>
           </Dialog>

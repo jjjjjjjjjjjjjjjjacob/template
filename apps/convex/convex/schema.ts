@@ -160,6 +160,7 @@ export default defineSchema({
         domains: v.array(v.string()),
         type: v.string(),
         priority: v.number(),
+        included: v.optional(v.boolean()),
       })
     ),
     technologies: v.object({

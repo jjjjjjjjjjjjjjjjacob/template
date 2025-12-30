@@ -17,6 +17,7 @@ import { Trash2, Star, Image as ImageIcon, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { createInlineImageSyntax } from '@/lib/remark-inline-images';
 import { Id } from '@template/convex/dataModel';
+import { uploadWithProgress } from '@/utils/upload-with-progress';
 
 interface BlogImageManagerProps {
   postId?: Id<'blogPosts'>;
@@ -42,30 +43,50 @@ export function BlogImageManager({
   const removeImageFromPost = useMutation(api.blog.removeImageFromPost);
   const setPostThumbnail = useMutation(api.blog.setPostThumbnail);
 
+  const updateFileProgress = React.useCallback(
+    (file: File, progress: number) => {
+      setUploadFiles((prev) =>
+        prev.map((f) =>
+          f.file === file
+            ? { ...f, progress: Math.min(100, Math.max(0, progress)) }
+            : f
+        )
+      );
+    },
+    []
+  );
+
+  const updateFileStatus = React.useCallback(
+    (file: File, status: FileUploadFile['status'], error?: string) => {
+      setUploadFiles((prev) =>
+        prev.map((f) => (f.file === file ? { ...f, status, error } : f))
+      );
+    },
+    []
+  );
+
   const handleFileUpload = async (files: File[]) => {
     try {
       const uploadedStorageIds: Id<'_storage'>[] = [];
 
       for (const file of files) {
-        // Generate upload URL
+        updateFileStatus(file, 'uploading');
+
         const uploadUrl = await generateUploadUrl();
 
-        // Upload file to Convex storage
-        const result = await fetch(uploadUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': file.type },
-          body: file,
+        const response = await uploadWithProgress({
+          url: uploadUrl,
+          file,
+          onProgress: (progress) => {
+            updateFileProgress(file, progress);
+          },
         });
 
-        if (!result.ok) {
-          throw new Error(`Upload failed: ${result.statusText}`);
-        }
+        updateFileStatus(file, 'completed');
 
-        const response = (await result.json()) as { storageId: Id<'_storage'> };
-        const storageId = response.storageId;
+        const storageId = response.storageId as Id<'_storage'>;
         uploadedStorageIds.push(storageId);
 
-        // Add to post if we have a postId, otherwise update local state
         if (postId) {
           await addImageToPost({ postId, storageId });
         } else {
@@ -74,7 +95,6 @@ export function BlogImageManager({
         }
       }
 
-      // Auto-select first uploaded image as thumbnail if no thumbnail is set
       if (uploadedStorageIds.length > 0 && !thumbnailId) {
         const firstImageId = uploadedStorageIds[0];
         if (postId) {
@@ -88,8 +108,11 @@ export function BlogImageManager({
       toast.success(
         `uploaded ${files.length} image${files.length > 1 ? 's' : ''}`
       );
-      setUploadFiles([]); // Clear upload state
+      setUploadFiles([]);
     } catch {
+      files.forEach((file) => {
+        updateFileStatus(file, 'error', 'upload failed');
+      });
       toast.error('failed to upload images');
     }
   };

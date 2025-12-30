@@ -1,6 +1,6 @@
 import type {
   ResumeProfileRecord,
-  ResumeProjectRecord,
+  LegacyResumeProjectRecord as ResumeProjectRecord,
   ResumeSkillRecord,
 } from './resume';
 

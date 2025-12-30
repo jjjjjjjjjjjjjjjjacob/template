@@ -190,8 +190,22 @@ export default defineSchema({
     role: v.string(),
     company: v.optional(v.string()),
     timeline: v.string(),
-    responsibilities: v.array(v.string()),
+    // DEPRECATED: Use achievements instead. Kept for migration compatibility.
+    responsibilities: v.optional(v.array(v.string())),
     technologies: v.array(v.string()),
+    // NEW: Structured achievements replacing responsibilities
+    achievements: v.optional(
+      v.array(
+        v.object({
+          description: v.string(),
+          impact: v.optional(v.string()),
+          technologies: v.array(v.string()),
+          domains: v.array(v.string()),
+          type: v.string(), // 'architecture', 'development', 'integration', etc.
+          priority: v.number(),
+        })
+      )
+    ),
     order: v.number(),
     published: v.boolean(),
     media: v.array(
@@ -208,7 +222,8 @@ export default defineSchema({
       })
     ),
     thumbnailIndex: v.optional(v.number()),
-    includeInResume: v.boolean(),
+    // DEPRECATED: Will be derived from junction table. Kept for migration.
+    includeInResume: v.optional(v.boolean()),
     resumeProfileSlugs: v.optional(v.array(v.string())),
     createdAt: v.number(),
     updatedAt: v.number(),
@@ -216,4 +231,16 @@ export default defineSchema({
     .index('by_slug', ['slug'])
     .index('by_order', ['order'])
     .index('by_published_order', ['published', 'order']),
+
+  // Junction table linking resume profiles to portfolio projects
+  resume_profile_projects: defineTable({
+    profileSlug: v.string(),
+    projectSlug: v.string(),
+    displayOrder: v.number(),
+    // Indices of achievements to include from portfolio. null/undefined = show all.
+    achievementFilter: v.optional(v.array(v.number())),
+  })
+    .index('by_profile', ['profileSlug'])
+    .index('by_project', ['projectSlug'])
+    .index('by_profile_order', ['profileSlug', 'displayOrder']),
 });

@@ -10,6 +10,15 @@ const mediaValidator = v.object({
   order: v.number(),
 });
 
+const achievementValidator = v.object({
+  description: v.string(),
+  impact: v.optional(v.string()),
+  technologies: v.array(v.string()),
+  domains: v.array(v.string()),
+  type: v.string(),
+  priority: v.number(),
+});
+
 const projectInput = v.object({
   slug: v.string(),
   title: v.string(),
@@ -18,13 +27,16 @@ const projectInput = v.object({
   role: v.string(),
   company: v.optional(v.string()),
   timeline: v.string(),
-  responsibilities: v.array(v.string()),
+  // DEPRECATED: Use achievements instead. Kept for backwards compatibility.
+  responsibilities: v.optional(v.array(v.string())),
   technologies: v.array(v.string()),
+  achievements: v.optional(v.array(achievementValidator)),
   order: v.number(),
   published: v.boolean(),
   media: v.array(mediaValidator),
   thumbnailIndex: v.optional(v.number()),
-  includeInResume: v.boolean(),
+  // DEPRECATED: Will be derived from junction table. Kept for backwards compatibility.
+  includeInResume: v.optional(v.boolean()),
   resumeProfileSlugs: v.optional(v.array(v.string())),
 });
 
@@ -389,19 +401,175 @@ export const getMultipleMediaUrls = query({
 export const listForResume = query({
   args: { profileSlug: v.optional(v.string()) },
   handler: async (ctx, args) => {
-    const projects = await ctx.db
-      .query('portfolio_projects')
-      .withIndex('by_published_order', (q) => q.eq('published', true))
+    if (!args.profileSlug) {
+      const projects = await ctx.db
+        .query('portfolio_projects')
+        .withIndex('by_published_order', (q) => q.eq('published', true))
+        .collect();
+
+      return projects.sort((a, b) => a.order - b.order);
+    }
+
+    const junctions = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile_order', (q) =>
+        q.eq('profileSlug', args.profileSlug!)
+      )
       .collect();
 
-    const resumeProjects = projects.filter((p) => {
-      if (!p.includeInResume) return false;
-      if (args.profileSlug && p.resumeProfileSlugs) {
-        return p.resumeProfileSlugs.includes(args.profileSlug);
-      }
-      return true;
+    const projectSlugs = junctions.map((j) => j.projectSlug);
+
+    const projects = await Promise.all(
+      projectSlugs.map((slug) =>
+        ctx.db
+          .query('portfolio_projects')
+          .withIndex('by_slug', (q) => q.eq('slug', slug))
+          .unique()
+      )
+    );
+
+    return projects.filter(Boolean).sort((a, b) => {
+      const junctionA = junctions.find((j) => j.projectSlug === a!.slug);
+      const junctionB = junctions.find((j) => j.projectSlug === b!.slug);
+      return (junctionA?.displayOrder ?? 0) - (junctionB?.displayOrder ?? 0);
+    });
+  },
+});
+
+export const addAchievement = mutation({
+  args: {
+    projectId: v.id('portfolio_projects'),
+    achievement: achievementValidator,
+  },
+  handler: async (ctx, args) => {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
+      throw new Error('Unauthorized: admin access required');
+    }
+
+    const project = await ctx.db.get(args.projectId);
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    const achievements = project.achievements || [];
+    const newAchievement = {
+      ...args.achievement,
+      priority: args.achievement.priority ?? achievements.length,
+    };
+
+    await ctx.db.patch(args.projectId, {
+      achievements: [...achievements, newAchievement],
+      updatedAt: Date.now(),
     });
 
-    return resumeProjects.sort((a, b) => a.order - b.order);
+    return achievements.length;
+  },
+});
+
+export const updateAchievement = mutation({
+  args: {
+    projectId: v.id('portfolio_projects'),
+    achievementIndex: v.number(),
+    achievement: achievementValidator,
+  },
+  handler: async (ctx, args) => {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
+      throw new Error('Unauthorized: admin access required');
+    }
+
+    const project = await ctx.db.get(args.projectId);
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    const achievements = project.achievements || [];
+    if (
+      args.achievementIndex < 0 ||
+      args.achievementIndex >= achievements.length
+    ) {
+      throw new Error('Achievement not found');
+    }
+
+    const updatedAchievements = [...achievements];
+    updatedAchievements[args.achievementIndex] = args.achievement;
+
+    await ctx.db.patch(args.projectId, {
+      achievements: updatedAchievements,
+      updatedAt: Date.now(),
+    });
+
+    return true;
+  },
+});
+
+export const removeAchievement = mutation({
+  args: {
+    projectId: v.id('portfolio_projects'),
+    achievementIndex: v.number(),
+  },
+  handler: async (ctx, args) => {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
+      throw new Error('Unauthorized: admin access required');
+    }
+
+    const project = await ctx.db.get(args.projectId);
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    const achievements = project.achievements || [];
+    if (
+      args.achievementIndex < 0 ||
+      args.achievementIndex >= achievements.length
+    ) {
+      throw new Error('Achievement not found');
+    }
+
+    const updatedAchievements = achievements
+      .filter((_, i) => i !== args.achievementIndex)
+      .map((a, i) => ({ ...a, priority: i }));
+
+    await ctx.db.patch(args.projectId, {
+      achievements: updatedAchievements,
+      updatedAt: Date.now(),
+    });
+
+    return true;
+  },
+});
+
+export const reorderAchievements = mutation({
+  args: {
+    projectId: v.id('portfolio_projects'),
+    achievementOrder: v.array(v.number()),
+  },
+  handler: async (ctx, args) => {
+    const isAdmin = await AuthUtils.isAdmin(ctx);
+    if (!isAdmin) {
+      throw new Error('Unauthorized: admin access required');
+    }
+
+    const project = await ctx.db.get(args.projectId);
+    if (!project) {
+      throw new Error('Project not found');
+    }
+
+    const achievements = project.achievements || [];
+    const reorderedAchievements = args.achievementOrder.map(
+      (oldIndex, newIndex) => ({
+        ...achievements[oldIndex],
+        priority: newIndex,
+      })
+    );
+
+    await ctx.db.patch(args.projectId, {
+      achievements: reorderedAchievements,
+      updatedAt: Date.now(),
+    });
+
+    return true;
   },
 });

@@ -22,8 +22,11 @@ import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
 import { Route as AdminResumeRouteImport } from './routes/admin/resume'
 import { Route as AdminProjectsRouteImport } from './routes/admin/projects'
 import { Route as AdminBlogRouteImport } from './routes/admin/blog'
+import { Route as AdminResumeIndexRouteImport } from './routes/admin/resume.index'
 import { Route as AdminProjectsIndexRouteImport } from './routes/admin/projects.index'
 import { Route as AdminBlogIndexRouteImport } from './routes/admin/blog.index'
+import { Route as AdminResumeNewRouteImport } from './routes/admin/resume.new'
+import { Route as AdminResumeProfileSlugRouteImport } from './routes/admin/resume.$profileSlug'
 import { Route as AdminProjectsNewRouteImport } from './routes/admin/projects.new'
 import { Route as AdminProjectsProjectIdRouteImport } from './routes/admin/projects.$projectId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog.new'
@@ -94,6 +97,11 @@ const AdminBlogRoute = AdminBlogRouteImport.update({
   path: '/admin/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminResumeIndexRoute = AdminResumeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminResumeRoute,
+} as any)
 const AdminProjectsIndexRoute = AdminProjectsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -104,6 +112,20 @@ const AdminBlogIndexRoute = AdminBlogIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminBlogRoute,
 } as any)
+const AdminResumeNewRoute = AdminResumeNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminResumeRoute,
+} as any).lazy(() =>
+  import('./routes/admin/resume.new.lazy').then((d) => d.Route),
+)
+const AdminResumeProfileSlugRoute = AdminResumeProfileSlugRouteImport.update({
+  id: '/$profileSlug',
+  path: '/$profileSlug',
+  getParentRoute: () => AdminResumeRoute,
+} as any).lazy(() =>
+  import('./routes/admin/resume.$profileSlug.lazy').then((d) => d.Route),
+)
 const AdminProjectsNewRoute = AdminProjectsNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -141,7 +163,7 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof SignUpRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/projects': typeof AdminProjectsRouteWithChildren
-  '/admin/resume': typeof AdminResumeRoute
+  '/admin/resume': typeof AdminResumeRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
@@ -151,8 +173,11 @@ export interface FileRoutesByFullPath {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/projects/$projectId': typeof AdminProjectsProjectIdRoute
   '/admin/projects/new': typeof AdminProjectsNewRoute
+  '/admin/resume/$profileSlug': typeof AdminResumeProfileSlugRoute
+  '/admin/resume/new': typeof AdminResumeNewRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/projects/': typeof AdminProjectsIndexRoute
+  '/admin/resume/': typeof AdminResumeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -160,7 +185,6 @@ export interface FileRoutesByTo {
   '/resume': typeof ResumeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
-  '/admin/resume': typeof AdminResumeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
@@ -170,8 +194,11 @@ export interface FileRoutesByTo {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/projects/$projectId': typeof AdminProjectsProjectIdRoute
   '/admin/projects/new': typeof AdminProjectsNewRoute
+  '/admin/resume/$profileSlug': typeof AdminResumeProfileSlugRoute
+  '/admin/resume/new': typeof AdminResumeNewRoute
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/projects': typeof AdminProjectsIndexRoute
+  '/admin/resume': typeof AdminResumeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -182,7 +209,7 @@ export interface FileRoutesById {
   '/sign-up': typeof SignUpRouteWithChildren
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/projects': typeof AdminProjectsRouteWithChildren
-  '/admin/resume': typeof AdminResumeRoute
+  '/admin/resume': typeof AdminResumeRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
@@ -192,8 +219,11 @@ export interface FileRoutesById {
   '/admin/blog/new': typeof AdminBlogNewRoute
   '/admin/projects/$projectId': typeof AdminProjectsProjectIdRoute
   '/admin/projects/new': typeof AdminProjectsNewRoute
+  '/admin/resume/$profileSlug': typeof AdminResumeProfileSlugRoute
+  '/admin/resume/new': typeof AdminResumeNewRoute
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/projects/': typeof AdminProjectsIndexRoute
+  '/admin/resume/': typeof AdminResumeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -215,8 +245,11 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/projects/$projectId'
     | '/admin/projects/new'
+    | '/admin/resume/$profileSlug'
+    | '/admin/resume/new'
     | '/admin/blog/'
     | '/admin/projects/'
+    | '/admin/resume/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -224,7 +257,6 @@ export interface FileRouteTypes {
     | '/resume'
     | '/sign-in'
     | '/sign-up'
-    | '/admin/resume'
     | '/blog/$slug'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
@@ -234,8 +266,11 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/projects/$projectId'
     | '/admin/projects/new'
+    | '/admin/resume/$profileSlug'
+    | '/admin/resume/new'
     | '/admin/blog'
     | '/admin/projects'
+    | '/admin/resume'
   id:
     | '__root__'
     | '/'
@@ -255,8 +290,11 @@ export interface FileRouteTypes {
     | '/admin/blog/new'
     | '/admin/projects/$projectId'
     | '/admin/projects/new'
+    | '/admin/resume/$profileSlug'
+    | '/admin/resume/new'
     | '/admin/blog/'
     | '/admin/projects/'
+    | '/admin/resume/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -267,7 +305,7 @@ export interface RootRouteChildren {
   SignUpRoute: typeof SignUpRouteWithChildren
   AdminBlogRoute: typeof AdminBlogRouteWithChildren
   AdminProjectsRoute: typeof AdminProjectsRouteWithChildren
-  AdminResumeRoute: typeof AdminResumeRoute
+  AdminResumeRoute: typeof AdminResumeRouteWithChildren
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
@@ -366,6 +404,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/resume/': {
+      id: '/admin/resume/'
+      path: '/'
+      fullPath: '/admin/resume/'
+      preLoaderRoute: typeof AdminResumeIndexRouteImport
+      parentRoute: typeof AdminResumeRoute
+    }
     '/admin/projects/': {
       id: '/admin/projects/'
       path: '/'
@@ -379,6 +424,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/blog/'
       preLoaderRoute: typeof AdminBlogIndexRouteImport
       parentRoute: typeof AdminBlogRoute
+    }
+    '/admin/resume/new': {
+      id: '/admin/resume/new'
+      path: '/new'
+      fullPath: '/admin/resume/new'
+      preLoaderRoute: typeof AdminResumeNewRouteImport
+      parentRoute: typeof AdminResumeRoute
+    }
+    '/admin/resume/$profileSlug': {
+      id: '/admin/resume/$profileSlug'
+      path: '/$profileSlug'
+      fullPath: '/admin/resume/$profileSlug'
+      preLoaderRoute: typeof AdminResumeProfileSlugRouteImport
+      parentRoute: typeof AdminResumeRoute
     }
     '/admin/projects/new': {
       id: '/admin/projects/new'
@@ -465,6 +524,22 @@ const AdminProjectsRouteWithChildren = AdminProjectsRoute._addFileChildren(
   AdminProjectsRouteChildren,
 )
 
+interface AdminResumeRouteChildren {
+  AdminResumeProfileSlugRoute: typeof AdminResumeProfileSlugRoute
+  AdminResumeNewRoute: typeof AdminResumeNewRoute
+  AdminResumeIndexRoute: typeof AdminResumeIndexRoute
+}
+
+const AdminResumeRouteChildren: AdminResumeRouteChildren = {
+  AdminResumeProfileSlugRoute: AdminResumeProfileSlugRoute,
+  AdminResumeNewRoute: AdminResumeNewRoute,
+  AdminResumeIndexRoute: AdminResumeIndexRoute,
+}
+
+const AdminResumeRouteWithChildren = AdminResumeRoute._addFileChildren(
+  AdminResumeRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProjectsRoute: ProjectsRoute,
@@ -473,7 +548,7 @@ const rootRouteChildren: RootRouteChildren = {
   SignUpRoute: SignUpRouteWithChildren,
   AdminBlogRoute: AdminBlogRouteWithChildren,
   AdminProjectsRoute: AdminProjectsRouteWithChildren,
-  AdminResumeRoute: AdminResumeRoute,
+  AdminResumeRoute: AdminResumeRouteWithChildren,
   BlogSlugRoute: BlogSlugRoute,
   AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,

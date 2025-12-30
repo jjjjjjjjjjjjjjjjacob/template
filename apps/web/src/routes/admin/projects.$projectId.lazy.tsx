@@ -9,7 +9,31 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Save, X, Plus, Trash2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  ArrowLeft,
+  Save,
+  X,
+  Plus,
+  Trash2,
+  ChevronUp,
+  ChevronDown,
+  Edit,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/features/auth/hooks/use-admin';
 import {
@@ -17,6 +41,43 @@ import {
   MediaItem,
 } from '@/components/admin/project-media-manager';
 import type { Id } from '@template/convex/dataModel';
+
+interface Achievement {
+  description: string;
+  impact?: string;
+  technologies: string[];
+  domains: string[];
+  type: string;
+  priority: number;
+}
+
+const ACHIEVEMENT_TYPES = [
+  'architecture',
+  'development',
+  'integration',
+  'optimization',
+  'leadership',
+  'design',
+  'testing',
+  'documentation',
+  'other',
+];
+
+const DOMAIN_OPTIONS = [
+  'frontend',
+  'backend',
+  '3d',
+  'realtime',
+  'infrastructure',
+  'payments',
+  'auth',
+  'ai',
+  'ml',
+  'devops',
+  'testing',
+  'video',
+  'search',
+];
 
 export const Route = createLazyFileRoute('/admin/projects/$projectId')({
   component: EditProjectPage,
@@ -45,6 +106,12 @@ function EditProjectPage() {
   const [newResponsibility, setNewResponsibility] = useState('');
   const [technologies, setTechnologies] = useState<string[]>([]);
   const [newTechnology, setNewTechnology] = useState('');
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [editingAchievement, setEditingAchievement] = useState<{
+    index: number | null;
+    data: Achievement;
+  } | null>(null);
+  const [newAchievementTech, setNewAchievementTech] = useState('');
   const [published, setPublished] = useState(false);
   const [media, setMedia] = useState<MediaItem[]>([]);
   const [thumbnailIndex, setThumbnailIndex] = useState<number | undefined>();
@@ -62,12 +129,13 @@ function EditProjectPage() {
       setRole(project.role);
       setCompany(project.company || '');
       setTimeline(project.timeline);
-      setResponsibilities(project.responsibilities);
+      setResponsibilities(project.responsibilities || []);
       setTechnologies(project.technologies);
+      setAchievements(project.achievements || []);
       setPublished(project.published);
       setMedia(project.media as MediaItem[]);
       setThumbnailIndex(project.thumbnailIndex);
-      setIncludeInResume(project.includeInResume);
+      setIncludeInResume(project.includeInResume ?? false);
       setSelectedProfiles(project.resumeProfileSlugs || []);
       setHasChanges(false);
     }
@@ -112,6 +180,125 @@ function EditProjectPage() {
     markChanged();
   };
 
+  const handleOpenAchievementDialog = (index: number | null) => {
+    if (index !== null) {
+      setEditingAchievement({ index, data: { ...achievements[index] } });
+    } else {
+      setEditingAchievement({
+        index: null,
+        data: {
+          description: '',
+          impact: '',
+          technologies: [],
+          domains: [],
+          type: 'development',
+          priority: achievements.length,
+        },
+      });
+    }
+    setNewAchievementTech('');
+  };
+
+  const handleCloseAchievementDialog = () => {
+    setEditingAchievement(null);
+    setNewAchievementTech('');
+  };
+
+  const handleSaveAchievement = () => {
+    if (!editingAchievement || !editingAchievement.data.description.trim()) {
+      toast.error('description is required');
+      return;
+    }
+
+    const newAchievements = [...achievements];
+    if (editingAchievement.index !== null) {
+      newAchievements[editingAchievement.index] = editingAchievement.data;
+    } else {
+      newAchievements.push({
+        ...editingAchievement.data,
+        priority: newAchievements.length,
+      });
+    }
+    setAchievements(newAchievements);
+    markChanged();
+    handleCloseAchievementDialog();
+  };
+
+  const handleRemoveAchievement = (index: number) => {
+    const newAchievements = achievements
+      .filter((_, i) => i !== index)
+      .map((a, i) => ({ ...a, priority: i }));
+    setAchievements(newAchievements);
+    markChanged();
+  };
+
+  const handleMoveAchievement = (index: number, direction: 'up' | 'down') => {
+    if (
+      (direction === 'up' && index === 0) ||
+      (direction === 'down' && index === achievements.length - 1)
+    ) {
+      return;
+    }
+
+    const newAchievements = [...achievements];
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    [newAchievements[index], newAchievements[targetIndex]] = [
+      newAchievements[targetIndex],
+      newAchievements[index],
+    ];
+    newAchievements.forEach((a, i) => {
+      a.priority = i;
+    });
+    setAchievements(newAchievements);
+    markChanged();
+  };
+
+  const handleAddAchievementTech = () => {
+    if (
+      !editingAchievement ||
+      !newAchievementTech.trim() ||
+      editingAchievement.data.technologies.includes(newAchievementTech.trim())
+    ) {
+      return;
+    }
+    setEditingAchievement({
+      ...editingAchievement,
+      data: {
+        ...editingAchievement.data,
+        technologies: [
+          ...editingAchievement.data.technologies,
+          newAchievementTech.trim(),
+        ],
+      },
+    });
+    setNewAchievementTech('');
+  };
+
+  const handleRemoveAchievementTech = (tech: string) => {
+    if (!editingAchievement) return;
+    setEditingAchievement({
+      ...editingAchievement,
+      data: {
+        ...editingAchievement.data,
+        technologies: editingAchievement.data.technologies.filter(
+          (t) => t !== tech
+        ),
+      },
+    });
+  };
+
+  const handleToggleAchievementDomain = (domain: string) => {
+    if (!editingAchievement) return;
+    const currentDomains = editingAchievement.data.domains;
+    const newDomains = currentDomains.includes(domain)
+      ? currentDomains.filter((d) => d !== domain)
+      : [...currentDomains, domain];
+    setEditingAchievement({
+      ...editingAchievement,
+      data: { ...editingAchievement.data, domains: newDomains },
+    });
+  };
+
   const handleSave = async () => {
     if (!title.trim()) {
       toast.error('please enter a title');
@@ -147,13 +334,15 @@ function EditProjectPage() {
           role: role.trim(),
           company: company.trim() || undefined,
           timeline: timeline.trim(),
-          responsibilities,
+          responsibilities:
+            responsibilities.length > 0 ? responsibilities : undefined,
           technologies,
+          achievements: achievements.length > 0 ? achievements : undefined,
           order: project?.order ?? 0,
           published,
           media,
           thumbnailIndex,
-          includeInResume,
+          includeInResume: includeInResume || undefined,
           resumeProfileSlugs:
             includeInResume && selectedProfiles.length > 0
               ? selectedProfiles
@@ -465,6 +654,103 @@ function EditProjectPage() {
           </Card>
 
           <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="font-light">
+                achievements ({achievements.length})
+              </CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleOpenAchievementDialog(null)}
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                add
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {achievements.length === 0 ? (
+                <p className="text-muted-foreground py-4 text-center text-sm">
+                  no achievements yet. add achievements to showcase on resume
+                  profiles.
+                </p>
+              ) : (
+                achievements.map((achievement, index) => (
+                  <div
+                    key={index}
+                    className="bg-muted flex items-start gap-3 rounded-lg p-3"
+                  >
+                    <div className="flex flex-col gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={() => handleMoveAchievement(index, 'up')}
+                        disabled={index === 0}
+                      >
+                        <ChevronUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
+                        onClick={() => handleMoveAchievement(index, 'down')}
+                        disabled={index === achievements.length - 1}
+                      >
+                        <ChevronDown className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm">{achievement.description}</p>
+                      {achievement.impact && (
+                        <p className="text-muted-foreground mt-1 text-xs">
+                          impact: {achievement.impact}
+                        </p>
+                      )}
+                      <div className="mt-2 flex flex-wrap items-center gap-1">
+                        <Badge variant="outline" className="text-xs">
+                          {achievement.type}
+                        </Badge>
+                        {achievement.technologies.slice(0, 3).map((tech) => (
+                          <Badge
+                            key={tech}
+                            variant="secondary"
+                            className="text-xs"
+                          >
+                            {tech}
+                          </Badge>
+                        ))}
+                        {achievement.technologies.length > 3 && (
+                          <span className="text-muted-foreground text-xs">
+                            +{achievement.technologies.length - 3} more
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleOpenAchievementDialog(index)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-destructive hover:bg-destructive hover:text-destructive-foreground h-8 w-8 p-0"
+                        onClick={() => handleRemoveAchievement(index)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
             <CardHeader>
               <CardTitle className="font-light">media</CardTitle>
             </CardHeader>
@@ -571,6 +857,158 @@ function EditProjectPage() {
           </Card>
         </div>
       </div>
+
+      <Dialog
+        open={!!editingAchievement}
+        onOpenChange={handleCloseAchievementDialog}
+      >
+        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingAchievement?.index !== null
+                ? 'edit achievement'
+                : 'add achievement'}
+            </DialogTitle>
+            <DialogDescription>
+              describe what you accomplished and the technologies used
+            </DialogDescription>
+          </DialogHeader>
+
+          {editingAchievement && (
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="achievement-description">description</Label>
+                <Textarea
+                  id="achievement-description"
+                  value={editingAchievement.data.description}
+                  onChange={(e) =>
+                    setEditingAchievement({
+                      ...editingAchievement,
+                      data: {
+                        ...editingAchievement.data,
+                        description: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="what did you accomplish?"
+                  rows={3}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="achievement-impact">impact (optional)</Label>
+                <Input
+                  id="achievement-impact"
+                  value={editingAchievement.data.impact || ''}
+                  onChange={(e) =>
+                    setEditingAchievement({
+                      ...editingAchievement,
+                      data: {
+                        ...editingAchievement.data,
+                        impact: e.target.value,
+                      },
+                    })
+                  }
+                  placeholder="e.g., reduced load time by 40%"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="achievement-type">type</Label>
+                <Select
+                  value={editingAchievement.data.type}
+                  onValueChange={(value) =>
+                    setEditingAchievement({
+                      ...editingAchievement,
+                      data: { ...editingAchievement.data, type: value },
+                    })
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ACHIEVEMENT_TYPES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label>technologies</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={newAchievementTech}
+                    onChange={(e) => setNewAchievementTech(e.target.value)}
+                    placeholder="add a technology..."
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddAchievementTech();
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAddAchievementTech}
+                    disabled={!newAchievementTech.trim()}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {editingAchievement.data.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {editingAchievement.data.technologies.map((tech) => (
+                      <Badge
+                        key={tech}
+                        variant="secondary"
+                        className="cursor-pointer gap-1 pr-1"
+                        onClick={() => handleRemoveAchievementTech(tech)}
+                      >
+                        {tech}
+                        <X className="h-3 w-3" />
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label>domains</Label>
+                <div className="flex flex-wrap gap-2">
+                  {DOMAIN_OPTIONS.map((domain) => (
+                    <Badge
+                      key={domain}
+                      variant={
+                        editingAchievement.data.domains.includes(domain)
+                          ? 'default'
+                          : 'outline'
+                      }
+                      className="cursor-pointer"
+                      onClick={() => handleToggleAchievementDomain(domain)}
+                    >
+                      {domain}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleCloseAchievementDialog}>
+              cancel
+            </Button>
+            <Button onClick={handleSaveAchievement}>
+              {editingAchievement?.index !== null ? 'save' : 'add'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

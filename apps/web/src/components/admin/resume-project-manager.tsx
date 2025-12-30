@@ -10,24 +10,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   GripVertical,
   Plus,
   Trash2,
-  Edit,
+  Settings2,
   ChevronDown,
   ChevronUp,
   Check,
+  ExternalLink,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/utils/tailwind-utils';
-import { AchievementSelector, Achievement } from './achievement-selector';
+import { Link } from '@tanstack/react-router';
 
 interface ResumeProjectManagerProps {
   profileSlug: string;
@@ -36,7 +39,6 @@ interface ResumeProjectManagerProps {
 export function ResumeProjectManager({
   profileSlug,
 }: ResumeProjectManagerProps) {
-  const profileData = useQuery(api.resume.getProfile, { slug: profileSlug });
   const availableProjects = useQuery(api.resume.listAvailableProjects, {
     profileSlug,
   });
@@ -44,37 +46,46 @@ export function ResumeProjectManager({
   const linkProject = useMutation(api.resume.linkProjectToProfile);
   const unlinkProject = useMutation(api.resume.unlinkProjectFromProfile);
   const reorderProjects = useMutation(api.resume.reorderProfileProjects);
-  const updateProject = useMutation(api.resume.updateResumeProject);
+  const updateSettings = useMutation(api.resume.updateProfileProjectSettings);
 
   const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
-  const [editingProjectId, setEditingProjectId] = React.useState<string | null>(
-    null
-  );
+  const [editingProjectSlug, setEditingProjectSlug] = React.useState<
+    string | null
+  >(null);
   const [expandedProjects, setExpandedProjects] = React.useState<Set<string>>(
     new Set()
   );
-  const [editingAchievements, setEditingAchievements] = React.useState<
-    Achievement[] | null
-  >(null);
+  const [selectedAchievements, setSelectedAchievements] = React.useState<
+    number[]
+  >([]);
   const [isSaving, setIsSaving] = React.useState(false);
 
-  const editingProject = profileData?.projects.find(
-    (p) => p.projectId === editingProjectId
+  const editingProject = availableProjects?.linked.find(
+    (p) => p.slug === editingProjectSlug
   );
 
   React.useEffect(() => {
     if (editingProject) {
-      setEditingAchievements(editingProject.achievements);
+      if (
+        editingProject.achievementFilter &&
+        editingProject.achievementFilter.length > 0
+      ) {
+        setSelectedAchievements(editingProject.achievementFilter);
+      } else {
+        setSelectedAchievements(
+          (editingProject.achievements || []).map((_, i) => i)
+        );
+      }
     }
   }, [editingProject]);
 
-  const toggleExpanded = (projectId: string) => {
+  const toggleExpanded = (projectSlug: string) => {
     setExpandedProjects((prev) => {
       const next = new Set(prev);
-      if (next.has(projectId)) {
-        next.delete(projectId);
+      if (next.has(projectSlug)) {
+        next.delete(projectSlug);
       } else {
-        next.add(projectId);
+        next.add(projectSlug);
       }
       return next;
     });
@@ -91,13 +102,13 @@ export function ResumeProjectManager({
     }
   };
 
-  const handleUnlink = async (projectId: string) => {
+  const handleUnlink = async (projectSlug: string) => {
     if (!confirm('remove this project from the resume profile?')) {
       return;
     }
 
     try {
-      await unlinkProject({ profileSlug, projectId });
+      await unlinkProject({ profileSlug, projectSlug });
       toast.success('project unlinked');
     } catch (error) {
       toast.error(
@@ -112,15 +123,16 @@ export function ResumeProjectManager({
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
-    if (draggedIndex === null || draggedIndex === index || !profileData) return;
+    if (draggedIndex === null || draggedIndex === index || !availableProjects)
+      return;
 
-    const newOrder = [...profileData.projects];
+    const newOrder = [...availableProjects.linked];
     const [draggedItem] = newOrder.splice(draggedIndex, 1);
     newOrder.splice(index, 0, draggedItem);
 
     reorderProjects({
       profileSlug,
-      projectOrder: newOrder.map((p) => p.projectId),
+      projectOrder: newOrder.map((p) => p.slug),
     });
 
     setDraggedIndex(index);
@@ -130,24 +142,45 @@ export function ResumeProjectManager({
     setDraggedIndex(null);
   };
 
-  const handleSaveAchievements = async () => {
-    if (!editingProjectId || !editingAchievements) return;
+  const handleToggleAchievement = (index: number) => {
+    setSelectedAchievements((prev) => {
+      if (prev.includes(index)) {
+        return prev.filter((i) => i !== index);
+      }
+      return [...prev, index].sort((a, b) => a - b);
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (!editingProject?.achievements) return;
+    setSelectedAchievements(editingProject.achievements.map((_, i) => i));
+  };
+
+  const handleSelectNone = () => {
+    setSelectedAchievements([]);
+  };
+
+  const handleSaveAchievementFilter = async () => {
+    if (!editingProjectSlug || !editingProject) return;
 
     setIsSaving(true);
     try {
-      await updateProject({
+      const isAllSelected =
+        selectedAchievements.length ===
+        (editingProject.achievements?.length || 0);
+
+      await updateSettings({
         profileSlug,
-        projectId: editingProjectId,
+        projectSlug: editingProjectSlug,
         updates: {
-          achievements: editingAchievements,
+          achievementFilter: isAllSelected ? [] : selectedAchievements,
         },
       });
-      toast.success('achievements updated');
-      setEditingProjectId(null);
-      setEditingAchievements(null);
+      toast.success('achievement filter updated');
+      setEditingProjectSlug(null);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : 'failed to update achievements'
+        error instanceof Error ? error.message : 'failed to update filter'
       );
     } finally {
       setIsSaving(false);
@@ -155,11 +188,33 @@ export function ResumeProjectManager({
   };
 
   const handleCloseDialog = () => {
-    setEditingProjectId(null);
-    setEditingAchievements(null);
+    setEditingProjectSlug(null);
+    setSelectedAchievements([]);
   };
 
-  if (!profileData || !availableProjects) {
+  type LinkedProject = NonNullable<typeof availableProjects>['linked'][0];
+
+  const getDisplayedAchievementsCount = (project: LinkedProject) => {
+    if (!project.achievements) return 0;
+    if (!project.achievementFilter || project.achievementFilter.length === 0) {
+      return project.achievements.length;
+    }
+    return project.achievementFilter.length;
+  };
+
+  type Achievement = NonNullable<LinkedProject['achievements']>[0];
+
+  const getDisplayedAchievements = (project: LinkedProject): Achievement[] => {
+    if (!project.achievements) return [];
+    if (!project.achievementFilter || project.achievementFilter.length === 0) {
+      return project.achievements;
+    }
+    return project.achievementFilter
+      .map((idx: number) => project.achievements![idx])
+      .filter((a): a is Achievement => Boolean(a));
+  };
+
+  if (!availableProjects) {
     return (
       <div className="flex items-center justify-center py-8">
         <div className="border-primary h-6 w-6 animate-spin rounded-full border-b-2" />
@@ -173,21 +228,21 @@ export function ResumeProjectManager({
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-light">
-            linked projects ({profileData.projects.length})
+            linked projects ({availableProjects.linked.length})
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {profileData.projects.length === 0 ? (
+          {availableProjects.linked.length === 0 ? (
             <p className="text-muted-foreground py-4 text-center text-sm">
               no projects linked yet. add projects from the list below.
             </p>
           ) : (
             <div className="space-y-2">
-              {profileData.projects.map((project, index) => (
+              {availableProjects.linked.map((project, index) => (
                 <Collapsible
-                  key={project.projectId}
-                  open={expandedProjects.has(project.projectId)}
-                  onOpenChange={() => toggleExpanded(project.projectId)}
+                  key={project.slug}
+                  open={expandedProjects.has(project.slug)}
+                  onOpenChange={() => toggleExpanded(project.slug)}
                 >
                   <div
                     role="listitem"
@@ -203,7 +258,7 @@ export function ResumeProjectManager({
                     onDragEnd={handleDragEnd}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
-                        toggleExpanded(project.projectId);
+                        toggleExpanded(project.slug);
                       }
                     }}
                   >
@@ -225,15 +280,11 @@ export function ResumeProjectManager({
                           </div>
 
                           <Badge variant="outline" className="shrink-0 text-xs">
-                            {
-                              project.achievements.filter(
-                                (a) => a.included !== false
-                              ).length
-                            }{' '}
-                            / {project.achievements.length} items
+                            {getDisplayedAchievementsCount(project)} /{' '}
+                            {project.achievements?.length || 0} items
                           </Badge>
 
-                          {expandedProjects.has(project.projectId) ? (
+                          {expandedProjects.has(project.slug) ? (
                             <ChevronUp className="text-muted-foreground h-4 w-4 shrink-0" />
                           ) : (
                             <ChevronDown className="text-muted-foreground h-4 w-4 shrink-0" />
@@ -245,16 +296,16 @@ export function ResumeProjectManager({
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => setEditingProjectId(project.projectId)}
+                          onClick={() => setEditingProjectSlug(project.slug)}
                           className="h-8 w-8 p-0"
-                          title="edit achievements"
+                          title="filter achievements"
                         >
-                          <Edit className="h-4 w-4" />
+                          <Settings2 className="h-4 w-4" />
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => handleUnlink(project.projectId)}
+                          onClick={() => handleUnlink(project.slug)}
                           className="text-destructive hover:bg-destructive hover:text-destructive-foreground h-8 w-8 p-0"
                           title="remove"
                         >
@@ -265,12 +316,21 @@ export function ResumeProjectManager({
 
                     <CollapsibleContent>
                       <div className="border-t px-3 py-3">
-                        <p className="text-muted-foreground mb-3 text-xs">
-                          included achievements:
-                        </p>
+                        <div className="mb-3 flex items-center justify-between">
+                          <p className="text-muted-foreground text-xs">
+                            displayed achievements:
+                          </p>
+                          <Link
+                            to="/admin/projects/$projectId"
+                            params={{ projectId: project._id }}
+                            className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-xs transition-colors"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            edit in portfolio
+                          </Link>
+                        </div>
                         <ul className="space-y-1">
-                          {project.achievements
-                            .filter((a) => a.included !== false)
+                          {getDisplayedAchievements(project)
                             .slice(0, 5)
                             .map((achievement, i) => (
                               <li
@@ -283,15 +343,9 @@ export function ResumeProjectManager({
                                 </span>
                               </li>
                             ))}
-                          {project.achievements.filter(
-                            (a) => a.included !== false
-                          ).length > 5 && (
+                          {getDisplayedAchievementsCount(project) > 5 && (
                             <li className="text-muted-foreground text-xs">
-                              +
-                              {project.achievements.filter(
-                                (a) => a.included !== false
-                              ).length - 5}{' '}
-                              more
+                              +{getDisplayedAchievementsCount(project) - 5} more
                             </li>
                           )}
                         </ul>
@@ -344,32 +398,121 @@ export function ResumeProjectManager({
         </CardContent>
       </Card>
 
-      <Dialog open={!!editingProjectId} onOpenChange={handleCloseDialog}>
+      <Dialog open={!!editingProjectSlug} onOpenChange={handleCloseDialog}>
         <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>edit achievements</DialogTitle>
+            <DialogTitle>filter achievements</DialogTitle>
+            <DialogDescription>
+              select which achievements to display on this resume profile.
+              achievements are managed in the portfolio project editor.
+            </DialogDescription>
           </DialogHeader>
-          {editingProject && editingAchievements && (
+          {editingProject && (
             <>
               <div className="py-4">
-                <div className="mb-4">
-                  <p className="font-light">{editingProject.title}</p>
-                  <p className="text-muted-foreground text-sm">
-                    {editingProject.role} • {editingProject.timeline}
-                  </p>
+                <div className="mb-4 flex items-center justify-between">
+                  <div>
+                    <p className="font-light">{editingProject.title}</p>
+                    <p className="text-muted-foreground text-sm">
+                      {editingProject.role} • {editingProject.timeline}
+                    </p>
+                  </div>
+                  <Link
+                    to="/admin/projects/$projectId"
+                    params={{ projectId: editingProject._id }}
+                    className="text-muted-foreground hover:text-foreground flex items-center gap-1 text-sm transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    edit project
+                  </Link>
                 </div>
 
-                <AchievementSelector
-                  achievements={editingAchievements}
-                  onAchievementsChange={setEditingAchievements}
-                />
+                <div className="mb-4 flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={handleSelectAll}>
+                    select all
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSelectNone}
+                  >
+                    select none
+                  </Button>
+                  <span className="text-muted-foreground ml-auto text-sm">
+                    {selectedAchievements.length} /{' '}
+                    {editingProject.achievements?.length || 0} selected
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  {(editingProject.achievements || []).map(
+                    (achievement, index) => (
+                      <div
+                        key={index}
+                        className={cn(
+                          'flex items-start gap-3 rounded-lg border p-3 transition-colors',
+                          selectedAchievements.includes(index)
+                            ? 'border-primary bg-primary/5'
+                            : 'border-muted'
+                        )}
+                      >
+                        <Checkbox
+                          checked={selectedAchievements.includes(index)}
+                          onCheckedChange={() => handleToggleAchievement(index)}
+                          className="mt-0.5"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm">{achievement.description}</p>
+                          {achievement.impact && (
+                            <p className="text-muted-foreground mt-1 text-xs">
+                              impact: {achievement.impact}
+                            </p>
+                          )}
+                          {achievement.technologies.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {achievement.technologies.map((tech) => (
+                                <Badge
+                                  key={tech}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {tech}
+                                </Badge>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {(!editingProject.achievements ||
+                  editingProject.achievements.length === 0) && (
+                  <div className="py-8 text-center">
+                    <p className="text-muted-foreground text-sm">
+                      no achievements found for this project.
+                    </p>
+                    <Link
+                      to="/admin/projects/$projectId"
+                      params={{ projectId: editingProject._id }}
+                      className="text-primary mt-2 inline-flex items-center gap-1 text-sm hover:underline"
+                    >
+                      <Plus className="h-4 w-4" />
+                      add achievements in portfolio
+                    </Link>
+                  </div>
+                )}
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={handleCloseDialog}>
                   cancel
                 </Button>
-                <Button onClick={handleSaveAchievements} disabled={isSaving}>
-                  {isSaving ? 'saving...' : 'save changes'}
+                <Button
+                  onClick={handleSaveAchievementFilter}
+                  disabled={isSaving}
+                >
+                  {isSaving ? 'saving...' : 'save filter'}
                 </Button>
               </DialogFooter>
             </>

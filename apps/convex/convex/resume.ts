@@ -26,6 +26,23 @@ export const listProfiles = query({
   },
 });
 
+const mediaValidator = v.object({
+  type: v.union(v.literal('image'), v.literal('video'), v.literal('iframe')),
+  storageId: v.optional(v.string()),
+  url: v.optional(v.string()),
+  caption: v.optional(v.string()),
+  order: v.number(),
+});
+
+const achievementValidator = v.object({
+  description: v.string(),
+  impact: v.optional(v.string()),
+  technologies: v.array(v.string()),
+  domains: v.array(v.string()),
+  type: v.string(),
+  priority: v.number(),
+});
+
 export const getProfile = query({
   args: {
     slug: v.string(),
@@ -52,7 +69,10 @@ export const getProfile = query({
     projects: v.array(
       v.object({
         projectId: v.string(),
+        slug: v.string(),
         priority: v.number(),
+        displayOrder: v.number(),
+        achievementFilter: v.optional(v.array(v.number())),
         title: v.string(),
         url: v.optional(v.string()),
         company: v.string(),
@@ -61,17 +81,7 @@ export const getProfile = query({
         description: v.string(),
         focusAreas: v.array(v.string()),
         domains: v.array(v.string()),
-        achievements: v.array(
-          v.object({
-            description: v.string(),
-            impact: v.optional(v.string()),
-            technologies: v.array(v.string()),
-            domains: v.array(v.string()),
-            type: v.string(),
-            priority: v.number(),
-            included: v.optional(v.boolean()),
-          })
-        ),
+        achievements: v.array(achievementValidator),
         technologies: v.object({
           frontend: v.array(v.string()),
           backend: v.array(v.string()),
@@ -102,42 +112,209 @@ export const getProfile = query({
       throw new Error(`Resume profile not found for slug: ${args.slug}`);
     }
 
-    const projects = await ctx.db
-      .query('resume_projects')
-      .withIndex('by_profile_priority', (q) => q.eq('profileSlug', args.slug))
+    const junctionRecords = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile_order', (q) => q.eq('profileSlug', args.slug))
       .collect();
+
+    const projectSlugs = junctionRecords.map((j) => j.projectSlug);
+
+    const portfolioProjects = await Promise.all(
+      projectSlugs.map((slug) =>
+        ctx.db
+          .query('portfolio_projects')
+          .withIndex('by_slug', (q) => q.eq('slug', slug))
+          .unique()
+      )
+    );
+
+    const projectPromises = junctionRecords.map(async (junction) => {
+      const portfolio = portfolioProjects.find(
+        (p) => p?.slug === junction.projectSlug
+      );
+      if (!portfolio) return null;
+
+      const allAchievements = portfolio.achievements || [];
+      const filteredAchievements =
+        junction.achievementFilter && junction.achievementFilter.length > 0
+          ? junction.achievementFilter
+              .map((idx) => allAchievements[idx])
+              .filter(Boolean)
+          : allAchievements;
+
+      const sortedAchievements = filteredAchievements.sort(
+        (a, b) => a.priority - b.priority
+      );
+
+      const allDomains = new Set<string>();
+      const allTechFromAchievements = new Set<string>();
+      for (const ach of sortedAchievements) {
+        for (const d of ach.domains) allDomains.add(d);
+        for (const t of ach.technologies) allTechFromAchievements.add(t);
+      }
+
+      const previewItems: string[] = [];
+
+      const sortedMedia = [...portfolio.media].sort(
+        (a, b) => a.order - b.order
+      );
+
+      for (const m of sortedMedia) {
+        if (m.type === 'iframe' && m.url) {
+          previewItems.push(m.url);
+        } else if (m.type === 'video') {
+          if (m.url) {
+            previewItems.push(m.url);
+          } else if (m.storageId) {
+            const url = await ctx.storage.getUrl(m.storageId as never);
+            if (url) previewItems.push(`${url}#video`);
+          }
+        } else if (m.type === 'image') {
+          if (m.url) {
+            previewItems.push(`${m.url}#image`);
+          } else if (m.storageId) {
+            const url = await ctx.storage.getUrl(m.storageId as never);
+            if (url) previewItems.push(`${url}#image`);
+          }
+        }
+      }
+
+      const previews = previewItems;
+
+      return {
+        projectId: portfolio.slug,
+        slug: portfolio.slug,
+        priority: junction.displayOrder,
+        displayOrder: junction.displayOrder,
+        achievementFilter: junction.achievementFilter,
+        title: portfolio.title,
+        url: portfolio.url,
+        company: portfolio.company ?? '',
+        timeline: portfolio.timeline,
+        role: portfolio.role,
+        description: portfolio.description,
+        focusAreas: Array.from(allDomains).slice(0, 5),
+        domains: Array.from(allDomains),
+        achievements: sortedAchievements,
+        technologies: {
+          frontend: portfolio.technologies.filter((t) =>
+            [
+              'react',
+              'vue',
+              'angular',
+              'svelte',
+              'nextjs',
+              'typescript',
+              'javascript',
+              'tailwind',
+              'css',
+              'html',
+              'three.js',
+              'tanstack',
+            ].some((k) => t.toLowerCase().includes(k))
+          ),
+          backend: portfolio.technologies.filter((t) =>
+            [
+              'node',
+              'python',
+              'go',
+              'rust',
+              'java',
+              'ruby',
+              'express',
+              'fastapi',
+              'django',
+              'graphql',
+              'rest',
+              'api',
+              'convex',
+            ].some((k) => t.toLowerCase().includes(k))
+          ),
+          infrastructure: portfolio.technologies.filter((t) =>
+            [
+              'aws',
+              'gcp',
+              'azure',
+              'docker',
+              'kubernetes',
+              'terraform',
+              'cloudflare',
+              'vercel',
+              'netlify',
+              'ci',
+              'cd',
+            ].some((k) => t.toLowerCase().includes(k))
+          ),
+          databases: portfolio.technologies.filter((t) =>
+            [
+              'postgres',
+              'mysql',
+              'mongodb',
+              'redis',
+              'sqlite',
+              'dynamodb',
+              'firebase',
+              'supabase',
+              'sql',
+            ].some((k) => t.toLowerCase().includes(k))
+          ),
+          tools: portfolio.technologies.filter((t) =>
+            [
+              'git',
+              'github',
+              'gitlab',
+              'jira',
+              'figma',
+              'slack',
+              'notion',
+              'linear',
+            ].some((k) => t.toLowerCase().includes(k))
+          ),
+        },
+        previews,
+      };
+    });
+
+    const resolvedProjects = (await Promise.all(projectPromises)).filter(
+      Boolean
+    ) as Array<{
+      projectId: string;
+      slug: string;
+      priority: number;
+      displayOrder: number;
+      achievementFilter?: number[];
+      title: string;
+      url?: string;
+      company: string;
+      timeline: string;
+      role: string;
+      description: string;
+      focusAreas: string[];
+      domains: string[];
+      achievements: Array<{
+        description: string;
+        impact?: string;
+        technologies: string[];
+        domains: string[];
+        type: string;
+        priority: number;
+      }>;
+      technologies: {
+        frontend: string[];
+        backend: string[];
+        infrastructure: string[];
+        databases: string[];
+        tools: string[];
+      };
+      previews: string[];
+    }>;
+
+    const projects = resolvedProjects.sort((a, b) => a.priority - b.priority);
 
     const skills = await ctx.db
       .query('resume_skills')
       .withIndex('by_profile_priority', (q) => q.eq('profileSlug', args.slug))
       .collect();
-
-    const sortedProjects = projects
-      .map((project) => ({
-        projectId: project.projectId,
-        priority: project.priority,
-        title: project.title,
-        url: project.url,
-        company: project.company,
-        timeline: project.timeline,
-        role: project.role,
-        description: project.description,
-        focusAreas: project.focusAreas,
-        domains: project.domains,
-        achievements: [...project.achievements].sort(
-          (a, b) => b.priority - a.priority
-        ),
-        technologies: project.technologies,
-        previews: project.previews,
-      }))
-      .sort((a, b) => {
-        const aHasPreviews = a.previews.length > 0 ? 1 : 0;
-        const bHasPreviews = b.previews.length > 0 ? 1 : 0;
-        if (aHasPreviews !== bHasPreviews) {
-          return bHasPreviews - aHasPreviews;
-        }
-        return b.priority - a.priority;
-      });
 
     return {
       profile: {
@@ -149,7 +326,7 @@ export const getProfile = query({
         contact: profile.contact,
         defaults: profile.defaults,
       },
-      projects: sortedProjects,
+      projects,
       skills: skills.map((skill) => ({
         category: skill.category,
         skills: skill.skills,
@@ -181,38 +358,6 @@ const resumeProfileInput = v.object({
   order: v.number(),
 });
 
-const resumeProjectInput = v.object({
-  projectId: v.string(),
-  priority: v.number(),
-  title: v.string(),
-  url: v.optional(v.string()),
-  company: v.string(),
-  timeline: v.string(),
-  role: v.string(),
-  description: v.string(),
-  focusAreas: v.array(v.string()),
-  domains: v.array(v.string()),
-  achievements: v.array(
-    v.object({
-      description: v.string(),
-      impact: v.optional(v.string()),
-      technologies: v.array(v.string()),
-      domains: v.array(v.string()),
-      type: v.string(),
-      priority: v.number(),
-      included: v.optional(v.boolean()),
-    })
-  ),
-  technologies: v.object({
-    frontend: v.array(v.string()),
-    backend: v.array(v.string()),
-    infrastructure: v.array(v.string()),
-    databases: v.array(v.string()),
-    tools: v.array(v.string()),
-  }),
-  previews: v.array(v.string()),
-});
-
 const resumeSkillInput = v.object({
   priority: v.number(),
   category: v.string(),
@@ -241,36 +386,6 @@ export type ResumeProfileRecord = {
   order: number;
 };
 
-export type ResumeProjectRecord = {
-  projectId: string;
-  priority: number;
-  title: string;
-  url?: string;
-  company: string;
-  timeline: string;
-  role: string;
-  description: string;
-  focusAreas: string[];
-  domains: string[];
-  achievements: Array<{
-    description: string;
-    impact?: string;
-    technologies: string[];
-    domains: string[];
-    type: string;
-    priority: number;
-    included?: boolean;
-  }>;
-  technologies: {
-    frontend: string[];
-    backend: string[];
-    infrastructure: string[];
-    databases: string[];
-    tools: string[];
-  };
-  previews: string[];
-};
-
 export type ResumeSkillRecord = {
   priority: number;
   category: string;
@@ -281,14 +396,12 @@ export type ResumeSkillRecord = {
 
 export type UpsertProfileArgs = {
   profile: ResumeProfileRecord;
-  projects: ResumeProjectRecord[];
+  projects: Array<{
+    projectSlug: string;
+    displayOrder: number;
+    achievementFilter?: number[];
+  }>;
   skills: ResumeSkillRecord[];
-};
-
-export type BulkReplaceProfilesArgs = {
-  profiles: ResumeProfileRecord[];
-  projects: Record<string, ResumeProjectRecord[]>;
-  skills: Record<string, ResumeSkillRecord[]>;
 };
 
 async function requireAdmin(ctx: MutationCtx) {
@@ -307,11 +420,11 @@ async function removeProfile(ctx: MutationCtx, slug: string) {
 
   await ctx.db.delete(existing._id);
 
-  const existingProjects = ctx.db
-    .query('resume_projects')
-    .withIndex('by_profile_priority', (q) => q.eq('profileSlug', slug));
+  const existingJunctions = ctx.db
+    .query('resume_profile_projects')
+    .withIndex('by_profile', (q) => q.eq('profileSlug', slug));
 
-  for await (const doc of existingProjects) {
+  for await (const doc of existingJunctions) {
     await ctx.db.delete(doc._id);
   }
 
@@ -325,15 +438,52 @@ async function removeProfile(ctx: MutationCtx, slug: string) {
 }
 
 async function upsertProfileData(ctx: MutationCtx, args: UpsertProfileArgs) {
-  await removeProfile(ctx, args.profile.slug);
+  const existing = await ctx.db
+    .query('resume_profiles')
+    .withIndex('by_slug', (q) => q.eq('slug', args.profile.slug))
+    .unique();
 
-  await ctx.db.insert('resume_profiles', args.profile);
+  if (existing) {
+    await ctx.db.patch(existing._id, {
+      name: args.profile.name,
+      title: args.profile.title,
+      location: args.profile.location,
+      summary: args.profile.summary,
+      contact: args.profile.contact,
+      defaults: args.profile.defaults,
+      order: args.profile.order,
+    });
+  } else {
+    await ctx.db.insert('resume_profiles', args.profile);
+  }
+
+  const existingJunctions = await ctx.db
+    .query('resume_profile_projects')
+    .withIndex('by_profile', (q) => q.eq('profileSlug', args.profile.slug))
+    .collect();
+
+  for (const junction of existingJunctions) {
+    await ctx.db.delete(junction._id);
+  }
 
   for (const project of args.projects) {
-    await ctx.db.insert('resume_projects', {
+    await ctx.db.insert('resume_profile_projects', {
       profileSlug: args.profile.slug,
-      ...project,
+      projectSlug: project.projectSlug,
+      displayOrder: project.displayOrder,
+      achievementFilter: project.achievementFilter,
     });
+  }
+
+  const existingSkills = await ctx.db
+    .query('resume_skills')
+    .withIndex('by_profile_priority', (q) =>
+      q.eq('profileSlug', args.profile.slug)
+    )
+    .collect();
+
+  for (const skill of existingSkills) {
+    await ctx.db.delete(skill._id);
   }
 
   for (const skill of args.skills) {
@@ -344,41 +494,16 @@ async function upsertProfileData(ctx: MutationCtx, args: UpsertProfileArgs) {
   }
 }
 
-export async function replaceProfilesData(
-  ctx: MutationCtx,
-  args: BulkReplaceProfilesArgs
-) {
-  const slugs = args.profiles.map((profile) => profile.slug);
-
-  for (const slug of slugs) {
-    await removeProfile(ctx, slug);
-  }
-
-  for (const profile of args.profiles) {
-    await ctx.db.insert('resume_profiles', profile);
-
-    const profileProjects = args.projects[profile.slug] ?? [];
-    for (const project of profileProjects) {
-      await ctx.db.insert('resume_projects', {
-        profileSlug: profile.slug,
-        ...project,
-      });
-    }
-
-    const profileSkills = args.skills[profile.slug] ?? [];
-    for (const skill of profileSkills) {
-      await ctx.db.insert('resume_skills', {
-        profileSlug: profile.slug,
-        ...skill,
-      });
-    }
-  }
-}
+const profileProjectInput = v.object({
+  projectSlug: v.string(),
+  displayOrder: v.number(),
+  achievementFilter: v.optional(v.array(v.number())),
+});
 
 export const upsertProfileInternal = internalMutation({
   args: {
     profile: resumeProfileInput,
-    projects: v.array(resumeProjectInput),
+    projects: v.array(profileProjectInput),
     skills: v.array(resumeSkillInput),
   },
   returns: v.null(),
@@ -391,40 +516,13 @@ export const upsertProfileInternal = internalMutation({
 export const upsertProfile = mutation({
   args: {
     profile: resumeProfileInput,
-    projects: v.array(resumeProjectInput),
+    projects: v.array(profileProjectInput),
     skills: v.array(resumeSkillInput),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
     await upsertProfileData(ctx, args);
-    return null;
-  },
-});
-
-export const bulkReplaceProfilesInternal = internalMutation({
-  args: {
-    profiles: v.array(resumeProfileInput),
-    projects: v.record(v.string(), v.array(resumeProjectInput)),
-    skills: v.record(v.string(), v.array(resumeSkillInput)),
-  },
-  returns: v.null(),
-  handler: async (ctx, args) => {
-    await replaceProfilesData(ctx, args);
-    return null;
-  },
-});
-
-export const bulkReplaceProfiles = mutation({
-  args: {
-    profiles: v.array(resumeProfileInput),
-    projects: v.record(v.string(), v.array(resumeProjectInput)),
-    skills: v.record(v.string(), v.array(resumeSkillInput)),
-  },
-  returns: v.null(),
-  handler: async (ctx, args) => {
-    await requireAdmin(ctx);
-    await replaceProfilesData(ctx, args);
     return null;
   },
 });
@@ -466,8 +564,10 @@ export const listAvailableProjects = query({
         description: v.string(),
         company: v.optional(v.string()),
         timeline: v.string(),
-        responsibilities: v.array(v.string()),
         technologies: v.array(v.string()),
+        achievements: v.optional(v.array(achievementValidator)),
+        displayOrder: v.number(),
+        achievementFilter: v.optional(v.array(v.number())),
       })
     ),
     available: v.array(
@@ -479,8 +579,8 @@ export const listAvailableProjects = query({
         description: v.string(),
         company: v.optional(v.string()),
         timeline: v.string(),
-        responsibilities: v.array(v.string()),
         technologies: v.array(v.string()),
+        achievements: v.optional(v.array(achievementValidator)),
       })
     ),
   }),
@@ -490,37 +590,49 @@ export const listAvailableProjects = query({
       .withIndex('by_published_order', (q) => q.eq('published', true))
       .collect();
 
-    const existingResumeProjects = await ctx.db
-      .query('resume_projects')
-      .withIndex('by_profile_priority', (q) =>
-        q.eq('profileSlug', args.profileSlug)
-      )
+    const junctions = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile', (q) => q.eq('profileSlug', args.profileSlug))
       .collect();
 
-    const linkedProjectIds = new Set(
-      existingResumeProjects.map((p) => p.projectId)
-    );
+    const linkedSlugs = new Set(junctions.map((j) => j.projectSlug));
+    const junctionMap = new Map(junctions.map((j) => [j.projectSlug, j]));
 
-    const mapProject = (p: (typeof portfolioProjects)[0]) => ({
-      _id: p._id,
-      slug: p.slug,
-      title: p.title,
-      role: p.role,
-      description: p.description,
-      company: p.company,
-      timeline: p.timeline,
-      responsibilities: p.responsibilities,
-      technologies: p.technologies,
-    });
+    const linked = portfolioProjects
+      .filter((p) => linkedSlugs.has(p.slug))
+      .map((p) => {
+        const junction = junctionMap.get(p.slug)!;
+        return {
+          _id: p._id,
+          slug: p.slug,
+          title: p.title,
+          role: p.role,
+          description: p.description,
+          company: p.company,
+          timeline: p.timeline,
+          technologies: p.technologies,
+          achievements: p.achievements,
+          displayOrder: junction.displayOrder,
+          achievementFilter: junction.achievementFilter,
+        };
+      })
+      .sort((a, b) => a.displayOrder - b.displayOrder);
 
-    return {
-      linked: portfolioProjects
-        .filter((p) => linkedProjectIds.has(p.slug))
-        .map(mapProject),
-      available: portfolioProjects
-        .filter((p) => !linkedProjectIds.has(p.slug))
-        .map(mapProject),
-    };
+    const available = portfolioProjects
+      .filter((p) => !linkedSlugs.has(p.slug))
+      .map((p) => ({
+        _id: p._id,
+        slug: p.slug,
+        title: p.title,
+        role: p.role,
+        description: p.description,
+        company: p.company,
+        timeline: p.timeline,
+        technologies: p.technologies,
+        achievements: p.achievements,
+      }));
+
+    return { linked, available };
   },
 });
 
@@ -542,62 +654,28 @@ export const linkProjectToProfile = mutation({
       throw new Error('portfolio project not found');
     }
 
-    const existingProjects = await ctx.db
-      .query('resume_projects')
-      .withIndex('by_profile_priority', (q) =>
-        q.eq('profileSlug', args.profileSlug)
-      )
+    const existingJunction = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile', (q) => q.eq('profileSlug', args.profileSlug))
       .collect();
 
-    const existingLink = existingProjects.find(
-      (p) => p.projectId === args.portfolioProjectSlug
+    const alreadyLinked = existingJunction.find(
+      (j) => j.projectSlug === args.portfolioProjectSlug
     );
-    if (existingLink) {
+    if (alreadyLinked) {
       throw new Error('project already linked to this profile');
     }
 
-    const maxPriority = existingProjects.reduce(
-      (max, p) => Math.max(max, p.priority),
+    const maxOrder = existingJunction.reduce(
+      (max, j) => Math.max(max, j.displayOrder),
       0
     );
 
-    await ctx.db.insert('resume_projects', {
+    await ctx.db.insert('resume_profile_projects', {
       profileSlug: args.profileSlug,
-      projectId: portfolioProject.slug,
-      priority: maxPriority + 1,
-      title: portfolioProject.title,
-      url: portfolioProject.url,
-      company: portfolioProject.company || '',
-      timeline: portfolioProject.timeline,
-      role: portfolioProject.role,
-      description: portfolioProject.description,
-      focusAreas: [],
-      domains: [],
-      achievements: portfolioProject.responsibilities.map((r, i) => ({
-        description: r,
-        technologies: [],
-        domains: [],
-        type: 'development',
-        priority: portfolioProject.responsibilities.length - i,
-        included: true,
-      })),
-      technologies: {
-        frontend: [],
-        backend: [],
-        infrastructure: [],
-        databases: [],
-        tools: portfolioProject.technologies,
-      },
-      previews: [],
-    });
-
-    const newSlugs = [
-      ...(portfolioProject.resumeProfileSlugs || []),
-      args.profileSlug,
-    ];
-    await ctx.db.patch(portfolioProject._id, {
-      resumeProfileSlugs: newSlugs,
-      includeInResume: true,
+      projectSlug: args.portfolioProjectSlug,
+      displayOrder: maxOrder + 1,
+      achievementFilter: undefined,
     });
 
     return null;
@@ -607,40 +685,21 @@ export const linkProjectToProfile = mutation({
 export const unlinkProjectFromProfile = mutation({
   args: {
     profileSlug: v.string(),
-    projectId: v.string(),
+    projectSlug: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
 
-    const resumeProjects = await ctx.db
-      .query('resume_projects')
-      .withIndex('by_profile_priority', (q) =>
-        q.eq('profileSlug', args.profileSlug)
-      )
+    const junctions = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile', (q) => q.eq('profileSlug', args.profileSlug))
       .collect();
 
-    const resumeProject = resumeProjects.find(
-      (p) => p.projectId === args.projectId
-    );
+    const junction = junctions.find((j) => j.projectSlug === args.projectSlug);
 
-    if (resumeProject) {
-      await ctx.db.delete(resumeProject._id);
-    }
-
-    const portfolioProject = await ctx.db
-      .query('portfolio_projects')
-      .withIndex('by_slug', (q) => q.eq('slug', args.projectId))
-      .unique();
-
-    if (portfolioProject && portfolioProject.resumeProfileSlugs) {
-      const newSlugs = portfolioProject.resumeProfileSlugs.filter(
-        (s) => s !== args.profileSlug
-      );
-      await ctx.db.patch(portfolioProject._id, {
-        resumeProfileSlugs: newSlugs.length > 0 ? newSlugs : undefined,
-        includeInResume: newSlugs.length > 0,
-      });
+    if (junction) {
+      await ctx.db.delete(junction._id);
     }
 
     return null;
@@ -656,21 +715,268 @@ export const reorderProfileProjects = mutation({
   handler: async (ctx, args) => {
     await requireAdmin(ctx);
 
-    const projects = await ctx.db
-      .query('resume_projects')
-      .withIndex('by_profile_priority', (q) =>
-        q.eq('profileSlug', args.profileSlug)
-      )
+    const junctions = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile', (q) => q.eq('profileSlug', args.profileSlug))
       .collect();
 
-    for (const project of projects) {
-      const index = args.projectOrder.indexOf(project.projectId);
+    for (const junction of junctions) {
+      const index = args.projectOrder.indexOf(junction.projectSlug);
       if (index !== -1) {
-        const newPriority = args.projectOrder.length - index;
-        await ctx.db.patch(project._id, { priority: newPriority });
+        await ctx.db.patch(junction._id, { displayOrder: index + 1 });
       }
     }
 
+    return null;
+  },
+});
+
+export const updateProfileProjectSettings = mutation({
+  args: {
+    profileSlug: v.string(),
+    projectSlug: v.string(),
+    updates: v.object({
+      displayOrder: v.optional(v.number()),
+      achievementFilter: v.optional(v.array(v.number())),
+    }),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+
+    const junctions = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile', (q) => q.eq('profileSlug', args.profileSlug))
+      .collect();
+
+    const junction = junctions.find((j) => j.projectSlug === args.projectSlug);
+
+    if (!junction) {
+      throw new Error('project not linked to this profile');
+    }
+
+    const updates: Partial<{
+      displayOrder: number;
+      achievementFilter: number[] | undefined;
+    }> = {};
+
+    if (args.updates.displayOrder !== undefined) {
+      updates.displayOrder = args.updates.displayOrder;
+    }
+    if (args.updates.achievementFilter !== undefined) {
+      updates.achievementFilter = args.updates.achievementFilter;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      await ctx.db.patch(junction._id, updates);
+    }
+
+    return null;
+  },
+});
+
+export const getProfileProject = query({
+  args: {
+    profileSlug: v.string(),
+    projectSlug: v.string(),
+  },
+  returns: v.union(
+    v.null(),
+    v.object({
+      slug: v.string(),
+      title: v.string(),
+      url: v.optional(v.string()),
+      company: v.optional(v.string()),
+      timeline: v.string(),
+      role: v.string(),
+      description: v.string(),
+      technologies: v.array(v.string()),
+      achievements: v.optional(v.array(achievementValidator)),
+      media: v.array(mediaValidator),
+      displayOrder: v.number(),
+      achievementFilter: v.optional(v.array(v.number())),
+    })
+  ),
+  handler: async (ctx, args) => {
+    const junction = await ctx.db
+      .query('resume_profile_projects')
+      .withIndex('by_profile', (q) => q.eq('profileSlug', args.profileSlug))
+      .collect()
+      .then((junctions) =>
+        junctions.find((j) => j.projectSlug === args.projectSlug)
+      );
+
+    if (!junction) {
+      return null;
+    }
+
+    const portfolio = await ctx.db
+      .query('portfolio_projects')
+      .withIndex('by_slug', (q) => q.eq('slug', args.projectSlug))
+      .unique();
+
+    if (!portfolio) {
+      return null;
+    }
+
+    return {
+      slug: portfolio.slug,
+      title: portfolio.title,
+      url: portfolio.url,
+      company: portfolio.company,
+      timeline: portfolio.timeline,
+      role: portfolio.role,
+      description: portfolio.description,
+      technologies: portfolio.technologies,
+      achievements: portfolio.achievements,
+      media: portfolio.media,
+      displayOrder: junction.displayOrder,
+      achievementFilter: junction.achievementFilter,
+    };
+  },
+});
+
+// DEPRECATED: Legacy functions for backwards compatibility during migration
+// These will be removed after migration is complete
+
+const legacyResumeProjectInput = v.object({
+  projectId: v.string(),
+  priority: v.number(),
+  title: v.string(),
+  url: v.optional(v.string()),
+  company: v.string(),
+  timeline: v.string(),
+  role: v.string(),
+  description: v.string(),
+  focusAreas: v.array(v.string()),
+  domains: v.array(v.string()),
+  achievements: v.array(
+    v.object({
+      description: v.string(),
+      impact: v.optional(v.string()),
+      technologies: v.array(v.string()),
+      domains: v.array(v.string()),
+      type: v.string(),
+      priority: v.number(),
+      included: v.optional(v.boolean()),
+    })
+  ),
+  technologies: v.object({
+    frontend: v.array(v.string()),
+    backend: v.array(v.string()),
+    infrastructure: v.array(v.string()),
+    databases: v.array(v.string()),
+    tools: v.array(v.string()),
+  }),
+  previews: v.array(v.string()),
+});
+
+export type LegacyResumeProjectRecord = {
+  projectId: string;
+  priority: number;
+  title: string;
+  url?: string;
+  company: string;
+  timeline: string;
+  role: string;
+  description: string;
+  focusAreas: string[];
+  domains: string[];
+  achievements: Array<{
+    description: string;
+    impact?: string;
+    technologies: string[];
+    domains: string[];
+    type: string;
+    priority: number;
+    included?: boolean;
+  }>;
+  technologies: {
+    frontend: string[];
+    backend: string[];
+    infrastructure: string[];
+    databases: string[];
+    tools: string[];
+  };
+  previews: string[];
+};
+
+export type LegacyUpsertProfileArgs = {
+  profile: ResumeProfileRecord;
+  projects: LegacyResumeProjectRecord[];
+  skills: ResumeSkillRecord[];
+};
+
+async function legacyUpsertProfileData(
+  ctx: MutationCtx,
+  args: LegacyUpsertProfileArgs
+) {
+  const existing = await ctx.db
+    .query('resume_profiles')
+    .withIndex('by_slug', (q) => q.eq('slug', args.profile.slug))
+    .unique();
+
+  if (existing) {
+    await ctx.db.patch(existing._id, {
+      name: args.profile.name,
+      title: args.profile.title,
+      location: args.profile.location,
+      summary: args.profile.summary,
+      contact: args.profile.contact,
+      defaults: args.profile.defaults,
+      order: args.profile.order,
+    });
+  } else {
+    await ctx.db.insert('resume_profiles', args.profile);
+  }
+
+  const existingProjects = await ctx.db
+    .query('resume_projects')
+    .withIndex('by_profile_priority', (q) =>
+      q.eq('profileSlug', args.profile.slug)
+    )
+    .collect();
+
+  for (const project of existingProjects) {
+    await ctx.db.delete(project._id);
+  }
+
+  for (const project of args.projects) {
+    await ctx.db.insert('resume_projects', {
+      profileSlug: args.profile.slug,
+      ...project,
+    });
+  }
+
+  const existingSkills = await ctx.db
+    .query('resume_skills')
+    .withIndex('by_profile_priority', (q) =>
+      q.eq('profileSlug', args.profile.slug)
+    )
+    .collect();
+
+  for (const skill of existingSkills) {
+    await ctx.db.delete(skill._id);
+  }
+
+  for (const skill of args.skills) {
+    await ctx.db.insert('resume_skills', {
+      profileSlug: args.profile.slug,
+      ...skill,
+    });
+  }
+}
+
+export const legacyUpsertProfile = mutation({
+  args: {
+    profile: resumeProfileInput,
+    projects: v.array(legacyResumeProjectInput),
+    skills: v.array(resumeSkillInput),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+    await legacyUpsertProfileData(ctx, args);
     return null;
   },
 });

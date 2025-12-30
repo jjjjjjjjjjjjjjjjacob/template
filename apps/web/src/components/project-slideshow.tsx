@@ -8,7 +8,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { trackEvents } from '@/lib/track-events';
 
 interface ProjectSlideshowProps {
@@ -20,6 +20,30 @@ interface ProjectSlideshowProps {
   isMobile?: boolean;
 }
 
+function isVideoUrl(url: string): boolean {
+  if (url.endsWith('#video')) return true;
+  const videoExtensions = ['.mov', '.mp4', '.webm', '.ogg'];
+  return videoExtensions.some((ext) => url.toLowerCase().includes(ext));
+}
+
+function isImageUrl(url: string): boolean {
+  if (url.endsWith('#image')) return true;
+  const imageExtensions = [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.gif',
+    '.webp',
+    '.svg',
+    '.avif',
+  ];
+  return imageExtensions.some((ext) => url.toLowerCase().includes(ext));
+}
+
+function getCleanUrl(url: string): string {
+  return url.replace(/#(video|image)$/, '');
+}
+
 function ProjectSlideshow({
   previews,
   title,
@@ -28,15 +52,33 @@ function ProjectSlideshow({
   slideDirection = 'left-to-right',
   isMobile = false,
 }: ProjectSlideshowProps) {
-  const [currentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [dialogLoading, setDialogLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleMobileIframeClick = () => {
-    if (isMobile) {
+  const currentPreview = previews[currentIndex];
+  const isVideo = isVideoUrl(currentPreview);
+  const isImage = isImageUrl(currentPreview);
+  const cleanUrl = getCleanUrl(currentPreview);
+  const hasMultiplePreviews = previews.length > 1;
+
+  const goToNext = () => {
+    setIsLoading(true);
+    setCurrentIndex((prev) => (prev + 1) % previews.length);
+    trackEvents.projectSlideshowInteracted(title, 'next', currentIndex);
+  };
+
+  const goToPrev = () => {
+    setIsLoading(true);
+    setCurrentIndex((prev) => (prev - 1 + previews.length) % previews.length);
+    trackEvents.projectSlideshowInteracted(title, 'previous', currentIndex);
+  };
+
+  const handleMobileClick = () => {
+    if (isMobile && !isVideo) {
       trackEvents.projectSlideshowInteracted(
         title,
         'dialog_opened',
@@ -56,11 +98,11 @@ function ProjectSlideshow({
     }
   };
 
-  const handleIframeLoad = () => {
+  const handleLoad = () => {
     setIsLoading(false);
   };
 
-  const handleDialogIframeLoad = () => {
+  const handleDialogLoad = () => {
     setDialogLoading(false);
   };
 
@@ -73,20 +115,17 @@ function ProjectSlideshow({
         `drop-shadow-muted/10 relative min-h-96 overflow-hidden transition perspective-dramatic`,
         className
       )}
+      style={{ overflowAnchor: 'none' }}
       role="region"
-      tabIndex={0}
+      tabIndex={-1}
       onMouseEnter={() => handleHover(true)}
       onMouseLeave={() => handleHover(false)}
-      onFocus={() => handleHover(true)}
-      onBlur={() => handleHover(false)}
     >
       <div
         className={cn(
           'relative h-full overflow-hidden opacity-100 transform-3d',
           'transition-transform-smooth',
-          // Mobile state - no transforms
           isMobile && 'transform-none',
-          // Desktop default states
           !isMobile &&
             !isHovered &&
             slideDirection === 'left-to-right' &&
@@ -95,48 +134,121 @@ function ProjectSlideshow({
             !isHovered &&
             slideDirection === 'right-to-left' &&
             'slideshow-right-default',
-          // Desktop hover state (should override default)
           !isMobile && isHovered && 'slideshow-hover'
         )}
       >
-        {/* Skeleton loader */}
-        {isLoading && <Skeleton className="h-full w-full rounded-2xl" />}
+        {isLoading && <Skeleton className="absolute inset-0 rounded-2xl" />}
 
-        <iframe
-          src={previews[currentIndex]}
-          className={cn(
-            'bg-background h-full w-full overflow-y-hidden rounded-2xl border-0 shadow-2xl transition-opacity duration-300',
-            isLoading ? 'opacity-0' : 'opacity-100'
-          )}
-          title={`${title} preview - ${currentIndex + 1}`}
-          loading="lazy"
-          scrolling=""
-          onLoad={handleIframeLoad}
-          onMouseEnter={() => {
-            if (!isMobile) {
-              trackEvents.projectSlideshowInteracted(
-                title,
-                'hover',
-                currentIndex
-              );
-            }
-          }}
-          style={{
-            pointerEvents: isMobile ? 'none' : 'auto',
-          }}
-        />
+        {isVideo ? (
+          <video
+            src={cleanUrl}
+            className={cn(
+              'bg-background absolute inset-0 h-full w-full rounded-2xl object-cover shadow-2xl transition-opacity duration-300',
+              isLoading ? 'opacity-0' : 'opacity-100'
+            )}
+            autoPlay
+            loop
+            muted
+            playsInline
+            onLoadedData={handleLoad}
+          />
+        ) : isImage ? (
+          <img
+            src={cleanUrl}
+            alt={`${title} preview - ${currentIndex + 1}`}
+            className={cn(
+              'bg-background absolute inset-0 h-full w-full rounded-2xl object-cover shadow-2xl transition-opacity duration-300',
+              isLoading ? 'opacity-0' : 'opacity-100'
+            )}
+            onLoad={handleLoad}
+          />
+        ) : (
+          <iframe
+            src={cleanUrl}
+            className={cn(
+              'bg-background absolute inset-0 h-full w-full overflow-y-hidden rounded-2xl border-0 shadow-2xl transition-opacity duration-300',
+              isLoading ? 'opacity-0' : 'opacity-100'
+            )}
+            title={`${title} preview - ${currentIndex + 1}`}
+            loading="lazy"
+            scrolling=""
+            onLoad={handleLoad}
+            onMouseEnter={() => {
+              if (!isMobile) {
+                trackEvents.projectSlideshowInteracted(
+                  title,
+                  'hover',
+                  currentIndex
+                );
+              }
+            }}
+            style={{
+              pointerEvents: isMobile ? 'none' : 'auto',
+            }}
+          />
+        )}
 
-        {/* Mobile overlay to open dialog */}
-        {isMobile && (
+        {isMobile && !isVideo && (
           <button
-            onClick={handleMobileIframeClick}
+            onClick={handleMobileClick}
             className="absolute inset-0 z-10 cursor-pointer bg-transparent"
             aria-label={`Open ${title} preview in dialog`}
           />
         )}
+
+        {hasMultiplePreviews && (
+          <>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                goToPrev();
+              }}
+              className="bg-background/80 hover:bg-background absolute top-1/2 left-2 z-20 -translate-y-1/2 rounded-full p-2 shadow-lg transition-colors"
+              aria-label="Previous preview"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                goToNext();
+              }}
+              className="bg-background/80 hover:bg-background absolute top-1/2 right-2 z-20 -translate-y-1/2 rounded-full p-2 shadow-lg transition-colors"
+              aria-label="Next preview"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+            <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+              {previews.map((_, idx) => (
+                <button
+                  type="button"
+                  key={idx}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    (e.currentTarget as HTMLButtonElement).blur();
+                    if (idx !== currentIndex) {
+                      setCurrentIndex(idx);
+                    }
+                  }}
+                  className={cn(
+                    'h-2 w-2 rounded-full transition-all focus:outline-none',
+                    idx === currentIndex
+                      ? 'bg-foreground w-4'
+                      : 'bg-foreground/40 hover:bg-foreground/60'
+                  )}
+                  aria-label={`Go to preview ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Mobile dialog for full iframe interaction */}
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent
           className="max-h-[90vh] max-w-[95vw] p-0"
@@ -160,19 +272,44 @@ function ProjectSlideshow({
             </DialogDescription>
           </DialogHeader>
           <div className="relative h-[70vh] w-full px-4 pb-4">
-            {/* Dialog skeleton loader */}
             {dialogLoading && <Skeleton className="h-full w-full rounded-lg" />}
 
-            <iframe
-              src={previews[currentIndex]}
-              className={cn(
-                'bg-background h-full w-full rounded-lg border shadow-lg transition-opacity duration-300',
-                dialogLoading ? 'opacity-0' : 'opacity-100'
-              )}
-              title={`${title} preview - ${currentIndex + 1}`}
-              loading="lazy"
-              onLoad={handleDialogIframeLoad}
-            />
+            {isVideo ? (
+              <video
+                src={cleanUrl}
+                className={cn(
+                  'bg-background h-full w-full rounded-lg object-contain shadow-lg transition-opacity duration-300',
+                  dialogLoading ? 'opacity-0' : 'opacity-100'
+                )}
+                autoPlay
+                loop
+                muted
+                playsInline
+                controls
+                onLoadedData={handleDialogLoad}
+              />
+            ) : isImage ? (
+              <img
+                src={cleanUrl}
+                alt={`${title} preview - ${currentIndex + 1}`}
+                className={cn(
+                  'bg-background h-full w-full rounded-lg object-contain shadow-lg transition-opacity duration-300',
+                  dialogLoading ? 'opacity-0' : 'opacity-100'
+                )}
+                onLoad={handleDialogLoad}
+              />
+            ) : (
+              <iframe
+                src={cleanUrl}
+                className={cn(
+                  'bg-background h-full w-full rounded-lg border shadow-lg transition-opacity duration-300',
+                  dialogLoading ? 'opacity-0' : 'opacity-100'
+                )}
+                title={`${title} preview - ${currentIndex + 1}`}
+                loading="lazy"
+                onLoad={handleDialogLoad}
+              />
+            )}
           </div>
         </DialogContent>
       </Dialog>

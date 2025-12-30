@@ -4,6 +4,11 @@ import { useQuery } from 'convex/react';
 import { api } from '@template/convex';
 import { ExternalLink } from 'lucide-react';
 
+import mobileViewerVideo from '@/assets/mobile-viewer-model-switch.mov';
+import batchUploaderVideo from '@/assets/batch-uploader.mov';
+import autoRigVideo from '@/assets/auto-rig.mov';
+import modelSwitchVideo from '@/assets/animation-model-switch.mov';
+
 const ProjectSlideshow = lazy(() => import('@/components/project-slideshow'));
 const ProjectThumbnails = lazy(
   () => import('@/components/projects/project-thumbnails')
@@ -25,100 +30,41 @@ interface Project {
   previews: string[];
 }
 
-const fallbackProjects: Project[] = [
-  {
-    id: 'vibechecc',
-    title: 'vibechecc.io',
-    url: 'https://vibechecc.io',
-    description:
-      'Social platform for sharing life experiences ("vibes") with emoji ratings and community interaction. Features real-time updates and modern React architecture.',
-    role: 'Founder & Lead Developer',
-    responsibilities: [
-      'Architected real-time social platform with TanStack Start and Convex backend',
-      'Designed innovative emoji rating system replacing traditional star ratings',
-      'Implemented real-time subscriptions with optimistic UI updates',
-      'Built comprehensive infrastructure with Terraform and Cloudflare Workers',
-      'Created extensive test suite with Vitest and Convex testing framework',
-    ],
-    technologies: [
-      'TanStack Start',
-      'TanStack Router',
-      'TanStack Query',
-      'Convex',
-      'Clerk',
-      'Node.js',
-      'Cloudflare Workers',
-      'Terraform',
-    ],
-    timeline: '2025 - present',
-    previews: ['https://vibechecc.io'],
-  },
-  {
-    id: 'heat-tech',
-    title: 'heat.tech',
-    url: 'https://heat.tech/search/animations/05867c5d-0542-48d1-bc7a-7f1f81ffee73',
-    description:
-      'Motion capture marketplace backed by a16z and Samsung Next, connecting viral movements with gaming. Architected full-stack TypeScript ecosystem with real-time 3D animation processing and cross-platform plugin system.',
-    role: 'Senior Full-Stack Developer & Technical Lead',
-    responsibilities: [
-      'Architected monorepo platform with real-time 3D animation marketplace using Nx workspace',
-      'Built advanced 3D viewer with Three.js/React Three Fiber for real-time animation preview',
-      'Integrated Stripe marketplace with subscription management and creator payout system',
-      'Developed cross-platform plugin ecosystem for Blender, Unity, Unreal Engine, and Maya',
-      'Built Qt desktop application with custom web view layer to unify interaction patterns',
-      'Trained and deployed armature-generating ML model using PyTorch and ONNX Runtime',
-      "Led technical integration with Move AI's beta API program",
-      'Designed and implemented AWS infrastructure with Terraform IaC',
-    ],
-    technologies: [
-      'React',
-      'Three.js',
-      'React Three Fiber',
-      'NestJS',
-      'TypeORM',
-      'PostgreSQL',
-      'AWS ECS',
-      'Terraform',
-      'Python',
-      'C++',
-      'Qt',
-      'PyTorch',
-    ],
-    timeline: '2022 - 2025',
-    previews: ['https://heat.tech'],
-  },
-  {
-    id: 'freelance',
-    title: 'Freelance Development',
-    url: '',
-    description:
-      'Providing full-stack development services to startups across healthtech, hospitality, creative industries, and early-stage ventures.',
-    role: 'Freelance Full-Stack Developer',
-    responsibilities: [
-      'Built platform for Biogenesis, a healthtech startup connecting clinical trial facilities with pharmaceutical companies',
-      "Developed event management platform for Jean's, a New York restaurant",
-      'Created portfolio websites for director and copywriter Madeline Leary',
-      'Built ticket and job management application for Wonder, streamlining workflow coordination',
-    ],
-    technologies: [
-      'React',
-      'Next.js',
-      'TypeScript',
-      'Node.js',
-      'PostgreSQL',
-      'Tailwind CSS',
-    ],
-    timeline: 'March 2021 - present',
-    previews: [],
-  },
+const HEAT_VIDEOS = [
+  mobileViewerVideo,
+  batchUploaderVideo,
+  autoRigVideo,
+  modelSwitchVideo,
 ];
+
+function getPreviewsForProject(
+  slug: string,
+  title: string,
+  media: { type: string; url?: string }[]
+): string[] {
+  const normalizedSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '');
+  const normalizedTitle = title.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  if (normalizedSlug.includes('heat') || normalizedTitle.includes('heat')) {
+    return HEAT_VIDEOS;
+  }
+
+  return media
+    .filter((m) => (m.type === 'video' || m.type === 'iframe') && m.url)
+    .map((m) => m.url as string)
+    .concat(
+      media
+        .filter((m) => m.type === 'image' && m.url)
+        .map((m) => m.url as string)
+    );
+}
 
 function useProjects(): Project[] {
   const dbProjects = useQuery(api.projects.list, { includeUnpublished: false });
 
   return useMemo(() => {
-    if (!dbProjects || dbProjects.length === 0) {
-      return fallbackProjects;
+    if (!dbProjects) {
+      return [];
     }
 
     return dbProjects.map((p) => ({
@@ -127,17 +73,10 @@ function useProjects(): Project[] {
       url: p.url || '',
       description: p.description,
       role: p.role,
-      responsibilities: p.responsibilities,
+      responsibilities: p.responsibilities ?? [],
       technologies: p.technologies,
       timeline: p.timeline,
-      previews: p.media
-        .filter((m) => m.type === 'iframe' && m.url)
-        .map((m) => m.url as string)
-        .concat(
-          p.media
-            .filter((m) => m.type === 'image' && m.url)
-            .map((m) => m.url as string)
-        ),
+      previews: getPreviewsForProject(p.slug, p.title, p.media),
     }));
   }, [dbProjects]);
 }

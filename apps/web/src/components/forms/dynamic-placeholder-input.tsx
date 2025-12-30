@@ -228,7 +228,7 @@ export function DynamicPlaceholderInput({
 
         {/* Visual indicator for dynamic placeholders */}
         {shouldRotate && effectivePlaceholders.length > 1 && (
-          <div className="absolute bottom-1 right-1 flex space-x-1">
+          <div className="absolute right-1 bottom-1 flex space-x-1">
             {effectivePlaceholders.map((_, index) => (
               <div
                 key={index}

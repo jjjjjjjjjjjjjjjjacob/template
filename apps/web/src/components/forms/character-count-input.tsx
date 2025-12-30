@@ -148,7 +148,7 @@ export function CharacterCountInput({
           <div
             id={countId}
             className={cn(
-              'pointer-events-none absolute bottom-2 right-2 text-xs font-light',
+              'pointer-events-none absolute right-2 bottom-2 text-xs font-light',
               'bg-background/80 rounded px-1.5 py-0.5 backdrop-blur-sm',
               getCountColor()
             )}

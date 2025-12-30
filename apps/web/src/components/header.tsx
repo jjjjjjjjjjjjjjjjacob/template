@@ -68,7 +68,7 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
       data-fading={
         isFading && (activeSection === 'home' || activeSection === null)
       }
-      className="border-border bg-background/50 fixed left-0 right-0 top-0 z-50 border-b backdrop-blur-md transition-opacity duration-1000 data-[fading=true]:opacity-0"
+      className="border-border bg-background/50 fixed top-0 right-0 left-0 z-50 border-b backdrop-blur-md transition-opacity duration-1000 data-[fading=true]:opacity-0"
       style={style}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4">

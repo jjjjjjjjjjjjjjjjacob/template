@@ -190,6 +190,9 @@ export function ResumeProjectManager({
                   onOpenChange={() => toggleExpanded(project.projectId)}
                 >
                   <div
+                    role="listitem"
+                    tabIndex={0}
+                    aria-label={`${project.title} - drag to reorder`}
                     className={cn(
                       'rounded-lg border transition-opacity',
                       draggedIndex === index && 'opacity-50'
@@ -198,6 +201,11 @@ export function ResumeProjectManager({
                     onDragStart={() => handleDragStart(index)}
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDragEnd={handleDragEnd}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        toggleExpanded(project.projectId);
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-3 p-3">
                       <GripVertical className="text-muted-foreground h-5 w-5 cursor-grab" />

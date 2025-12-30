@@ -31,12 +31,10 @@ describe('Feature Architecture Integration', () => {
 
   it('should allow importing individual auth components', async () => {
     const { useAuth } = await import('@/features/auth/hooks/use-auth');
-    const { AuthPromptDialog } = await import(
-      '@/features/auth/components/auth-prompt-dialog'
-    );
-    const { authService } = await import(
-      '@/features/auth/services/auth-service'
-    );
+    const { AuthPromptDialog } =
+      await import('@/features/auth/components/auth-prompt-dialog');
+    const { authService } =
+      await import('@/features/auth/services/auth-service');
 
     expect(useAuth).toBeDefined();
     expect(AuthPromptDialog).toBeDefined();
@@ -48,12 +46,10 @@ describe('Feature Architecture Integration', () => {
 
   it('should allow importing individual admin components', async () => {
     const { useAdminAuth } = await import('@/features/admin/hooks/use-admin');
-    const { AdminGuard } = await import(
-      '@/features/admin/components/admin-guard'
-    );
-    const { adminService } = await import(
-      '@/features/admin/services/admin-service'
-    );
+    const { AdminGuard } =
+      await import('@/features/admin/components/admin-guard');
+    const { adminService } =
+      await import('@/features/admin/services/admin-service');
 
     expect(useAdminAuth).toBeDefined();
     expect(AdminGuard).toBeDefined();
@@ -102,9 +98,8 @@ describe('Feature Architecture Integration', () => {
     // Test that old import paths still work (if we've set up re-exports)
     try {
       // These might exist as backward compatibility re-exports
-      const { AuthPromptDialog } = await import(
-        '@/components/auth-prompt-dialog'
-      );
+      const { AuthPromptDialog } =
+        await import('@/components/auth-prompt-dialog');
       expect(AuthPromptDialog).toBeDefined();
     } catch (error) {
       // This is expected if we haven't set up backward compatibility yet
@@ -146,12 +141,10 @@ describe('Feature Architecture Integration', () => {
     expect(typeof useAdminAuth).toBe('function');
 
     // Both features should have services
-    const { authService } = await import(
-      '@/features/auth/services/auth-service'
-    );
-    const { adminService } = await import(
-      '@/features/admin/services/admin-service'
-    );
+    const { authService } =
+      await import('@/features/auth/services/auth-service');
+    const { adminService } =
+      await import('@/features/admin/services/admin-service');
 
     expect(authService).toBeDefined();
     expect(adminService).toBeDefined();

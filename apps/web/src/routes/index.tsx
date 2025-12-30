@@ -180,7 +180,7 @@ function HomePage() {
               </div>
             </div>
 
-            <p className="text-muted-foreground max-w-3xl font-light leading-relaxed md:text-lg">
+            <p className="text-muted-foreground max-w-3xl leading-relaxed font-light md:text-lg">
               {project.description}
             </p>
 
@@ -262,7 +262,7 @@ function HomePage() {
               </button>
             </div>
 
-            <p className="text-muted-foreground font-light leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed font-light">
               {project.description}
             </p>
 
@@ -355,7 +355,7 @@ function HomePage() {
               </div>
             </div>
 
-            <p className="text-muted-foreground text-lg font-light leading-relaxed">
+            <p className="text-muted-foreground text-lg leading-relaxed font-light">
               {project.description}
             </p>
 
@@ -467,7 +467,7 @@ function HomePage() {
         {experiences.map((experience, index) => (
           <AnimatedSection key={index} animationType="card" delay={index * 150}>
             <div className="border-primary/20 relative border-l-2 pl-8">
-              <div className="bg-primary absolute -left-2 top-0 h-4 w-4 rounded-full"></div>
+              <div className="bg-primary absolute top-0 -left-2 h-4 w-4 rounded-full"></div>
 
               <div className="mb-6 space-y-4">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -844,14 +844,14 @@ function HomePage() {
 
             <p
               data-visible={!showLoader}
-              className="text-muted-foreground delay-600 duration-1500 data-[visible=false]:scale-102 max-w-md text-center text-[14px] font-light tracking-wide opacity-0 transition-all data-[visible=false]:translate-y-[2px] data-[visible=true]:opacity-100 sm:text-lg"
+              className="text-muted-foreground max-w-md text-center text-[14px] font-light tracking-wide opacity-0 transition-all delay-600 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100 sm:text-lg"
             >
               ui/ux | fullstack | product
             </p>
 
             <div
               data-visible={!showLoader}
-              className="duration-1500 data-[visible=false]:scale-102 flex gap-2 font-light opacity-0 transition-all delay-1000 data-[visible=false]:translate-y-[2px] data-[visible=true]:opacity-100"
+              className="flex gap-2 font-light opacity-0 transition-all delay-1000 duration-1500 data-[visible=false]:translate-y-[2px] data-[visible=false]:scale-102 data-[visible=true]:opacity-100"
             >
               <a href="#projects">
                 <Button
@@ -938,7 +938,7 @@ function HomePage() {
                 </div>
 
                 <AnimatedSection animationType="section" delay={400}>
-                  <p className="text-muted-foreground mx-auto max-w-2xl font-light leading-relaxed">
+                  <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed font-light">
                     {summary}
                   </p>
                 </AnimatedSection>

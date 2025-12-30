@@ -44,16 +44,14 @@ export default function CodeBlock({
     const loadLanguageAndStyle = async () => {
       try {
         // Load style
-        const styleModule = await import(
-          'react-syntax-highlighter/dist/esm/styles/prism/one-dark'
-        );
+        const styleModule =
+          await import('react-syntax-highlighter/dist/esm/styles/prism/one-dark');
         setStyle(styleModule.default);
 
         // Load only if language is supported
         if (SUPPORTED_LANGUAGES.includes(language)) {
-          const PrismLightModule = await import(
-            'react-syntax-highlighter/dist/esm/prism-light'
-          );
+          const PrismLightModule =
+            await import('react-syntax-highlighter/dist/esm/prism-light');
           const PrismComponent = PrismLightModule.default;
 
           // Map language to import path
@@ -62,13 +60,9 @@ export default function CodeBlock({
             () => Promise<Record<string, string>>
           > = {
             javascript: () =>
-              import(
-                'react-syntax-highlighter/dist/esm/languages/prism/javascript'
-              ),
+              import('react-syntax-highlighter/dist/esm/languages/prism/javascript'),
             typescript: () =>
-              import(
-                'react-syntax-highlighter/dist/esm/languages/prism/typescript'
-              ),
+              import('react-syntax-highlighter/dist/esm/languages/prism/typescript'),
             jsx: () =>
               import('react-syntax-highlighter/dist/esm/languages/prism/jsx'),
             tsx: () =>
@@ -76,17 +70,13 @@ export default function CodeBlock({
             css: () =>
               import('react-syntax-highlighter/dist/esm/languages/prism/css'),
             html: () =>
-              import(
-                'react-syntax-highlighter/dist/esm/languages/prism/markup'
-              ),
+              import('react-syntax-highlighter/dist/esm/languages/prism/markup'),
             json: () =>
               import('react-syntax-highlighter/dist/esm/languages/prism/json'),
             bash: () =>
               import('react-syntax-highlighter/dist/esm/languages/prism/bash'),
             python: () =>
-              import(
-                'react-syntax-highlighter/dist/esm/languages/prism/python'
-              ),
+              import('react-syntax-highlighter/dist/esm/languages/prism/python'),
             java: () =>
               import('react-syntax-highlighter/dist/esm/languages/prism/java'),
             go: () =>
@@ -98,9 +88,7 @@ export default function CodeBlock({
             yaml: () =>
               import('react-syntax-highlighter/dist/esm/languages/prism/yaml'),
             markdown: () =>
-              import(
-                'react-syntax-highlighter/dist/esm/languages/prism/markdown'
-              ),
+              import('react-syntax-highlighter/dist/esm/languages/prism/markdown'),
           };
 
           if (languageMap[language]) {

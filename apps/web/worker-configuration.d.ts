@@ -22,22 +22,21 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
     : string;
 };
 declare namespace NodeJS {
-  interface ProcessEnv
-    extends StringifyValues<
-      Pick<
-        Cloudflare.Env,
-        | 'CONVEX_DEPLOYMENT'
-        | 'VITE_CONVEX_URL'
-        | 'VITE_CLERK_PUBLISHABLE_KEY'
-        | 'CLERK_FRONTEND_API_URL'
-        | 'CLERK_SECRET_KEY'
-        | 'CLERK_WEBHOOK_SIGNING_SECRET'
-        | 'VITE_POSTHOG_API_KEY'
-        | 'VITE_POSTHOG_API_HOST'
-        | 'VITE_POSTHOG_PROJECT_ID'
-        | 'VITE_POSTHOG_REGION'
-      >
-    > {}
+  interface ProcessEnv extends StringifyValues<
+    Pick<
+      Cloudflare.Env,
+      | 'CONVEX_DEPLOYMENT'
+      | 'VITE_CONVEX_URL'
+      | 'VITE_CLERK_PUBLISHABLE_KEY'
+      | 'CLERK_FRONTEND_API_URL'
+      | 'CLERK_SECRET_KEY'
+      | 'CLERK_WEBHOOK_SIGNING_SECRET'
+      | 'VITE_POSTHOG_API_KEY'
+      | 'VITE_POSTHOG_API_HOST'
+      | 'VITE_POSTHOG_PROJECT_ID'
+      | 'VITE_POSTHOG_REGION'
+    >
+  > {}
 }
 
 // Begin runtime types
@@ -1696,8 +1695,10 @@ declare var Request: {
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request)
  */
-interface Request<CfHostMetadata = unknown, Cf = CfProperties<CfHostMetadata>>
-  extends Body {
+interface Request<
+  CfHostMetadata = unknown,
+  Cf = CfProperties<CfHostMetadata>,
+> extends Body {
   /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/Request/clone) */
   clone(): Request<CfHostMetadata, Cf>;
   /**
@@ -2498,9 +2499,7 @@ interface TextDecoderStreamTextDecoderStreamInit {
  *
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/ByteLengthQueuingStrategy)
  */
-declare class ByteLengthQueuingStrategy
-  implements QueuingStrategy<ArrayBufferView>
-{
+declare class ByteLengthQueuingStrategy implements QueuingStrategy<ArrayBufferView> {
   constructor(init: QueuingStrategyInit);
   /* [MDN Reference](https://developer.mozilla.org/docs/Web/API/ByteLengthQueuingStrategy/highWaterMark) */
   get highWaterMark(): number;
@@ -6626,8 +6625,7 @@ interface IncomingRequestCfPropertiesBotManagement {
    */
   clientTrustScore: number;
 }
-interface IncomingRequestCfPropertiesBotManagementEnterprise
-  extends IncomingRequestCfPropertiesBotManagement {
+interface IncomingRequestCfPropertiesBotManagementEnterprise extends IncomingRequestCfPropertiesBotManagement {
   /**
    * Results of Cloudflare's Bot Management analysis
    */
@@ -7892,7 +7890,8 @@ declare module 'cloudflare:workers' {
   export abstract class WorkflowEntrypoint<
     Env = unknown,
     T extends Rpc.Serializable<T> | unknown = unknown,
-  > implements Rpc.WorkflowEntrypointBranded
+  >
+    implements Rpc.WorkflowEntrypointBranded
   {
     [Rpc.__WORKFLOW_ENTRYPOINT_BRAND]: never;
     protected ctx: ExecutionContext;

@@ -131,7 +131,7 @@ export function PerformanceDashboard() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed right-4 bottom-4 z-50">
       {!isVisible ? (
         <Button
           onClick={() => setIsVisible(true)}
@@ -278,7 +278,7 @@ export function PerformanceDashboard() {
                 </div>
 
                 {!isComplete && (
-                  <div className="text-xs italic text-gray-500">
+                  <div className="text-xs text-gray-500 italic">
                     collecting metrics...
                   </div>
                 )}
@@ -315,7 +315,7 @@ export function PerformanceDashboard() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-xs italic text-gray-500">
+                  <div className="text-xs text-gray-500 italic">
                     navigation timing not available
                   </div>
                 )}
@@ -358,7 +358,7 @@ export function PerformanceDashboard() {
                     </div>
                   </div>
                 ) : (
-                  <div className="text-xs italic text-gray-500">
+                  <div className="text-xs text-gray-500 italic">
                     resource timing not available
                   </div>
                 )}

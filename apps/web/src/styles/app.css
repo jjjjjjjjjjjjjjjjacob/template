@@ -323,7 +323,7 @@
 .prose h4,
 .prose h5,
 .prose h6 {
-  @apply text-foreground mb-4 mt-6 font-light first:mt-0;
+  @apply text-foreground mt-6 mb-4 font-light first:mt-0;
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -902,7 +902,7 @@
 
 .cl-formButtonPrimary,
 .cl-socialButtonsBlockButton {
-  @apply bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md px-3 font-light !shadow-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  @apply bg-primary text-primary-foreground ring-offset-background hover:bg-primary/90 focus-visible:ring-ring inline-flex h-9 items-center justify-center rounded-md px-3 font-light whitespace-nowrap !shadow-none transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50;
 }
 
 .cl-card,
@@ -962,7 +962,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 .cl-formFieldInput[type='text'],
 .cl-formFieldInput[type='email'],
 .cl-formFieldInput[type='password'] {
-  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 file:border-0 file:bg-transparent file:text-sm file:font-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 file:border-0 file:bg-transparent file:text-sm file:font-light focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-footerActionLink {
@@ -978,7 +978,7 @@ p[data-localization-key='userProfile.profilePage.successMessage'] {
 }
 
 .cl-selectSearchInput__countryCode {
-  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border border-b file:border-0 file:bg-transparent file:text-sm file:font-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  @apply border-input bg-background text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border border-b file:border-0 file:bg-transparent file:text-sm file:font-light focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 .cl-selectOptionsContainer__countryCode {

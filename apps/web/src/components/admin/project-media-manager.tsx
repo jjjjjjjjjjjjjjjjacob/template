@@ -451,7 +451,7 @@ function MediaCard({
             </div>
           )}
 
-          <div className="absolute left-2 top-2 flex gap-1">
+          <div className="absolute top-2 left-2 flex gap-1">
             {isThumbnail && (
               <Badge className="bg-primary">
                 <Star className="mr-1 h-3 w-3" />
@@ -464,7 +464,7 @@ function MediaCard({
             </Badge>
           </div>
 
-          <div className="absolute right-2 top-2">
+          <div className="absolute top-2 right-2">
             <GripVertical className="text-muted-foreground h-5 w-5" />
           </div>
         </div>

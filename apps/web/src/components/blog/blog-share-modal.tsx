@@ -306,7 +306,7 @@ export function BlogShareModal({
                             <img
                               src={previewUrls.get(option.value)}
                               alt={`${option.label} layout preview`}
-                              className="h-auto max-h-[250px] w-auto cursor-pointer select-none rounded-lg shadow-sm sm:max-h-[400px]"
+                              className="h-auto max-h-[250px] w-auto cursor-pointer rounded-lg shadow-sm select-none sm:max-h-[400px]"
                               onClick={() => setShowPreview(true)}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter' || e.key === ' ') {
@@ -320,7 +320,7 @@ export function BlogShareModal({
                             />
                           </div>
                         ) : generationError ? (
-                          <div className="flex h-[250px] w-full select-none flex-col items-center justify-center gap-3 sm:h-[400px] sm:gap-4">
+                          <div className="flex h-[250px] w-full flex-col items-center justify-center gap-3 select-none sm:h-[400px] sm:gap-4">
                             <div className="text-destructive flex flex-col items-center gap-2">
                               <Info className="h-5 w-5 sm:h-8 sm:w-8" />
                               <span className="text-center text-xs sm:text-base">
@@ -339,9 +339,9 @@ export function BlogShareModal({
                             </div>
                           </div>
                         ) : (
-                          <div className="flex h-[250px] w-full select-none flex-col items-center justify-center gap-3 sm:h-[400px] sm:gap-4">
+                          <div className="flex h-[250px] w-full flex-col items-center justify-center gap-3 select-none sm:h-[400px] sm:gap-4">
                             <Loader2 className="text-muted-foreground h-5 w-5 animate-spin sm:h-8 sm:w-8" />
-                            <span className="text-muted-foreground select-none text-center text-xs sm:text-base">
+                            <span className="text-muted-foreground text-center text-xs select-none sm:text-base">
                               generating {option.label} layout...
                             </span>
                           </div>
@@ -353,7 +353,7 @@ export function BlogShareModal({
                   {currentPreviewUrl && (
                     <button
                       onClick={() => setShowPreview(true)}
-                      className="bg-background/90 border-border hover:bg-background absolute right-2 top-2 z-10 rounded-md border p-1 backdrop-blur-sm transition-colors sm:right-4 sm:top-4 sm:rounded-lg sm:p-1.5"
+                      className="bg-background/90 border-border hover:bg-background absolute top-2 right-2 z-10 rounded-md border p-1 backdrop-blur-sm transition-colors sm:top-4 sm:right-4 sm:rounded-lg sm:p-1.5"
                       aria-label="maximize preview"
                     >
                       <Maximize2 className="h-3 w-3 sm:h-4 sm:w-4" />

@@ -112,9 +112,8 @@ describe('Auth Feature Integration', () => {
 
   it('integrates with auth components properly', async () => {
     // Import auth components dynamically to test integration
-    const { AuthPromptDialog } = await import(
-      '../components/auth-prompt-dialog'
-    );
+    const { AuthPromptDialog } =
+      await import('../components/auth-prompt-dialog');
 
     function TestWithAuthPrompt() {
       return (

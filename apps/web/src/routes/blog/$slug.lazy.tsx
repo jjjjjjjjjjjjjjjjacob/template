@@ -118,7 +118,7 @@ function BlogPostPage() {
             </div>
           )}
 
-          <h1 className="text-foreground mb-8 text-4xl font-[200] leading-tight tracking-wide sm:text-5xl sm:leading-tight">
+          <h1 className="text-foreground mb-8 text-4xl leading-tight font-[200] tracking-wide sm:text-5xl sm:leading-tight">
             {postData.title}
           </h1>
 

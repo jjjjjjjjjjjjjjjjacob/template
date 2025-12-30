@@ -107,7 +107,7 @@ export function BlogFeedItem({ post, className }: BlogFeedItemProps) {
           </div>
 
           {/* Title */}
-          <h2 className="text-foreground group-hover:text-primary mb-4 line-clamp-2 text-xl font-[200] leading-snug transition-colors duration-200">
+          <h2 className="text-foreground group-hover:text-primary mb-4 line-clamp-2 text-xl leading-snug font-[200] transition-colors duration-200">
             {post.title}
           </h2>
 
@@ -154,7 +154,7 @@ export function BlogFeedItem({ post, className }: BlogFeedItemProps) {
             </div>
 
             {/* Title */}
-            <h2 className="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-xl font-[200] leading-tight transition-colors duration-200">
+            <h2 className="text-foreground group-hover:text-primary mb-3 line-clamp-2 text-xl leading-tight font-[200] transition-colors duration-200">
               {post.title}
             </h2>
 

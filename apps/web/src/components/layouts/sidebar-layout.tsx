@@ -98,7 +98,7 @@ export function SidebarLayout({
           'bg-background border-border absolute inset-y-0 z-30 border-r',
         isMobile &&
           sidebarPosition === 'right' &&
-          'right-0 border-l border-r-0',
+          'right-0 border-r-0 border-l',
         !isMobile && 'relative'
       )}
     >

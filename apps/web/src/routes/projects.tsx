@@ -4,11 +4,6 @@ import { useQuery } from 'convex/react';
 import { api } from '@template/convex';
 import { ExternalLink } from 'lucide-react';
 
-import mobileViewerVideo from '@/assets/mobile-viewer-model-switch.mov';
-import batchUploaderVideo from '@/assets/batch-uploader.mov';
-import autoRigVideo from '@/assets/auto-rig.mov';
-import modelSwitchVideo from '@/assets/animation-model-switch.mov';
-
 const ProjectSlideshow = lazy(() => import('@/components/project-slideshow'));
 const ProjectThumbnails = lazy(
   () => import('@/components/projects/project-thumbnails')
@@ -30,25 +25,9 @@ interface Project {
   previews: string[];
 }
 
-const HEAT_VIDEOS = [
-  mobileViewerVideo,
-  batchUploaderVideo,
-  autoRigVideo,
-  modelSwitchVideo,
-];
-
-function getPreviewsForProject(
-  slug: string,
-  title: string,
+function getPreviewsFromMedia(
   media: { type: string; url?: string }[]
 ): string[] {
-  const normalizedSlug = slug.toLowerCase().replace(/[^a-z0-9]/g, '');
-  const normalizedTitle = title.toLowerCase().replace(/[^a-z0-9]/g, '');
-
-  if (normalizedSlug.includes('heat') || normalizedTitle.includes('heat')) {
-    return HEAT_VIDEOS;
-  }
-
   return media
     .filter((m) => (m.type === 'video' || m.type === 'iframe') && m.url)
     .map((m) => m.url as string)
@@ -76,7 +55,7 @@ function useProjects(): Project[] {
       responsibilities: p.responsibilities ?? [],
       technologies: p.technologies,
       timeline: p.timeline,
-      previews: getPreviewsForProject(p.slug, p.title, p.media),
+      previews: getPreviewsFromMedia(p.media),
     }));
   }, [dbProjects]);
 }

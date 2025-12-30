@@ -45,27 +45,44 @@ export const list = query({
     includeUnpublished: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
+    let projects;
+
     if (args.includeUnpublished) {
       const isAdmin = await AuthUtils.isAdmin(ctx);
       if (!isAdmin) {
-        const projects = await ctx.db
+        projects = await ctx.db
           .query('portfolio_projects')
           .withIndex('by_published_order', (q) => q.eq('published', true))
           .collect();
-        return projects.sort((a, b) => a.order - b.order);
+      } else {
+        projects = await ctx.db
+          .query('portfolio_projects')
+          .withIndex('by_order')
+          .collect();
       }
-      const projects = await ctx.db
+    } else {
+      projects = await ctx.db
         .query('portfolio_projects')
-        .withIndex('by_order')
+        .withIndex('by_published_order', (q) => q.eq('published', true))
         .collect();
-      return projects.sort((a, b) => a.order - b.order);
     }
 
-    const projects = await ctx.db
-      .query('portfolio_projects')
-      .withIndex('by_published_order', (q) => q.eq('published', true))
-      .collect();
-    return projects.sort((a, b) => a.order - b.order);
+    const projectsWithUrls = await Promise.all(
+      projects.map(async (project) => {
+        const mediaWithUrls = await Promise.all(
+          project.media.map(async (m) => {
+            if (m.storageId) {
+              const url = await ctx.storage.getUrl(m.storageId);
+              return { ...m, url: url ?? m.url };
+            }
+            return m;
+          })
+        );
+        return { ...project, media: mediaWithUrls };
+      })
+    );
+
+    return projectsWithUrls.sort((a, b) => a.order - b.order);
   },
 });
 

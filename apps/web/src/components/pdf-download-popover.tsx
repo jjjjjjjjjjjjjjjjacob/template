@@ -5,15 +5,70 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Download, FileImage, FileText, Loader2 } from 'lucide-react';
-import {
-  useStoryCanvas,
-  type ResumeExportFormat,
-  type ResumeData,
-} from '@/hooks/use-story-canvas';
+import { Download, FileCode, FileDown, FileText, Loader2 } from 'lucide-react';
+import type { ResumeData } from '@/hooks/use-story-canvas';
+import { buildResumeMarkdown } from '@/lib/resume-export-text';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { trackEvents } from '@/lib/track-events';
 import { useTheme } from '@/components/theme-provider';
+import { RESUME_EXPORT_FILENAME_BASE } from '@/lib/resume-export-data';
+
+interface ClientTextFormat {
+  value: 'md';
+  label: string;
+  description: string;
+  mimeType: string;
+  build: (data: ResumeData) => string;
+}
+
+interface ServerExportFormat {
+  value: 'txt' | 'docx';
+  label: string;
+  description: string;
+}
+
+const clientExportFormats: ClientTextFormat[] = [
+  {
+    value: 'md',
+    label: 'Markdown',
+    description: 'readable text, renders anywhere',
+    mimeType: 'text/markdown',
+    build: buildResumeMarkdown,
+  },
+];
+
+const serverExportFormats: ServerExportFormat[] = [
+  {
+    value: 'txt',
+    label: 'Plain Text',
+    description: 'maximum ATS compatibility',
+  },
+  {
+    value: 'docx',
+    label: 'DOCX',
+    description: 'simple Word document',
+  },
+];
+
+function downloadTextFile(content: string, filename: string, mimeType: string) {
+  const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function buildServerExportUrl(format: ServerExportFormat['value']) {
+  const params = new URLSearchParams(
+    typeof window === 'undefined' ? undefined : window.location.search
+  );
+  params.set('format', format);
+  return `/resume/export?${params.toString()}`;
+}
 
 export interface PDFDownloadPopoverProps {
   resumeData: ResumeData;
@@ -21,56 +76,64 @@ export interface PDFDownloadPopoverProps {
   source?: string; // Track where the download was initiated from
 }
 
-const exportFormats: ResumeExportFormat[] = [
-  {
-    value: 'png',
-    label: 'PNG Image',
-    description: 'high quality image for sharing',
-    mimeType: 'image/png',
-  },
-  {
-    value: 'pdf',
-    label: 'PDF Document',
-    description: 'optimized for printing',
-    mimeType: 'application/pdf',
-  },
-];
-
 export function PDFDownloadPopover({
   resumeData,
   className,
   source = 'unknown',
 }: PDFDownloadPopoverProps) {
   const [open, setOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
   const { resolvedTheme } = useTheme();
-  const { isGenerating, generateResumeImage, downloadImage } = useStoryCanvas({
-    filename: 'jacob-stein-resume',
-  });
 
-  const handleExport = async (format: ResumeExportFormat) => {
-    // Track download attempt
+  const handleClientExport = (format: ClientTextFormat) => {
     trackEvents.resumeDownloadAttempted(format.value, source, false);
 
     try {
-      const blob = await generateResumeImage(resumeData, format);
-      if (blob) {
-        downloadImage(blob, format);
+      setIsGenerating(true);
+      const content = format.build(resumeData);
+      downloadTextFile(
+        content,
+        `${RESUME_EXPORT_FILENAME_BASE}.${format.value}`,
+        format.mimeType
+      );
 
-        // Track successful download - KEY CONVERSION EVENT
-        trackEvents.resumeDownloaded(
-          format.value,
-          resolvedTheme || 'light',
-          source
-        );
+      trackEvents.resumeDownloaded(
+        format.value,
+        resolvedTheme || 'light',
+        source
+      );
+      trackEvents.resumeDownloadAttempted(format.value, source, true);
 
-        // Update attempt to successful
-        trackEvents.resumeDownloadAttempted(format.value, source, true);
-
-        setOpen(false);
-      }
+      setOpen(false);
     } catch (error) {
-      // Track failed download attempt
+      trackEvents.resumeDownloadAttempted(
+        format.value,
+        source,
+        false,
+        error instanceof Error ? error.message : 'unknown_error'
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleServerExport = (format: ServerExportFormat) => {
+    trackEvents.resumeDownloadAttempted(format.value, source, false);
+
+    try {
+      const url = buildServerExportUrl(format.value);
+
+      trackEvents.resumeDownloadAttempted(format.value, source, true);
+      trackEvents.resumeDownloaded(
+        format.value,
+        resolvedTheme || 'light',
+        source
+      );
+
+      setOpen(false);
+      window.location.assign(url);
+    } catch (error) {
       trackEvents.resumeDownloadAttempted(
         format.value,
         source,
@@ -82,10 +145,8 @@ export function PDFDownloadPopover({
 
   const handlePopoverOpenChange = (newOpen: boolean) => {
     if (newOpen) {
-      // Track when download popover is opened
       trackEvents.popoverOpened('resume_download', source);
     } else {
-      // Track when download popover is closed
       trackEvents.popoverClosed('resume_download', source);
     }
     setOpen(newOpen);
@@ -123,18 +184,39 @@ export function PDFDownloadPopover({
           </div>
 
           <div className="space-y-2">
-            {exportFormats.map((format) => (
+            {clientExportFormats.map((format) => (
               <Button
                 key={format.value}
                 variant="ghost"
                 size="sm"
                 className="h-auto w-full justify-start gap-3 p-3"
-                onClick={() => handleExport(format)}
+                onClick={() => handleClientExport(format)}
                 disabled={isGenerating}
               >
                 <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
-                  {format.value === 'png' ? (
-                    <FileImage className="h-4 w-4" />
+                  <FileCode className="h-4 w-4" />
+                </div>
+                <div className="flex-1 text-left">
+                  <div className="text-sm font-light">{format.label}</div>
+                  <div className="text-muted-foreground text-xs">
+                    {format.description}
+                  </div>
+                </div>
+              </Button>
+            ))}
+
+            {serverExportFormats.map((format) => (
+              <Button
+                key={format.value}
+                variant="ghost"
+                size="sm"
+                className="h-auto w-full justify-start gap-3 p-3"
+                onClick={() => handleServerExport(format)}
+                disabled={isGenerating}
+              >
+                <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
+                  {format.value === 'docx' ? (
+                    <FileDown className="h-4 w-4" />
                   ) : (
                     <FileText className="h-4 w-4" />
                   )}
@@ -151,7 +233,7 @@ export function PDFDownloadPopover({
 
           <div className="border-t pt-2">
             <p className="text-muted-foreground text-xs">
-              resume will match your current theme
+              plain-text resume, ready for ats resume checkers
             </p>
           </div>
         </div>

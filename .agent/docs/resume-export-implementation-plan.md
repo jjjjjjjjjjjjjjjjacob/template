@@ -1,5 +1,11 @@
 # Resume Export Implementation Plan
 
+> **UPDATE (superseded for ATS):** The canvas/PDF approach below produces a _rasterized
+> image_ PDF with no extractable text, so it cannot pass ATS / Enhancv resume checkers.
+> The in-app export now produces **Markdown (.md) + Plain text (.txt)** via the pure
+> `src/lib/resume-export-text.ts` builders (see `.agent/docs/web-learnings.md`). The canvas
+> plan below is retained only as the reference for the _visual_ PNG/PDF layout.
+
 ## Objective
 
 Fix the resume export functionality to generate a pixel-perfect match of the reference design, including ALL sections from the website's resume display.

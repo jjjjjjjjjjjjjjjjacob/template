@@ -7,8 +7,15 @@ vi.mock('@tanstack/react-router', () => ({
   useSearch: vi.fn(),
 }));
 
-vi.mock('convex/react', () => ({
+vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn(),
+}));
+
+vi.mock('@convex-dev/react-query', () => ({
+  convexQuery: vi.fn((query, args) => ({
+    queryKey: ['convexQuery', query, args],
+    queryFn: vi.fn(),
+  })),
 }));
 
 vi.mock('@template/convex', () => ({
@@ -20,7 +27,7 @@ vi.mock('@template/convex', () => ({
 }));
 
 import { useSearch } from '@tanstack/react-router';
-import { useQuery } from 'convex/react';
+import { useQuery } from '@tanstack/react-query';
 
 const mockedUseSearch = useSearch as unknown as vi.Mock;
 const mockedUseQuery = useQuery as unknown as vi.Mock;
@@ -51,7 +58,7 @@ describe('useResumeFilter', () => {
 
   it('defaults to fullstack profile', () => {
     mockedUseSearch.mockReturnValue({});
-    mockedUseQuery.mockReturnValue(samplePayload);
+    mockedUseQuery.mockReturnValue({ data: samplePayload });
 
     const { result } = renderHook(() => useResumeFilter());
 
@@ -62,10 +69,12 @@ describe('useResumeFilter', () => {
   it('uses requested variant when supported', () => {
     mockedUseSearch.mockReturnValue({ resume: 'frontend' });
     mockedUseQuery.mockReturnValue({
-      ...samplePayload,
-      profile: {
-        ...samplePayload.profile,
-        slug: 'frontend',
+      data: {
+        ...samplePayload,
+        profile: {
+          ...samplePayload.profile,
+          slug: 'frontend',
+        },
       },
     });
 
@@ -77,7 +86,7 @@ describe('useResumeFilter', () => {
 
   it('falls back to default on unsupported variant', () => {
     mockedUseSearch.mockReturnValue({ resume: 'unknown' });
-    mockedUseQuery.mockReturnValue(samplePayload);
+    mockedUseQuery.mockReturnValue({ data: samplePayload });
 
     const { result } = renderHook(() => useResumeFilter());
 

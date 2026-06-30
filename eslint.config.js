@@ -13,6 +13,7 @@ export default tseslint.config(
       '**/.nitro',
       '**/.output',
       '**/.tanstack',
+      '**/.wrangler/**',
       '**/packages/backend/_generated',
       '**/apps/convex/convex/_generated/**',
       '**/node_modules',
@@ -95,6 +96,8 @@ export default tseslint.config(
     files: [
       '**/performance.config.js',
       '**/scripts/**/*.js',
+      '**/convex/migrations/**/*.ts',
+      '**/convex/seed/**/*.ts',
       '**/bundle-analyzer.js',
       '**/src/client.tsx',
       '**/route-performance.ts',

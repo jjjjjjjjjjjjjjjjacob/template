@@ -90,6 +90,7 @@ export const getProfile = query({
           tools: v.array(v.string()),
         }),
         previews: v.array(v.string()),
+        previewCaptions: v.array(v.string()),
       })
     ),
     skills: v.array(
@@ -154,32 +155,46 @@ export const getProfile = query({
       }
 
       const previewItems: string[] = [];
+      // Captions stay index-aligned with previewItems: every preview push has a
+      // matching caption push (empty string when a media item has none).
+      const previewCaptionItems: string[] = [];
 
       const sortedMedia = [...portfolio.media].sort(
         (a, b) => a.order - b.order
       );
 
       for (const m of sortedMedia) {
+        const caption = m.caption ?? '';
         if (m.type === 'iframe' && m.url) {
           previewItems.push(m.url);
+          previewCaptionItems.push(caption);
         } else if (m.type === 'video') {
           if (m.url) {
             previewItems.push(m.url);
+            previewCaptionItems.push(caption);
           } else if (m.storageId) {
             const url = await ctx.storage.getUrl(m.storageId as never);
-            if (url) previewItems.push(`${url}#video`);
+            if (url) {
+              previewItems.push(`${url}#video`);
+              previewCaptionItems.push(caption);
+            }
           }
         } else if (m.type === 'image') {
           if (m.url) {
             previewItems.push(`${m.url}#image`);
+            previewCaptionItems.push(caption);
           } else if (m.storageId) {
             const url = await ctx.storage.getUrl(m.storageId as never);
-            if (url) previewItems.push(`${url}#image`);
+            if (url) {
+              previewItems.push(`${url}#image`);
+              previewCaptionItems.push(caption);
+            }
           }
         }
       }
 
       const previews = previewItems;
+      const previewCaptions = previewCaptionItems;
 
       return {
         projectId: portfolio.slug,
@@ -272,6 +287,7 @@ export const getProfile = query({
           ),
         },
         previews,
+        previewCaptions,
       };
     });
 
@@ -307,6 +323,7 @@ export const getProfile = query({
         tools: string[];
       };
       previews: string[];
+      previewCaptions: string[];
     }>;
 
     const projects = resolvedProjects.sort((a, b) => a.priority - b.priority);

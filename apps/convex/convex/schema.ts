@@ -243,4 +243,48 @@ export default defineSchema({
     .index('by_profile', ['profileSlug'])
     .index('by_project', ['projectSlug'])
     .index('by_profile_order', ['profileSlug', 'displayOrder']),
+
+  photobooth_photos: defineTable({
+    storageId: v.id('_storage'),
+    createdAt: v.number(),
+    effect: v.optional(v.string()),
+  }).index('by_createdAt', ['createdAt']),
+
+  stickies: defineTable({
+    content: v.string(),
+    color: v.union(
+      v.literal('yellow'),
+      v.literal('blue'),
+      v.literal('green'),
+      v.literal('pink'),
+      v.literal('purple'),
+      v.literal('gray')
+    ),
+    x: v.number(),
+    y: v.number(),
+    width: v.number(),
+    height: v.number(),
+    isCollapsed: v.optional(v.boolean()),
+    isTranslucent: v.optional(v.boolean()),
+    isZoomed: v.optional(v.boolean()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_createdAt', ['createdAt'])
+    .index('by_updatedAt', ['updatedAt']),
+
+  wallpaper_preferences: defineTable({
+    ipKey: v.string(),
+    storageId: v.id('_storage'),
+    fileName: v.optional(v.string()),
+    mimeType: v.optional(v.string()),
+    updatedAt: v.number(),
+  }).index('by_ipKey', ['ipKey']),
+
+  chat_messages: defineTable({
+    sessionId: v.string(),
+    role: v.union(v.literal('user'), v.literal('assistant')),
+    content: v.string(),
+    createdAt: v.number(),
+  }).index('by_session', ['sessionId', 'createdAt']),
 });

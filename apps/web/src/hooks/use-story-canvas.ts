@@ -27,6 +27,9 @@ export interface ResumeData {
   name: string;
   title: string;
   summary: string;
+  // Optional top-level location (city, state) for the contact line. The canvas
+  // exporter ignores this; the text/markdown exporter renders it for ATS.
+  location?: string;
   experiences: Array<{
     company: string;
     role: string;
@@ -40,10 +43,19 @@ export interface ResumeData {
     category: string;
     skills: string[];
   }>;
+  // Optional education entries. Rendered by the text/markdown exporter only.
+  education?: Array<{
+    institution: string;
+    degree: string;
+    timeline: string;
+    location?: string;
+  }>;
   contact: {
     email?: string;
+    phone?: string;
     github?: string;
     website?: string;
+    linkedin?: string;
   };
 }
 

@@ -8,11 +8,15 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createServerRootRoute } from '@tanstack/react-start/server'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignUpRouteImport } from './routes/sign-up'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as MacosRouteImport } from './routes/macos'
+import { Route as LegacyRouteImport } from './routes/legacy'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -31,6 +35,9 @@ import { Route as AdminProjectsNewRouteImport } from './routes/admin/projects.ne
 import { Route as AdminProjectsProjectIdRouteImport } from './routes/admin/projects.$projectId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog.new'
 import { Route as AdminBlogPostIdRouteImport } from './routes/admin/blog.$postId'
+import { ServerRoute as ResumeExportServerRouteImport } from './routes/resume.export'
+
+const rootServerRouteImport = createServerRootRoute()
 
 const SignUpRoute = SignUpRouteImport.update({
   id: '/sign-up',
@@ -50,6 +57,16 @@ const ResumeRoute = ResumeRouteImport.update({
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MacosRoute = MacosRouteImport.update({
+  id: '/macos',
+  path: '/macos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegacyRoute = LegacyRouteImport.update({
+  id: '/legacy',
+  path: '/legacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -154,9 +171,16 @@ const AdminBlogPostIdRoute = AdminBlogPostIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/blog.$postId.lazy').then((d) => d.Route),
 )
+const ResumeExportServerRoute = ResumeExportServerRouteImport.update({
+  id: '/resume/export',
+  path: '/resume/export',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/legacy': typeof LegacyRoute
+  '/macos': typeof MacosRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
   '/sign-in': typeof SignInRouteWithChildren
@@ -181,6 +205,8 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/legacy': typeof LegacyRoute
+  '/macos': typeof MacosRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
   '/sign-in': typeof SignInRouteWithChildren
@@ -203,6 +229,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/legacy': typeof LegacyRoute
+  '/macos': typeof MacosRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
   '/sign-in': typeof SignInRouteWithChildren
@@ -229,6 +257,8 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/legacy'
+    | '/macos'
     | '/projects'
     | '/resume'
     | '/sign-in'
@@ -253,6 +283,8 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/legacy'
+    | '/macos'
     | '/projects'
     | '/resume'
     | '/sign-in'
@@ -274,6 +306,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/legacy'
+    | '/macos'
     | '/projects'
     | '/resume'
     | '/sign-in'
@@ -299,6 +333,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LegacyRoute: typeof LegacyRoute
+  MacosRoute: typeof MacosRoute
   ProjectsRoute: typeof ProjectsRoute
   ResumeRoute: typeof ResumeRoute
   SignInRoute: typeof SignInRouteWithChildren
@@ -309,6 +345,27 @@ export interface RootRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
   AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
+}
+export interface FileServerRoutesByFullPath {
+  '/resume/export': typeof ResumeExportServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/resume/export': typeof ResumeExportServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/resume/export': typeof ResumeExportServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths: '/resume/export'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to: '/resume/export'
+  id: '__root__' | '/resume/export'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  ResumeExportServerRoute: typeof ResumeExportServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -339,6 +396,20 @@ declare module '@tanstack/react-router' {
       path: '/projects'
       fullPath: '/projects'
       preLoaderRoute: typeof ProjectsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/macos': {
+      id: '/macos'
+      path: '/macos'
+      fullPath: '/macos'
+      preLoaderRoute: typeof MacosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legacy': {
+      id: '/legacy'
+      path: '/legacy'
+      fullPath: '/legacy'
+      preLoaderRoute: typeof LegacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -469,6 +540,17 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/resume/export': {
+      id: '/resume/export'
+      path: '/resume/export'
+      fullPath: '/resume/export'
+      preLoaderRoute: typeof ResumeExportServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+  }
+}
 
 interface SignInRouteChildren {
   SignInSsoCallbackRoute: typeof SignInSsoCallbackRoute
@@ -542,6 +624,8 @@ const AdminResumeRouteWithChildren = AdminResumeRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LegacyRoute: LegacyRoute,
+  MacosRoute: MacosRoute,
   ProjectsRoute: ProjectsRoute,
   ResumeRoute: ResumeRoute,
   SignInRoute: SignInRouteWithChildren,
@@ -556,3 +640,9 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+const rootServerRouteChildren: RootServerRouteChildren = {
+  ResumeExportServerRoute: ResumeExportServerRoute,
+}
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()

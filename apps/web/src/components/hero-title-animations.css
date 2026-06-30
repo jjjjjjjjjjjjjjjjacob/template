@@ -144,3 +144,24 @@
   animation: hero-title-text-reveal 400ms cubic-bezier(0.4, 0, 0.2, 1) 1500ms
     forwards;
 }
+
+/* Reduced motion: jump straight to the final title state, no animation */
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-animate {
+    animation: none;
+    transform: none;
+    opacity: 1;
+    gap: 0.75rem;
+  }
+
+  .hero-title-j-animate,
+  .hero-title-s-animate {
+    animation: none;
+    width: auto;
+  }
+
+  .hero-title-text-animate {
+    animation: none;
+    opacity: 1;
+  }
+}

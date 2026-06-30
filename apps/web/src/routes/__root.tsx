@@ -60,6 +60,15 @@ const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
   return await getOptimizedAuth(request);
 });
 
+// NOTE: confirm these two values for production —
+//  - SITE_URL: canonical origin (used for og:url + canonical link)
+//  - a 1200x630 share image must exist at apps/web/public/og-image.png
+const SITE_URL = 'https://jacobstein.dev';
+const SITE_TITLE = 'jacob stein | ui/ux - fullstack - product';
+const SITE_DESCRIPTION =
+  'the portfolio of jacob stein — ui/ux designer and fullstack developer building real-time, 3d-capable web products.';
+const OG_IMAGE = `${SITE_URL}/og-image.png`;
+
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   convexClient: ConvexReactClient;
@@ -69,23 +78,28 @@ export const Route = createRootRouteWithContext<{
 }>()({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'jacob stein | ui/ux - fullstack - product',
-        content:
-          'A portfolio website for Jacob Stein, a UI/UX designer and fullstack developer',
-      },
+      { charSet: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { title: SITE_TITLE },
+      { name: 'description', content: SITE_DESCRIPTION },
+      // Open Graph
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: 'jacob stein' },
+      { property: 'og:title', content: SITE_TITLE },
+      { property: 'og:description', content: SITE_DESCRIPTION },
+      { property: 'og:url', content: SITE_URL },
+      { property: 'og:image', content: OG_IMAGE },
+      // Twitter
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: SITE_TITLE },
+      { name: 'twitter:description', content: SITE_DESCRIPTION },
+      { name: 'twitter:image', content: OG_IMAGE },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
       { rel: 'stylesheet', href: blogCss },
       { rel: 'icon', href: '/favicon.ico' },
+      { rel: 'canonical', href: SITE_URL },
       // Critical font preloads
       {
         rel: 'preload',
@@ -197,6 +211,10 @@ function RootComponent() {
 function HeaderWrapper() {
   const location = useLocation();
   const isBlogRoute = location.pathname.startsWith('/blog');
+  const isChromeFreeRoute =
+    location.pathname === '/' || location.pathname === '/macos';
+
+  if (isChromeFreeRoute) return null;
 
   return (
     <div className="relative">
@@ -219,6 +237,18 @@ function HeaderWrapper() {
       </div>
     </div>
   );
+}
+
+function MainWrapper({ children }: { children: React.ReactNode }) {
+  const location = useLocation();
+  const isChromeFreeRoute =
+    location.pathname === '/' || location.pathname === '/macos';
+
+  if (isChromeFreeRoute) {
+    return <main>{children}</main>;
+  }
+
+  return <main className="mt-14">{children}</main>;
 }
 
 function RootDocument({ children }: { children: React.ReactNode }) {
@@ -275,7 +305,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <PostHogPageTracker />
             <HeaderWrapper />
 
-            <main className="mt-14">{children}</main>
+            <MainWrapper>{children}</MainWrapper>
 
             {/* Development Tools */}
             {import.meta.env.DEV && (

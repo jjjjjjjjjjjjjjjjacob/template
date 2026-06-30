@@ -226,6 +226,465 @@
     @apply bg-muted rounded-full;
   }
 
+  .alt7-scroll-surface,
+  .alt7-scroll-surface * {
+    --alt7-scroll-size: 15px;
+    --alt7-scroll-gutter-size: var(--alt7-scroll-size);
+    --alt7-scroll-rail-cap-size: 16px;
+    --alt7-scroll-rail-inner-size: 11px;
+    --alt7-scroll-edge-top-size: 12px;
+    --alt7-scroll-button-up-size: 21px;
+    --alt7-scroll-button-down-size: 17px;
+    --alt7-scroll-button-up-active-size: 24px;
+    --alt7-scroll-button-down-active-size: 16px;
+    --alt7-scroll-button-stack-size: 38px;
+    scrollbar-color: #5e96cc #e6ebf0;
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar,
+  .alt7-scroll-surface *::-webkit-scrollbar {
+    width: var(--alt7-scroll-size);
+    height: var(--alt7-scroll-size);
+    background-color: transparent;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-track,
+  .alt7-scroll-surface *::-webkit-scrollbar-track {
+    background-color: transparent;
+    background-repeat: repeat;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-track:vertical,
+  .alt7-scroll-surface *::-webkit-scrollbar-track:vertical {
+    background-image:
+      url('/os-x/ui/scrollbar-outer-edge-top.png'),
+      url('/os-x/ui/scrollbar-rail-outer-top.png'),
+      url('/os-x/ui/scrollbar-rail-outer-bottom.png'),
+      url('/os-x/ui/scrollbar-rail-inner-vertical.png');
+    background-position:
+      top center,
+      center var(--alt7-scroll-edge-top-size),
+      bottom center,
+      center
+        calc(
+          var(--alt7-scroll-edge-top-size) + var(--alt7-scroll-rail-cap-size)
+        );
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+    background-size:
+      var(--alt7-scroll-size) var(--alt7-scroll-edge-top-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-rail-cap-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-rail-cap-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-rail-inner-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-track:horizontal,
+  .alt7-scroll-surface *::-webkit-scrollbar-track:horizontal {
+    background-image:
+      url('/os-x/ui/scrollbar-rail-outer-left.png'),
+      url('/os-x/ui/scrollbar-rail-outer-right.png'),
+      url('/os-x/ui/scrollbar-rail-inner-horizontal.png');
+    background-position:
+      left center,
+      right center,
+      var(--alt7-scroll-rail-cap-size) center;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    background-size:
+      var(--alt7-scroll-rail-cap-size) var(--alt7-scroll-size),
+      var(--alt7-scroll-rail-cap-size) var(--alt7-scroll-size),
+      var(--alt7-scroll-rail-inner-size) var(--alt7-scroll-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-thumb,
+  .alt7-scroll-surface *::-webkit-scrollbar-thumb {
+    background-color: #78bbf2;
+    background-repeat: no-repeat, no-repeat, repeat;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-thumb:vertical,
+  .alt7-scroll-surface *::-webkit-scrollbar-thumb:vertical {
+    min-height: 30px;
+    background-image:
+      url('/os-x/ui/scroll-thumb-top.png'),
+      url('/os-x/ui/scroll-thumb-bottom.png'),
+      url('/os-x/ui/scroll-thumb-mid-vertical.png');
+    background-position:
+      top center,
+      bottom center,
+      center center;
+    background-size: var(--alt7-scroll-size) auto;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-thumb:horizontal,
+  .alt7-scroll-surface *::-webkit-scrollbar-thumb:horizontal {
+    min-width: 30px;
+    background-image:
+      url('/os-x/ui/scroll-thumb-left.png'),
+      url('/os-x/ui/scroll-thumb-right.png'),
+      url('/os-x/ui/scroll-thumb-mid-horizontal.png');
+    background-position:
+      left center,
+      right center,
+      center center;
+    background-size: auto var(--alt7-scroll-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button,
+  .alt7-scroll-surface *::-webkit-scrollbar-button {
+    display: block;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:vertical,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:vertical {
+    height: var(--alt7-scroll-size);
+    background-size: var(--alt7-scroll-size) auto;
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:horizontal,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:horizontal {
+    width: var(--alt7-scroll-size);
+    background-size: auto var(--alt7-scroll-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:vertical:decrement,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:vertical:decrement {
+    height: var(--alt7-scroll-button-up-size);
+    background-image: url('/os-x/ui/scrollbar-up-button.png');
+    background-position: top center;
+    background-size: var(--alt7-scroll-size) var(--alt7-scroll-button-up-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:vertical:increment,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:vertical:increment {
+    height: var(--alt7-scroll-button-down-size);
+    background-image: url('/os-x/ui/scrollbar-down-button.png');
+    background-position: bottom center;
+    background-size: var(--alt7-scroll-size) var(--alt7-scroll-button-down-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:horizontal:decrement,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url('/os-x/ui/scrollbar-left-button.png');
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:horizontal:increment,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url('/os-x/ui/scrollbar-right-button.png');
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:vertical:decrement:active,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:vertical:decrement:active {
+    background-image:
+      url('/os-x/ui/scrollbar-up-button-active.png'),
+      url('/os-x/ui/scrollbar-up-button.png');
+    background-position:
+      top center,
+      top center;
+    background-size:
+      var(--alt7-scroll-size) var(--alt7-scroll-button-up-active-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-button-up-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:vertical:increment:active,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:vertical:increment:active {
+    background-image:
+      url('/os-x/ui/scrollbar-down-button-active.png'),
+      url('/os-x/ui/scrollbar-down-button.png');
+    background-position:
+      bottom center,
+      bottom center;
+    background-size:
+      var(--alt7-scroll-size) var(--alt7-scroll-button-down-active-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-button-down-size);
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:horizontal:decrement:active,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:horizontal:decrement:active {
+    background-image: url('/os-x/ui/scrollbar-left-button-active.png');
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-button:horizontal:increment:active,
+  .alt7-scroll-surface *::-webkit-scrollbar-button:horizontal:increment:active {
+    background-image: url('/os-x/ui/scrollbar-right-button-active.png');
+  }
+
+  .alt7-scroll-surface::-webkit-scrollbar-corner,
+  .alt7-scroll-surface *::-webkit-scrollbar-corner {
+    background-color: #e6e7e8;
+    background-image: url('/os-x/ui/resize-corner.png');
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    background-size: var(--alt7-scroll-size) var(--alt7-scroll-size);
+  }
+
+  .alt7-scroll-area {
+    --alt7-scroll-size: 15px;
+    --alt7-scroll-gutter-size: var(--alt7-scroll-size);
+    --alt7-scroll-rail-cap-size: 16px;
+    --alt7-scroll-rail-inner-size: 11px;
+    --alt7-scroll-edge-top-size: 12px;
+    --alt7-scroll-button-up-size: 21px;
+    --alt7-scroll-button-down-size: 17px;
+    --alt7-scroll-button-up-active-size: 24px;
+    --alt7-scroll-button-down-active-size: 16px;
+    --alt7-scroll-button-stack-size: 38px;
+    position: relative;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .alt7-scroll-viewport {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .alt7-scroll-viewport::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  .alt7-scrollbar,
+  .alt7-scrollbar-corner {
+    position: absolute;
+    z-index: 3;
+    user-select: none;
+  }
+
+  .alt7-scrollbar-vertical {
+    top: 0;
+    right: 0;
+    width: var(--alt7-scroll-gutter-size);
+    background-color: transparent;
+  }
+
+  .alt7-scrollbar-horizontal {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: var(--alt7-scroll-size);
+    background-color: transparent;
+  }
+
+  .alt7-scrollbar-button {
+    position: absolute;
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    width: var(--alt7-scroll-size);
+    height: var(--alt7-scroll-size);
+    border: 0;
+    background-color: transparent !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: none;
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+    outline: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .alt7-scrollbar-button:active,
+  .alt7-scrollbar-button:focus,
+  .alt7-scrollbar-button:focus-visible {
+    background-color: transparent !important;
+    box-shadow: none;
+    outline: 0;
+  }
+
+  .alt7-scrollbar-button-up {
+    width: var(--alt7-scroll-gutter-size);
+    height: var(--alt7-scroll-button-up-size);
+    left: 0;
+    background-image: url('/os-x/ui/scrollbar-up-button.png');
+    background-position: top right;
+    background-size: var(--alt7-scroll-size) var(--alt7-scroll-button-up-size);
+  }
+
+  .alt7-scrollbar-button-up:active {
+    height: var(--alt7-scroll-button-up-active-size);
+    background-image:
+      url('/os-x/ui/scrollbar-up-button-active.png'),
+      url('/os-x/ui/scrollbar-up-button.png');
+    background-position:
+      top right,
+      top right;
+    background-size:
+      var(--alt7-scroll-size) var(--alt7-scroll-button-up-active-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-button-up-size);
+  }
+
+  .alt7-scrollbar-button-down {
+    left: 0;
+    bottom: 0;
+    width: var(--alt7-scroll-gutter-size);
+    height: var(--alt7-scroll-button-down-size);
+    background-image: url('/os-x/ui/scrollbar-down-button.png');
+    background-position: bottom right;
+    background-size: var(--alt7-scroll-size) var(--alt7-scroll-button-down-size);
+  }
+
+  .alt7-scrollbar-button-down:active {
+    background-image:
+      url('/os-x/ui/scrollbar-down-button-active.png'),
+      url('/os-x/ui/scrollbar-down-button.png');
+    background-position:
+      bottom right,
+      bottom right;
+    background-size:
+      var(--alt7-scroll-size) var(--alt7-scroll-button-down-active-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-button-down-size);
+  }
+
+  .alt7-scrollbar-button-left {
+    right: var(--alt7-scroll-size);
+    bottom: 0;
+    background-image: url('/os-x/ui/scrollbar-left-button.png');
+    background-size: auto var(--alt7-scroll-size);
+  }
+
+  .alt7-scrollbar-button-left:active {
+    background-image: url('/os-x/ui/scrollbar-left-button-active.png');
+  }
+
+  .alt7-scrollbar-button-right {
+    right: 0;
+    bottom: 0;
+    background-image: url('/os-x/ui/scrollbar-right-button.png');
+    background-size: auto var(--alt7-scroll-size);
+  }
+
+  .alt7-scrollbar-button-right:active {
+    background-image: url('/os-x/ui/scrollbar-right-button-active.png');
+  }
+
+  .alt7-scrollbar-track {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  .alt7-scrollbar-track-vertical {
+    top: 0;
+    bottom: var(--alt7-scroll-button-stack-size);
+    left: 0;
+    width: var(--alt7-scroll-gutter-size);
+    background-color: transparent;
+    background-image:
+      url('/os-x/ui/scrollbar-outer-edge-top.png'),
+      url('/os-x/ui/scrollbar-rail-outer-top.png'),
+      url('/os-x/ui/scrollbar-rail-outer-bottom.png'),
+      url('/os-x/ui/scrollbar-rail-inner-vertical.png');
+    background-position:
+      right top,
+      right var(--alt7-scroll-edge-top-size),
+      right bottom,
+      right
+        calc(
+          var(--alt7-scroll-edge-top-size) + var(--alt7-scroll-rail-cap-size)
+        );
+    background-repeat: no-repeat, no-repeat, no-repeat, repeat-y;
+    background-size:
+      var(--alt7-scroll-size) var(--alt7-scroll-edge-top-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-rail-cap-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-rail-cap-size),
+      var(--alt7-scroll-size) var(--alt7-scroll-rail-inner-size);
+  }
+
+  .alt7-scrollbar-track-horizontal {
+    right: calc(var(--alt7-scroll-size) * 2);
+    bottom: 0;
+    left: 0;
+    height: var(--alt7-scroll-size);
+    background-color: transparent;
+    background-image:
+      url('/os-x/ui/scrollbar-rail-outer-left.png'),
+      url('/os-x/ui/scrollbar-rail-outer-right.png'),
+      url('/os-x/ui/scrollbar-rail-inner-horizontal.png');
+    background-position:
+      left center,
+      right center,
+      var(--alt7-scroll-rail-cap-size) center;
+    background-repeat: no-repeat, no-repeat, repeat-x;
+    background-size:
+      var(--alt7-scroll-rail-cap-size) var(--alt7-scroll-size),
+      var(--alt7-scroll-rail-cap-size) var(--alt7-scroll-size),
+      var(--alt7-scroll-rail-inner-size) var(--alt7-scroll-size);
+  }
+
+  .alt7-scrollbar-thumb {
+    position: absolute;
+    display: block;
+    box-sizing: border-box;
+    background-color: transparent;
+    background-repeat: no-repeat;
+  }
+
+  .alt7-scrollbar-thumb-vertical {
+    top: 0;
+    left: calc(var(--alt7-scroll-gutter-size) - var(--alt7-scroll-size));
+    width: var(--alt7-scroll-size);
+    padding: 11px 0;
+    background-image:
+      url('/os-x/ui/scroll-thumb-top.png'),
+      url('/os-x/ui/scroll-thumb-bottom.png'),
+      url('/os-x/ui/scroll-thumb-mid-vertical.png');
+    background-position:
+      top center,
+      bottom center,
+      center center;
+    background-origin: border-box, border-box, content-box;
+    background-clip: border-box, border-box, content-box;
+    background-size:
+      var(--alt7-scroll-size) auto,
+      var(--alt7-scroll-size) auto,
+      var(--alt7-scroll-size) 100%;
+  }
+
+  .alt7-scrollbar-thumb-horizontal {
+    bottom: 0;
+    left: 0;
+    height: var(--alt7-scroll-size);
+    padding: 0 11px;
+    background-image:
+      url('/os-x/ui/scroll-thumb-left.png'),
+      url('/os-x/ui/scroll-thumb-right.png'),
+      url('/os-x/ui/scroll-thumb-mid-horizontal.png');
+    background-position:
+      left center,
+      right center,
+      center center;
+    background-origin: border-box, border-box, content-box;
+    background-clip: border-box, border-box, content-box;
+    background-size:
+      auto var(--alt7-scroll-size),
+      auto var(--alt7-scroll-size),
+      100% var(--alt7-scroll-size);
+  }
+
+  .alt7-scrollbar-corner {
+    right: 0;
+    bottom: 0;
+    width: var(--alt7-scroll-size);
+    height: var(--alt7-scroll-size);
+    background-color: #e6e7e8;
+    background-image: url('/os-x/ui/resize-corner.png');
+    background-position: right bottom;
+    background-repeat: no-repeat;
+    background-size: var(--alt7-scroll-size) var(--alt7-scroll-size);
+  }
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -874,6 +1333,39 @@
 
 .animate-rotate-right-and-zoom-in {
   animation: rotate-right-and-zoom-in 0.6s ease-out;
+}
+
+/* CRT terminal flicker effect */
+@keyframes crt-flicker {
+  0% {
+    opacity: 0.03;
+  }
+  5% {
+    opacity: 0.01;
+  }
+  10% {
+    opacity: 0.04;
+  }
+  15% {
+    opacity: 0.02;
+  }
+  20% {
+    opacity: 0.03;
+  }
+  50% {
+    opacity: 0.01;
+  }
+  80% {
+    opacity: 0.04;
+  }
+  100% {
+    opacity: 0.03;
+  }
+}
+
+.animate-crt-flicker {
+  animation: crt-flicker 0.15s infinite;
+  background: white;
 }
 
 /* Mobile-specific animation optimizations */

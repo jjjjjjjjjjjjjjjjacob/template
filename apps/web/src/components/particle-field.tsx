@@ -34,6 +34,21 @@ function getMobilePixelRatio(): number {
   return Math.min(window.devicePixelRatio, isMobileDevice() ? 1.5 : 2);
 }
 
+// Precomputed jitter table (values in [-0.5, 0.5)) — replaces the millions of
+// Math.random() calls per second made by the per-frame physics loop.
+const RAND_SIZE = 1 << 16;
+const RAND_MASK = RAND_SIZE - 1;
+const RAND_TABLE = (() => {
+  const table = new Float32Array(RAND_SIZE);
+  for (let i = 0; i < RAND_SIZE; i += 1) {
+    table[i] = Math.random() - 0.5;
+  }
+  return table;
+})();
+
+// Reused every frame to avoid allocating a THREE.Color per frame.
+const SCRATCH_COLOR = new THREE.Color();
+
 function Particles({
   // Basic
   count = 10000,
@@ -104,15 +119,22 @@ function Particles({
 
   containerSize = { width: 800, height: 600 },
   currentPositionsRef,
+  pausedRef,
+  mouseRef,
+  scrollVelocityRef,
+  scrollSeqRef,
 }: ParticleFieldProps & {
   currentPositionsRef?: React.RefObject<Float32Array | null>;
+  pausedRef?: React.RefObject<boolean>;
+  mouseRef?: React.RefObject<{ x: number; y: number; active: boolean }>;
+  scrollVelocityRef?: React.RefObject<{ x: number; y: number }>;
+  scrollSeqRef?: React.RefObject<number>;
 }) {
   const mesh = useRef<THREE.Points>(null);
-  const mouse = useRef({ x: 0, y: 0, active: false });
-  const activePointers = useRef(new Set<number>());
-  const lastScrollPosition = useRef({ x: 0, y: 0 });
   const scrollInertia = useRef({ x: 0, y: 0 });
+  const lastScrollSeq = useRef(0);
   const frameCount = useRef(0);
+  const randCursorRef = useRef(0);
 
   const isMobile = useMemo(() => isMobileDevice(), []);
   const frameSkip = isMobile ? 2 : 1;
@@ -197,153 +219,9 @@ function Particles({
     return temps;
   }, [deferredCount]);
 
-  useEffect(() => {
-    const handlePointerDown = (event: PointerEvent) => {
-      // Track active pointers
-      activePointers.current.add(event.pointerId);
-    };
-
-    const handlePointerMove = (event: PointerEvent) => {
-      // Only activate if pointer is down (dragging) for touch, or always for mouse
-      if (
-        event.pointerType === 'mouse' ||
-        activePointers.current.has(event.pointerId)
-      ) {
-        const containerElement = document.querySelector('.particle-container');
-        if (containerElement) {
-          const rect = containerElement.getBoundingClientRect();
-          mouse.current.x =
-            ((event.clientX - rect.left) / rect.width - 0.5) *
-            containerSize.width;
-          mouse.current.y =
-            -((event.clientY - rect.top) / rect.height - 0.5) *
-            containerSize.height;
-          mouse.current.active = true;
-        }
-      }
-    };
-
-    const handlePointerUp = (event: PointerEvent) => {
-      // Remove from active pointers
-      activePointers.current.delete(event.pointerId);
-
-      // Deactivate if no more active pointers
-      if (activePointers.current.size === 0) {
-        mouse.current.active = false;
-      }
-    };
-
-    const handlePointerCancel = (event: PointerEvent) => {
-      // Handle cancelled pointers
-      activePointers.current.delete(event.pointerId);
-
-      if (activePointers.current.size === 0) {
-        mouse.current.active = false;
-      }
-    };
-
-    const handlePointerLeave = (event: PointerEvent) => {
-      // Deactivate when pointer leaves the window
-      if (event.pointerType === 'mouse') {
-        mouse.current.active = false;
-      }
-    };
-
-    // Add pointer event listeners
-    window.addEventListener('pointerdown', handlePointerDown);
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
-    window.addEventListener('pointercancel', handlePointerCancel);
-    window.addEventListener('pointerleave', handlePointerLeave);
-
-    return () => {
-      window.removeEventListener('pointerdown', handlePointerDown);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
-      window.removeEventListener('pointercancel', handlePointerCancel);
-      window.removeEventListener('pointerleave', handlePointerLeave);
-    };
-  }, [containerSize.width, containerSize.height]);
-
-  // Add scroll velocity tracking
-  useEffect(() => {
-    let rafId: number;
-    let lastTime = performance.now();
-    let scrollTimeout: NodeJS.Timeout;
-
-    const handleScroll = () => {
-      const currentTime = performance.now();
-      const deltaTime = (currentTime - lastTime) / 1000; // Convert to seconds
-      lastTime = currentTime;
-
-      const currentScrollX = window.scrollX || window.pageXOffset;
-      const currentScrollY = window.scrollY || window.pageYOffset;
-
-      // Calculate scroll velocity
-      if (deltaTime > 0 && deltaTime < 0.1) {
-        // Ignore large time gaps
-        const velocityX =
-          (currentScrollX - lastScrollPosition.current.x) / deltaTime;
-        const velocityY =
-          (currentScrollY - lastScrollPosition.current.y) / deltaTime;
-
-        // Apply velocity to inertia with clamping
-        scrollInertia.current.x = Math.min(
-          Math.max(
-            velocityX * scrollInertiaStrength * 0.001,
-            -scrollInertiaMax
-          ),
-          scrollInertiaMax
-        );
-        scrollInertia.current.y = Math.min(
-          Math.max(
-            -velocityY * scrollInertiaStrength * 0.001,
-            -scrollInertiaMax
-          ),
-          scrollInertiaMax
-        );
-      }
-
-      lastScrollPosition.current.x = currentScrollX;
-      lastScrollPosition.current.y = currentScrollY;
-
-      // Clear existing timeout
-      clearTimeout(scrollTimeout);
-
-      // Set timeout to detect when scrolling stops (for future use)
-      scrollTimeout = setTimeout(() => {
-        // Scrolling has stopped
-      }, 150);
-    };
-
-    const updateInertia = () => {
-      // Gradually dampen the inertia
-      scrollInertia.current.x *= scrollInertiaDamping;
-      scrollInertia.current.y *= scrollInertiaDamping;
-
-      // Clamp to zero when very small to prevent drift
-      if (Math.abs(scrollInertia.current.x) < 0.0001) {
-        scrollInertia.current.x = 0;
-      }
-      if (Math.abs(scrollInertia.current.y) < 0.0001) {
-        scrollInertia.current.y = 0;
-      }
-
-      // Continue updating
-      rafId = requestAnimationFrame(updateInertia);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Start inertia update loop
-    updateInertia();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-      clearTimeout(scrollTimeout);
-    };
-  }, [scrollInertiaStrength, scrollInertiaDamping, scrollInertiaMax]);
+  // Pointer position and scroll velocity are tracked once by the ParticleField
+  // parent and shared with every field via refs (mouseRef / scrollVelocityRef /
+  // scrollSeqRef), so the listeners aren't duplicated per particle system.
 
   // Ensure material starts invisible to avoid initial flicker
   useEffect(() => {
@@ -369,13 +247,43 @@ function Particles({
       material.opacity = opacity * progress;
     }
 
+    // Pause heavy physics when the field is off-screen or the tab is hidden
+    if (pausedRef?.current) {
+      return;
+    }
+
+    // Apply this field's scroll inertia from the shared scroll velocity.
+    // Seeded once per new scroll (via scrollSeqRef), then damped every frame —
+    // each field keeps its own strength/damping/max so the feel is preserved.
+    if (scrollSeqRef && scrollSeqRef.current !== lastScrollSeq.current) {
+      lastScrollSeq.current = scrollSeqRef.current;
+      const velocityX = scrollVelocityRef?.current.x ?? 0;
+      const velocityY = scrollVelocityRef?.current.y ?? 0;
+      scrollInertia.current.x = Math.min(
+        Math.max(velocityX * scrollInertiaStrength * 0.001, -scrollInertiaMax),
+        scrollInertiaMax
+      );
+      scrollInertia.current.y = Math.min(
+        Math.max(-velocityY * scrollInertiaStrength * 0.001, -scrollInertiaMax),
+        scrollInertiaMax
+      );
+    }
+    scrollInertia.current.x *= scrollInertiaDamping;
+    scrollInertia.current.y *= scrollInertiaDamping;
+    if (Math.abs(scrollInertia.current.x) < 0.0001) {
+      scrollInertia.current.x = 0;
+    }
+    if (Math.abs(scrollInertia.current.y) < 0.0001) {
+      scrollInertia.current.y = 0;
+    }
+
     // Skip physics update on some frames for mobile performance
     if (!shouldUpdatePhysics) {
       return;
     }
 
     // Smooth #ff0059 ↔ cyan cycle avoiding oversaturated intermediate colors
-    if (color === '#ff0059') {
+    if (color === '#06b6d4') {
       const rawCycle = (Math.sin(time) + 1) / 20; // 0..1
       // Transform cycle to stay longer on endpoints (ff0059 & cyan) with shorter transitions
       // Use power curve to compress middle and expand endpoints
@@ -389,9 +297,9 @@ function Particles({
       }
 
       // Start with cyan values, end with magenta
-      const CYAN_H = 200; // degrees - start color
-      const CYAN_S = 1.0;
-      const CYAN_L = 0.5;
+      const CYAN_H = 160; // degrees - start color 160.1 84.1% 39.4%
+      const CYAN_S = 0.84;
+      const CYAN_L = 0.39;
 
       const FF0059_H = 355; // degrees - end color (magenta)
       const FF0059_S = 1.0;
@@ -422,10 +330,11 @@ function Particles({
       const l =
         CYAN_L + (FF0059_L - CYAN_L) * cycle + (1 - saturationCurve) * 0.2;
 
-      const target = new THREE.Color();
-      target.setHSL((h < 0 ? h + 360 : h) / 360, s, l);
+      SCRATCH_COLOR.setHSL((h < 0 ? h + 360 : h) / 360, s, l);
       if (mesh.current.material) {
-        (mesh.current.material as THREE.PointsMaterial).color = target;
+        (mesh.current.material as THREE.PointsMaterial).color.copy(
+          SCRATCH_COLOR
+        );
       }
     }
 
@@ -433,6 +342,8 @@ function Particles({
     if (currentPositionsRef) {
       currentPositionsRef.current = positionsArray;
     }
+
+    let randCursor = randCursorRef.current;
 
     for (let i = 0; i < deferredCount; i++) {
       const i3 = i * 3;
@@ -455,17 +366,20 @@ function Particles({
       );
 
       if (distanceFromCenter > 0) {
-        // Calculate tangential velocity for circular flow
-        const angle = Math.atan2(particleY - centerY, particleX - centerX);
-        const tangentX = -Math.sin(angle); // Perpendicular to radial direction
-        const tangentY = Math.cos(angle);
+        // sin(atan2(y,x)) = y/dist, cos(atan2(y,x)) = x/dist (center is 0,0),
+        // so the orbital/radial basis needs no atan2/sin/cos.
+        const invDist = 1 / distanceFromCenter;
+        const cosA = particleX * invDist;
+        const sinA = particleY * invDist;
+        const tangentX = -sinA; // Perpendicular to radial direction
+        const tangentY = cosA;
 
         // Create varying orbital speeds based on distance
         const orbitalSpeed = convectionStrength * 0.1;
 
         // Add radial convection with bias toward filling center
-        const radialX = Math.cos(angle);
-        const radialY = Math.sin(angle);
+        const radialX = cosA;
+        const radialY = sinA;
 
         // Create inward bias to fill the center void
         const inwardBias = obstacleEnabled
@@ -517,8 +431,14 @@ function Particles({
 
         // Add turbulent noise (reduced on mobile)
         const noiseFactor = isMobile ? 0.003 : 0.005;
-        const noiseX = (Math.random() - 0.5) * noiseFactor * convectionStrength;
-        const noiseY = (Math.random() - 0.5) * noiseFactor * convectionStrength;
+        const noiseX =
+          RAND_TABLE[randCursor++ & RAND_MASK] *
+          noiseFactor *
+          convectionStrength;
+        const noiseY =
+          RAND_TABLE[randCursor++ & RAND_MASK] *
+          noiseFactor *
+          convectionStrength;
 
         velocities[i3] += convectionX + noiseX;
         velocities[i3 + 1] += convectionY + noiseY;
@@ -533,21 +453,18 @@ function Particles({
       // Mouse interaction - particles bounce away from cursor
 
       // Only apply mouse interaction when active
-      if (mouse.current.active) {
-        const distanceFromMouse = Math.sqrt(
-          Math.pow(particleX - mouse.current.x, 2) +
-            Math.pow(particleY - mouse.current.y, 2)
-        );
+      const activeMouse = mouseRef?.current;
+      if (activeMouse?.active) {
+        const mdx = particleX - activeMouse.x;
+        const mdy = particleY - activeMouse.y;
+        const distanceFromMouse = Math.sqrt(mdx * mdx + mdy * mdy);
 
-        if (distanceFromMouse < mouseRadius) {
-          const angle = Math.atan2(
-            particleY - mouse.current.y,
-            particleX - mouse.current.x
-          );
+        if (distanceFromMouse < mouseRadius && distanceFromMouse > 0) {
           const force =
             ((mouseRadius - distanceFromMouse) / mouseRadius) * mouseForce;
-          velocities[i3] += Math.cos(angle) * force;
-          velocities[i3 + 1] += Math.sin(angle) * force;
+          const invDist = 1 / distanceFromMouse;
+          velocities[i3] += mdx * invDist * force;
+          velocities[i3 + 1] += mdy * invDist * force;
 
           // Heat up particles near mouse
           temperatures[i] = Math.min(1, temperatures[i] + mouseHeat);
@@ -556,36 +473,33 @@ function Particles({
 
       // Center obstacle interaction - gentler deflection
       if (obstacleEnabled) {
-        const distanceFromObstacle = Math.sqrt(
-          Math.pow(particleX - obstacleX, 2) +
-            Math.pow(particleY - obstacleY, 2)
-        );
+        const odx = particleX - obstacleX;
+        const ody = particleY - obstacleY;
+        const distanceFromObstacle = Math.sqrt(odx * odx + ody * ody);
 
         // Create a softer boundary that allows particles closer
         const effectiveRadius = obstacleRadius * 0.7; // Smaller effective radius
 
-        if (distanceFromObstacle < effectiveRadius) {
-          const angle = Math.atan2(
-            particleY - obstacleY,
-            particleX - obstacleX
-          );
-
-          // Gentler force curve - less aggressive repulsion
-          const forceFactor = Math.pow(
-            (effectiveRadius - distanceFromObstacle) / effectiveRadius,
-            0.5
+        if (
+          distanceFromObstacle < effectiveRadius &&
+          distanceFromObstacle > 0
+        ) {
+          // Gentler force curve - less aggressive repulsion (pow(x,0.5) = sqrt)
+          const forceFactor = Math.sqrt(
+            (effectiveRadius - distanceFromObstacle) / effectiveRadius
           );
           const force = forceFactor * obstacleForce * 0.3; // Reduced force multiplier
 
           // Add tangential component for swirling around obstacle
           const tangentialForce = force * 0.5;
-          const tangentX = -Math.sin(angle);
-          const tangentY = Math.cos(angle);
+          const invDist = 1 / distanceFromObstacle;
+          const cosA = odx * invDist;
+          const sinA = ody * invDist;
+          const tangentX = -sinA;
+          const tangentY = cosA;
 
-          velocities[i3] +=
-            Math.cos(angle) * force + tangentX * tangentialForce;
-          velocities[i3 + 1] +=
-            Math.sin(angle) * force + tangentY * tangentialForce;
+          velocities[i3] += cosA * force + tangentX * tangentialForce;
+          velocities[i3 + 1] += sinA * force + tangentY * tangentialForce;
 
           // Heat up particles near obstacle
           temperatures[i] = Math.min(1, temperatures[i] + obstacleHeat);
@@ -619,20 +533,23 @@ function Particles({
       }
 
       // Apply wind with variation
-      velocities[i3] += windX + (Math.random() - 0.5) * windVariation;
-      velocities[i3 + 1] += windY + (Math.random() - 0.5) * windVariation;
+      velocities[i3] +=
+        windX + RAND_TABLE[randCursor++ & RAND_MASK] * windVariation;
+      velocities[i3 + 1] +=
+        windY + RAND_TABLE[randCursor++ & RAND_MASK] * windVariation;
 
-      // Apply vortex force
-      if (vortexStrength > 0) {
-        const vortexDist = Math.sqrt(
-          particleX * particleX + particleY * particleY
-        );
-        if (vortexDist < vortexRadius && vortexDist > 0) {
-          const vortexAngle = Math.atan2(particleY, particleX) + Math.PI / 2;
-          const vortexForce = (1 - vortexDist / vortexRadius) * vortexStrength;
-          velocities[i3] += Math.cos(vortexAngle) * vortexForce;
-          velocities[i3 + 1] += Math.sin(vortexAngle) * vortexForce;
-        }
+      // Apply vortex force. cos(a+90°) = -y/dist, sin(a+90°) = x/dist, and the
+      // vortex distance equals distanceFromCenter, so reuse it (no extra sqrt).
+      if (
+        vortexStrength > 0 &&
+        distanceFromCenter > 0 &&
+        distanceFromCenter < vortexRadius
+      ) {
+        const vortexForce =
+          (1 - distanceFromCenter / vortexRadius) * vortexStrength;
+        const invDist = 1 / distanceFromCenter;
+        velocities[i3] += -particleY * invDist * vortexForce;
+        velocities[i3 + 1] += particleX * invDist * vortexForce;
       }
 
       // Apply scroll inertia to particles
@@ -644,9 +561,10 @@ function Particles({
       velocities[i3 + 1] *= damping;
 
       // Add turbulence
-      velocities[i3] += (Math.random() - 0.5) * turbulence * turbulenceScale;
+      velocities[i3] +=
+        RAND_TABLE[randCursor++ & RAND_MASK] * turbulence * turbulenceScale;
       velocities[i3 + 1] +=
-        (Math.random() - 0.5) * turbulence * turbulenceScale;
+        RAND_TABLE[randCursor++ & RAND_MASK] * turbulence * turbulenceScale;
 
       // Boundary bouncing with elastic collision and rounded corners
       if (boundaryRoundness > 0) {
@@ -758,6 +676,7 @@ function Particles({
       }
     }
 
+    randCursorRef.current = randCursor;
     geometry.attributes.position.needsUpdate = true;
   });
 
@@ -809,6 +728,10 @@ export function ParticleField(
   });
   const containerRef = useRef<HTMLDivElement>(null);
   const currentPositionsRef = useRef<Float32Array | null>(null);
+  const pausedRef = useRef(false);
+  const mouseRef = useRef({ x: 0, y: 0, active: false });
+  const scrollVelocityRef = useRef({ x: 0, y: 0 });
+  const scrollSeqRef = useRef(0);
 
   // Handle position copying when requested
   const { onCopyPositions, copyTrigger } = props;
@@ -847,9 +770,115 @@ export function ParticleField(
     };
   }, []);
 
+  // Pause the simulation when the field scrolls off-screen or the tab is hidden
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    let isOnScreen = true;
+    const updatePaused = () => {
+      pausedRef.current = !isOnScreen || document.hidden;
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isOnScreen = entries[0]?.isIntersecting ?? true;
+        updatePaused();
+      },
+      { threshold: 0 }
+    );
+    observer.observe(element);
+    document.addEventListener('visibilitychange', updatePaused);
+    updatePaused();
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', updatePaused);
+    };
+  }, []);
+
+  // Shared pointer tracking for all particle systems (one listener set)
+  useEffect(() => {
+    const activePointers = new Set<number>();
+
+    const handlePointerDown = (event: PointerEvent) => {
+      activePointers.add(event.pointerId);
+    };
+    const handlePointerMove = (event: PointerEvent) => {
+      if (
+        event.pointerType === 'mouse' ||
+        activePointers.has(event.pointerId)
+      ) {
+        const element = containerRef.current;
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          mouseRef.current.x =
+            ((event.clientX - rect.left) / rect.width - 0.5) *
+            containerSize.width;
+          mouseRef.current.y =
+            -((event.clientY - rect.top) / rect.height - 0.5) *
+            containerSize.height;
+          mouseRef.current.active = true;
+        }
+      }
+    };
+    const handlePointerUp = (event: PointerEvent) => {
+      activePointers.delete(event.pointerId);
+      if (activePointers.size === 0) mouseRef.current.active = false;
+    };
+    const handlePointerCancel = (event: PointerEvent) => {
+      activePointers.delete(event.pointerId);
+      if (activePointers.size === 0) mouseRef.current.active = false;
+    };
+    const handlePointerLeave = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse') mouseRef.current.active = false;
+    };
+
+    window.addEventListener('pointerdown', handlePointerDown);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('pointercancel', handlePointerCancel);
+    window.addEventListener('pointerleave', handlePointerLeave);
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('pointercancel', handlePointerCancel);
+      window.removeEventListener('pointerleave', handlePointerLeave);
+    };
+  }, [containerSize.width, containerSize.height]);
+
+  // Shared scroll-velocity tracking (one listener). Each field applies its own
+  // strength/damping/max in its frame loop, keyed off scrollSeqRef.
+  useEffect(() => {
+    let lastTime = performance.now();
+    let lastX = window.scrollX || window.pageXOffset;
+    let lastY = window.scrollY || window.pageYOffset;
+
+    const handleScroll = () => {
+      const now = performance.now();
+      const deltaTime = (now - lastTime) / 1000;
+      lastTime = now;
+      const currentX = window.scrollX || window.pageXOffset;
+      const currentY = window.scrollY || window.pageYOffset;
+      if (deltaTime > 0 && deltaTime < 0.1) {
+        scrollVelocityRef.current.x = (currentX - lastX) / deltaTime;
+        scrollVelocityRef.current.y = (currentY - lastY) / deltaTime;
+        scrollSeqRef.current += 1;
+      }
+      lastX = currentX;
+      lastY = currentY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
+      role="presentation"
       className="particle-container pointer-events-none absolute inset-0 p-0"
     >
       {isClient && (
@@ -906,6 +935,10 @@ export function ParticleField(
                 currentPositionsRef={
                   index === 0 ? currentPositionsRef : undefined
                 }
+                pausedRef={pausedRef}
+                mouseRef={mouseRef}
+                scrollVelocityRef={scrollVelocityRef}
+                scrollSeqRef={scrollSeqRef}
               />
             ))
           ) : (
@@ -915,6 +948,10 @@ export function ParticleField(
               {...props}
               containerSize={containerSize}
               currentPositionsRef={currentPositionsRef}
+              pausedRef={pausedRef}
+              mouseRef={mouseRef}
+              scrollVelocityRef={scrollVelocityRef}
+              scrollSeqRef={scrollSeqRef}
             />
           )}
         </Canvas>

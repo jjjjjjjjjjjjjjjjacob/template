@@ -2,5 +2,6 @@
 
 .nitro
 .output
+.wrangler
 .tanstack
 node_modules

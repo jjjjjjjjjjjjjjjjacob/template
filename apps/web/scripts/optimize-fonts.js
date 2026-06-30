@@ -154,6 +154,31 @@ function quickSubset(inputPath, outputPath, unicodeRange) {
   }
 }
 
+function formatUnicodeRange(unicodeRange) {
+  const ranges = unicodeRange
+    .split(',')
+    .map((range) => range.trim())
+    .filter(Boolean);
+  const lines = [];
+  let currentLine = '';
+
+  for (const range of ranges) {
+    const candidate = currentLine ? `${currentLine}, ${range}` : range;
+    if (candidate.length > 80 && currentLine) {
+      lines.push(`${currentLine},`);
+      currentLine = range;
+    } else {
+      currentLine = candidate;
+    }
+  }
+
+  if (currentLine) {
+    lines.push(`${currentLine};`);
+  }
+
+  return `\n  unicode-range:\n    ${lines.join('\n    ')}`;
+}
+
 function generateCSS(processedFonts) {
   let css = `/* Hybrid Font Loading - Fast & Optimized */
 
@@ -184,14 +209,13 @@ function generateCSS(processedFonts) {
   src: url('${fontPath}') format('woff2');
   font-weight: ${fontWeight};
   font-style: normal;
-  font-display: swap;${font.unicodeRange ? `\n  unicode-range: ${font.unicodeRange};` : ''}
+  font-display: swap;${font.unicodeRange ? formatUnicodeRange(font.unicodeRange) : ''}
 }
 
 `;
   });
 
-  css += `
-/* Font Stacks */
+  css += `/* Font Stacks */
 :root {
   --font-sans: 'Utendo', 'GeistSans', system-ui, -apple-system, sans-serif;
   --font-mono: 'GeistMono', ui-monospace, monospace;
@@ -200,7 +224,8 @@ function generateCSS(processedFonts) {
 /* Apply font to common elements */
 body {
   font-family: var(--font-sans);
-}`;
+}
+`;
 
   return css;
 }

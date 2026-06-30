@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useSearch } from '@tanstack/react-router';
-import { useQuery } from 'convex/react';
+import { useQuery } from '@tanstack/react-query';
+import { convexQuery } from '@convex-dev/react-query';
 import { api } from '@template/convex';
 
 export interface ResumeProfilePayload {
@@ -49,6 +50,7 @@ export interface ResumeProfilePayload {
       tools: string[];
     };
     previews: string[];
+    previewCaptions?: string[];
   }>;
   skills: Array<{
     category: string;
@@ -132,6 +134,8 @@ export interface ResumeFilterResult {
   projects: ResumeProject[];
   skills: ResumeSkill[];
 }
+
+type ResumeFilterRoute = '/' | '/legacy';
 
 function parseVariant(searchParams: Record<string, unknown>): ResumeVariant {
   if (typeof searchParams.resume === 'string') {
@@ -234,14 +238,21 @@ function normalizeFilterInput(filters: Partial<ResumeFilters>): ResumeFilters {
   };
 }
 
-export function useResumeFilter(): ResumeFilterResult {
-  const searchParams = useSearch({ from: '/' });
+export function useResumeFilter(
+  options: { from?: ResumeFilterRoute } = {}
+): ResumeFilterResult {
+  const from = options.from ?? '/';
+  const searchParams = useSearch({ from });
   const variant = parseVariant(searchParams);
   const filters = useMemo(() => parseFilters(searchParams), [searchParams]);
 
-  const payload = useQuery(api.resume.getProfile, { slug: variant }) as
-    | ResumeProfilePayload
-    | undefined;
+  // Use the TanStack Query + Convex integration so the profile can be
+  // prefetched in the route loader and rendered server-side (SEO + no
+  // content pop-in), while staying live-reactive via convexQueryClient.
+  const profileQuery = useQuery({
+    ...convexQuery(api.resume.getProfile, { slug: variant }),
+  });
+  const payload = profileQuery.data as ResumeProfilePayload | undefined;
 
   return useMemo(() => {
     const profile = payload?.profile;
@@ -264,8 +275,11 @@ export function useResumeFilter(): ResumeFilterResult {
   }, [filters, payload, variant]);
 }
 
-export function useResumeFilterNavigation() {
-  const searchParams = useSearch({ from: '/' });
+export function useResumeFilterNavigation(
+  options: { from?: ResumeFilterRoute } = {}
+) {
+  const from = options.from ?? '/';
+  const searchParams = useSearch({ from });
   const variant = parseVariant(searchParams);
 
   const createFilterUrl = useCallback(
@@ -298,9 +312,9 @@ export function useResumeFilterNavigation() {
       }
 
       const queryString = params.toString();
-      return queryString.length > 0 ? `/?${queryString}` : '/';
+      return queryString.length > 0 ? `${from}?${queryString}` : from;
     },
-    [variant]
+    [from, variant]
   );
 
   return { createFilterUrl };

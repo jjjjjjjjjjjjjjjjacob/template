@@ -1,0 +1,479 @@
+/* alt-3b · "Index" + the soluo morph metaball + cursor-safe (menu-aim) index. */
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/alt/Archivo-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.alt-3-root {
+  --bg: #efeeea;
+  --ink: #1a1a18;
+  --ink-soft: #5c5b55;
+  --ink-faint: #918f86;
+  --rule: #d3d1c8;
+
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  overflow-x: hidden;
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: 'Archivo', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.alt-3-grotesk {
+  font-family: 'Archivo', system-ui, sans-serif;
+}
+
+.alt-3-mono {
+  font-family: 'GeistMono', ui-monospace, monospace;
+}
+
+.alt-3-fade-in {
+  opacity: 0;
+  animation: alt3-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes alt3-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.alt-3-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.95rem 0;
+  text-align: left;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+  color: var(--ink-faint);
+  transition: color 0.4s ease;
+}
+
+.alt-3-row:last-of-type {
+  border-bottom: 1px solid var(--rule);
+}
+
+.alt-3-row-num {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.alt-3-row-title {
+  position: relative;
+  width: fit-content;
+  font-size: 1.06rem;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink-soft);
+  transition: color 0.4s ease;
+}
+
+.alt-3-row-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 100%;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.alt-3-row-year {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.alt-3-row:hover,
+.alt-3-row:focus-visible,
+.alt-3-row[data-active='true'] {
+  color: var(--ink);
+  outline: none;
+}
+
+.alt-3-row:hover .alt-3-row-title,
+.alt-3-row:focus-visible .alt-3-row-title,
+.alt-3-row[data-active='true'] .alt-3-row-title {
+  color: var(--ink);
+}
+
+.alt-3-row:hover .alt-3-row-title::after,
+.alt-3-row:focus-visible .alt-3-row-title::after,
+.alt-3-row[data-active='true'] .alt-3-row-title::after {
+  transform: scaleX(1);
+}
+
+.alt-3-detail {
+  animation: alt3-detail 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes alt3-detail {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.alt-3-link {
+  position: relative;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: color 0.35s ease;
+}
+
+.alt-3-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.alt-3-link:hover,
+.alt-3-link:focus-visible {
+  color: var(--ink);
+  outline: none;
+}
+
+.alt-3-link:hover::after,
+.alt-3-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alt-3-fade-in,
+  .alt-3-detail {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* `overflow-x: hidden` (inherited from .alt-3-root) would turn the root into a
+   scroll container and break the sticky sidebar. `clip` clips horizontally
+   without establishing a scroll container, so position: sticky still pins to
+   the viewport. */
+.alt-3-root.alt-3b-root {
+  overflow-x: clip;
+}
+
+/* The metaball sits behind everything as a fixed field. Its own shader paints
+   the paper bg, so the opaque `--bg` on .alt-3-root is the WebGL-less fallback.
+   The mask keeps the identity column clean and blooms the morph toward the
+   right — the detail panel the cursor is travelling toward. */
+.alt-3b-metaball {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.32) 30%,
+    rgba(0, 0, 0, 0.85) 62%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(0, 0, 0, 0.32) 30%,
+    rgba(0, 0, 0, 0.85) 62%,
+    rgba(0, 0, 0, 1) 100%
+  );
+}
+
+/* The metaball is mounted only once the active project's palette is known
+   (gated in index.tsx), then blooms in here — delayed past the start of the
+   content cascade so the page reads "content first, ambient field after"
+   rather than flashing a default-purple blob. */
+.alt-3b-metaball-veil {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: alt3b-meta-in 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+}
+
+@keyframes alt3b-meta-in {
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alt-3b-metaball-veil {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Lift page content above the metaball field. */
+.alt-3b-root > main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- independent two-pane layout -------------------------------------- */
+/* On desktop the page itself does NOT scroll — the identity+index and the
+   detail are separate panes that each scroll internally. This fully decouples
+   them: the right column's height has zero bearing on the sidebar. (A sticky
+   sidebar still drifts near the bottom of the scroll, because sticky releases
+   at the bottom of its grid row, whose height = the right content.)
+   On mobile the layout stacks and the page scrolls normally. */
+.alt-3b-aside {
+  padding-top: 8vh;
+  padding-bottom: 0;
+}
+.alt-3b-detail-col {
+  min-width: 0;
+  padding-top: 1.5rem;
+  padding-bottom: 10vh;
+}
+
+@media (min-width: 768px) {
+  .alt-3b-shell {
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .alt-3b-aside,
+  .alt-3b-detail-col {
+    height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+  }
+  .alt-3b-aside::-webkit-scrollbar,
+  .alt-3b-detail-col::-webkit-scrollbar {
+    display: none;
+  }
+  .alt-3b-aside {
+    display: flex;
+    flex-direction: column;
+    padding-top: 12vh;
+    padding-bottom: 10vh;
+  }
+  .alt-3b-detail-col {
+    padding-top: 12vh;
+    padding-bottom: 12vh;
+  }
+}
+
+/* ---- "work cited": visual examples, not links ------------------------- */
+.alt-3b-cited {
+  margin-top: 2.75rem;
+}
+.alt-3b-media-list {
+  display: grid;
+  gap: 2rem;
+  max-width: 34rem;
+}
+/* Each example is laid out by the media's orientation:
+   - landscape → stacked: media on top, description beneath.
+   - portrait  → one horizontal block: description left, media right. */
+.alt-3b-media {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+.alt-3b-media[data-orientation='portrait'][data-has-desc='true'] {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 1.5rem;
+}
+.alt-3b-media[data-orientation='portrait'][data-has-desc='true']
+  .alt-3b-media-desc {
+  grid-column: 1;
+  grid-row: 1;
+}
+.alt-3b-media[data-orientation='portrait'][data-has-desc='true']
+  .alt-3b-media-frame {
+  grid-column: 2;
+  grid-row: 1;
+}
+/* Landscape (stacked) media nests under the hanging number: its left edge
+   aligns with the description text (past the 1.6rem number column + 0.75rem
+   gap), so the number marks the whole block instead of sitting beneath a
+   full-bleed frame that bleeds over it. */
+.alt-3b-media[data-orientation='landscape'][data-has-desc='true']
+  .alt-3b-media-frame {
+  margin-left: calc(1.6rem + 0.75rem);
+  width: calc(100% - 1.6rem - 0.75rem);
+}
+/* Frame wraps the media at its natural (content) height. Iframes have no
+   intrinsic height, so only those keep a fixed aspect box. */
+.alt-3b-media-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.45);
+}
+.alt-3b-media-frame[data-kind='iframe'] {
+  aspect-ratio: 16 / 10;
+}
+/* Images/videos display full column width at their natural height (no crop). */
+.alt-3b-media-el {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+.alt-3b-media-frame[data-kind='image'] .alt-3b-media-el,
+.alt-3b-media-frame[data-kind='video'] .alt-3b-media-el {
+  /* the cover anchor handles interaction */
+  pointer-events: none;
+}
+/* Portrait media is height-bounded so its vertical budget matches landscape
+   rows instead of dominating the column; width follows from the aspect. */
+.alt-3b-media[data-orientation='portrait'] .alt-3b-media-frame {
+  width: auto;
+  max-width: 100%;
+}
+.alt-3b-media[data-orientation='portrait'] .alt-3b-media-el {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 20rem;
+}
+/* Render the page at 2× the frame, then scale down — a roomier "thumbnail"
+   of the live site rather than a cramped mobile reflow. */
+.alt-3b-media-iframe {
+  position: absolute;
+  inset: 0;
+  width: 200%;
+  height: 200%;
+  transform: scale(0.5);
+  transform-origin: top left;
+  background: #fff;
+  pointer-events: none;
+}
+.alt-3b-media-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.alt-3b-media-cover:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.alt-3b-media-frame:hover {
+  border-color: var(--ink-faint);
+}
+/* description: under the media (landscape) or to its left (portrait split).
+   Spacing comes from the figure's flex/grid gap, not a margin. */
+.alt-3b-media-desc {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0.75rem;
+  align-items: baseline;
+  max-width: 34rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.alt-3b-media-num {
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+/* ---- dark mode -------------------------------------------------------- */
+/* Page-local theme: flipped by `data-theme="dark"` on the root (never the
+   global `.dark`), so alt-3b reads as designed regardless of the site toggle.
+   Every surface is var-driven, so overriding the palette re-themes the page. */
+.alt-3-root.alt-3b-root[data-theme='dark'] {
+  --bg: #131210;
+  --ink: #ecebe4;
+  --ink-soft: #a3a199;
+  --ink-faint: #6c6a62;
+  --rule: #2a2925;
+}
+/* The two hardcoded whites in the media frames (the iframe keeps its white —
+   it's a thumbnail of a real, light site). */
+.alt-3-root.alt-3b-root[data-theme='dark'] .alt-3b-media-frame {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---- theme toggle ----------------------------------------------------- */
+/* Bespoke (not shadcn) so it inherits the page palette. Sits in the aside
+   eyebrow row; the circular reveal originates from its centre. */
+.alt-3b-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin: -0.4rem -0.4rem 0 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-faint);
+  cursor: pointer;
+  transition:
+    color 0.35s ease,
+    border-color 0.35s ease;
+}
+.alt-3b-theme-toggle:hover,
+.alt-3b-theme-toggle:focus-visible {
+  color: var(--ink);
+  border-color: var(--rule);
+  outline: none;
+}
+.alt-3b-theme-toggle svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* ---- circular theme reveal (see theme-reveal.ts) ---------------------- */
+/* Transient class on <html> while a swap is in flight. Drops transitions so the
+   reduced-motion / unsupported-browser fallback swaps instantly rather than
+   cross-fading every element's colour. */
+.alt3b-theme-transitioning *,
+.alt3b-theme-transitioning *::before,
+.alt3b-theme-transitioning *::after {
+  transition: none;
+}
+
+/* The reveal: hold the old snapshot fully opaque underneath and grow the new
+   one over it via the origin-specific keyframes injected at runtime. Scoped
+   under the transient <html> class so these never touch any other transition. */
+html.alt3b-theme-transitioning-circle::view-transition-old(root) {
+  animation: none;
+  z-index: 1;
+}
+html.alt3b-theme-transitioning-circle::view-transition-new(root) {
+  /* 680ms must match the stage timing in theme-reveal.ts */
+  animation: alt3b-theme-expand-circle 680ms forwards;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.alt3b-theme-transitioning-circle::view-transition-new(root) {
+    animation: none;
+  }
+}

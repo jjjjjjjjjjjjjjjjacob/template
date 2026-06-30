@@ -11,6 +11,8 @@
 
 import posthog from 'posthog-js';
 
+type ResumeDownloadFormat = 'pdf' | 'png' | 'md' | 'txt' | 'docx';
+
 /**
  * Helper function to safely capture events only when PostHog is initialized
  */
@@ -63,7 +65,11 @@ export const trackEvents = {
     }),
 
   // Conversion Events (Key Business Metrics)
-  resumeDownloaded: (format: 'pdf' | 'png', theme: string, source: string) =>
+  resumeDownloaded: (
+    format: ResumeDownloadFormat,
+    theme: string,
+    source: string
+  ) =>
     safeCapture('resume_downloaded', {
       format,
       theme,
@@ -72,7 +78,7 @@ export const trackEvents = {
     }),
 
   resumeDownloadAttempted: (
-    format: 'pdf' | 'png',
+    format: ResumeDownloadFormat,
     source: string,
     success: boolean,
     error?: string

@@ -156,6 +156,8 @@ function ProjectSlideshow({
           <img
             src={cleanUrl}
             alt={`${title} preview - ${currentIndex + 1}`}
+            loading="lazy"
+            decoding="async"
             className={cn(
               'bg-background absolute inset-0 h-full w-full rounded-2xl object-cover shadow-2xl transition-opacity duration-300',
               isLoading ? 'opacity-0' : 'opacity-100'

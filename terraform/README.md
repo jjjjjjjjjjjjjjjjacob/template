@@ -58,7 +58,7 @@ chmod +x generate-backend-config.sh
 ./generate-backend-config.sh
 ```
 
-This creates `backend.tfvars` with the correct R2 bucket and credentials for remote state.
+This creates `backend.tfvars` with the correct R2 bucket and endpoint for remote state. Terraform reads the R2 access key and secret from `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
 
 ### 4. Select/Create a Workspace
 

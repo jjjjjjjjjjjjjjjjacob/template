@@ -30,12 +30,17 @@ jobs:
       - name: Cache Terraform plugins
         uses: actions/cache@v4
         with:
-          path: |
-            ~/.terraform.d/plugin-cache
-            terraform/.terraform
+          path: ~/.terraform.d/plugin-cache
           key: ${{ runner.os }}-terraform-${{ inputs.environment }}-${{ hashFiles('terraform/**/*.tf') }}
           restore-keys: |
             ${{ runner.os }}-terraform-${{ inputs.environment }}-
+
+      - name: Configure Terraform plugin cache
+        run: |
+          mkdir -p ~/.terraform.d/plugin-cache
+          cat > ~/.terraformrc << EOF
+          plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"
+          EOF
 
       - name: Determine workspace and environment variables
         id: env
@@ -58,19 +63,24 @@ jobs:
           TF_VAR_cloudflare_zone: ${{ vars.CLOUDFLARE_ZONE }}
           TF_VAR_environment: ${{ inputs.environment }}
           TF_VAR_pr_number: ${{ inputs.pr_number }}
-          R2_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: |
           chmod +x ./generate-backend-config.sh
           ./generate-backend-config.sh
 
       - name: Initialize Terraform with backend
         working-directory: terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: |
-          terraform init -backend-config=backend.tfvars
+          rm -rf .terraform
+          terraform init -reconfigure -backend-config=backend.tfvars
 
       - name: Create or select workspace
         working-directory: terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: |
           terraform workspace select ${{ steps.env.outputs.workspace }} || terraform workspace new ${{ steps.env.outputs.workspace }}
 
@@ -84,6 +94,8 @@ jobs:
           TF_VAR_cloudflare_zone: ${{ vars.CLOUDFLARE_ZONE }}
           TF_VAR_environment: ${{ inputs.environment }}
           TF_VAR_pr_number: ${{ inputs.pr_number }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: |
           # Set prefix based on environment
           PREFIX=""

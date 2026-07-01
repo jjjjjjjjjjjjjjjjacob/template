@@ -46,18 +46,22 @@ jobs:
           TF_VAR_cloudflare_zone: ${{ vars.CLOUDFLARE_ZONE }}
           TF_VAR_environment: ephemeral
           TF_VAR_pr_number: ${{ github.event.pull_request.number }}
-          R2_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: |
           chmod +x ./generate-backend-config.sh
           ./generate-backend-config.sh
 
       - name: Terraform Init
         working-directory: terraform
-        run: terraform init -backend-config=backend.tfvars
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
+        run: terraform init -reconfigure -backend-config=backend.tfvars
 
       - name: Select Ephemeral Workspace
         working-directory: terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: terraform workspace select pr-${{ github.event.pull_request.number }}
 
       - name: Terraform Destroy
@@ -77,6 +81,9 @@ jobs:
 
       - name: Delete Ephemeral Workspace
         working-directory: terraform
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_SECRET_ACCESS_KEY }}
         run: terraform workspace select default && terraform workspace delete pr-${{ github.event.pull_request.number }}
 
       # Notes:

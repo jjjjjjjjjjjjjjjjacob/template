@@ -1,9 +1,4 @@
 import { createLazyFileRoute, useRouter, Link } from '@tanstack/react-router';
-import {
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
-} from '@clerk/tanstack-react-start';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '@template/convex';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -223,7 +218,7 @@ function BlogEditorPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="admin-page">
         <div className="py-8 text-center">
           <p className="text-muted-foreground">loading post...</p>
         </div>
@@ -233,8 +228,8 @@ function BlogEditorPage() {
 
   if (error || !post) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">
               failed to load post: {String(error) || 'post not found'}
@@ -257,188 +252,176 @@ function BlogEditorPage() {
   };
 
   return (
-    <>
-      <SignedOut>
-        <RedirectToSignIn redirectUrl={`/admin/blog/${postId}`} />
-      </SignedOut>
-      <SignedIn>
-        <div className="container mx-auto px-4 py-8">
-          {/* Mobile Layout */}
-          <div className="mb-6 sm:hidden">
-            <div className="mb-4 flex items-center gap-4">
-              <Link to="/admin/blog">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  back
-                </Button>
-              </Link>
-              <div className="min-w-0 flex-1">
-                <h1 className="text-xl font-light">edit post</h1>
-                <div className="mt-1 flex flex-wrap items-center gap-2">
-                  <Badge variant={published ? 'default' : 'secondary'}>
-                    {published ? 'published' : 'draft'}
-                  </Badge>
-                  {hasUnsavedChanges && (
-                    <Badge variant="outline" className="text-orange-600">
-                      unsaved changes
-                    </Badge>
-                  )}
-                  {lastSaved && !hasUnsavedChanges && (
-                    <span className="text-muted-foreground text-xs">
-                      {formatLastSaved()}
-                    </span>
-                  )}
-                </div>
-              </div>
+    <div className="admin-page admin-page-wide">
+      <div className="mb-6 sm:hidden">
+        <div className="mb-4 flex items-center gap-4">
+          <Link to="/admin/blog">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              back
+            </Button>
+          </Link>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl font-light">edit post</h1>
+            <div className="mt-1 flex flex-wrap items-center gap-2">
+              <Badge variant={published ? 'default' : 'secondary'}>
+                {published ? 'published' : 'draft'}
+              </Badge>
+              {hasUnsavedChanges && (
+                <Badge variant="outline" className="text-orange-600">
+                  unsaved changes
+                </Badge>
+              )}
+              {lastSaved && !hasUnsavedChanges && (
+                <span className="text-muted-foreground text-xs">
+                  {formatLastSaved()}
+                </span>
+              )}
             </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleTogglePublish}
-                disabled={false}
-                className="flex-1"
-              >
-                {published ? (
-                  <>
-                    <EyeOff className="mr-2 h-4 w-4" />
-                    unpublish
-                  </>
-                ) : (
-                  <>
-                    <Eye className="mr-2 h-4 w-4" />
-                    publish
-                  </>
-                )}
-              </Button>
-
-              <Button
-                onClick={handleSave}
-                disabled={!hasUnsavedChanges}
-                size="sm"
-                className="flex-1"
-              >
-                <Save className="mr-2 h-4 w-4" />
-                save
-              </Button>
-
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleDelete}
-                disabled={false}
-                className="flex-1"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                delete
-              </Button>
-            </div>
-          </div>
-
-          {/* Desktop Layout */}
-          <div className="mb-6 hidden items-center justify-between sm:flex">
-            <div className="flex items-center gap-4">
-              <Link to="/admin/blog">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  back
-                </Button>
-              </Link>
-              <div>
-                <h1 className="text-2xl font-light">edit post</h1>
-                <div className="mt-1 flex items-center gap-2">
-                  <Badge variant={published ? 'default' : 'secondary'}>
-                    {published ? 'published' : 'draft'}
-                  </Badge>
-                  {hasUnsavedChanges && (
-                    <Badge variant="outline" className="text-orange-600">
-                      unsaved changes
-                    </Badge>
-                  )}
-                  {lastSaved && !hasUnsavedChanges && (
-                    <span className="text-muted-foreground text-sm">
-                      {formatLastSaved()}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleTogglePublish}
-                disabled={false}
-              >
-                {published ? (
-                  <>
-                    <EyeOff className="mr-2 h-4 w-4" />
-                    unpublish
-                  </>
-                ) : (
-                  <>
-                    <Eye className="mr-2 h-4 w-4" />
-                    publish
-                  </>
-                )}
-              </Button>
-
-              <Button
-                onClick={handleSave}
-                disabled={!hasUnsavedChanges}
-                size="sm"
-              >
-                <Save className="mr-2 h-4 w-4" />
-                save
-              </Button>
-
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={handleDelete}
-                disabled={false}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                delete
-              </Button>
-            </div>
-          </div>
-
-          <div className="space-y-6">
-            <MarkdownEditor
-              value={markdown}
-              onChange={(value) => handleContentChange('markdown', value)}
-              title={title}
-              onTitleChange={(value) => handleContentChange('title', value)}
-              slug={slug}
-              onSlugChange={(value) => handleContentChange('slug', value)}
-              postId={postId as Id<'blogPosts'>}
-              onSave={handleSave}
-              images={images}
-            />
-
-            <Card>
-              <CardHeader>
-                <CardTitle>images</CardTitle>
-                <CardDescription>
-                  upload and manage blog post images
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <BlogImageManager
-                  postId={postId as Id<'blogPosts'>}
-                  images={images}
-                  thumbnailId={thumbnailId}
-                  onImagesChange={setImages}
-                  onThumbnailChange={setThumbnailId}
-                />
-              </CardContent>
-            </Card>
           </div>
         </div>
-      </SignedIn>
-    </>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleTogglePublish}
+            disabled={false}
+            className="flex-1"
+          >
+            {published ? (
+              <>
+                <EyeOff className="mr-2 h-4 w-4" />
+                unpublish
+              </>
+            ) : (
+              <>
+                <Eye className="mr-2 h-4 w-4" />
+                publish
+              </>
+            )}
+          </Button>
+
+          <Button
+            onClick={handleSave}
+            disabled={!hasUnsavedChanges}
+            size="sm"
+            className="flex-1"
+          >
+            <Save className="mr-2 h-4 w-4" />
+            save
+          </Button>
+
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDelete}
+            disabled={false}
+            className="flex-1"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            delete
+          </Button>
+        </div>
+      </div>
+
+      <div className="admin-page-header hidden sm:flex">
+        <div className="flex items-center gap-4">
+          <Link to="/admin/blog">
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              back
+            </Button>
+          </Link>
+          <div>
+            <p className="admin-page-kicker">content</p>
+            <h1 className="admin-page-title">edit post</h1>
+            <div className="mt-1 flex items-center gap-2">
+              <Badge variant={published ? 'default' : 'secondary'}>
+                {published ? 'published' : 'draft'}
+              </Badge>
+              {hasUnsavedChanges && (
+                <Badge variant="outline" className="text-orange-600">
+                  unsaved changes
+                </Badge>
+              )}
+              {lastSaved && !hasUnsavedChanges && (
+                <span className="text-muted-foreground text-sm">
+                  {formatLastSaved()}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleTogglePublish}
+            disabled={false}
+          >
+            {published ? (
+              <>
+                <EyeOff className="mr-2 h-4 w-4" />
+                unpublish
+              </>
+            ) : (
+              <>
+                <Eye className="mr-2 h-4 w-4" />
+                publish
+              </>
+            )}
+          </Button>
+
+          <Button onClick={handleSave} disabled={!hasUnsavedChanges} size="sm">
+            <Save className="mr-2 h-4 w-4" />
+            save
+          </Button>
+
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={handleDelete}
+            disabled={false}
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            delete
+          </Button>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        <MarkdownEditor
+          value={markdown}
+          onChange={(value) => handleContentChange('markdown', value)}
+          title={title}
+          onTitleChange={(value) => handleContentChange('title', value)}
+          slug={slug}
+          onSlugChange={(value) => handleContentChange('slug', value)}
+          postId={postId as Id<'blogPosts'>}
+          onSave={handleSave}
+          images={images}
+        />
+
+        <Card className="admin-card">
+          <CardHeader>
+            <CardTitle>images</CardTitle>
+            <CardDescription>
+              upload and manage blog post images
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <BlogImageManager
+              postId={postId as Id<'blogPosts'>}
+              images={images}
+              thumbnailId={thumbnailId}
+              onImagesChange={setImages}
+              onThumbnailChange={setThumbnailId}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

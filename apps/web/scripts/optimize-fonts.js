@@ -215,7 +215,17 @@ function generateCSS(processedFonts) {
 `;
   });
 
-  css += `/* Font Stacks */
+  css += `/* The public/admin site face is registered in the head-loaded
+   stylesheet so first paint does not inherit the legacy body font. */
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/site/Archivo-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Font Stacks */
 :root {
   --font-sans: 'Utendo', 'GeistSans', system-ui, -apple-system, sans-serif;
   --font-mono: 'GeistMono', ui-monospace, monospace;
@@ -224,6 +234,12 @@ function generateCSS(processedFonts) {
 /* Apply font to common elements */
 body {
   font-family: var(--font-sans);
+}
+
+/* Critical public-shell typography. The rest of the site system lives in
+   site.css, but this rule must arrive with app.css before JavaScript runs. */
+.site-root {
+  font-family: 'Archivo', system-ui, sans-serif;
 }
 `;
 

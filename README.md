@@ -14,6 +14,7 @@ template/
 │   ├── web/              # React web application (TanStack Start)
 │   └── convex/           # Convex backend (real-time DB, serverless functions)
 ├── packages/
+│   ├── scheduler/        # @template/scheduler - Headless scheduler SDK + React UI
 │   ├── types/            # @template/types - Shared TypeScript interfaces
 │   └── utils/            # @template/utils - Shared utility functions
 ├── terraform/            # Infrastructure as code
@@ -92,6 +93,11 @@ bun install
 2. Fill in values for:
    - `VITE_CONVEX_URL`, `CONVEX_DEPLOYMENT` (Convex dashboard)
    - `VITE_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, `CLERK_WEBHOOK_SECRET` (Clerk dashboard)
+   - Google Calendar scheduling:
+     - Enable the Google Calendar API in Google Cloud. Google Meet links are created through Calendar event `conferenceData`; no Gmail API or separate email provider is required.
+     - Configure the OAuth consent screen and create OAuth Web Application credentials.
+     - Add `http://localhost:3030/admin/scheduling/google/callback` and the production callback URL as authorized redirect URIs.
+     - Set `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_REDIRECT_URI`, `GOOGLE_CALENDAR_ID`, `GOOGLE_ALLOWED_ACCOUNT_EMAIL`, `GOOGLE_TOKEN_ENCRYPTION_KEY`, and `BOOKING_PUBLIC_BASE_URL` in Convex.
    - `NGROK_AUTHTOKEN`
 
 ### Running Locally
@@ -152,6 +158,7 @@ All scripts are run from the root with Bun:
 - **Workflows:** Automated via GitHub Actions:
   - Lint, typecheck, test, build, deploy (see `.github/workflows/`)
   - Terraform manages infra, Convex and Cloudflare deploys
+- **Scheduling CI/CD secrets:** add `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `GOOGLE_OAUTH_REDIRECT_URI`, `GOOGLE_CALENDAR_ID`, `GOOGLE_ALLOWED_ACCOUNT_EMAIL`, `GOOGLE_TOKEN_ENCRYPTION_KEY`, and `BOOKING_PUBLIC_BASE_URL` to the GitHub environment used by deployment. The deploy workflow writes these into Convex env vars before deploy.
 - **Manual Deploys/Rollbacks:**
   - Trigger from GitHub Actions tab
   - Rollback via Cloudflare/Convex dashboards
@@ -182,6 +189,7 @@ All scripts are run from the root with Bun:
 
 ```typescript
 import { api } from '@template/convex';
+import { BookingFlow } from '@template/scheduler/react';
 import type { User, DataType } from '@template/types';
 import { utilityFunction } from '@template/utils';
 import { seo } from '@template/utils';
@@ -202,6 +210,8 @@ import { utilityFunction } from '@template/utils';
 ```typescript
 // @template/types
 export interface User { id: string; name: string; email: string; }
+// @template/scheduler
+export { BookingFlow } from '@template/scheduler/react';
 // @template/utils
 export function utilityFunction(param: string): string { ... }
 // @template/utils/tailwind

@@ -26,6 +26,8 @@ import type * as migrations_migrateResumeProjects from "../migrations/migrateRes
 import type * as photobooth from "../photobooth.js";
 import type * as projects from "../projects.js";
 import type * as resume from "../resume.js";
+import type * as scheduling_availability from "../scheduling/availability.js";
+import type * as scheduling from "../scheduling.js";
 import type * as search_fuzzy_search from "../search/fuzzy_search.js";
 import type * as search_search_scorer from "../search/search_scorer.js";
 import type * as search_search_utils from "../search/search_utils.js";
@@ -70,6 +72,8 @@ declare const fullApi: ApiFromModules<{
   photobooth: typeof photobooth;
   projects: typeof projects;
   resume: typeof resume;
+  "scheduling/availability": typeof scheduling_availability;
+  scheduling: typeof scheduling;
   "search/fuzzy_search": typeof search_fuzzy_search;
   "search/search_scorer": typeof search_search_scorer;
   "search/search_utils": typeof search_search_utils;

@@ -149,6 +149,12 @@ export function Header({ style }: { style?: React.CSSProperties } = {}) {
               blog
             </Link>
           )}
+          <Link
+            to="/book"
+            className="text-muted-foreground hover:text-foreground text-sm font-light tracking-wider transition-colors"
+          >
+            book
+          </Link>
           {isAdmin && (
             <Link
               to="/admin"

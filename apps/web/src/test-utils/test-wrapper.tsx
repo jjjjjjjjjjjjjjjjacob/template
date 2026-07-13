@@ -8,6 +8,7 @@ import {
   type Router,
 } from '@tanstack/react-router';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SiteVisualProvider } from '@/components/site/visual-provider';
 import type { TestWrapperOptions } from './types';
 
 /**
@@ -90,7 +91,9 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
         <MockClerkProvider>
           <MockFeatureFlagsProvider>
             <ThemeProvider>
-              <RouterProvider router={testRouter} />
+              <SiteVisualProvider>
+                <RouterProvider router={testRouter} />
+              </SiteVisualProvider>
             </ThemeProvider>
           </MockFeatureFlagsProvider>
         </MockClerkProvider>
@@ -215,7 +218,9 @@ export function createSimpleTestWrapper(
       <QueryClientProvider client={testQueryClient}>
         <MockClerkProvider>
           <MockFeatureFlagsProvider>
-            <ThemeProvider>{wrappedChildren}</ThemeProvider>
+            <ThemeProvider>
+              <SiteVisualProvider>{wrappedChildren}</SiteVisualProvider>
+            </ThemeProvider>
           </MockFeatureFlagsProvider>
         </MockClerkProvider>
       </QueryClientProvider>

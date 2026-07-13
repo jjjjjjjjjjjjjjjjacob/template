@@ -291,7 +291,7 @@ function EditProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="admin-page">
         <div className="flex items-center justify-center py-12">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
           <span className="ml-2">loading...</span>
@@ -302,8 +302,8 @@ function EditProfilePage() {
 
   if (!isAdmin) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">
               you do not have permission to access this area.
@@ -316,8 +316,8 @@ function EditProfilePage() {
 
   if (!profileData) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">profile not found</p>
             <Link to="/admin/resume">
@@ -333,8 +333,8 @@ function EditProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="admin-page admin-page-wide">
+      <div className="admin-page-header">
         <div className="flex items-center gap-4">
           <Link to="/admin/resume">
             <Button variant="ghost" size="sm">
@@ -344,16 +344,17 @@ function EditProfilePage() {
           </Link>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-light">edit profile</h1>
+              <div>
+                <p className="admin-page-kicker">resume</p>
+                <h1 className="admin-page-title">edit profile</h1>
+              </div>
               {hasChanges && (
                 <Badge variant="outline" className="text-orange-500">
                   unsaved
                 </Badge>
               )}
             </div>
-            <p className="text-muted-foreground text-sm">
-              {profileData.profile.name}
-            </p>
+            <p className="admin-page-description">{profileData.profile.name}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -370,7 +371,7 @@ function EditProfilePage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">profile details</CardTitle>
             </CardHeader>
@@ -452,7 +453,7 @@ function EditProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">contact information</CardTitle>
             </CardHeader>
@@ -529,7 +530,7 @@ function EditProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">default filters</CardTitle>
             </CardHeader>
@@ -569,7 +570,7 @@ function EditProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">ordering</CardTitle>
             </CardHeader>

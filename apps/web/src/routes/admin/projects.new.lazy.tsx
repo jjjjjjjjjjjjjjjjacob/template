@@ -148,7 +148,7 @@ function NewProjectPage() {
 
   if (authLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="admin-page">
         <div className="flex items-center justify-center py-12">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
           <span className="ml-2">loading...</span>
@@ -159,8 +159,8 @@ function NewProjectPage() {
 
   if (!isAdmin) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">
               you do not have permission to access this area.
@@ -172,8 +172,8 @@ function NewProjectPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="admin-page admin-page-wide">
+      <div className="admin-page-header">
         <div className="flex items-center gap-4">
           <Link to="/admin/projects">
             <Button variant="ghost" size="sm">
@@ -182,8 +182,9 @@ function NewProjectPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-light">new project</h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="admin-page-kicker">portfolio</p>
+            <h1 className="admin-page-title">new project</h1>
+            <p className="admin-page-description">
               create a new portfolio project
             </p>
           </div>
@@ -196,7 +197,7 @@ function NewProjectPage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">project details</CardTitle>
             </CardHeader>
@@ -277,7 +278,7 @@ function NewProjectPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">responsibilities</CardTitle>
             </CardHeader>
@@ -325,7 +326,7 @@ function NewProjectPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">technologies</CardTitle>
             </CardHeader>
@@ -368,7 +369,7 @@ function NewProjectPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">media</CardTitle>
             </CardHeader>
@@ -384,7 +385,7 @@ function NewProjectPage() {
         </div>
 
         <div className="space-y-6">
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">publishing</CardTitle>
             </CardHeader>
@@ -405,7 +406,7 @@ function NewProjectPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">resume settings</CardTitle>
             </CardHeader>

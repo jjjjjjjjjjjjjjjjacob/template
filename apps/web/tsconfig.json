@@ -8,6 +8,8 @@
       "@/*": ["./src/*"],
       "@template/convex": ["../convex"],
       "@template/convex/*": ["../convex/*"],
+      "@template/scheduler": ["../../packages/scheduler/src/index.ts"],
+      "@template/scheduler/*": ["../../packages/scheduler/src/*"],
       "@template/types": ["../../packages/types/src/index.ts"],
       "@template/utils": ["../../packages/utils/src/index.ts"]
     }

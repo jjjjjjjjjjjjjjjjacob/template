@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactElement } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -74,12 +74,20 @@ export interface PDFDownloadPopoverProps {
   resumeData: ResumeData;
   className?: string;
   source?: string; // Track where the download was initiated from
+  trigger?: (state: { isGenerating: boolean }) => ReactElement;
+  contentSide?: 'top' | 'right' | 'bottom' | 'left';
+  contentAlign?: 'start' | 'center' | 'end';
+  visualStyle?: 'legacy' | 'site';
 }
 
 export function PDFDownloadPopover({
   resumeData,
   className,
   source = 'unknown',
+  trigger,
+  contentSide,
+  contentAlign = 'center',
+  visualStyle = 'site',
 }: PDFDownloadPopoverProps) {
   const [open, setOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -152,91 +160,168 @@ export function PDFDownloadPopover({
     setOpen(newOpen);
   };
 
+  const triggerElement = trigger ? (
+    trigger({ isGenerating })
+  ) : (
+    <Button
+      variant="outline"
+      size="sm"
+      className={`h-8 gap-2 ${className || ''}`}
+      disabled={isGenerating}
+    >
+      {isGenerating ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Download className="h-4 w-4" />
+      )}
+      {isGenerating ? 'generating...' : 'download'}
+    </Button>
+  );
+
+  const side = contentSide ?? (isMobile ? 'top' : 'right');
+
   return (
     <Popover open={open} onOpenChange={handlePopoverOpenChange}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className={`h-8 gap-2 ${className || ''}`}
-          disabled={isGenerating}
-        >
-          {isGenerating ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-          {isGenerating ? 'generating...' : 'download'}
-        </Button>
-      </PopoverTrigger>
+      <PopoverTrigger asChild>{triggerElement}</PopoverTrigger>
       <PopoverContent
-        className="w-64 p-3"
-        align="center"
-        side={isMobile ? 'top' : 'right'}
+        className={
+          visualStyle === 'site' ? 'resume-export-site-menu' : 'w-64 p-3'
+        }
+        align={contentAlign}
+        side={side}
+        sideOffset={visualStyle === 'site' ? 10 : 4}
         avoidCollisions
       >
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-sm leading-none font-light">export resume</h3>
-            <p className="text-muted-foreground mt-1 text-xs">
-              choose your preferred format
+        {visualStyle === 'site' ? (
+          <div className="resume-export-site-content">
+            <header className="resume-export-site-head">
+              <p className="resume-export-site-kicker">download / resume</p>
+              <p className="resume-export-site-title">choose a format</p>
+            </header>
+
+            <div className="resume-export-site-options">
+              {clientExportFormats.map((format, index) => (
+                <button
+                  key={format.value}
+                  type="button"
+                  className="resume-export-site-option"
+                  onClick={() => handleClientExport(format)}
+                  disabled={isGenerating}
+                >
+                  <span className="resume-export-site-number">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <span className="resume-export-site-text">
+                    <span className="resume-export-site-label">
+                      {format.label}
+                    </span>
+                    <span className="resume-export-site-description">
+                      {format.description}
+                    </span>
+                  </span>
+                  <span className="resume-export-site-extension">
+                    .{format.value}
+                  </span>
+                </button>
+              ))}
+
+              {serverExportFormats.map((format, index) => (
+                <button
+                  key={format.value}
+                  type="button"
+                  className="resume-export-site-option"
+                  onClick={() => handleServerExport(format)}
+                  disabled={isGenerating}
+                >
+                  <span className="resume-export-site-number">
+                    {String(clientExportFormats.length + index + 1).padStart(
+                      2,
+                      '0'
+                    )}
+                  </span>
+                  <span className="resume-export-site-text">
+                    <span className="resume-export-site-label">
+                      {format.label}
+                    </span>
+                    <span className="resume-export-site-description">
+                      {format.description}
+                    </span>
+                  </span>
+                  <span className="resume-export-site-extension">
+                    .{format.value}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <p className="resume-export-site-foot">
+              optimized for ats resume checkers
             </p>
           </div>
+        ) : (
+          <div className="space-y-3">
+            <div>
+              <h3 className="text-sm leading-none font-light">export resume</h3>
+              <p className="text-muted-foreground mt-1 text-xs">
+                choose your preferred format
+              </p>
+            </div>
 
-          <div className="space-y-2">
-            {clientExportFormats.map((format) => (
-              <Button
-                key={format.value}
-                variant="ghost"
-                size="sm"
-                className="h-auto w-full justify-start gap-3 p-3"
-                onClick={() => handleClientExport(format)}
-                disabled={isGenerating}
-              >
-                <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
-                  <FileCode className="h-4 w-4" />
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="text-sm font-light">{format.label}</div>
-                  <div className="text-muted-foreground text-xs">
-                    {format.description}
+            <div className="space-y-2">
+              {clientExportFormats.map((format) => (
+                <Button
+                  key={format.value}
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto w-full justify-start gap-3 p-3"
+                  onClick={() => handleClientExport(format)}
+                  disabled={isGenerating}
+                >
+                  <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
+                    <FileCode className="h-4 w-4" />
                   </div>
-                </div>
-              </Button>
-            ))}
-
-            {serverExportFormats.map((format) => (
-              <Button
-                key={format.value}
-                variant="ghost"
-                size="sm"
-                className="h-auto w-full justify-start gap-3 p-3"
-                onClick={() => handleServerExport(format)}
-                disabled={isGenerating}
-              >
-                <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
-                  {format.value === 'docx' ? (
-                    <FileDown className="h-4 w-4" />
-                  ) : (
-                    <FileText className="h-4 w-4" />
-                  )}
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="text-sm font-light">{format.label}</div>
-                  <div className="text-muted-foreground text-xs">
-                    {format.description}
+                  <div className="flex-1 text-left">
+                    <div className="text-sm font-light">{format.label}</div>
+                    <div className="text-muted-foreground text-xs">
+                      {format.description}
+                    </div>
                   </div>
-                </div>
-              </Button>
-            ))}
-          </div>
+                </Button>
+              ))}
 
-          <div className="border-t pt-2">
-            <p className="text-muted-foreground text-xs">
-              plain-text resume, ready for ats resume checkers
-            </p>
+              {serverExportFormats.map((format) => (
+                <Button
+                  key={format.value}
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto w-full justify-start gap-3 p-3"
+                  onClick={() => handleServerExport(format)}
+                  disabled={isGenerating}
+                >
+                  <div className="bg-muted flex h-8 w-8 items-center justify-center rounded-md">
+                    {format.value === 'docx' ? (
+                      <FileDown className="h-4 w-4" />
+                    ) : (
+                      <FileText className="h-4 w-4" />
+                    )}
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="text-sm font-light">{format.label}</div>
+                    <div className="text-muted-foreground text-xs">
+                      {format.description}
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+
+            <div className="border-t pt-2">
+              <p className="text-muted-foreground text-xs">
+                plain-text resume, ready for ats resume checkers
+              </p>
+            </div>
           </div>
-        </div>
+        )}
       </PopoverContent>
     </Popover>
   );

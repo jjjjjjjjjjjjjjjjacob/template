@@ -229,6 +229,13 @@ jobs:
         run: |
           bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set CLERK_FRONTEND_API_URL ${{ secrets.CLERK_FRONTEND_API_URL }}
           bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set CLERK_WEBHOOK_SECRET ${{ secrets.CLERK_WEBHOOK_SECRET }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set GOOGLE_OAUTH_CLIENT_ID ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set GOOGLE_OAUTH_CLIENT_SECRET ${{ secrets.GOOGLE_OAUTH_CLIENT_SECRET }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set GOOGLE_OAUTH_REDIRECT_URI ${{ secrets.GOOGLE_OAUTH_REDIRECT_URI }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set GOOGLE_CALENDAR_ID ${{ secrets.GOOGLE_CALENDAR_ID }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set GOOGLE_ALLOWED_ACCOUNT_EMAIL ${{ secrets.GOOGLE_ALLOWED_ACCOUNT_EMAIL }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set GOOGLE_TOKEN_ENCRYPTION_KEY ${{ secrets.GOOGLE_TOKEN_ENCRYPTION_KEY }}
+          bunx convex env --deployment-name ${{ secrets.CONVEX_DEPLOYMENT_NAME }} set BOOKING_PUBLIC_BASE_URL ${{ secrets.BOOKING_PUBLIC_BASE_URL }}
 
       # Build and deploy Convex backend
       - name: Build Convex Backend

@@ -31,17 +31,20 @@ import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
 import { DefaultCatchBoundary } from '@/components/default-catch-boundary';
 import { NotFound } from '@/components/not-found';
 import { Header } from '@/components/header';
-import { BlogHeader } from '@/components/blog-header';
+import { SiteChrome } from '@/components/site/chrome';
+import { SiteVisualProvider } from '@/components/site/visual-provider';
 import { ThemeProvider } from '@/components/theme-provider';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { PostHogPageTracker } from '@/components/posthog-page-tracker';
 import appCss from '@/styles/app.css?url';
+import siteCss from '@/components/site/site.css?url';
 import blogCss from '@/styles/blog.css?url';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexQueryClient } from '@convex-dev/react-query';
 import { ClerkProvider, useAuth } from '@clerk/tanstack-react-start';
 import { useSectionStore } from '@/stores/section-store';
+import { getRouteExperience } from '@/lib/route-experience';
 
 // Optimized server function with caching and mobile optimizations
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {
@@ -97,13 +100,14 @@ export const Route = createRootRouteWithContext<{
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
+      { rel: 'stylesheet', href: siteCss },
       { rel: 'stylesheet', href: blogCss },
       { rel: 'icon', href: '/favicon.ico' },
       { rel: 'canonical', href: SITE_URL },
-      // Critical font preloads
+      // The first-class site font is needed for the initial public paint.
       {
         rel: 'preload',
-        href: '/fonts/optimized/GeistSans-Variable.woff2',
+        href: '/fonts/site/Archivo-Variable.woff2',
         as: 'font',
         type: 'font/woff2',
         crossOrigin: 'anonymous',
@@ -137,7 +141,7 @@ export const Route = createRootRouteWithContext<{
   errorComponent: (props) => {
     return (
       <ClerkProviderWrapper>
-        <RootDocument>
+        <RootDocument forceSiteChrome>
           <DefaultCatchBoundary {...props} />
         </RootDocument>
       </ClerkProviderWrapper>
@@ -210,48 +214,48 @@ function RootComponent() {
 
 function HeaderWrapper() {
   const location = useLocation();
-  const isBlogRoute = location.pathname.startsWith('/blog');
-  const isChromeFreeRoute =
-    location.pathname === '/' || location.pathname === '/macos';
 
-  if (isChromeFreeRoute) return null;
+  if (getRouteExperience(location.pathname) === 'legacy') {
+    return <Header />;
+  }
 
-  return (
-    <div className="relative">
-      {/* Regular Header */}
-      <div
-        className={`transition-opacity duration-300 ease-in-out ${
-          isBlogRoute ? 'pointer-events-none opacity-0' : 'opacity-100'
-        }`}
-      >
-        <Header />
-      </div>
-
-      {/* Blog Header */}
-      <div
-        className={`absolute inset-0 transition-opacity duration-300 ease-in-out ${
-          isBlogRoute ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-      >
-        <BlogHeader />
-      </div>
-    </div>
-  );
+  return null;
 }
 
-function MainWrapper({ children }: { children: React.ReactNode }) {
+function RoutePresentation({
+  children,
+  forceSiteChrome = false,
+}: {
+  children: React.ReactNode;
+  forceSiteChrome?: boolean;
+}) {
   const location = useLocation();
-  const isChromeFreeRoute =
-    location.pathname === '/' || location.pathname === '/macos';
+  const experience = getRouteExperience(location.pathname);
 
-  if (isChromeFreeRoute) {
-    return <main>{children}</main>;
+  if (forceSiteChrome || experience === 'public') {
+    return (
+      <SiteChrome>
+        <div key={location.pathname} className="site-route-swap">
+          {children}
+        </div>
+      </SiteChrome>
+    );
+  }
+
+  if (experience === 'admin' || experience === 'macos') {
+    return <>{children}</>;
   }
 
   return <main className="mt-14">{children}</main>;
 }
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootDocument({
+  children,
+  forceSiteChrome = false,
+}: {
+  children: React.ReactNode;
+  forceSiteChrome?: boolean;
+}) {
   const { initializeObserver, cleanup } = useSectionStore();
 
   // Initialize section observer once at app mount
@@ -273,8 +277,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             __html: `
               (function() {
                 try {
+                  var legacySiteTheme = localStorage.getItem('alt-3b-theme');
                   var theme = localStorage.getItem('theme');
                   var resolvedTheme = 'light';
+
+                  if (legacySiteTheme === 'light' || legacySiteTheme === 'dark') {
+                    theme = legacySiteTheme;
+                    localStorage.setItem('theme', legacySiteTheme);
+                    localStorage.removeItem('alt-3b-theme');
+                  } else if (legacySiteTheme !== null) {
+                    localStorage.removeItem('alt-3b-theme');
+                  }
                   
                   if (theme === 'dark') {
                     resolvedTheme = 'dark';
@@ -283,6 +296,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                   }
                   
                   document.documentElement.classList.add(resolvedTheme);
+                  document.documentElement.dataset.siteTheme = resolvedTheme;
                   
                   var colorTheme = localStorage.getItem('colorTheme');
                   if (colorTheme) {
@@ -302,18 +316,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="bg-background text-foreground min-h-screen transition-colors duration-300">
         <PostHogProvider>
           <ThemeProvider>
-            <PostHogPageTracker />
-            <HeaderWrapper />
+            <SiteVisualProvider>
+              <PostHogPageTracker />
+              <HeaderWrapper />
 
-            <MainWrapper>{children}</MainWrapper>
+              <RoutePresentation forceSiteChrome={forceSiteChrome}>
+                {children}
+              </RoutePresentation>
 
-            {/* Development Tools */}
-            {import.meta.env.DEV && (
-              <React.Suspense fallback={null}>
-                <ReactQueryDevtools />
-                <TanStackRouterDevtools position="bottom-left" />
-              </React.Suspense>
-            )}
+              {/* Development Tools */}
+              {import.meta.env.DEV && (
+                <React.Suspense fallback={null}>
+                  <ReactQueryDevtools />
+                  <TanStackRouterDevtools position="bottom-left" />
+                </React.Suspense>
+              )}
+            </SiteVisualProvider>
           </ThemeProvider>
         </PostHogProvider>
 

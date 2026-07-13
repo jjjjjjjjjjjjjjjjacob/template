@@ -12,6 +12,9 @@
       "path": "./packages/types"
     },
     {
+      "path": "./packages/scheduler"
+    },
+    {
       "path": "./packages/utils"
     }
   ],
@@ -34,6 +37,8 @@
       "@template/convex/*": ["./apps/convex/*"],
       "@template/types": ["./packages/types/src"],
       "@template/types/*": ["./packages/types/src/*"],
+      "@template/scheduler": ["./packages/scheduler/src"],
+      "@template/scheduler/*": ["./packages/scheduler/src/*"],
       "@template/utils": ["./packages/utils/src"],
       "@template/utils/*": ["./packages/utils/src/*"],
       "@template/web": ["./apps/web"],

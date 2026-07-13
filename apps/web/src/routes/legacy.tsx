@@ -601,6 +601,7 @@ function HomePage() {
                         resumeData={resumeExportData}
                         className="mt-2"
                         source="homepage"
+                        visualStyle="legacy"
                       />
                     </div>
                   </div>

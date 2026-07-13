@@ -17,12 +17,18 @@ import { Route as ResumeRouteImport } from './routes/resume'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as MacosRouteImport } from './routes/macos'
 import { Route as LegacyRouteImport } from './routes/legacy'
+import { Route as BookRouteImport } from './routes/book'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as SignUpSsoCallbackRouteImport } from './routes/sign-up/sso-callback'
 import { Route as SignInSsoCallbackRouteImport } from './routes/sign-in/sso-callback'
+import { Route as BookRescheduleRouteImport } from './routes/book/reschedule'
+import { Route as BookCancelRouteImport } from './routes/book/cancel'
+import { Route as BookEventTypeSlugRouteImport } from './routes/book/$eventTypeSlug'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as AdminSchedulingRouteImport } from './routes/admin/scheduling'
 import { Route as AdminResumeRouteImport } from './routes/admin/resume'
 import { Route as AdminProjectsRouteImport } from './routes/admin/projects'
 import { Route as AdminBlogRouteImport } from './routes/admin/blog'
@@ -35,6 +41,7 @@ import { Route as AdminProjectsNewRouteImport } from './routes/admin/projects.ne
 import { Route as AdminProjectsProjectIdRouteImport } from './routes/admin/projects.$projectId'
 import { Route as AdminBlogNewRouteImport } from './routes/admin/blog.new'
 import { Route as AdminBlogPostIdRouteImport } from './routes/admin/blog.$postId'
+import { Route as AdminSchedulingGoogleCallbackRouteImport } from './routes/admin/scheduling/google/callback'
 import { ServerRoute as ResumeExportServerRouteImport } from './routes/resume.export'
 
 const rootServerRouteImport = createServerRootRoute()
@@ -69,6 +76,16 @@ const LegacyRoute = LegacyRouteImport.update({
   path: '/legacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BookRoute = BookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -80,9 +97,9 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/blog/index.lazy').then((d) => d.Route))
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const SignUpSsoCallbackRoute = SignUpSsoCallbackRouteImport.update({
   id: '/sso-callback',
@@ -94,25 +111,45 @@ const SignInSsoCallbackRoute = SignInSsoCallbackRouteImport.update({
   path: '/sso-callback',
   getParentRoute: () => SignInRoute,
 } as any)
+const BookRescheduleRoute = BookRescheduleRouteImport.update({
+  id: '/reschedule',
+  path: '/reschedule',
+  getParentRoute: () => BookRoute,
+} as any)
+const BookCancelRoute = BookCancelRouteImport.update({
+  id: '/cancel',
+  path: '/cancel',
+  getParentRoute: () => BookRoute,
+} as any)
+const BookEventTypeSlugRoute = BookEventTypeSlugRouteImport.update({
+  id: '/$eventTypeSlug',
+  path: '/$eventTypeSlug',
+  getParentRoute: () => BookRoute,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any).lazy(() => import('./routes/blog/$slug.lazy').then((d) => d.Route))
+const AdminSchedulingRoute = AdminSchedulingRouteImport.update({
+  id: '/scheduling',
+  path: '/scheduling',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminResumeRoute = AdminResumeRouteImport.update({
-  id: '/admin/resume',
-  path: '/admin/resume',
-  getParentRoute: () => rootRouteImport,
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminProjectsRoute = AdminProjectsRouteImport.update({
-  id: '/admin/projects',
-  path: '/admin/projects',
-  getParentRoute: () => rootRouteImport,
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminBlogRoute = AdminBlogRouteImport.update({
-  id: '/admin/blog',
-  path: '/admin/blog',
-  getParentRoute: () => rootRouteImport,
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminResumeIndexRoute = AdminResumeIndexRouteImport.update({
   id: '/',
@@ -171,6 +208,12 @@ const AdminBlogPostIdRoute = AdminBlogPostIdRouteImport.update({
 } as any).lazy(() =>
   import('./routes/admin/blog.$postId.lazy').then((d) => d.Route),
 )
+const AdminSchedulingGoogleCallbackRoute =
+  AdminSchedulingGoogleCallbackRouteImport.update({
+    id: '/google/callback',
+    path: '/google/callback',
+    getParentRoute: () => AdminSchedulingRoute,
+  } as any)
 const ResumeExportServerRoute = ResumeExportServerRouteImport.update({
   id: '/resume/export',
   path: '/resume/export',
@@ -179,6 +222,8 @@ const ResumeExportServerRoute = ResumeExportServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/book': typeof BookRouteWithChildren
   '/legacy': typeof LegacyRoute
   '/macos': typeof MacosRoute
   '/projects': typeof ProjectsRoute
@@ -188,10 +233,14 @@ export interface FileRoutesByFullPath {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/projects': typeof AdminProjectsRouteWithChildren
   '/admin/resume': typeof AdminResumeRouteWithChildren
+  '/admin/scheduling': typeof AdminSchedulingRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/book/$eventTypeSlug': typeof BookEventTypeSlugRoute
+  '/book/cancel': typeof BookCancelRoute
+  '/book/reschedule': typeof BookRescheduleRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
-  '/admin': typeof AdminIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/admin/blog/$postId': typeof AdminBlogPostIdRoute
   '/admin/blog/new': typeof AdminBlogNewRoute
@@ -202,16 +251,22 @@ export interface FileRoutesByFullPath {
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/projects/': typeof AdminProjectsIndexRoute
   '/admin/resume/': typeof AdminResumeIndexRoute
+  '/admin/scheduling/google/callback': typeof AdminSchedulingGoogleCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/book': typeof BookRouteWithChildren
   '/legacy': typeof LegacyRoute
   '/macos': typeof MacosRoute
   '/projects': typeof ProjectsRoute
   '/resume': typeof ResumeRoute
   '/sign-in': typeof SignInRouteWithChildren
   '/sign-up': typeof SignUpRouteWithChildren
+  '/admin/scheduling': typeof AdminSchedulingRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/book/$eventTypeSlug': typeof BookEventTypeSlugRoute
+  '/book/cancel': typeof BookCancelRoute
+  '/book/reschedule': typeof BookRescheduleRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
   '/admin': typeof AdminIndexRoute
@@ -225,10 +280,13 @@ export interface FileRoutesByTo {
   '/admin/blog': typeof AdminBlogIndexRoute
   '/admin/projects': typeof AdminProjectsIndexRoute
   '/admin/resume': typeof AdminResumeIndexRoute
+  '/admin/scheduling/google/callback': typeof AdminSchedulingGoogleCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/book': typeof BookRouteWithChildren
   '/legacy': typeof LegacyRoute
   '/macos': typeof MacosRoute
   '/projects': typeof ProjectsRoute
@@ -238,7 +296,11 @@ export interface FileRoutesById {
   '/admin/blog': typeof AdminBlogRouteWithChildren
   '/admin/projects': typeof AdminProjectsRouteWithChildren
   '/admin/resume': typeof AdminResumeRouteWithChildren
+  '/admin/scheduling': typeof AdminSchedulingRouteWithChildren
   '/blog/$slug': typeof BlogSlugRoute
+  '/book/$eventTypeSlug': typeof BookEventTypeSlugRoute
+  '/book/cancel': typeof BookCancelRoute
+  '/book/reschedule': typeof BookRescheduleRoute
   '/sign-in/sso-callback': typeof SignInSsoCallbackRoute
   '/sign-up/sso-callback': typeof SignUpSsoCallbackRoute
   '/admin/': typeof AdminIndexRoute
@@ -252,11 +314,14 @@ export interface FileRoutesById {
   '/admin/blog/': typeof AdminBlogIndexRoute
   '/admin/projects/': typeof AdminProjectsIndexRoute
   '/admin/resume/': typeof AdminResumeIndexRoute
+  '/admin/scheduling/google/callback': typeof AdminSchedulingGoogleCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
+    | '/book'
     | '/legacy'
     | '/macos'
     | '/projects'
@@ -266,10 +331,14 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/projects'
     | '/admin/resume'
+    | '/admin/scheduling'
     | '/blog/$slug'
+    | '/book/$eventTypeSlug'
+    | '/book/cancel'
+    | '/book/reschedule'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
-    | '/admin'
+    | '/admin/'
     | '/blog'
     | '/admin/blog/$postId'
     | '/admin/blog/new'
@@ -280,16 +349,22 @@ export interface FileRouteTypes {
     | '/admin/blog/'
     | '/admin/projects/'
     | '/admin/resume/'
+    | '/admin/scheduling/google/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/book'
     | '/legacy'
     | '/macos'
     | '/projects'
     | '/resume'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/scheduling'
     | '/blog/$slug'
+    | '/book/$eventTypeSlug'
+    | '/book/cancel'
+    | '/book/reschedule'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
     | '/admin'
@@ -303,9 +378,12 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/projects'
     | '/admin/resume'
+    | '/admin/scheduling/google/callback'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/book'
     | '/legacy'
     | '/macos'
     | '/projects'
@@ -315,7 +393,11 @@ export interface FileRouteTypes {
     | '/admin/blog'
     | '/admin/projects'
     | '/admin/resume'
+    | '/admin/scheduling'
     | '/blog/$slug'
+    | '/book/$eventTypeSlug'
+    | '/book/cancel'
+    | '/book/reschedule'
     | '/sign-in/sso-callback'
     | '/sign-up/sso-callback'
     | '/admin/'
@@ -329,21 +411,20 @@ export interface FileRouteTypes {
     | '/admin/blog/'
     | '/admin/projects/'
     | '/admin/resume/'
+    | '/admin/scheduling/google/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  BookRoute: typeof BookRouteWithChildren
   LegacyRoute: typeof LegacyRoute
   MacosRoute: typeof MacosRoute
   ProjectsRoute: typeof ProjectsRoute
   ResumeRoute: typeof ResumeRoute
   SignInRoute: typeof SignInRouteWithChildren
   SignUpRoute: typeof SignUpRouteWithChildren
-  AdminBlogRoute: typeof AdminBlogRouteWithChildren
-  AdminProjectsRoute: typeof AdminProjectsRouteWithChildren
-  AdminResumeRoute: typeof AdminResumeRouteWithChildren
   BlogSlugRoute: typeof BlogSlugRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 export interface FileServerRoutesByFullPath {
@@ -412,6 +493,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/book': {
+      id: '/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof BookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -428,10 +523,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin'
+      path: '/'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/sign-up/sso-callback': {
       id: '/sign-up/sso-callback'
@@ -447,6 +542,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInSsoCallbackRouteImport
       parentRoute: typeof SignInRoute
     }
+    '/book/reschedule': {
+      id: '/book/reschedule'
+      path: '/reschedule'
+      fullPath: '/book/reschedule'
+      preLoaderRoute: typeof BookRescheduleRouteImport
+      parentRoute: typeof BookRoute
+    }
+    '/book/cancel': {
+      id: '/book/cancel'
+      path: '/cancel'
+      fullPath: '/book/cancel'
+      preLoaderRoute: typeof BookCancelRouteImport
+      parentRoute: typeof BookRoute
+    }
+    '/book/$eventTypeSlug': {
+      id: '/book/$eventTypeSlug'
+      path: '/$eventTypeSlug'
+      fullPath: '/book/$eventTypeSlug'
+      preLoaderRoute: typeof BookEventTypeSlugRouteImport
+      parentRoute: typeof BookRoute
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -454,26 +570,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/scheduling': {
+      id: '/admin/scheduling'
+      path: '/scheduling'
+      fullPath: '/admin/scheduling'
+      preLoaderRoute: typeof AdminSchedulingRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/resume': {
       id: '/admin/resume'
-      path: '/admin/resume'
+      path: '/resume'
       fullPath: '/admin/resume'
       preLoaderRoute: typeof AdminResumeRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/projects': {
       id: '/admin/projects'
-      path: '/admin/projects'
+      path: '/projects'
       fullPath: '/admin/projects'
       preLoaderRoute: typeof AdminProjectsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/blog': {
       id: '/admin/blog'
-      path: '/admin/blog'
+      path: '/blog'
       fullPath: '/admin/blog'
       preLoaderRoute: typeof AdminBlogRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/resume/': {
       id: '/admin/resume/'
@@ -538,6 +661,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminBlogPostIdRouteImport
       parentRoute: typeof AdminBlogRoute
     }
+    '/admin/scheduling/google/callback': {
+      id: '/admin/scheduling/google/callback'
+      path: '/google/callback'
+      fullPath: '/admin/scheduling/google/callback'
+      preLoaderRoute: typeof AdminSchedulingGoogleCallbackRouteImport
+      parentRoute: typeof AdminSchedulingRoute
+    }
   }
 }
 declare module '@tanstack/react-start/server' {
@@ -551,28 +681,6 @@ declare module '@tanstack/react-start/server' {
     }
   }
 }
-
-interface SignInRouteChildren {
-  SignInSsoCallbackRoute: typeof SignInSsoCallbackRoute
-}
-
-const SignInRouteChildren: SignInRouteChildren = {
-  SignInSsoCallbackRoute: SignInSsoCallbackRoute,
-}
-
-const SignInRouteWithChildren =
-  SignInRoute._addFileChildren(SignInRouteChildren)
-
-interface SignUpRouteChildren {
-  SignUpSsoCallbackRoute: typeof SignUpSsoCallbackRoute
-}
-
-const SignUpRouteChildren: SignUpRouteChildren = {
-  SignUpSsoCallbackRoute: SignUpSsoCallbackRoute,
-}
-
-const SignUpRouteWithChildren =
-  SignUpRoute._addFileChildren(SignUpRouteChildren)
 
 interface AdminBlogRouteChildren {
   AdminBlogPostIdRoute: typeof AdminBlogPostIdRoute
@@ -622,19 +730,83 @@ const AdminResumeRouteWithChildren = AdminResumeRoute._addFileChildren(
   AdminResumeRouteChildren,
 )
 
+interface AdminSchedulingRouteChildren {
+  AdminSchedulingGoogleCallbackRoute: typeof AdminSchedulingGoogleCallbackRoute
+}
+
+const AdminSchedulingRouteChildren: AdminSchedulingRouteChildren = {
+  AdminSchedulingGoogleCallbackRoute: AdminSchedulingGoogleCallbackRoute,
+}
+
+const AdminSchedulingRouteWithChildren = AdminSchedulingRoute._addFileChildren(
+  AdminSchedulingRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminBlogRoute: typeof AdminBlogRouteWithChildren
+  AdminProjectsRoute: typeof AdminProjectsRouteWithChildren
+  AdminResumeRoute: typeof AdminResumeRouteWithChildren
+  AdminSchedulingRoute: typeof AdminSchedulingRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminBlogRoute: AdminBlogRouteWithChildren,
+  AdminProjectsRoute: AdminProjectsRouteWithChildren,
+  AdminResumeRoute: AdminResumeRouteWithChildren,
+  AdminSchedulingRoute: AdminSchedulingRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface BookRouteChildren {
+  BookEventTypeSlugRoute: typeof BookEventTypeSlugRoute
+  BookCancelRoute: typeof BookCancelRoute
+  BookRescheduleRoute: typeof BookRescheduleRoute
+}
+
+const BookRouteChildren: BookRouteChildren = {
+  BookEventTypeSlugRoute: BookEventTypeSlugRoute,
+  BookCancelRoute: BookCancelRoute,
+  BookRescheduleRoute: BookRescheduleRoute,
+}
+
+const BookRouteWithChildren = BookRoute._addFileChildren(BookRouteChildren)
+
+interface SignInRouteChildren {
+  SignInSsoCallbackRoute: typeof SignInSsoCallbackRoute
+}
+
+const SignInRouteChildren: SignInRouteChildren = {
+  SignInSsoCallbackRoute: SignInSsoCallbackRoute,
+}
+
+const SignInRouteWithChildren =
+  SignInRoute._addFileChildren(SignInRouteChildren)
+
+interface SignUpRouteChildren {
+  SignUpSsoCallbackRoute: typeof SignUpSsoCallbackRoute
+}
+
+const SignUpRouteChildren: SignUpRouteChildren = {
+  SignUpSsoCallbackRoute: SignUpSsoCallbackRoute,
+}
+
+const SignUpRouteWithChildren =
+  SignUpRoute._addFileChildren(SignUpRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  BookRoute: BookRouteWithChildren,
   LegacyRoute: LegacyRoute,
   MacosRoute: MacosRoute,
   ProjectsRoute: ProjectsRoute,
   ResumeRoute: ResumeRoute,
   SignInRoute: SignInRouteWithChildren,
   SignUpRoute: SignUpRouteWithChildren,
-  AdminBlogRoute: AdminBlogRouteWithChildren,
-  AdminProjectsRoute: AdminProjectsRouteWithChildren,
-  AdminResumeRoute: AdminResumeRouteWithChildren,
   BlogSlugRoute: BlogSlugRoute,
-  AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -9,6 +9,10 @@ import type { MenuAim } from './use-menu-aim';
 
 type PreviewKind = 'image' | 'video' | 'iframe';
 
+function isPresentUrl(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
 /**
  * `getProfile` encodes a preview's type in a URL fragment: `#image` / `#video`
  * for stored media, and a bare URL for an embeddable page (iframe). We also
@@ -97,17 +101,17 @@ function PreviewMedia({
 
   return (
     <figure
-      className="alt-3b-media"
+      className="site-media"
       data-orientation={orientation}
       data-has-desc={description ? 'true' : 'false'}
     >
-      <div className="alt-3b-media-frame" data-kind={kind}>
+      <div className="site-media-frame" data-kind={kind}>
         {kind === 'image' && (
           <img
             src={src}
             alt={a11y}
             loading="lazy"
-            className="alt-3b-media-el"
+            className="site-media-el"
             onLoad={(e) =>
               setOrientation(
                 e.currentTarget.naturalHeight > e.currentTarget.naturalWidth
@@ -120,7 +124,7 @@ function PreviewMedia({
         {kind === 'video' && (
           <video
             src={src}
-            className="alt-3b-media-el"
+            className="site-media-el"
             muted
             loop
             autoPlay
@@ -140,7 +144,7 @@ function PreviewMedia({
             src={src}
             title={a11y}
             loading="lazy"
-            className="alt-3b-media-el alt-3b-media-iframe"
+            className="site-media-el site-media-iframe"
             sandbox="allow-scripts allow-same-origin"
             referrerPolicy="no-referrer"
             tabIndex={-1}
@@ -153,14 +157,14 @@ function PreviewMedia({
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="alt-3b-media-cover"
+          className="site-media-cover"
         >
           <span className="sr-only">open {a11y}</span>
         </a>
       </div>
       {description && (
-        <figcaption className="alt-3b-media-desc">
-          <span className="alt-3-mono alt-3b-media-num">
+        <figcaption className="site-media-desc">
+          <span className="site-mono site-media-num">
             {String(index + 1).padStart(2, '0')}
           </span>
           <span className="whitespace-pre-line">{description}</span>
@@ -184,16 +188,16 @@ export function ProjectRow({
   return (
     <button
       type="button"
-      className="alt-3-row"
+      className="site-row"
       data-active={isActive ? 'true' : 'false'}
       aria-pressed={isActive}
       {...rowProps}
     >
-      <span className="alt-3-row-num alt-3-mono">
+      <span className="site-row-num site-mono">
         {String(index + 1).padStart(2, '0')}
       </span>
-      <span className="alt-3-row-title alt-3-grotesk">{project.title}</span>
-      <span className="alt-3-row-year alt-3-mono">
+      <span className="site-row-title site-grotesk">{project.title}</span>
+      <span className="site-row-year site-mono">
         {startYear(project.timeline)}
       </span>
     </button>
@@ -210,16 +214,16 @@ export function ProjectDetail({
 }) {
   const tech = flattenTechnologies(project, 12);
   const achievements = topAchievements(project, 4);
-  const previews = project.previews ?? [];
+  const previews = (project.previews ?? []).filter(isPresentUrl);
   const captions = project.previewCaptions ?? [];
 
   return (
-    <div className="alt-3-detail">
-      <p className="alt-3-mono mb-6 text-[0.7rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+    <div className="site-detail">
+      <p className="site-mono mb-6 text-[0.7rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
         no. {String(index + 1).padStart(2, '0')} / {project.timeline}
       </p>
 
-      <h2 className="alt-3-grotesk text-[clamp(2.4rem,5.5vw,4.2rem)] leading-[0.95] font-[600] tracking-[-0.02em]">
+      <h2 className="site-grotesk text-[clamp(2.4rem,5.5vw,4.2rem)] leading-[0.95] font-[600] tracking-[-0.02em]">
         {project.title}
       </h2>
 
@@ -229,14 +233,14 @@ export function ProjectDetail({
 
       <dl className="mt-10 grid max-w-xl grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
         <div>
-          <dt className="alt-3-mono mb-2 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+          <dt className="site-mono mb-2 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
             role
           </dt>
           <dd className="text-[0.92rem] text-[var(--ink)]">{project.role}</dd>
         </div>
         {project.url && (
           <div>
-            <dt className="alt-3-mono mb-2 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+            <dt className="site-mono mb-2 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
               live
             </dt>
             <dd>
@@ -244,7 +248,7 @@ export function ProjectDetail({
                 href={project.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="alt-3-link alt-3-mono text-[0.85rem]"
+                className="site-link site-mono text-[0.85rem]"
               >
                 {project.url.replace(/^https?:\/\//, '')} ↗
               </a>
@@ -252,7 +256,7 @@ export function ProjectDetail({
           </div>
         )}
         <div className="sm:col-span-2">
-          <dt className="alt-3-mono mb-3 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+          <dt className="site-mono mb-3 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
             stack
           </dt>
           <dd className="flex flex-wrap gap-x-4 gap-y-1.5 text-[0.82rem] text-[var(--ink-soft)]">
@@ -263,7 +267,7 @@ export function ProjectDetail({
         </div>
         {achievements.length > 0 && (
           <div className="sm:col-span-2">
-            <dt className="alt-3-mono mb-3 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+            <dt className="site-mono mb-3 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
               selected
             </dt>
             <dd>
@@ -273,7 +277,7 @@ export function ProjectDetail({
                     key={i}
                     className="grid grid-cols-[1.6rem_1fr] text-[0.88rem] leading-relaxed text-[var(--ink-soft)]"
                   >
-                    <span className="alt-3-mono text-[0.7rem] text-[var(--ink-faint)]">
+                    <span className="site-mono text-[0.7rem] text-[var(--ink-faint)]">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <span>{achievement}</span>
@@ -287,11 +291,11 @@ export function ProjectDetail({
 
       {/* visual examples of the work — scroll down past "selected" to reach */}
       {previews.length > 0 && (
-        <section className="alt-3b-cited">
-          <p className="alt-3-mono mb-5 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+        <section className="site-cited">
+          <p className="site-mono mb-5 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
             work cited
           </p>
-          <div className="alt-3b-media-list">
+          <div className="site-media-list">
             {previews.map((raw, i) => (
               <PreviewMedia
                 key={raw}

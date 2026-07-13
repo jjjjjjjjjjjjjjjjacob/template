@@ -238,7 +238,7 @@ function NewProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="admin-page">
         <div className="flex items-center justify-center py-12">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
           <span className="ml-2">loading...</span>
@@ -249,8 +249,8 @@ function NewProfilePage() {
 
   if (!isAdmin) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">
               you do not have permission to access this area.
@@ -262,8 +262,8 @@ function NewProfilePage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="admin-page admin-page-wide">
+      <div className="admin-page-header">
         <div className="flex items-center gap-4">
           <Link to="/admin/resume">
             <Button variant="ghost" size="sm">
@@ -272,8 +272,9 @@ function NewProfilePage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-light">new profile</h1>
-            <p className="text-muted-foreground text-sm">
+            <p className="admin-page-kicker">resume</p>
+            <h1 className="admin-page-title">new profile</h1>
+            <p className="admin-page-description">
               create a new resume profile
             </p>
           </div>
@@ -286,7 +287,7 @@ function NewProfilePage() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">profile details</CardTitle>
             </CardHeader>
@@ -362,7 +363,7 @@ function NewProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">contact information</CardTitle>
             </CardHeader>
@@ -428,7 +429,7 @@ function NewProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">default filters</CardTitle>
             </CardHeader>
@@ -459,7 +460,7 @@ function NewProfilePage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="admin-card">
             <CardHeader>
               <CardTitle className="font-light">ordering</CardTitle>
             </CardHeader>

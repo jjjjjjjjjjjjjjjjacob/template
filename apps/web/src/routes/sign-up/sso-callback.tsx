@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { AuthenticateWithRedirectCallback } from '@clerk/tanstack-react-start';
+import { SiteAuthShell } from '@/components/site/auth-shell';
 
 export const Route = createFileRoute('/sign-up/sso-callback')({
   component: CallbackPage,
@@ -7,8 +8,15 @@ export const Route = createFileRoute('/sign-up/sso-callback')({
 
 function CallbackPage() {
   return (
-    <div className="container mx-auto max-w-md px-4 py-10">
-      <AuthenticateWithRedirectCallback />
-    </div>
+    <SiteAuthShell
+      eyebrow="private route / callback"
+      title="Completing sign up"
+      description="Your identity provider is returning you to finish account setup."
+    >
+      <div className="site-auth-callback">
+        <p className="site-mono">verifying session...</p>
+        <AuthenticateWithRedirectCallback />
+      </div>
+    </SiteAuthShell>
   );
 }

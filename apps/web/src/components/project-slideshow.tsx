@@ -20,6 +20,10 @@ interface ProjectSlideshowProps {
   isMobile?: boolean;
 }
 
+function isPresentUrl(value: unknown): value is string {
+  return typeof value === 'string' && value.trim().length > 0;
+}
+
 function isVideoUrl(url: string): boolean {
   if (url.endsWith('#video')) return true;
   const videoExtensions = ['.mov', '.mp4', '.webm', '.ogg'];
@@ -58,32 +62,34 @@ function ProjectSlideshow({
   const [isLoading, setIsLoading] = useState(true);
   const [dialogLoading, setDialogLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
+  const validPreviews = previews.filter(isPresentUrl);
 
-  const currentPreview = previews[currentIndex];
+  if (validPreviews.length === 0) return null;
+
+  const safeIndex = currentIndex % validPreviews.length;
+  const currentPreview = validPreviews[safeIndex];
   const isVideo = isVideoUrl(currentPreview);
   const isImage = isImageUrl(currentPreview);
   const cleanUrl = getCleanUrl(currentPreview);
-  const hasMultiplePreviews = previews.length > 1;
+  const hasMultiplePreviews = validPreviews.length > 1;
 
   const goToNext = () => {
     setIsLoading(true);
-    setCurrentIndex((prev) => (prev + 1) % previews.length);
-    trackEvents.projectSlideshowInteracted(title, 'next', currentIndex);
+    setCurrentIndex((prev) => (prev + 1) % validPreviews.length);
+    trackEvents.projectSlideshowInteracted(title, 'next', safeIndex);
   };
 
   const goToPrev = () => {
     setIsLoading(true);
-    setCurrentIndex((prev) => (prev - 1 + previews.length) % previews.length);
-    trackEvents.projectSlideshowInteracted(title, 'previous', currentIndex);
+    setCurrentIndex(
+      (prev) => (prev - 1 + validPreviews.length) % validPreviews.length
+    );
+    trackEvents.projectSlideshowInteracted(title, 'previous', safeIndex);
   };
 
   const handleMobileClick = () => {
     if (isMobile && !isVideo) {
-      trackEvents.projectSlideshowInteracted(
-        title,
-        'dialog_opened',
-        currentIndex
-      );
+      trackEvents.projectSlideshowInteracted(title, 'dialog_opened', safeIndex);
       setDialogLoading(true);
       setShowDialog(true);
     }
@@ -91,7 +97,7 @@ function ProjectSlideshow({
 
   const handleHover = (isHovering: boolean) => {
     if (isHovering) {
-      trackEvents.projectSlideshowInteracted(title, 'hover', currentIndex);
+      trackEvents.projectSlideshowInteracted(title, 'hover', safeIndex);
       setIsHovered(true);
     } else {
       setIsHovered(false);
@@ -105,8 +111,6 @@ function ProjectSlideshow({
   const handleDialogLoad = () => {
     setDialogLoading(false);
   };
-
-  if (previews.length === 0) return null;
 
   return (
     <div
@@ -155,7 +159,7 @@ function ProjectSlideshow({
         ) : isImage ? (
           <img
             src={cleanUrl}
-            alt={`${title} preview - ${currentIndex + 1}`}
+            alt={`${title} preview - ${safeIndex + 1}`}
             loading="lazy"
             decoding="async"
             className={cn(
@@ -171,7 +175,7 @@ function ProjectSlideshow({
               'bg-background absolute inset-0 h-full w-full overflow-y-hidden rounded-2xl border-0 shadow-2xl transition-opacity duration-300',
               isLoading ? 'opacity-0' : 'opacity-100'
             )}
-            title={`${title} preview - ${currentIndex + 1}`}
+            title={`${title} preview - ${safeIndex + 1}`}
             loading="lazy"
             scrolling=""
             onLoad={handleLoad}
@@ -180,7 +184,7 @@ function ProjectSlideshow({
                 trackEvents.projectSlideshowInteracted(
                   title,
                   'hover',
-                  currentIndex
+                  safeIndex
                 );
               }
             }}
@@ -225,7 +229,7 @@ function ProjectSlideshow({
               <ChevronRight className="h-5 w-5" />
             </button>
             <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-              {previews.map((_, idx) => (
+              {validPreviews.map((_, idx) => (
                 <button
                   type="button"
                   key={idx}
@@ -233,13 +237,13 @@ function ProjectSlideshow({
                     e.preventDefault();
                     e.stopPropagation();
                     (e.currentTarget as HTMLButtonElement).blur();
-                    if (idx !== currentIndex) {
+                    if (idx !== safeIndex) {
                       setCurrentIndex(idx);
                     }
                   }}
                   className={cn(
                     'h-2 w-2 rounded-full transition-all focus:outline-none',
-                    idx === currentIndex
+                    idx === safeIndex
                       ? 'bg-foreground w-4'
                       : 'bg-foreground/40 hover:bg-foreground/60'
                   )}
@@ -293,7 +297,7 @@ function ProjectSlideshow({
             ) : isImage ? (
               <img
                 src={cleanUrl}
-                alt={`${title} preview - ${currentIndex + 1}`}
+                alt={`${title} preview - ${safeIndex + 1}`}
                 className={cn(
                   'bg-background h-full w-full rounded-lg object-contain shadow-lg transition-opacity duration-300',
                   dialogLoading ? 'opacity-0' : 'opacity-100'
@@ -307,7 +311,7 @@ function ProjectSlideshow({
                   'bg-background h-full w-full rounded-lg border shadow-lg transition-opacity duration-300',
                   dialogLoading ? 'opacity-0' : 'opacity-100'
                 )}
-                title={`${title} preview - ${currentIndex + 1}`}
+                title={`${title} preview - ${safeIndex + 1}`}
                 loading="lazy"
                 onLoad={handleDialogLoad}
               />

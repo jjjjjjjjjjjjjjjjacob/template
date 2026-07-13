@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
-  ArrowLeft,
   Plus,
   Edit,
   Trash2,
@@ -46,7 +45,7 @@ function ResumeIndexPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="admin-page">
         <div className="flex items-center justify-center py-12">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
           <span className="ml-2">loading...</span>
@@ -57,8 +56,8 @@ function ResumeIndexPage() {
 
   if (!isAdmin) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">
               you do not have permission to access this area.
@@ -70,21 +69,14 @@ function ResumeIndexPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/admin">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              back
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-light">resume profiles</h1>
-            <p className="text-muted-foreground text-sm">
-              manage your resume configurations
-            </p>
-          </div>
+    <div className="admin-page">
+      <div className="admin-page-header">
+        <div>
+          <p className="admin-page-kicker">resume</p>
+          <h1 className="admin-page-title">resume profiles</h1>
+          <p className="admin-page-description">
+            manage your resume configurations
+          </p>
         </div>
         <Link to="/admin/resume/new">
           <Button>
@@ -95,7 +87,7 @@ function ResumeIndexPage() {
       </div>
 
       {!profiles || profiles.length === 0 ? (
-        <Card>
+        <Card className="admin-card">
           <CardContent className="py-12 text-center">
             <User className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
             <h3 className="mb-2 text-lg font-light">no profiles yet</h3>
@@ -115,28 +107,28 @@ function ResumeIndexPage() {
           {profiles.map((profile) => (
             <Card
               key={profile.slug}
-              className="group relative overflow-hidden transition-shadow hover:shadow-lg"
+              className="admin-card group relative flex min-h-64 flex-col overflow-hidden"
             >
               <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-primary/10 flex h-10 w-10 items-center justify-center rounded-full">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex min-w-0 items-start gap-3">
+                    <div className="bg-primary/10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full">
                       <User className="text-primary h-5 w-5" />
                     </div>
-                    <div>
-                      <CardTitle className="text-lg font-light">
+                    <div className="min-w-0">
+                      <CardTitle className="text-lg leading-tight font-medium">
                         {profile.name}
                       </CardTitle>
-                      <p className="text-muted-foreground text-sm">
+                      <p className="text-muted-foreground mt-1 text-sm leading-snug">
                         {profile.title}
                       </p>
                     </div>
                   </div>
-                  <GripVertical className="text-muted-foreground h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
+                  <GripVertical className="text-muted-foreground h-5 w-5 shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center gap-2">
+              <CardContent className="flex flex-1 flex-col gap-4">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{profile.slug}</Badge>
                   <Badge variant="secondary">order: {profile.order}</Badge>
                 </div>
@@ -153,7 +145,7 @@ function ResumeIndexPage() {
                   </a>
                 </div>
 
-                <div className="flex gap-2 pt-2">
+                <div className="mt-auto flex gap-2 pt-2">
                   <Link
                     to="/admin/resume/$profileSlug"
                     params={{ profileSlug: profile.slug }}
@@ -167,7 +159,8 @@ function ResumeIndexPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                    className="text-destructive hover:bg-destructive hover:text-destructive-foreground shrink-0"
+                    aria-label={`delete ${profile.name}`}
                     onClick={() =>
                       handleDeleteProfile(profile.slug, profile.name)
                     }

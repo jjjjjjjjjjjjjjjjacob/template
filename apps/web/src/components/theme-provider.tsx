@@ -1,6 +1,11 @@
 import * as React from 'react';
+import {
+  migrateLegacySiteTheme,
+  SITE_THEME_STORAGE_KEY,
+  type SiteThemePreference,
+} from '@/lib/site-theme';
 
-type Theme = 'light' | 'dark' | 'system';
+type Theme = SiteThemePreference;
 export type PrimaryColorTheme =
   | 'purple-primary'
   | 'pink-primary'
@@ -60,6 +65,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [colorTheme, setColorTheme] = React.useState<ColorTheme | null>(null);
   const [secondaryColorTheme, setSecondaryColorTheme] =
     React.useState<SecondaryColorTheme | null>(null);
+  const [systemTheme, setSystemTheme] = React.useState<'light' | 'dark'>(
+    'light'
+  );
 
   // Get system theme preference
   const getSystemTheme = React.useCallback((): 'light' | 'dark' => {
@@ -74,10 +82,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   // Resolve the actual theme to apply
   const resolvedTheme = React.useMemo(() => {
     if (theme === 'system') {
-      return getSystemTheme();
+      return systemTheme;
     }
     return theme as 'light' | 'dark';
-  }, [theme, getSystemTheme]);
+  }, [theme, systemTheme]);
 
   // Apply theme to document
   React.useEffect(() => {
@@ -146,8 +154,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       // Load light/dark theme
-      const savedTheme = localStorage.getItem('theme') as Theme;
-      if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+      const savedTheme = migrateLegacySiteTheme(localStorage);
+      if (savedTheme) {
         setTheme(savedTheme);
       }
 
@@ -210,7 +218,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const handleSetTheme = React.useCallback((newTheme: Theme) => {
     setTheme(newTheme);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('theme', newTheme);
+      localStorage.setItem(SITE_THEME_STORAGE_KEY, newTheme);
     }
   }, []);
 
@@ -248,14 +256,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     if (typeof window !== 'undefined' && theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const handleChange = () => {
-        // Force re-render when system theme changes
-        setTheme('system');
-      };
+      const handleChange = () => setSystemTheme(getSystemTheme());
+      handleChange();
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
     }
-  }, [theme]);
+  }, [getSystemTheme, theme]);
 
   // Always provide context value, even during SSR
   const contextValue = React.useMemo(

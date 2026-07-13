@@ -90,11 +90,12 @@ function BlogListPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="admin-page admin-page-wide">
+      <div className="admin-page-header">
         <div>
-          <h1 className="text-3xl font-light">manage posts</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="admin-page-kicker">content</p>
+          <h1 className="admin-page-title">manage posts</h1>
+          <p className="admin-page-description">
             create, edit, and publish your blog posts
           </p>
         </div>
@@ -112,7 +113,7 @@ function BlogListPage() {
       </div>
 
       {error && (
-        <Card className="border-destructive mb-6">
+        <Card className="admin-card border-destructive mb-6">
           <CardContent className="pt-6">
             <p className="text-destructive">
               failed to load posts: {String(error)}
@@ -121,7 +122,7 @@ function BlogListPage() {
         </Card>
       )}
 
-      <Card>
+      <Card className="admin-card">
         <CardHeader>
           <CardTitle>all posts</CardTitle>
           <CardDescription>

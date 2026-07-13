@@ -1,8 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { Link, createFileRoute } from '@tanstack/react-router';
 import { Mail, MapPin, Calendar, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Suspense, lazy } from 'react';
 import { trackEvents } from '@/lib/track-events';
+import {
+  SitePublicShell,
+  SiteResumeAction,
+} from '@/components/site/public-shell';
 
 // Lazy load heavy data visualization components
 const ResumeCharts = lazy(() => import('@/components/resume/resume-charts'));
@@ -316,187 +319,166 @@ function SkillCategory({
 
 function ResumePage() {
   return (
-    <div className="bg-background min-h-screen py-16">
-      <div className="container mx-auto px-4">
-        <div
-          className="mx-auto max-w-4xl"
-          style={{ display: 'flex', flexDirection: 'column', gap: '6rem' }}
-        >
-          <div>
-            <div
-              className="text-center"
-              style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}
-            >
-              <div>
-                <h1 className="text-foreground text-4xl font-[200] tracking-tight sm:text-5xl">
-                  jacob stein
-                </h1>
-                <p className="text-muted-foreground mt-2 text-xl">
-                  founding engineer & ui/ux
-                </p>
-              </div>
-              <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                <a
-                  href="mailto:jacob@jacobstein.me"
-                  className="text-muted-foreground hover:text-primary flex items-center gap-1 transition-colors"
-                  onClick={() =>
-                    trackEvents.contactInitiated(
-                      'email',
-                      'resume_page',
-                      'mailto:jacob@jacobstein.me'
-                    )
-                  }
-                >
-                  <Mail className="h-4 w-4" />
-                  <span>jacob@jacobstein.me</span>
-                </a>
-                <div className="text-muted-foreground flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  <span>San Francisco, CA</span>
-                </div>
-              </div>
-              <p className="text-muted-foreground mx-auto max-w-2xl leading-relaxed">
-                Technical leader and architect with 4+ years of experience
-                building cross-platform software systems that bridge legacy
-                applications with modern infrastructure. Proven track record
-                integrating disparate APIs, deploying ML models to production,
-                and managing technical partnerships with major platform vendors.
-              </p>
-            </div>
-          </div>
+    <SitePublicShell
+      title="Jacob Stein"
+      description="Founding engineer and UI/UX-focused product developer building cross-platform software, real-time systems, AI-assisted workflows, and production infrastructure."
+      wide
+    >
+      <div className="site-resume-stack">
+        <div className="site-resume-actions">
+          <a
+            href="mailto:jacob@jacobstein.me"
+            className="site-link site-resume-contact"
+            onClick={() =>
+              trackEvents.contactInitiated(
+                'email',
+                'resume_page',
+                'mailto:jacob@jacobstein.me'
+              )
+            }
+          >
+            <Mail aria-hidden="true" />
+            <span>jacob@jacobstein.me</span>
+          </a>
+          <span className="site-resume-contact">
+            <MapPin aria-hidden="true" />
+            <span>San Francisco, CA</span>
+          </span>
+          <SiteResumeAction
+            label="download resume"
+            source="site_resume_page"
+            contentSide="bottom"
+            contentAlign="start"
+          />
+        </div>
 
-          <section>
-            <div>
-              <h2 className="text-foreground mb-8 text-3xl font-[200]">
-                experience
-              </h2>
-            </div>
-            <div className="space-y-12">
-              {experiences.map((experience, index) => (
-                <ExperienceCard
-                  key={index}
-                  experience={experience}
+        <section>
+          <div>
+            <h2 className="text-foreground mb-8 text-3xl font-[200]">
+              experience
+            </h2>
+          </div>
+          <div className="space-y-12">
+            {experiences.map((experience, index) => (
+              <ExperienceCard
+                key={index}
+                experience={experience}
+                index={index}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <div>
+            <h2 className="text-foreground mb-8 text-3xl font-[200]">skills</h2>
+          </div>
+          <div className="space-y-8">
+            <div className="grid gap-8 md:grid-cols-2">
+              {Object.entries(skills).map(([category, skillList], index) => (
+                <SkillCategory
+                  key={category}
+                  title={category}
+                  skills={skillList}
                   index={index}
                 />
               ))}
-            </div>
-          </section>
-
-          <section>
-            <div>
-              <h2 className="text-foreground mb-8 text-3xl font-[200]">
-                skills
-              </h2>
-            </div>
-            <div className="space-y-8">
-              <div className="grid gap-8 md:grid-cols-2">
-                {Object.entries(skills).map(([category, skillList], index) => (
-                  <SkillCategory
-                    key={category}
-                    title={category}
-                    skills={skillList}
-                    index={index}
-                  />
-                ))}
-              </div>
-              <Suspense
-                fallback={
-                  <div className="bg-muted/20 h-64 w-full animate-pulse rounded-lg" />
-                }
-              >
-                <SkillsVisualization />
-              </Suspense>
-            </div>
-          </section>
-
-          <section>
-            <div>
-              <h2 className="text-foreground mb-8 text-3xl font-[200]">
-                performance metrics
-              </h2>
             </div>
             <Suspense
               fallback={
                 <div className="bg-muted/20 h-64 w-full animate-pulse rounded-lg" />
               }
             >
-              <ResumeCharts />
+              <SkillsVisualization />
             </Suspense>
-          </section>
+          </div>
+        </section>
 
-          <section>
-            <div>
-              <h2 className="text-foreground mb-8 text-3xl font-[200]">
-                education
-              </h2>
-              <div className="space-y-6">
-                {education.map((edu, index) => (
-                  <div
-                    key={index}
-                    className="border-primary/20 relative border-l-2 pl-8"
-                  >
-                    <div className="bg-primary absolute top-0 -left-2 h-4 w-4 rounded-full"></div>
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <h3 className="text-foreground text-xl font-[200]">
-                          {edu.degree}
-                        </h3>
-                        <p className="text-primary text-lg font-light">
-                          {edu.institution}
-                        </p>
+        <section>
+          <div>
+            <h2 className="text-foreground mb-8 text-3xl font-[200]">
+              performance metrics
+            </h2>
+          </div>
+          <Suspense
+            fallback={
+              <div className="bg-muted/20 h-64 w-full animate-pulse rounded-lg" />
+            }
+          >
+            <ResumeCharts />
+          </Suspense>
+        </section>
+
+        <section>
+          <div>
+            <h2 className="text-foreground mb-8 text-3xl font-[200]">
+              education
+            </h2>
+            <div className="space-y-6">
+              {education.map((edu, index) => (
+                <div
+                  key={index}
+                  className="border-primary/20 relative border-l-2 pl-8"
+                >
+                  <div className="bg-primary absolute top-0 -left-2 h-4 w-4 rounded-full"></div>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h3 className="text-foreground text-xl font-[200]">
+                        {edu.degree}
+                      </h3>
+                      <p className="text-primary text-lg font-light">
+                        {edu.institution}
+                      </p>
+                    </div>
+                    <div
+                      className="text-muted-foreground flex items-center text-sm"
+                      style={{ gap: '0.25rem' }}
+                    >
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {edu.timeline}
                       </div>
-                      <div
-                        className="text-muted-foreground flex items-center text-sm"
-                        style={{ gap: '0.25rem' }}
-                      >
-                        <div className="flex items-center gap-1">
-                          <Calendar className="h-4 w-4" />
-                          {edu.timeline}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4" />
-                          {edu.location}
-                        </div>
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        {edu.location}
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div>
+          <section className="site-public-section text-center">
+            <div>
+              <h3 className="text-foreground mb-4 text-2xl font-[200]">
+                view my work
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Explore detailed case studies and live demos of my recent
+                projects
+              </p>
+              <Link
+                to="/projects"
+                className="site-link site-resume-projects-link"
+                onClick={() =>
+                  trackEvents.navLinkClicked(
+                    'projects',
+                    'resume',
+                    'projects',
+                    window.scrollY
+                  )
+                }
+              >
+                <ExternalLink className="h-4 w-4" />
+                see projects
+              </Link>
             </div>
           </section>
-
-          <div>
-            <section className="text-center">
-              <div className="border-border bg-card rounded-2xl border p-8">
-                <h3 className="text-foreground mb-4 text-2xl font-[200]">
-                  view my work
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  Explore detailed case studies and live demos of my recent
-                  projects
-                </p>
-                <Button asChild>
-                  <a
-                    href="/projects"
-                    className="gap-2"
-                    onClick={() =>
-                      trackEvents.navLinkClicked(
-                        'projects',
-                        'resume',
-                        'projects',
-                        window.scrollY
-                      )
-                    }
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    see projects
-                  </a>
-                </Button>
-              </div>
-            </section>
-          </div>
         </div>
       </div>
-    </div>
+    </SitePublicShell>
   );
 }

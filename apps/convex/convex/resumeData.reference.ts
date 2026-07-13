@@ -14,7 +14,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
       'Founder/developer building The Market, a compatibility-focused dating app for web and mobile, since November 2025. Technical leader with 4+ years of experience shipping cross-platform products, real-time systems, AI-assisted workflows, and production infrastructure across TypeScript, React, React Native, Convex, and AWS.',
     contact: {
       email: 'jacob@jacobstein.me',
-      github: 'https://github.com/jjjjjjjjjjjjjjacob',
+      github: 'https://github.com/jjjjjjjjjjjjjjjjacob',
       website: 'https://x.com/jaequbh',
     },
     defaults: {
@@ -47,7 +47,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
       'Product strategist and technical founder focused on zero-to-one social products, currently building The Market as a compatibility-first dating app. Experienced turning product theses into shipped onboarding, discovery, trust, and engagement loops.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
-      github: 'https://github.com/jacobstein',
+      github: 'https://github.com/jjjjjjjjjjjjjjjjacob',
       website: 'https://jacobstein.dev',
     },
     defaults: {
@@ -73,7 +73,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
       'Frontend engineer and product designer focused on building polished web and mobile product experiences, real-time interfaces, and design systems. Currently building The Market across TanStack Start, React 19, Expo, and React Native.',
     contact: {
       linkedin: 'https://linkedin.com/in/jacobstein',
-      github: 'https://github.com/jacobstein',
+      github: 'https://github.com/jjjjjjjjjjjjjjjjacob',
       website: 'https://jacobstein.dev',
     },
     defaults: {
@@ -99,7 +99,7 @@ export const resumeProfiles: ResumeProfileRecord[] = [
       'Technical leader with 4+ years building production AI applications, cross-platform systems, and customer-facing integrations. Currently building The Market across AI-assisted matching, identity verification, real-time communication, and mobile/web product delivery.',
     contact: {
       email: 'jacob@jacobstein.me',
-      github: 'https://github.com/jjjjjjjjjjjjjjacob',
+      github: 'https://github.com/jjjjjjjjjjjjjjjjacob',
       website: 'https://x.com/jaequbh',
     },
     defaults: {

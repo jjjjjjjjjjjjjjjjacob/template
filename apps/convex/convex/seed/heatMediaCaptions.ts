@@ -2,7 +2,7 @@ import { v } from 'convex/values';
 import { internalMutation } from '../_generated/server';
 
 // Per-example copy for the HEAT.tech portfolio project, keyed by the media
-// item's `order`. Stored with real newlines so the alt-3b "work cited" media
+// item's `order`. Stored with real newlines so the site "work cited" media
 // list renders each numbered point on its own line (whitespace-pre-line).
 const captionsByOrder: Record<number, string> = {
   0: `The 3D model & animation viewport required overcoming several challenges in a pre-Opus-4.5/GPT-5.3 world:

@@ -1,10 +1,10 @@
-/* alt-3b · circular theme reveal.
+/* site · circular theme reveal.
    A self-contained port of the View Transitions reveal from the sibling repo
-   `../the-new-modern` (`app/_components/theme-mode.ts`), scoped to alt-3b so it
+   `../the-new-modern` (`app/_components/theme-mode.ts`), scoped to site so it
    never introduces a global pattern. The visible swap is a `clip-path: circle()`
    that grows from the toggle outward to the far viewport corner, in three eased
-   stages (overshoot → settle → expand). The matching CSS lives in alt-3b.css,
-   keyed on the `alt3b-theme-transitioning-circle` class added to <html> below. */
+   stages (overshoot → settle → expand). The matching CSS lives in site.css,
+   keyed on the `site-theme-transitioning-circle` class added to <html> below. */
 
 export interface ThemeRevealOrigin {
   x: number;
@@ -15,13 +15,10 @@ export interface ThemeRevealOrigin {
    the CSS animation; keep the two in sync. */
 const STAGE_ONE_RADIUS_PX = 160;
 const STAGE_ONE_OVERSHOOT_RADIUS_PX = 176;
-/* Uniquely prefixed so nothing here can collide with the global theme system. */
-const TRANSITIONING_CLASS = 'alt3b-theme-transitioning';
-const CIRCLE_CLASS = 'alt3b-theme-transitioning-circle';
-const KEYFRAMES_NAME = 'alt3b-theme-expand-circle';
-
-/** localStorage key for the page-local theme choice. */
-export const ALT3B_THEME_STORAGE_KEY = 'alt-3b-theme';
+/* Stable site-prefixed names keep the transition isolated from app chrome. */
+const TRANSITIONING_CLASS = 'site-theme-transitioning';
+const CIRCLE_CLASS = 'site-theme-transitioning-circle';
+const KEYFRAMES_NAME = 'site-theme-expand-circle';
 
 /** `startViewTransition` isn't in every TS lib target — declare what we use. */
 type ViewTransitionDocument = Document & {
@@ -58,7 +55,7 @@ function injectThemeRevealKeyframes(
   finalRadius: number
 ): () => void {
   const style = document.createElement('style');
-  style.setAttribute('data-alt3b-theme-reveal', '');
+  style.setAttribute('data-site-theme-reveal', '');
   const { x, y } = origin;
   style.textContent = `@keyframes ${KEYFRAMES_NAME}{0%{clip-path:circle(0px at ${x}px ${y}px);animation-timing-function:cubic-bezier(0.175,0.885,0.32,1.275)}38%{clip-path:circle(${STAGE_ONE_OVERSHOOT_RADIUS_PX}px at ${x}px ${y}px);animation-timing-function:cubic-bezier(0.33,1,0.68,1)}48%{clip-path:circle(${STAGE_ONE_RADIUS_PX}px at ${x}px ${y}px);animation-timing-function:cubic-bezier(0.22,1,0.36,1)}100%{clip-path:circle(${Math.ceil(finalRadius)}px at ${x}px ${y}px)}}`;
   document.head.appendChild(style);

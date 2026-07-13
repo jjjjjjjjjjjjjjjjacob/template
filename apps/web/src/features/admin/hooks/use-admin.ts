@@ -9,12 +9,14 @@ import type { UserManagementFilters } from '../types';
  * Hook for checking admin permissions
  */
 export function useAdminAuth() {
-  const { isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn } = useAuth();
 
   const adminUser = useQuery({
     ...convexQuery(api.admin.getCurrentAdmin, {}),
-    enabled: isSignedIn,
+    enabled: isLoaded && isSignedIn,
   });
+
+  const isCheckingAdmin = isSignedIn && adminUser.isLoading;
 
   return {
     isAdmin: adminUser.data ? adminUser.data.role === 'admin' : false,
@@ -22,7 +24,7 @@ export function useAdminAuth() {
       ? adminUser.data.role === 'moderator' || adminUser.data.role === 'admin'
       : false,
     adminUser: adminUser.data,
-    isLoading: adminUser.isLoading,
+    isLoading: !isLoaded || isCheckingAdmin,
     hasPermission: (permission: string) =>
       adminUser.data?.permissions?.includes(permission) || false,
   };

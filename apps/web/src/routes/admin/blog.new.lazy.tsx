@@ -1,9 +1,4 @@
 import { createLazyFileRoute, Link, useRouter } from '@tanstack/react-router';
-import {
-  SignedIn,
-  SignedOut,
-  RedirectToSignIn,
-} from '@clerk/tanstack-react-start';
 import { useMutation } from 'convex/react';
 import { api } from '@template/convex';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -135,144 +130,130 @@ function NewBlogPostPage() {
   };
 
   return (
-    <>
-      <SignedOut>
-        <RedirectToSignIn redirectUrl="/admin/blog/new" />
-      </SignedOut>
-      <SignedIn>
-        <div className="container mx-auto px-4 py-8">
-          <div className="mb-8">
-            <div className="mb-4 flex items-center">
-              <Link to="/admin/blog">
-                <Button variant="ghost" size="sm" className="mr-4">
-                  <ArrowLeft className="mr-2 h-4 w-4" />
-                  back to posts
-                </Button>
-              </Link>
-            </div>
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min-w-0 flex-1">
-                <h1 className="text-2xl font-light sm:text-3xl">
-                  new blog post
-                </h1>
-                <p className="text-muted-foreground mt-1 text-sm">
-                  create a new blog post
-                  {isAutoSaving && (
-                    <span className="ml-2">• autosaving...</span>
-                  )}
-                </p>
-              </div>
-              <div className="flex flex-shrink-0 items-center gap-2">
-                <Button
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  size="sm"
-                  className="sm:size-default"
-                >
-                  <Save className="mr-2 h-4 w-4" />
-                  {isSaving ? 'saving...' : 'save post'}
-                </Button>
-              </div>
-            </div>
+    <div className="admin-page admin-page-wide">
+      <div className="mb-8">
+        <div className="mb-4 flex items-center">
+          <Link to="/admin/blog">
+            <Button variant="ghost" size="sm" className="mr-4">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              back to posts
+            </Button>
+          </Link>
+        </div>
+        <div className="admin-page-header">
+          <div className="min-w-0 flex-1">
+            <p className="admin-page-kicker">content</p>
+            <h1 className="admin-page-title">new blog post</h1>
+            <p className="admin-page-description">
+              create a new blog post
+              {isAutoSaving && <span className="ml-2">• autosaving...</span>}
+            </p>
           </div>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-            {/* Main Editor */}
-            <div className="lg:col-span-3">
-              <MarkdownEditor
-                value={markdown}
-                onChange={setMarkdown}
-                title={title}
-                onTitleChange={setTitle}
-                slug={slug}
-                onSlugChange={setSlug}
-                onSave={handleSave}
-                images={images}
-              />
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>publish settings</CardTitle>
-                  <CardDescription>
-                    configure post visibility and URL
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center space-x-2">
-                    <Switch
-                      id="published"
-                      checked={published}
-                      onCheckedChange={setPublished}
-                    />
-                    <Label htmlFor="published">
-                      {published ? 'published' : 'draft'}
-                    </Label>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>images</CardTitle>
-                  <CardDescription>
-                    upload and manage blog post images
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <BlogImageManager
-                    images={images}
-                    thumbnailId={thumbnailId}
-                    onImagesChange={setImages}
-                    onThumbnailChange={setThumbnailId}
-                    onInsertImage={handleInsertImage}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>markdown guide</CardTitle>
-                  <CardDescription>
-                    quick reference for formatting
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-muted-foreground space-y-2 text-sm">
-                  <div>
-                    <code># Heading 1</code>
-                  </div>
-                  <div>
-                    <code>## Heading 2</code>
-                  </div>
-                  <div>
-                    <code>**bold text**</code>
-                  </div>
-                  <div>
-                    <code>*italic text*</code>
-                  </div>
-                  <div>
-                    <code>`code`</code>
-                  </div>
-                  <div>
-                    <code>[link](url)</code>
-                  </div>
-                  <div>
-                    <code>![image](url)</code>
-                  </div>
-                  <div>
-                    <code>- list item</code>
-                  </div>
-                  <div>
-                    <code>```code block```</code>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+          <div className="flex flex-shrink-0 items-center gap-2">
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
+              size="sm"
+              className="sm:size-default"
+            >
+              <Save className="mr-2 h-4 w-4" />
+              {isSaving ? 'saving...' : 'save post'}
+            </Button>
           </div>
         </div>
-      </SignedIn>
-    </>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+        <div className="lg:col-span-3">
+          <MarkdownEditor
+            value={markdown}
+            onChange={setMarkdown}
+            title={title}
+            onTitleChange={setTitle}
+            slug={slug}
+            onSlugChange={setSlug}
+            onSave={handleSave}
+            images={images}
+          />
+        </div>
+
+        <div className="space-y-6">
+          <Card className="admin-card">
+            <CardHeader>
+              <CardTitle>publish settings</CardTitle>
+              <CardDescription>
+                configure post visibility and URL
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="published"
+                  checked={published}
+                  onCheckedChange={setPublished}
+                />
+                <Label htmlFor="published">
+                  {published ? 'published' : 'draft'}
+                </Label>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="admin-card">
+            <CardHeader>
+              <CardTitle>images</CardTitle>
+              <CardDescription>
+                upload and manage blog post images
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <BlogImageManager
+                images={images}
+                thumbnailId={thumbnailId}
+                onImagesChange={setImages}
+                onThumbnailChange={setThumbnailId}
+                onInsertImage={handleInsertImage}
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="admin-card">
+            <CardHeader>
+              <CardTitle>markdown guide</CardTitle>
+              <CardDescription>quick reference for formatting</CardDescription>
+            </CardHeader>
+            <CardContent className="text-muted-foreground space-y-2 text-sm">
+              <div>
+                <code># Heading 1</code>
+              </div>
+              <div>
+                <code>## Heading 2</code>
+              </div>
+              <div>
+                <code>**bold text**</code>
+              </div>
+              <div>
+                <code>*italic text*</code>
+              </div>
+              <div>
+                <code>`code`</code>
+              </div>
+              <div>
+                <code>[link](url)</code>
+              </div>
+              <div>
+                <code>![image](url)</code>
+              </div>
+              <div>
+                <code>- list item</code>
+              </div>
+              <div>
+                <code>```code block```</code>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

@@ -45,36 +45,19 @@ month-precision and some year-only dates ("March 2021 - present" vs "2022 - 2025
 future task needs a true ATS _PDF_, generate a text-based PDF (jsPDF text API or print CSS),
 NOT the canvas image.
 
-## Alternative landing pages (`/alt-*`)
+## Standalone experiences (`/macos` and `/legacy`)
 
-**Situation: building or editing any `/alt-N` landing concept, or adding a new one.**
+**Situation: changing a route that intentionally does not use the default site presentation.**
 
-- `__root.tsx` already special-cases any path starting with `/alt-`: `HeaderWrapper`
-  returns `null` and `MainWrapper` drops the `mt-14` offset. So an alt route owns the full
-  viewport with **no global header and no top margin** — do not re-add chrome, and don't
-  modify `__root` for a new alt. (`/alt-macos` is the original; `/alt-1`…`/alt-5` are the
-  refined "Jony Ive" minimal family.)
-- **Data:** use `usePortfolioData()` (→ `api.resume.getProfile`, slug `default`). It returns
-  `{ profile, projects, skills, summary }` and works regardless of the `portfolio_projects`
-  `published` flag — unlike `api.projects.list` (`includeUnpublished:false`), which is empty
-  right now. The live resume profile's projects are vibechecc.io / HEAT.tech / Freelance
-  Development (NOT the `portfolioProjects.ts` seed set). **`project.previews[]` is empty** —
-  design typography-first; never depend on uploaded imagery.
-- **Pattern:** `routes/alt-N.tsx` = `createFileRoute('/alt-N')` → component in
-  `components/alt-N/` (`index.tsx` + sub-pieces + co-located `alt-N.css`). Shared helpers in
-  `components/alt-shared/` (`AltSwitcher`, `flattenTechnologies`/`startYear`/`topAchievements`).
-- **Fonts:** distinct self-hosted variable woff2 per page under `public/fonts/alt/`
-  (Fraunces, Mona Sans, Archivo, Cormorant, Bodoni Moda), declared via `@font-face` in the
-  page's co-located CSS — keeps the global `fonts.css`/`app.css` untouched. In dev these are
-  JS-injected (not in SSR `<head>`); they extract normally in prod builds.
-- **Theme isolation:** each `.alt-N-root` sets its own explicit bg/fg (not the flipping
-  `--background` token) so it reads as designed regardless of the global dark/light toggle.
-- Pointer/`window`-dependent pages: effects-only access is SSR-safe (alt-2 SSRs fine).
-  Wrap in `ClientOnly` only when first render depends on capability (alt-5 picks an
-  immersive vs static variant via `matchMedia('(hover/pointer)')` + reduced-motion). Always
-  give a no-hover/reduced-motion fallback that shows all content (alt-5's `alt-5-static`).
-- Switcher uses plain `<a href>` (full reload) on purpose, so each immersive page tears down
-  cleanly; it's intentionally decoupled from the typed route tree.
+- `getRouteExperience()` is the source of truth. Public and unknown routes receive `SiteChrome`,
+  admin receives the shared site tokens without the metaball canvas, `/legacy` keeps its old header
+  and offset, and `/macos` owns the viewport with no surrounding chrome.
+- The always-mounted `SiteVisualProvider` still surrounds every route so navigation cannot orphan a
+  shared consumer. Standalone means presentation isolation, not a second global provider.
+- Pointer/`window`-dependent immersive UI must keep effects-only access or use `ClientOnly` when the
+  first render depends on browser capability. Always retain no-hover and reduced-motion fallbacks.
+- Self-hosted site fonts live under `public/fonts/site/`; macOS-specific assets remain under
+  `public/os-x/` and its component directory.
 
 ## Hash-anchor scrolling on the home page (`#projects` / `#resume` / `#contact`)
 
@@ -108,20 +91,16 @@ lands in the wrong place / under the header" bugs on `routes/index.tsx`.**
 - This race usually does NOT reproduce on localhost (fonts are cached/instant). Verify with a
   throttled/cold network or a hard reload of `/#resume`.
 
-## Alt landing variants + the soluo metaball + cursor-safe (menu-aim) index
+## First-class site landing + the soluo metaball + cursor-safe index
 
-**Situation: porting visuals from a sibling `../soluo` repo, adding a WebGL background to an
-alt landing, or building "safe triangle" hover-intent over a hover-activated list.**
+**Situation: changing the default public experience, its WebGL background, or the "safe triangle"
+hover intent over the project index.**
 
-- Alt pages follow a fixed shape: `routes/alt-N.tsx` is a 6-line `createFileRoute` that renders
-  `IndexLanding` from `components/alt-N/index.tsx`; styles live in a co-located `alt-N.css`
-  scoped under a `.alt-N-root` class (CSS vars + most row/link rules are defined there).
+- The default `/` route renders `SiteLanding` from `components/site/landing.tsx`. The public,
+  authentication, status, theme, and visual-provider components live under `components/site/`,
+  and their first-class selectors live in `site.css` under the `.site-*` namespace.
   Data comes from `usePortfolioData()` (`api.resume.getProfile`, slug `default`) — projects carry
   `previews: string[]` (live-example URLs = "work cited") and categorized `technologies`.
-- **Additive variant pattern:** to evolve an alt page without touching it, copy to `alt-Nb/` and
-  add `routes/alt-Nb.tsx`. Reuse the original CSS by importing it and stacking both root classes
-  (`<div className="alt-3-root alt-3b-root">`), then layer only the new rules in `alt-Nb.css`.
-  This inherits every `--ink/--rule` var and row style for free; no edits to the original.
 - **routeTree.gen.ts is auto-generated by the `tanstackStart` vite plugin** (it's tracked but
   rewritten on dev/build — note it imports `createServerRootRoute`, so the bare
   `@tanstack/router-generator` would produce a different shape; don't hand-roll it). Just add the
@@ -138,16 +117,16 @@ alt landing, or building "safe triangle" hover-intent over a hover-activated lis
   second effect keyed on props.
 - **First-paint gating (no default-purple flash, no half-empty content):** `usePortfolioData()` is a
   plain client `useQuery` — `payload` is `undefined` on SSR + first client paint (`isLoading: true`),
-  and `routes/index.tsx` does NOT preload. So `IndexLanding` must hold: early-return just the
-  `.alt-3-root.alt-3b-root` backdrop (with `aria-busy`) while `isLoading`, placed AFTER all hooks. Two
+  and `routes/index.tsx` does NOT preload. So `SiteLanding` must hold: early-return just the
+  empty `.site-shell` main (with `aria-busy`) while `isLoading`, placed AFTER all hooks. Two
   separate gates, not one — content gates on `!isLoading` (so the whole `<main>` mounts at once and the
-  existing staggered `.alt-3-fade-in` 0/0.1/0.2s delays actually cascade _populated_ content), while the
+  existing staggered `.site-fade-in` 0/0.1/0.2s delays actually cascade _populated_ content), while the
   metaball gates one step further on `activeProject` (so its palette is known). Mounting `MetaballStage`
   only when the palette is known means its uniforms initialize directly to the project's accents — no
-  purple→color lerp. Fade it in a beat _after_ the content via a `.alt-3b-metaball-veil` wrapper
+  purple→color lerp. Fade it in a beat _after_ the content via a `.site-metaball-veil` wrapper
   (opacity 0→1, `0.5s` delay; `animation:none;opacity:1` under `prefers-reduced-motion`). Keep the gates
   split so a genuine zero-projects payload still renders the content (just without the blob).
-- **Menu-aim ("safe triangle") hover intent** (`alt-3b/use-menu-aim.ts`): the index is on the left,
+- **Menu-aim ("safe triangle") hover intent** (`site/use-menu-aim.ts`): the index is on the left,
   the focused project's detail panel on the right; moving the cursor diagonally toward the panel must
   NOT switch focus to rows it clips. Algorithm (per jquery-menu-aim): keep a 2–3 sample pointer trail;
   the cursor is "aiming" when the slopes from it to the panel's near-edge corners
@@ -165,7 +144,7 @@ alt landing, or building "safe triangle" hover-intent over a hover-activated lis
   the left identity+index an **independent `position: sticky; top: 0; height: 100dvh; align-self: start`
   column** (its own `overflow-y: auto`; `mt-auto` to anchor the index near the bottom like the comp),
   and let the right detail column scroll in the document. The selectors then never move when the right
-  resizes. **Critical:** `.alt-3-root` sets `overflow-x: hidden`, which makes it a scroll container and
+  resizes. **Critical:** `.site-root` sets `overflow-x: hidden`, which makes it a scroll container and
   breaks the sticky — override to `overflow-x: clip` (clips without establishing a scroll container, so
   sticky still pins to the viewport).
 - **Preview type is fragment-encoded** — `getProfile` (`resume.ts`) builds `previews: string[]` from the
@@ -179,7 +158,7 @@ alt landing, or building "safe triangle" hover-intent over a hover-activated lis
   `pointer-events:none`, and overlay one absolute anchor (with an `sr-only` label) as the single
   accessible click target — that also stops the iframe trapping page scroll.
 - **Name casing:** the comp lowercases everything, but a person's name is a proper noun (the CLAUDE.md
-  casing exception). alt-3b renders the name with `capitalize` (not `lowercase`); titles/other copy keep
+  casing exception). site renders the name with `capitalize` (not `lowercase`); titles/other copy keep
   the lowercase house style.
 - **Media captions are in the schema + CMS already, just dropped on read.** `portfolio_projects.media[]`
   has an optional `caption` (editable in `admin/.../project-media-manager.tsx` via the upload/external
@@ -190,7 +169,7 @@ alt landing, or building "safe triangle" hover-intent over a hover-activated lis
   the arrays aligned). Add `previewCaptions: v.array(v.string())` to the `returns` validator AND the
   inline TS return type, and `previewCaptions?: string[]` (optional) to `ResumeProfilePayload` in
   use-resume-filter.ts. Fully additive — `previews` is unchanged so the other ~6 consumers don't care.
-- **Per-example description fallback, keyed by host (not slug+index, not global).** alt-3b resolves a
+- **Per-example description fallback, keyed by host (not slug+index, not global).** site resolves a
   media description as `cmsCaption?.trim() || HARDCODED_DESCRIPTIONS[host] || undefined`. Host-keying is
   robust to media reordering and to opaque Convex storage URLs. Reality of the live data (verify by
   POSTing `{path:"resume:getProfile",args:{slug},format:"json"}` to `$CONVEX_URL/api/query`): captions
@@ -201,12 +180,12 @@ alt landing, or building "safe triangle" hover-intent over a hover-activated lis
 - **"Full to content-height, covering it" = natural media height, NOT `vh`.** Drop the fixed
   `aspect-ratio: 16/10` + `position:absolute; object-fit:cover` crop; images/videos become
   `width:100%; height:auto` (whole asset shown, full column width). Iframes are the exception — no
-  intrinsic height — so only `.alt-3b-media-frame[data-kind='iframe']` keeps an `aspect-ratio` box (with
+  intrinsic height — so only `.site-media-frame[data-kind='iframe']` keeps an `aspect-ratio` box (with
   the 2×-scaled embed). The description sits in a `<figcaption>` UNDER the media (where the old filename
   link was); never render the file/URL name (use host only for `alt`/sr-only text).
 - **Verifying a Convex query change is actually live:** a `convex dev` process (per workspace) auto-pushes
   on save — confirm it's running (`ps aux | grep "convex dev"`) and hit `$CONVEX_URL/api/query` directly
-  (`{path:"resume:getProfile",args:{...},format:"json"}`) to see the new field, since the alt pages fetch
+  (`{path:"resume:getProfile",args:{...},format:"json"}`) to see the new field, since the site pages fetch
   client-side (SSR HTML won't show hydrated data).
 - **Orientation-adaptive media (reconciling vertical budget):** a full-width portrait asset eats a huge
   vertical block; a landscape one doesn't. So branch the per-example layout on the media's orientation,
@@ -219,26 +198,24 @@ alt landing, or building "safe triangle" hover-intent over a hover-activated lis
   height-bounded (`max-height: 20rem; width: auto`) so its budget matches landscape rows. Defaults to
   `landscape` so SSR/first paint match (a portrait item reflows once after its media loads).
 
-## alt-3b dark mode + View Transitions circular reveal
+## Shared site theme + View Transitions circular reveal
 
-**Situation: adding a per-page dark mode, porting `../the-new-modern`'s circular theme reveal,
-or anything touching `alt-3b/theme-reveal.ts` / the `data-theme` attr / `::view-transition` CSS.**
+**Situation: changing the shared public/admin theme, porting `../the-new-modern`'s circular reveal,
+or anything touching `site/theme-reveal.ts` / the `data-theme` attr / `::view-transition` CSS.**
 
-- **Theme is page-local, never the global `.dark`.** alt pages are theme-isolated (each `.alt-N-root`
-  hardcodes its palette). alt-3b's dark mode is a local `useState<'light'|'dark'>` in `index.tsx`,
-  persisted to its OWN key `alt-3b-theme`, applied as `data-theme` on the `.alt-3b-root` div. It does
-  NOT use `ThemeProvider`/`useTheme` (that toggles `.dark` on `<html>` for the whole app). Dark palette
-  = `.alt-3-root.alt-3b-root[data-theme='dark']` overriding the 5 vars (`--bg/--ink/--ink-soft/
---ink-faint/--rule`). Because every surface is var-driven, that one block re-themes the whole page;
-  the only extra override is the media-frame white (`.alt-3b-media-frame` bg). The iframe keeps `#fff`
-  (it's a thumbnail of a real light site).
+- **Theme state is global and provider-first.** `ThemeProvider` owns the persisted `theme` preference;
+  the always-mounted `SiteVisualProvider` exposes the resolved light/dark value and metaball stage to
+  public and admin consumers. `SiteChrome` only renders the public canvas. The inline head bootstrap
+  applies `data-site-theme` before hydration and performs the one-time `alt-3b-theme` migration.
+  Canonical `--site-*` tokens live on `<html>`; `.site-root` and `.admin-shell` alias their local
+  semantic variables to those tokens. `/legacy` and `/macos` keep their standalone presentations.
 - **The circular reveal = View Transitions API + injected `clip-path` keyframes** (`theme-reveal.ts`,
   ported from `the-new-modern/app/_components/theme-mode.ts`). `transitionTheme({commit, origin})`
-  injects a `@keyframes alt3b-theme-expand-circle` that grows `circle(0 at x y)` → `circle(R at x y)`
+  injects a `@keyframes site-theme-expand-circle` that grows `circle(0 at x y)` → `circle(R at x y)`
   where `R` = max hypotenuse to the 4 viewport corners, in 3 eased stages (overshoot 176 → settle 160
   → expand, 680ms), adds two transient classes to `<html>`, runs `document.startViewTransition(commit)`,
-  and removes everything on `.finished`. The matching CSS (`alt-3b.css`) is **scoped entirely under
-  `html.alt3b-theme-transitioning-circle`** so it can never leak into any other (future/global) view
+  and removes everything on `.finished`. The matching CSS (`site.css`) is **scoped entirely under
+  `html.site-theme-transitioning-circle`** so it can never leak into any other (future/global) view
   transition: `::view-transition-old(root){animation:none;z-index:1}` (old held opaque underneath),
   `::view-transition-new(root){animation:…680ms;z-index:2}` (new revealed over it by the circle).
 - **React + View Transitions gotcha — commit MUST be synchronous.** The API snapshots the "new" state
@@ -252,29 +229,27 @@ or anything touching `alt-3b/theme-reveal.ts` / the `data-theme` attr / `::view-
 - **Fallbacks:** `transitionTheme` commits instantly (no animation) when `prefers-reduced-motion` OR
   `document.startViewTransition` is absent (Firefox/Safari<18); a CSS media query also nulls the
   `new(root)` animation. All `window`/`document` access is `typeof`-guarded (SSR-safe).
-- **First paint is light on both server & client** (avoids hydration mismatch); the saved theme is
-  applied in a mount `useEffect`, so a returning dark-mode user sees a brief light→dark settle on load
-  (no anti-FOUC inline `<head>` script — out of scope for an alt page; note if that flash ever matters).
-- **Toggle:** a bespoke `.alt-3b-theme-toggle` button (lucide `Sun`/`Moon`, shows the CURRENT mode like
-  the global `theme-toggle.tsx`), in the aside eyebrow row, with a `ref` — the reveal origin is its
-  `getBoundingClientRect()` centre. `AltSwitcher` already has a `tone` prop; pass `dark ? 'dark':'light'`.
+- **First paint is bootstrapped in `<head>`.** Keep the inline storage/system resolver synchronized
+  with `ThemeProvider` and `lib/site-theme.ts` so returning users do not receive the wrong CSS palette.
+- **Toggle:** a bespoke `.site-theme-toggle` button (lucide `Sun`/`Moon`, shows the CURRENT mode like
+  the legacy toggle), used on public pages and in the admin desktop/mobile chrome. Its `ref` provides
+  the reveal origin via the centre of `getBoundingClientRect()`.
 
-## Per-example portfolio captions (alt-3b "work cited" media)
+## Per-example portfolio captions (site "work cited" media)
 
 **Situation: adding/editing the descriptive copy under each project example image/video,
-or anything touching `previewCaptions` / the alt-3b media list.**
+or anything touching `previewCaptions` / the site media list.**
 
 - **The caption pipeline already exists end-to-end — don't build a new one.** Source of
   truth is `portfolio_projects.media[].caption` (Convex). `resume.getProfile` sorts each
   project's media by `order` and emits index-aligned `previews` + `previewCaptions`
   (`apps/convex/convex/resume.ts`, `caption = m.caption ?? ''`). `usePortfolioData()` →
-  alt-3b `ProjectDetail` → `<PreviewMedia caption={captions[i]} />`.
-- **Per-example captions render in ONLY one surface: alt-3b** (`components/alt-3b/
-project-row.tsx`, `PreviewMedia` figcaption). The other themes (alt-1..5, alt-macos
-  Photos/Finder/Safari, the main `/` `ProjectCard`) show the project-level `description`
-  per preview, not per-example copy. If a request says "copy on each example," it's alt-3b.
+  site `ProjectDetail` → `<PreviewMedia caption={captions[i]} />`.
+- **Per-example captions render in ONLY one surface: site** (`components/site/
+project-row.tsx`, `PreviewMedia` figcaption). The standalone macOS experience shows project-level
+  descriptions instead. If a request says "copy on each example," it belongs to the site component.
 - **Multiline captions need `whitespace-pre-line` on the caption `<span>`** (project-row.tsx,
-  the `<span>{description}</span>` inside `.alt-3b-media-desc`). Captions are stored with
+  the `<span>{description}</span>` inside `.site-media-desc`). Captions are stored with
   real `\n`; without the class they collapse to one line. `caption?.trim()` trims ends but
   keeps internal newlines. The codebase's other multiline pattern is `whitespace-pre-wrap`
   (`alt-macos/apps/terminal-app.tsx`); use `pre-line` for prose.
@@ -290,7 +265,7 @@ project-row.tsx`, `PreviewMedia` figcaption). The other themes (alt-1..5, alt-ma
   live media order isn't visible from source. The admin caption editor
   (`components/admin/project-media-manager.tsx`) is already a multiline `<Textarea>`.
 - **Portrait examples render side-by-side via a CSS grid that needs explicit
-  `grid-row: 1`.** `.alt-3b-media[data-orientation='portrait'][data-has-desc='true']`
+  `grid-row: 1`.** `.site-media[data-orientation='portrait'][data-has-desc='true']`
   is `display:grid; grid-template-columns:1fr auto` with the caption assigned
   `grid-column:1` (left) and the frame `grid-column:2` (right). But the frame comes
   FIRST in the DOM (assigned col 2) and the caption SECOND (assigned col 1) — so

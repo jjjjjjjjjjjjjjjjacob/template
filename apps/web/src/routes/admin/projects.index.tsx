@@ -19,7 +19,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  ArrowLeft,
   Plus,
   MoreHorizontal,
   Edit,
@@ -137,7 +136,7 @@ function ProjectsIndexPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="admin-page">
         <div className="flex items-center justify-center py-12">
           <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
           <span className="ml-2">loading...</span>
@@ -148,8 +147,8 @@ function ProjectsIndexPage() {
 
   if (!isAdmin) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Card className="border-destructive">
+      <div className="admin-page">
+        <Card className="admin-card border-destructive">
           <CardContent className="pt-6">
             <p className="text-destructive">
               you do not have permission to access this area.
@@ -161,21 +160,12 @@ function ProjectsIndexPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/admin">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              back
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-2xl font-light">projects</h1>
-            <p className="text-muted-foreground text-sm">
-              manage portfolio projects
-            </p>
-          </div>
+    <div className="admin-page admin-page-wide">
+      <div className="admin-page-header">
+        <div>
+          <p className="admin-page-kicker">portfolio</p>
+          <h1 className="admin-page-title">projects</h1>
+          <p className="admin-page-description">manage portfolio projects</p>
         </div>
         <Link to="/admin/projects/new">
           <Button>
@@ -186,7 +176,7 @@ function ProjectsIndexPage() {
       </div>
 
       {!projects || projects.length === 0 ? (
-        <Card>
+        <Card className="admin-card">
           <CardContent className="py-12 text-center">
             <FileText className="text-muted-foreground mx-auto mb-4 h-12 w-12" />
             <h3 className="mb-2 text-lg font-light">no projects yet</h3>
@@ -202,7 +192,7 @@ function ProjectsIndexPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card className="admin-card">
           <CardHeader>
             <CardTitle className="font-light">
               all projects ({projects.length})

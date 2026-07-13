@@ -281,6 +281,175 @@ export default defineSchema({
     updatedAt: v.number(),
   }).index('by_ipKey', ['ipKey']),
 
+  schedulingEventTypes: defineTable({
+    slug: v.string(),
+    title: v.string(),
+    description: v.optional(v.string()),
+    durationMinutes: v.number(),
+    slotIntervalMinutes: v.number(),
+    bufferBeforeMinutes: v.number(),
+    bufferAfterMinutes: v.number(),
+    minNoticeMinutes: v.number(),
+    maxAdvanceDays: v.number(),
+    questions: v.optional(
+      v.array(
+        v.object({
+          id: v.string(),
+          label: v.string(),
+          type: v.union(
+            v.literal('text'),
+            v.literal('textarea'),
+            v.literal('select')
+          ),
+          required: v.boolean(),
+          options: v.optional(v.array(v.string())),
+        })
+      )
+    ),
+    reminders: v.optional(
+      v.array(
+        v.object({
+          method: v.union(v.literal('email'), v.literal('popup')),
+          minutes: v.number(),
+        })
+      )
+    ),
+    locationType: v.literal('google_meet'),
+    active: v.boolean(),
+    sortOrder: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_slug', ['slug'])
+    .index('by_active_order', ['active', 'sortOrder']),
+
+  schedulingAvailabilityRules: defineTable({
+    scope: v.union(v.literal('global'), v.id('schedulingEventTypes')),
+    dayOfWeek: v.number(),
+    startMinutes: v.number(),
+    endMinutes: v.number(),
+    timeZone: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_scope', ['scope'])
+    .index('by_scope_day', ['scope', 'dayOfWeek']),
+
+  schedulingDateOverrides: defineTable({
+    scope: v.union(v.literal('global'), v.id('schedulingEventTypes')),
+    date: v.string(),
+    unavailable: v.boolean(),
+    intervals: v.array(
+      v.object({
+        startMinutes: v.number(),
+        endMinutes: v.number(),
+      })
+    ),
+    timeZone: v.string(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_scope', ['scope'])
+    .index('by_scope_date', ['scope', 'date']),
+
+  schedulingBookingHolds: defineTable({
+    eventTypeId: v.id('schedulingEventTypes'),
+    startTime: v.number(),
+    endTime: v.number(),
+    expiresAt: v.number(),
+    tokenHash: v.string(),
+    createdAt: v.number(),
+  })
+    .index('by_event_type_time', ['eventTypeId', 'startTime'])
+    .index('by_expires_at', ['expiresAt'])
+    .index('by_token_hash', ['tokenHash']),
+
+  schedulingBookings: defineTable({
+    eventTypeId: v.id('schedulingEventTypes'),
+    status: v.union(
+      v.literal('pending_google'),
+      v.literal('confirmed'),
+      v.literal('cancelled'),
+      v.literal('rescheduled'),
+      v.literal('failed')
+    ),
+    startTime: v.number(),
+    endTime: v.number(),
+    timeZone: v.string(),
+    inviteeName: v.string(),
+    inviteeEmail: v.string(),
+    notes: v.optional(v.string()),
+    questionResponses: v.optional(
+      v.array(
+        v.object({
+          questionId: v.string(),
+          label: v.string(),
+          value: v.string(),
+        })
+      )
+    ),
+    googleCalendarId: v.optional(v.string()),
+    googleEventId: v.optional(v.string()),
+    googleEventHtmlLink: v.optional(v.string()),
+    googleMeetUrl: v.optional(v.string()),
+    googleConferenceStatus: v.optional(v.string()),
+    cancelTokenHash: v.string(),
+    rescheduleTokenHash: v.string(),
+    errorMessage: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_event_type_time', ['eventTypeId', 'startTime'])
+    .index('by_status_time', ['status', 'startTime'])
+    .index('by_invitee_email', ['inviteeEmail'])
+    .index('by_cancel_token_hash', ['cancelTokenHash'])
+    .index('by_reschedule_token_hash', ['rescheduleTokenHash']),
+
+  schedulingGoogleConnections: defineTable({
+    provider: v.literal('google'),
+    accountEmail: v.string(),
+    calendarId: v.string(),
+    accessTokenEncrypted: v.optional(v.string()),
+    refreshTokenEncrypted: v.string(),
+    tokenExpiresAt: v.optional(v.number()),
+    scopes: v.array(v.string()),
+    status: v.union(
+      v.literal('connected'),
+      v.literal('needs_reconnect'),
+      v.literal('disabled')
+    ),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_provider', ['provider'])
+    .index('by_status', ['status']),
+
+  schedulingOAuthStates: defineTable({
+    stateHash: v.string(),
+    redirectPath: v.optional(v.string()),
+    createdBy: v.string(),
+    expiresAt: v.number(),
+    createdAt: v.number(),
+  })
+    .index('by_state_hash', ['stateHash'])
+    .index('by_expires_at', ['expiresAt']),
+
+  schedulingAuditEvents: defineTable({
+    actorType: v.union(
+      v.literal('admin'),
+      v.literal('invitee'),
+      v.literal('system')
+    ),
+    actorId: v.optional(v.string()),
+    action: v.string(),
+    bookingId: v.optional(v.id('schedulingBookings')),
+    eventTypeId: v.optional(v.id('schedulingEventTypes')),
+    metadata: v.optional(v.any()),
+    createdAt: v.number(),
+  })
+    .index('by_booking', ['bookingId'])
+    .index('by_created_at', ['createdAt']),
+
   chat_messages: defineTable({
     sessionId: v.string(),
     role: v.union(v.literal('user'), v.literal('assistant')),

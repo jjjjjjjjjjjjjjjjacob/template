@@ -2,7 +2,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { searchCache } from '../services/search-cache';
 import type { SearchFilters, SearchOptions, SearchState } from '../types';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';

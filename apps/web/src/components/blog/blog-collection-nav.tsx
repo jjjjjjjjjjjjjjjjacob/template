@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { Link } from '@tanstack/react-router';
 import { Plus } from 'lucide-react';
 import { Button } from '../ui/button';

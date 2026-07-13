@@ -331,6 +331,7 @@ export function MetaballStage({
     accent: new THREE.Color(accent),
     accent2: new THREE.Color(accent2),
   });
+  const lightRef = useRef(light);
   const dampRef = useRef(cursorMode === 'trail' ? 0.04 : 0.12);
 
   // ---- mount once: build renderer, run the RAF loop ----------------------
@@ -497,6 +498,7 @@ export function MetaballStage({
   // ---- live sync: update uniforms/targets when props change --------------
   useEffect(() => {
     dampRef.current = cursorMode === 'trail' ? 0.04 : 0.12;
+    const themeChanged = lightRef.current !== light;
     const tgt = targetRef.current;
     tgt.bg.set(bg);
     tgt.fg.set(light ? accent2 : ink);
@@ -510,6 +512,18 @@ export function MetaballStage({
     u.uIntensity.value = light ? Math.min(intensity, 0.6) : intensity;
     u.uLight.value = light ? 1.0 : 0.0;
     (u.uInk.value as THREE.Color).set(ink);
+
+    // Project palettes morph within a theme, but a theme swap must be atomic.
+    // Otherwise the masked canvas briefly eases from the light page background
+    // to the dark one, which reads as a full black-to-white split.
+    if (themeChanged) {
+      (u.uBg.value as THREE.Color).set(bg);
+      (u.uFg.value as THREE.Color).set(light ? accent2 : ink);
+      (u.uAccent.value as THREE.Color).set(accent);
+      (u.uAccent2.value as THREE.Color).set(accent2);
+    }
+
+    lightRef.current = light;
   }, [variant, cursorMode, intensity, bg, ink, accent, accent2, light]);
 
   return <div ref={hostRef} style={{ position: 'absolute', inset: 0 }} />;

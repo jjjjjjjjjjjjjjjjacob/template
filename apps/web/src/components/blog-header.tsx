@@ -4,7 +4,7 @@ import { useTheme } from './theme-provider';
 import { Link, useLocation } from '@tanstack/react-router';
 import { useAdminAuth } from '@/features/admin/hooks/use-admin';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 
 export function BlogHeader() {
   const { setTheme, resolvedTheme } = useTheme();

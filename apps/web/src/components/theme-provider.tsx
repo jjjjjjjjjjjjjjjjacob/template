@@ -48,6 +48,7 @@ interface ThemeContextType {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   resolvedTheme: 'light' | 'dark';
+  isThemeReady: boolean;
   colorTheme: ColorTheme | null;
   secondaryColorTheme: SecondaryColorTheme | null;
   setColorTheme: (colorTheme: ColorTheme | null) => void;
@@ -68,6 +69,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [systemTheme, setSystemTheme] = React.useState<'light' | 'dark'>(
     'light'
   );
+  const [isThemeReady, setIsThemeReady] = React.useState(false);
 
   // Get system theme preference
   const getSystemTheme = React.useCallback((): 'light' | 'dark' => {
@@ -89,16 +91,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Apply theme to document
   React.useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && isThemeReady) {
       const root = window.document.documentElement;
       root.classList.remove('light', 'dark');
       root.classList.add(resolvedTheme);
     }
-  }, [resolvedTheme]);
+  }, [isThemeReady, resolvedTheme]);
 
   // Apply color theme to document
   React.useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && isThemeReady) {
       const root = window.document.documentElement;
       // Remove all possible color theme classes
       const colorThemes: ColorTheme[] = [
@@ -148,11 +150,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         root.classList.add(secondaryColorTheme);
       }
     }
-  }, [colorTheme, secondaryColorTheme]);
+  }, [colorTheme, isThemeReady, secondaryColorTheme]);
 
-  // Load saved themes from localStorage
+  // Resolve persisted and system themes before dependent visual surfaces are
+  // marked ready. This keeps WebGL from booting once with the light palette
+  // while the inline head script has already painted dark.
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
+      setSystemTheme(getSystemTheme());
+
       // Load light/dark theme
       const savedTheme = migrateLegacySiteTheme(localStorage);
       if (savedTheme) {
@@ -211,8 +217,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       ) {
         setSecondaryColorTheme(savedSecondaryTheme);
       }
+
+      setIsThemeReady(true);
     }
-  }, []);
+  }, [getSystemTheme]);
 
   // Save theme to localStorage
   const handleSetTheme = React.useCallback((newTheme: Theme) => {
@@ -269,6 +277,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       theme,
       setTheme: handleSetTheme,
       resolvedTheme,
+      isThemeReady,
       colorTheme,
       secondaryColorTheme,
       setColorTheme: handleSetColorTheme,
@@ -278,6 +287,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       theme,
       handleSetTheme,
       resolvedTheme,
+      isThemeReady,
       colorTheme,
       secondaryColorTheme,
       handleSetColorTheme,

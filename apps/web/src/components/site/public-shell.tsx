@@ -1,10 +1,9 @@
-import { Link } from '@tanstack/react-router';
 import { useEffect, useMemo, type ComponentProps, type ReactNode } from 'react';
 import { PDFDownloadPopover } from '@/components/pdf-download-popover';
 import { usePortfolioData } from '@/hooks/use-portfolio-data';
 import { buildResumeDataFromSource } from '@/lib/resume-export-data';
 import { projectStage, useSiteVisuals } from './visual-provider';
-import { SiteThemeToggle } from './theme-toggle';
+import { SitePublicNav } from './public-nav';
 
 function classes(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(' ');
@@ -94,24 +93,9 @@ export function SitePublicShell({
         )}
       >
         <header className="site-fade-in site-public-head">
-          <div className="site-public-nav">
-            <Link to="/" className="site-link">
-              Jacob Stein
-            </Link>
-            <nav aria-label="public pages" className="site-public-nav-links">
-              <Link to="/projects" className="site-link">
-                projects
-              </Link>
-              <Link to="/blog" className="site-link">
-                blog
-              </Link>
-              <Link to="/book" className="site-link">
-                book
-              </Link>
-              <SiteResumeAction source="site_public_nav" />
-              <SiteThemeToggle className="site-public-theme-toggle" />
-            </nav>
-          </div>
+          <SitePublicNav
+            resumeAction={<SiteResumeAction source="site_public_nav" />}
+          />
           {eyebrow && <p className="site-mono site-public-kicker">{eyebrow}</p>}
           <h1 className="site-grotesk site-public-title">{title}</h1>
           {description && <p className="site-public-copy">{description}</p>}

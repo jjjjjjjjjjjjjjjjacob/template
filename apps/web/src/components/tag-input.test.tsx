@@ -18,7 +18,7 @@ vi.mock('@convex-dev/react-query', () => ({
   convexQuery: () => ({}),
 }));
 
-vi.mock('@template/convex', () => ({
+vi.mock('@template/backend', () => ({
   api: {
     tags: {
       search: vi.fn(),

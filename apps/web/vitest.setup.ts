@@ -233,7 +233,7 @@ vi.mock('@convex-dev/react-query', () => ({
 }));
 
 // Also mock the api import to provide consistent function references
-vi.mock('@template/convex', () => ({
+vi.mock('@template/backend', () => ({
   api: {
     emojis: {
       getPopular: 'api.emojis.getPopular',

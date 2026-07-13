@@ -6,26 +6,26 @@ A modern full-stack monorepo template built with TanStack Start, Convex, and Clo
 
 ## Monorepo Structure
 
-This project is an Nx-powered monorepo, enabling code sharing between multiple frontend applications and a Convex backend.
+This project is a Turborepo-powered monorepo, enabling code sharing between the frontend application, Convex backend, and shared packages.
 
 ```
 template/
 ├── apps/
-│   ├── web/              # React web application (TanStack Start)
-│   └── convex/           # Convex backend (real-time DB, serverless functions)
+│   └── web/              # React web application (TanStack Start)
 ├── packages/
+│   ├── backend/          # @template/backend - Convex backend
 │   ├── scheduler/        # @template/scheduler - Headless scheduler SDK + React UI
 │   ├── types/            # @template/types - Shared TypeScript interfaces
 │   └── utils/            # @template/utils - Shared utility functions
 ├── terraform/            # Infrastructure as code
 ├── .github/              # GitHub Actions workflows
-├── nx.json               # Nx workspace configuration
+├── turbo.json            # Turborepo task configuration
 ├── package.json          # Root workspace package.json
 └── ...
 ```
 
 - **Frontend details:** See [`apps/web/README.md`](./apps/web/README.md)
-- **Backend details:** See [`apps/convex/README.md`](./apps/convex/README.md)
+- **Backend details:** See [`packages/backend/README.md`](./packages/backend/README.md)
 - **Infrastructure:** See [`terraform/README.md`](./terraform/README.md)
 
 ---
@@ -62,7 +62,7 @@ template/
 - [TypeScript](https://typescriptlang.org/) (type checking)
 - [ESLint](https://eslint.org/) (linting)
 - [Prettier](https://prettier.io/) (formatting)
-- [Nx](https://nx.dev/) (monorepo orchestration)
+- [Turborepo](https://turborepo.dev/) (monorepo orchestration)
 
 ---
 
@@ -107,7 +107,7 @@ bun run dev
 ```
 
 - Starts Convex backend, launches frontend (http://localhost:3030), and ngrok tunnel.
-- See [apps/web/README.md](./apps/web/README.md) and [apps/convex/README.md](./apps/convex/README.md) for app-specific dev info.
+- See [apps/web/README.md](./apps/web/README.md) and [packages/backend/README.md](./packages/backend/README.md) for app-specific dev info.
 
 ### Troubleshooting
 
@@ -133,18 +133,18 @@ All scripts are run from the root with Bun:
 | `bun run quality`      | Run typecheck + lint + format  |
 | `bun run quality:fix`  | Run typecheck + lint fix + fmt |
 
-#### Nx Usage
+#### Turborepo Usage
 
-- List projects: `bun nx show projects`
-- Project details: `bun nx show project <project>`
-- Run task: `bun nx <task> <project>` (e.g., `bun nx build @template/web`)
-- Run for all: `bun nx run-many --target=<task>`
-- Clear cache: `bun nx reset`
+- List workspaces: `bunx turbo ls`
+- Run a task for one workspace: `bunx turbo run <task> --filter=<workspace>`
+- Run a task for all applicable workspaces: `bunx turbo run <task>`
+- Inspect the task graph: `bunx turbo run <task> --dry`
+- Clear build outputs and the local Turbo cache: `bun run clean`
 
 #### Adding New Apps
 
-- Add a new app in `apps/` (see Nx docs for generators)
-- Add to `package.json` workspaces and `nx.json` if needed
+- Add a new application under `apps/` with its own `package.json`
+- Add the required package scripts and register new task names in `turbo.json`
 - See [Import Patterns](#import-patterns) for shared code usage
 
 ---
@@ -188,7 +188,7 @@ All scripts are run from the root with Bun:
 ### From Browser App
 
 ```typescript
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { BookingFlow } from '@template/scheduler/react';
 import type { User, DataType } from '@template/types';
 import { utilityFunction } from '@template/utils';
@@ -237,7 +237,7 @@ export function cn(...classes: string[]): string { ... }
 - Frontend: Vitest + React Testing Library for component tests
 - Backend: convex-test for Convex function testing
 - Run all tests: `bun run test`
-- Run specific project: `bun nx test <project>`
+- Run a specific workspace: `bunx turbo run test --filter=<workspace>`
 
 ### E2E Testing
 

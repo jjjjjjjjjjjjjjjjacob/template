@@ -16,7 +16,7 @@ These rules override default AI behavior when working on this codebase.
    - When unsure about a pattern, ask for clarification
 
 3. **Monorepo Awareness**
-   - Always use workspace imports (`@template/types`, `@template/utils`, `@template/convex`)
+   - Always use workspace imports (`@template/types`, `@template/utils`, `@template/backend`)
    - Run commands from the repository root using `bun`
    - Never use npm, yarn, pnpm, or npx - use `bun` and `bunx` exclusively
 
@@ -121,7 +121,7 @@ These rules override default AI behavior when working on this codebase.
 - Organize features in `src/features/` directory
 - Use lowercase text in all UI elements
 
-### Backend (`apps/convex/`)
+### Backend (`packages/backend/`)
 
 - Prefer Convex indexes over filters for queries
 - Use proper authentication checks in mutations

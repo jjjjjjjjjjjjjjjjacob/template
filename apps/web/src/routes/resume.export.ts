@@ -1,6 +1,6 @@
 import { createServerFileRoute } from '@tanstack/react-start/server';
 import { ConvexHttpClient } from 'convex/browser';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 
 import type { ResumeProfilePayload } from '@/hooks/use-resume-filter';
 import {

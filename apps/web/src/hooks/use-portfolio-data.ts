@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import type {
   ResumeProfilePayload,
   ResumeProject,

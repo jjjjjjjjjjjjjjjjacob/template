@@ -13,9 +13,9 @@ import {
   useBlogShareCanvas,
   type BlogLayoutOption,
 } from '@/hooks/use-blog-share-canvas';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { useQuery } from 'convex/react';
-import type { Id } from '@template/convex/dataModel';
+import type { Id } from '@template/backend/dataModel';
 import {
   Download,
   Copy,

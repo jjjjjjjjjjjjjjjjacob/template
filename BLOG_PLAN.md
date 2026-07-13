@@ -45,6 +45,6 @@ Scope: Add a markdown-powered blog with public routes at `/blog` and an authenti
 
 Notes:
 
-- Admin allowlist controlled via `ADMIN_EMAILS` in `apps/convex/.env.local`.
+- Admin allowlist controlled via `ADMIN_EMAILS` in `packages/backend/.env.local`.
 - Types for new Convex functions appear after `convex dev`/codegen.
 - After setting `ADMIN_EMAILS`, restart Convex (`bun run dev:backend`) so server picks up env.

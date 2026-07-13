@@ -30,7 +30,7 @@ import { cn } from '@/utils/tailwind-utils';      // Local utils
 
 ### From other workspaces
 ```typescript
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import type { User } from '@template/types';
 import { formatDate } from '@template/utils';
 ```

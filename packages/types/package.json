@@ -18,6 +18,9 @@
   "scripts": {
     "build": "rm -rf dist && tsup src/index.ts --format cjs,esm && bunx tsc src/index.ts src/search.ts --declaration --outDir dist --rootDir src",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "clean": "rm -rf dist"
   },
   "devDependencies": {

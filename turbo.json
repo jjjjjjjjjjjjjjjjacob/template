@@ -1,0 +1,94 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "globalDependencies": [
+    "eslint.config.js",
+    "tsconfig.json",
+    "vitest.config.ts",
+    "vitest.setup.ts"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", ".output/**", "convex/_generated/**"],
+      "env": [
+        "CLERK_FRONTEND_API_URL",
+        "CONVEX_DEPLOYMENT",
+        "NODE_ENV",
+        "PERF_MONITOR",
+        "VITE_*"
+      ],
+      "passThroughEnv": ["CONVEX_DEPLOY_KEY"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "passThroughEnv": [
+        "BOOKING_*",
+        "CLERK_*",
+        "CONVEX_*",
+        "GEMINI_API_KEY",
+        "GOOGLE_*",
+        "NODE_ENV",
+        "PERF_MONITOR",
+        "RESEND_API_KEY",
+        "VITE_*"
+      ]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "test:watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test:integration": {
+      "dependsOn": ["^build"]
+    },
+    "test:integration:watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "lint": {},
+    "lint:fix": {
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "preview": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true
+    },
+    "wrangler:dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "deploy": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "passThroughEnv": ["CLERK_*", "CLOUDFLARE_*", "CONVEX_*", "VITE_*"]
+    },
+    "cf-typegen": {
+      "cache": false,
+      "passThroughEnv": ["CLOUDFLARE_*", "VITE_*"]
+    },
+    "seed": {
+      "cache": false,
+      "passThroughEnv": ["CONVEX_*"]
+    },
+    "seed:clear": {
+      "cache": false,
+      "passThroughEnv": ["CONVEX_*"]
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}

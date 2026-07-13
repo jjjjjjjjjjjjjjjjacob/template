@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Link } from '@tanstack/react-router';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CalendarDays, ArrowRight, Image as ImageIcon } from 'lucide-react';
-import { Id } from '@template/convex/dataModel';
+import { Id } from '@template/backend/dataModel';
 
 interface BlogCardProps {
   post: {

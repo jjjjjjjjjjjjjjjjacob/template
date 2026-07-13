@@ -1,6 +1,6 @@
 import { createLazyFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { useMutation } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '../../components/ui/button';
 import {
@@ -16,7 +16,7 @@ import { MarkdownEditor } from '../../components/blog-editor/markdown-editor';
 import { BlogImageManager } from '../../components/blog-editor/blog-image-manager';
 import { toast } from 'sonner';
 import { Label } from '../../components/ui/label';
-import { Id } from '@template/convex/dataModel';
+import { Id } from '@template/backend/dataModel';
 
 export const Route = createLazyFileRoute('/admin/blog/new')({
   component: NewBlogPostPage,

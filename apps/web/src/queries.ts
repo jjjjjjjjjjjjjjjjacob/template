@@ -5,7 +5,7 @@ import {
   useConvexMutation,
   useConvexAction,
 } from '@convex-dev/react-query';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 // import { useAuth } from '@clerk/tanstack-react-start';
 
 // template QUERIES

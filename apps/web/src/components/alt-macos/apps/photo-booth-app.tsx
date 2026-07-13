@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useMutation, useQuery } from 'convex/react';
-import { api } from '@template/convex';
-import type { Id } from '@template/convex/dataModel';
+import { api } from '@template/backend';
+import type { Id } from '@template/backend/dataModel';
 import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
 
 type Effect =

@@ -1,6 +1,6 @@
 import { createLazyFileRoute, Link } from '@tanstack/react-router';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import React, { Suspense } from 'react';
 import { Button } from '../../components/ui/button';
 import { BlogImageGallery } from '../../components/blog/blog-image-gallery';

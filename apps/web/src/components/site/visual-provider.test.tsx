@@ -1,7 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { useEffect } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ThemeProvider } from '@/components/theme-provider';
 import {
+  projectStage,
   SiteVisualProvider,
   useSiteVisuals,
   type SiteStage,
@@ -27,6 +29,40 @@ function SiteVisualProbe() {
   );
 }
 
+function PassiveVisualProbe({
+  onSnapshot,
+}: {
+  onSnapshot: (snapshot: { theme: string; accent: string }) => void;
+}) {
+  const { theme, stage, isReady } = useSiteVisuals();
+
+  if (!isReady) return null;
+
+  return (
+    <MountedVisualProbe
+      theme={theme}
+      accent={stage.accent}
+      onSnapshot={onSnapshot}
+    />
+  );
+}
+
+function MountedVisualProbe({
+  theme,
+  accent,
+  onSnapshot,
+}: {
+  theme: string;
+  accent: string;
+  onSnapshot: (snapshot: { theme: string; accent: string }) => void;
+}) {
+  useEffect(() => {
+    onSnapshot({ theme, accent });
+  }, [accent, onSnapshot, theme]);
+
+  return null;
+}
+
 function renderProvider(children: React.ReactNode) {
   return render(
     <ThemeProvider>
@@ -50,6 +86,21 @@ describe('SiteVisualProvider', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'change stage' }));
     expect(screen.getByTestId('stage')).toHaveTextContent('halo');
+  });
+
+  it('boots the dark visual palette before child passive effects mount', () => {
+    localStorage.setItem('theme', 'dark');
+    document.documentElement.dataset.siteTheme = 'dark';
+    const snapshots: Array<{ theme: string; accent: string }> = [];
+
+    renderProvider(
+      <PassiveVisualProbe onSnapshot={(snapshot) => snapshots.push(snapshot)} />
+    );
+
+    expect(snapshots[0]).toEqual({
+      theme: 'dark',
+      accent: projectStage(0, undefined, 'dark').accent,
+    });
   });
 
   it('migrates the old theme choice into the shared public/admin preference', async () => {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/utils/tailwind-utils';
-import type { Id } from '@template/convex/dataModel';
+import type { Id } from '@template/backend/dataModel';
 
 interface BlogInlineImageProps {
   src: string;

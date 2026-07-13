@@ -1,6 +1,6 @@
 ---
-description: Backend development patterns and rules for apps/convex
-globs: apps/convex/**/*
+description: Backend development patterns and rules for packages/backend
+globs: packages/backend/**/*
 alwaysApply: true
 ---
 

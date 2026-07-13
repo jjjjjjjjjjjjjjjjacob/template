@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { FileUpload, FileUploadFile } from '@/components/forms/file-upload';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,7 +16,7 @@ import {
 import { Trash2, Star, Image as ImageIcon, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { createInlineImageSyntax } from '@/lib/remark-inline-images';
-import { Id } from '@template/convex/dataModel';
+import { Id } from '@template/backend/dataModel';
 import { uploadWithProgress } from '@/utils/upload-with-progress';
 
 interface BlogImageManagerProps {

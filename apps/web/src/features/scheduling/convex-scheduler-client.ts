@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAction, useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import type {
   AvailabilityResult,
   BookingResult,

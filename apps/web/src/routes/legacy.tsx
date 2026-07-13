@@ -2,7 +2,7 @@ import { useHashScroll } from '@/hooks/use-hash-scroll';
 import { useSectionObserverById } from '@/hooks/use-section-observer';
 import { createFileRoute } from '@tanstack/react-router';
 import { convexQuery } from '@convex-dev/react-query';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { defaultParticleConfig } from '@/components/particle-controls';
 import {
   useState,

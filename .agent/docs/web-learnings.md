@@ -243,7 +243,7 @@ or anything touching `previewCaptions` / the site media list.**
 - **The caption pipeline already exists end-to-end — don't build a new one.** Source of
   truth is `portfolio_projects.media[].caption` (Convex). `resume.getProfile` sorts each
   project's media by `order` and emits index-aligned `previews` + `previewCaptions`
-  (`apps/convex/convex/resume.ts`, `caption = m.caption ?? ''`). `usePortfolioData()` →
+  (`packages/backend/convex/resume.ts`, `caption = m.caption ?? ''`). `usePortfolioData()` →
   site `ProjectDetail` → `<PreviewMedia caption={captions[i]} />`.
 - **Per-example captions render in ONLY one surface: site** (`components/site/
 project-row.tsx`, `PreviewMedia` figcaption). The standalone macOS experience shows project-level
@@ -259,7 +259,7 @@ project-row.tsx`, `PreviewMedia` figcaption). The standalone macOS experience sh
   videos with `storageId`s). `resumeData.reference.ts` is stale (3 unrelated iframe URLs).
   To bulk-set captions on live media, write an idempotent `internalMutation` that looks up
   the project by slug and patches `media` matched by `order` (see
-  `apps/convex/convex/seed/heatMediaCaptions.ts`), run via
+  `packages/backend/convex/seed/heatMediaCaptions.ts`), run via
   `bunx convex run seed/heatMediaCaptions:seedHeatMediaCaptions`. Have it return a
   `{ totalMedia, matched, mapping }` summary to verify order→caption alignment, since the
   live media order isn't visible from source. The admin caption editor

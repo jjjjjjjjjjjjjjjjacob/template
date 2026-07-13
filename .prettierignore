@@ -1,7 +1,5 @@
 # Generated files
-apps/backend/convex/_generated/
-apps/convex/convex/_generated/
-convex/_generated/
+packages/backend/convex/_generated/
 apps/web/src/routeTree.gen.ts
 apps/web/.tanstack/
 apps/**/dist/
@@ -13,7 +11,7 @@ packages/**/dist/
 .nitro/
 
 # Cache and temporary files
-.nx/
+.turbo/
 .tanstack/
 node_modules/
 bun.lock

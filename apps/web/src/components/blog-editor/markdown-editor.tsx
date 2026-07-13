@@ -7,7 +7,7 @@ import React, {
   Suspense,
 } from 'react';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { cn } from '../../utils/tailwind-utils';
 import { Card } from '../ui/card';
 import { Separator } from '../ui/separator';
@@ -19,7 +19,7 @@ import { useIsMobile, useIsTablet } from '../../hooks/use-media-query';
 
 // Dynamic import for markdown preview
 const MarkdownPreview = React.lazy(() => import('./markdown-preview'));
-import type { Id } from '@template/convex/dataModel';
+import type { Id } from '@template/backend/dataModel';
 
 interface MarkdownEditorProps {
   value: string;

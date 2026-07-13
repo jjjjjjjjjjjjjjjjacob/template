@@ -1,6 +1,6 @@
 import { createLazyFileRoute, useRouter, Link } from '@tanstack/react-router';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -40,7 +40,7 @@ import {
   ProjectMediaManager,
   MediaItem,
 } from '@/components/admin/project-media-manager';
-import type { Id } from '@template/convex/dataModel';
+import type { Id } from '@template/backend/dataModel';
 
 interface Achievement {
   description: string;

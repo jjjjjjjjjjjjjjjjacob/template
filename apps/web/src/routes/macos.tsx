@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { useMutation, useQuery } from 'convex/react';
-import { api } from '@template/convex';
-import type { Id } from '@template/convex/dataModel';
+import { api } from '@template/backend';
+import type { Id } from '@template/backend/dataModel';
 import { ClientOnly } from '@/components/ui/client-only';
 import { usePortfolioData } from '@/hooks/use-portfolio-data';
 import { useMobile } from '@/hooks/use-mobile';

@@ -15,6 +15,7 @@ export type SiteVisualContextValue = {
   setTheme: (theme: SiteTheme) => void;
   stage: SiteStage;
   setStage: React.Dispatch<React.SetStateAction<SiteStage>>;
+  isReady: boolean;
 };
 
 export const SPECIMENS: SiteStage[] = [
@@ -107,18 +108,41 @@ export function SiteVisualProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const { resolvedTheme, setTheme: setThemePreference } = useTheme();
+  const {
+    resolvedTheme,
+    isThemeReady,
+    setTheme: setThemePreference,
+  } = useTheme();
   const theme: SiteTheme = resolvedTheme;
   const [stage, setStage] = React.useState<SiteStage>(() =>
     projectStage(0, undefined, 'light')
   );
+  const hasBootstrappedStage = React.useRef(false);
+  const [isReady, setIsReady] = React.useState(false);
+
+  // The server-safe default is light, but the inline theme bootstrap may have
+  // already resolved a dark first paint. Synchronize the initial specimen
+  // before marking the visual ready so the metaball's first mount uses one
+  // coherent dark palette instead of lerping from pale accents over a dark
+  // background.
+  React.useEffect(() => {
+    if (!isThemeReady || hasBootstrappedStage.current) return;
+
+    if (theme === 'dark') {
+      setStage(projectStage(0, undefined, theme));
+    }
+    hasBootstrappedStage.current = true;
+    setIsReady(true);
+  }, [isThemeReady, theme]);
 
   React.useEffect(() => {
+    if (!isThemeReady) return;
+
     document.documentElement.dataset.siteTheme = theme;
     return () => {
       delete document.documentElement.dataset.siteTheme;
     };
-  }, [theme]);
+  }, [isThemeReady, theme]);
 
   const setTheme = React.useCallback(
     (nextTheme: SiteTheme) => setThemePreference(nextTheme),
@@ -126,8 +150,8 @@ export function SiteVisualProvider({
   );
 
   const contextValue = React.useMemo(
-    () => ({ theme, setTheme, stage, setStage }),
-    [stage, theme, setTheme]
+    () => ({ theme, setTheme, stage, setStage, isReady }),
+    [isReady, stage, theme, setTheme]
   );
 
   return (

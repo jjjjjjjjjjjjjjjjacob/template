@@ -1,10 +1,17 @@
 import { Link } from '@tanstack/react-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react';
 import { usePortfolioData } from '@/hooks/use-portfolio-data';
 import { ProjectRow, ProjectDetail } from './project-row';
 import { useMenuAim } from './use-menu-aim';
 import { projectStage, useSiteVisuals } from './visual-provider';
 import { SiteResumeAction } from './public-shell';
+import { SitePublicNav, useHasPublishedBlogPosts } from './public-nav';
 import { SiteThemeToggle } from './theme-toggle';
 
 const FALLBACK = {
@@ -16,12 +23,26 @@ const FALLBACK = {
   website: 'https://jacobstein.dev',
 };
 
+type CascadeStyle = CSSProperties & {
+  '--site-cascade-delay': string;
+};
+
+const cascadeStyle = (delayMs: number): CascadeStyle => ({
+  '--site-cascade-delay': `${delayMs}ms`,
+});
+
+const SIDEBAR_ACTION_START_MS = 240;
+const SIDEBAR_ACTION_STEP_MS = 45;
+const SIDEBAR_PROJECT_START_MS = 520;
+const SIDEBAR_PROJECT_STEP_MS = 55;
+
 export function SiteLanding() {
   const { profile, projects, summary, isLoading } = usePortfolioData();
   const { activeIndex, panelRef, navProps, getRowProps } = useMenuAim(0);
   const { theme, setStage } = useSiteVisuals();
   const actionEndRef = useRef<HTMLSpanElement | null>(null);
   const [showMobileHeader, setShowMobileHeader] = useState(false);
+  const hasPublishedPosts = useHasPublishedBlogPosts();
 
   const activeProject = projects[activeIndex];
 
@@ -103,89 +124,132 @@ export function SiteLanding() {
         className="site-mobile-topbar"
         data-visible={showMobileHeader ? 'true' : 'false'}
       >
-        <div className="site-mobile-topbar-inner">
-          <Link to="/" className="site-mobile-topbar-name">
-            Jacob Stein
-          </Link>
-          <nav
-            className="site-mobile-topbar-actions"
-            aria-label="quick contact"
-          >
-            <a className="site-link" href={`mailto:${email}`}>
-              email
-            </a>
-            <Link className="site-link" to="/book">
-              book
-            </Link>
+        <SitePublicNav
+          className="site-mobile-topbar-inner"
+          linksClassName="site-mobile-topbar-actions"
+          nameClassName="site-mobile-topbar-name"
+          themeToggleClassName="site-mobile-theme-toggle"
+          resumeAction={
             <SiteResumeAction
               className="site-mobile-resume-trigger"
               source="site_mobile_header"
               contentSide="bottom"
               contentAlign="end"
             />
-            <SiteThemeToggle className="site-mobile-theme-toggle" />
-          </nav>
-        </div>
+          }
+        />
       </header>
 
       <aside className="site-aside">
-        <header className="site-fade-in">
-          <div className="mb-8 flex items-start justify-between gap-4">
+        <header>
+          <div
+            className="site-cascade-item mb-8 flex items-start justify-between gap-4"
+            style={cascadeStyle(0)}
+          >
             <p className="site-mono text-[0.68rem] tracking-[0.22em] text-[var(--ink-faint)] uppercase">
               index — selected work
             </p>
             <SiteThemeToggle />
           </div>
-          <h1 className="site-grotesk text-[clamp(2rem,4.5vw,2.9rem)] leading-[0.98] font-[600] tracking-[-0.02em] capitalize">
+          <h1
+            className="site-cascade-item site-grotesk text-[clamp(2rem,4.5vw,2.9rem)] leading-[0.98] font-[600] tracking-[-0.02em] capitalize"
+            style={cascadeStyle(60)}
+          >
             {name}
           </h1>
-          <p className="mt-3 text-[0.95rem] text-[var(--ink-soft)]">{title}</p>
+          <p
+            className="site-cascade-item mt-3 text-[0.95rem] text-[var(--ink-soft)]"
+            style={cascadeStyle(120)}
+          >
+            {title}
+          </p>
           {summary && (
-            <p className="mt-6 max-w-xs text-[0.9rem] leading-relaxed text-[var(--ink-soft)]">
+            <p
+              className="site-cascade-item mt-6 max-w-xs text-[0.9rem] leading-relaxed text-[var(--ink-soft)]"
+              style={cascadeStyle(180)}
+            >
               {summary}
             </p>
           )}
 
           <div className="mt-9 flex flex-col gap-1.5 text-[0.88rem]">
-            <a className="site-link w-fit" href={`mailto:${email}`}>
+            <a
+              className="site-cascade-item site-link w-fit"
+              href={`mailto:${email}`}
+              style={cascadeStyle(SIDEBAR_ACTION_START_MS)}
+            >
               {email}
             </a>
-            <Link className="site-link w-fit" to="/book">
+            <Link
+              className="site-cascade-item site-link w-fit"
+              to="/book"
+              style={cascadeStyle(
+                SIDEBAR_ACTION_START_MS + SIDEBAR_ACTION_STEP_MS
+              )}
+            >
               book a call
             </Link>
-            <SiteResumeAction
-              className="w-fit"
-              source="site_landing_actions"
-              contentSide="right"
-              contentAlign="start"
-            />
+            <div
+              className="site-cascade-item w-fit"
+              style={cascadeStyle(
+                SIDEBAR_ACTION_START_MS + SIDEBAR_ACTION_STEP_MS * 2
+              )}
+            >
+              <SiteResumeAction
+                className="w-fit"
+                source="site_landing_actions"
+                contentSide="right"
+                contentAlign="start"
+              />
+            </div>
+            {hasPublishedPosts && (
+              <Link
+                className="site-cascade-item site-link w-fit"
+                to="/blog"
+                style={cascadeStyle(
+                  SIDEBAR_ACTION_START_MS + SIDEBAR_ACTION_STEP_MS * 3
+                )}
+              >
+                blog
+              </Link>
+            )}
             <a
-              className="site-link w-fit"
+              className="site-cascade-item site-link w-fit"
               href={github}
               target="_blank"
               rel="noopener noreferrer"
+              style={cascadeStyle(
+                SIDEBAR_ACTION_START_MS + SIDEBAR_ACTION_STEP_MS * 4
+              )}
             >
               github ↗
             </a>
             <a
-              className="site-link w-fit"
+              className="site-cascade-item site-link w-fit"
               href={website}
               target="_blank"
               rel="noopener noreferrer"
+              style={cascadeStyle(
+                SIDEBAR_ACTION_START_MS + SIDEBAR_ACTION_STEP_MS * 5
+              )}
             >
               {website.replace(/^https?:\/\//, '')} ↗
             </a>
             <span ref={actionEndRef} aria-hidden="true" />
           </div>
-          <p className="site-mono mt-9 text-[0.68rem] tracking-[0.14em] text-[var(--ink-faint)]">
+          <p
+            className="site-cascade-item site-mono mt-9 text-[0.68rem] tracking-[0.14em] text-[var(--ink-faint)]"
+            style={cascadeStyle(
+              SIDEBAR_ACTION_START_MS + SIDEBAR_ACTION_STEP_MS * 6
+            )}
+          >
             {location} · © {new Date().getFullYear()}
           </p>
         </header>
 
         <nav
           aria-label="project index"
-          className="site-fade-in site-index md:mt-auto"
-          style={{ animationDelay: '0.1s' }}
+          className="site-index md:mt-auto"
           {...navProps}
         >
           {projects.map((project, index) => {
@@ -196,6 +260,9 @@ export function SiteLanding() {
                 project={project}
                 index={index}
                 isActive={index === activeIndex}
+                enterDelayMs={
+                  SIDEBAR_PROJECT_START_MS + index * SIDEBAR_PROJECT_STEP_MS
+                }
                 rowProps={{
                   ...rowProps,
                   onClick: (event) => {
@@ -209,12 +276,7 @@ export function SiteLanding() {
         </nav>
       </aside>
 
-      <section
-        ref={panelRef}
-        aria-live="polite"
-        className="site-fade-in site-detail-col"
-        style={{ animationDelay: '0.2s' }}
-      >
+      <section ref={panelRef} aria-live="polite" className="site-detail-col">
         {activeProject && (
           <ProjectDetail
             key={activeProject.id}

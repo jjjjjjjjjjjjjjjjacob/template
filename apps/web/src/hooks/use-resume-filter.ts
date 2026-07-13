@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useSearch } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 import { convexQuery } from '@convex-dev/react-query';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 
 export interface ResumeProfilePayload {
   profile: {

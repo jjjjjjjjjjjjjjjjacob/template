@@ -6,8 +6,8 @@
     "jsxImportSource": "react",
     "paths": {
       "@/*": ["./src/*"],
-      "@template/convex": ["../convex"],
-      "@template/convex/*": ["../convex/*"],
+      "@template/backend": ["../../packages/backend"],
+      "@template/backend/*": ["../../packages/backend/*"],
       "@template/scheduler": ["../../packages/scheduler/src/index.ts"],
       "@template/scheduler/*": ["../../packages/scheduler/src/*"],
       "@template/types": ["../../packages/types/src/index.ts"],
@@ -17,8 +17,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "../convex/convex/_generated/api.d.ts",
-    "../convex/convex/_generated/dataModel.d.ts"
+    "../../packages/backend/convex/_generated/api.d.ts",
+    "../../packages/backend/convex/_generated/dataModel.d.ts"
   ],
   "exclude": [
     "node_modules",

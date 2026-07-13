@@ -18,7 +18,7 @@ vi.mock('@convex-dev/react-query', () => ({
   })),
 }));
 
-vi.mock('@template/convex', () => ({
+vi.mock('@template/backend', () => ({
   api: {
     resume: {
       getProfile: 'resume:getProfile',

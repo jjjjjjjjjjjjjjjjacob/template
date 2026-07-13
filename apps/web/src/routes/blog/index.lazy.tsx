@@ -1,6 +1,6 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import React from 'react';
 import { BlogFeedItem } from '../../components/blog/blog-feed-item';
 import { BlogCollectionNav } from '../../components/blog/blog-collection-nav';

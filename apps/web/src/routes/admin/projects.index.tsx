@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -32,7 +32,7 @@ import {
 import { toast } from 'sonner';
 import { useAdminAuth } from '@/features/auth/hooks/use-admin';
 import { useState } from 'react';
-import type { Id } from '@template/convex/dataModel';
+import type { Id } from '@template/backend/dataModel';
 
 export const Route = createFileRoute('/admin/projects/')({
   component: ProjectsIndexPage,

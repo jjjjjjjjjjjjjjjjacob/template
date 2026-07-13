@@ -2,7 +2,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useConvexMutation } from '@convex-dev/react-query';
 import { useAction } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 
 /**
  * Service for user-related mutations

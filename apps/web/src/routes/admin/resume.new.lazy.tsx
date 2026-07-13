@@ -1,6 +1,6 @@
 import { createLazyFileRoute, useRouter, Link } from '@tanstack/react-router';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

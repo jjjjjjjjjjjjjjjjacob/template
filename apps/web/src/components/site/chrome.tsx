@@ -3,7 +3,7 @@ import { MetaballStage } from './metaball-stage';
 import { META_PALETTE, useSiteVisuals } from './visual-provider';
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
-  const { theme, stage } = useSiteVisuals();
+  const { theme, stage, isReady } = useSiteVisuals();
   const dark = theme === 'dark';
   const palette = META_PALETTE[theme];
 
@@ -16,16 +16,19 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
     <div className="site-root" data-theme={theme}>
       <div className="site-metaball" aria-hidden="true">
         <div className="site-metaball-veil">
-          <MetaballStage
-            variant={stage.variant}
-            cursorMode="trail"
-            intensity={palette.intensity}
-            bg={palette.bg}
-            ink={palette.ink}
-            accent={stage.accent}
-            accent2={stage.accent2}
-            light={!dark}
-          />
+          {isReady && (
+            <MetaballStage
+              key={theme}
+              variant={stage.variant}
+              cursorMode="trail"
+              intensity={palette.intensity}
+              bg={palette.bg}
+              ink={palette.ink}
+              accent={stage.accent}
+              accent2={stage.accent2}
+              light={!dark}
+            />
+          )}
         </div>
       </div>
       {children}

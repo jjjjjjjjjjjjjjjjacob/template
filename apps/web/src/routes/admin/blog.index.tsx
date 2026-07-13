@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useQuery, useMutation, useConvex } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import React from 'react';
 import { Button } from '../../components/ui/button';
 import {
@@ -27,7 +27,7 @@ import {
 } from '../../components/ui/dropdown-menu';
 import { MoreHorizontal, Plus, Edit, Trash2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Id } from '@template/convex/dataModel';
+import type { Id } from '@template/backend/dataModel';
 
 export const Route = createFileRoute('/admin/blog/')({
   component: BlogListPage,

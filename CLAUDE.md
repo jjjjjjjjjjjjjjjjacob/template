@@ -20,7 +20,7 @@ These files contain critical information about how to work with this codebase ef
 ### Monorepo Structure
 
 - `apps/web/` - React web app (TanStack Start)
-- `apps/convex/` - Convex real-time backend
+- `packages/backend/` - Convex real-time backend
 - `packages/types/` - Shared TypeScript interfaces (@template/types)
 - `packages/utils/` - Shared utility functions (@template/utils)
 - `terraform/` - Infrastructure as code
@@ -32,7 +32,7 @@ These files contain critical information about how to work with this codebase ef
 - **Frontend**: TanStack Start, shadcn/ui, Tailwind CSS v4, TanStack Query/Router, Three.js, Framer Motion
 - **Backend**: Convex (real-time DB + serverless functions), Clerk (auth)
 - **Infrastructure**: Cloudflare Workers, Terraform, ngrok (local webhooks)
-- **Development**: Bun, Nx, Vitest, TypeScript, ESLint, Prettier
+- **Development**: Bun, Turborepo, Vitest, TypeScript, ESLint, Prettier
 
 ## Development Commands
 
@@ -55,14 +55,14 @@ bun run quality       # Run typecheck + lint + format check
 bun run quality:fix   # Run typecheck + lint fix + format
 ```
 
-### Nx Commands
+### Turborepo Commands
 
 ```bash
-bun nx show projects                    # List all projects
-bun nx show project <project>           # Show project details
-bun nx <task> <project>                 # Run task for specific project
-bun nx run-many --target=<task>         # Run task for all projects
-bun nx reset                            # Clear Nx cache
+bunx turbo ls                                      # List all workspaces
+bunx turbo run <task>                              # Run a task across workspaces
+bunx turbo run <task> --filter=<workspace>         # Run a task for one workspace
+bunx turbo run <task> --dry                        # Inspect the task graph
+bun run clean                                      # Clear outputs and local cache
 ```
 
 ### Testing
@@ -70,7 +70,7 @@ bun nx reset                            # Clear Nx cache
 - **Framework**: Vitest with Happy DOM
 - **Frontend**: @testing-library/react for component testing
 - **Backend**: convex-test for Convex function testing
-- **Run single test**: `bun nx test <project> -- <test-file>`
+- **Run single test**: `bunx turbo run test --filter=<workspace> -- <test-file>`
 
 ## Code Conventions & Style Guide
 
@@ -124,7 +124,7 @@ bun nx reset                            # Clear Nx cache
 
 ```typescript
 // From web app
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import type { User, DataType } from '@template/types';
 import { utilityFunction } from '@template/utils';
 import { cn } from '@/utils/tailwind-utils';

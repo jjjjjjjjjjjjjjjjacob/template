@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useQuery, useMutation } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

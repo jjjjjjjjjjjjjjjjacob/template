@@ -6,7 +6,7 @@
       "path": "./apps/web"
     },
     {
-      "path": "./apps/convex"
+      "path": "./packages/backend"
     },
     {
       "path": "./packages/types"
@@ -33,8 +33,8 @@
     "baseUrl": ".",
     "noEmit": true,
     "paths": {
-      "@template/convex": ["./apps/convex"],
-      "@template/convex/*": ["./apps/convex/*"],
+      "@template/backend": ["./packages/backend"],
+      "@template/backend/*": ["./packages/backend/*"],
       "@template/types": ["./packages/types/src"],
       "@template/types/*": ["./packages/types/src/*"],
       "@template/scheduler": ["./packages/scheduler/src"],

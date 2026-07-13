@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { X, Hash } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { convexQuery } from '@convex-dev/react-query';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import {
   Command,
   CommandEmpty,

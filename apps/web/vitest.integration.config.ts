@@ -70,7 +70,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@template/convex': resolve(__dirname, '../convex'),
+      '@template/backend': resolve(__dirname, '../../packages/backend'),
       '@template/types': resolve(__dirname, '../../packages/types/src'),
       '@template/utils': resolve(__dirname, '../../packages/utils/src'),
     },

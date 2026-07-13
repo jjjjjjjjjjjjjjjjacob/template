@@ -29,7 +29,7 @@ src/features/[feature]/
 
 ### Backend Implementation
 
-The Convex backend includes comprehensive search at `apps/convex/convex/search.ts`:
+The Convex backend includes comprehensive search at `packages/backend/convex/search.ts`:
 
 - Fuzzy search algorithm
 - Query parser with operators (quotes, exclusions, filters)

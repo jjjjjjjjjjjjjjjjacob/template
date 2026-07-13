@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import type { ResumeProject } from '@/hooks/use-resume-filter';
 import {
   flattenTechnologies,
@@ -8,6 +8,16 @@ import {
 import type { MenuAim } from './use-menu-aim';
 
 type PreviewKind = 'image' | 'video' | 'iframe';
+
+type CascadeStyle = CSSProperties & {
+  '--site-cascade-delay': string;
+};
+
+const cascadeStyle = (delayMs: number): CascadeStyle => ({
+  '--site-cascade-delay': `${delayMs}ms`,
+});
+
+const DETAIL_CASCADE_STEP_MS = 65;
 
 function isPresentUrl(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
@@ -84,10 +94,12 @@ function PreviewMedia({
   raw,
   index,
   caption,
+  enterDelayMs,
 }: {
   raw: string;
   index: number;
   caption?: string;
+  enterDelayMs: number;
 }) {
   const { kind, src, href } = parsePreview(raw);
   const description = caption?.trim() || hardcodedDescription(href);
@@ -101,9 +113,10 @@ function PreviewMedia({
 
   return (
     <figure
-      className="site-media"
+      className="site-cascade-item site-media"
       data-orientation={orientation}
       data-has-desc={description ? 'true' : 'false'}
+      style={cascadeStyle(enterDelayMs)}
     >
       <div className="site-media-frame" data-kind={kind}>
         {kind === 'image' && (
@@ -178,19 +191,22 @@ export function ProjectRow({
   project,
   index,
   isActive,
+  enterDelayMs,
   rowProps,
 }: {
   project: ResumeProject;
   index: number;
   isActive: boolean;
+  enterDelayMs: number;
   rowProps: ReturnType<MenuAim['getRowProps']>;
 }) {
   return (
     <button
       type="button"
-      className="site-row"
+      className="site-cascade-item site-row"
       data-active={isActive ? 'true' : 'false'}
       aria-pressed={isActive}
+      style={cascadeStyle(enterDelayMs)}
       {...rowProps}
     >
       <span className="site-row-num site-mono">
@@ -219,27 +235,42 @@ export function ProjectDetail({
 
   return (
     <div className="site-detail">
-      <p className="site-mono mb-6 text-[0.7rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+      <p
+        className="site-cascade-item site-mono mb-6 text-[0.7rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase"
+        style={cascadeStyle(0)}
+      >
         no. {String(index + 1).padStart(2, '0')} / {project.timeline}
       </p>
 
-      <h2 className="site-grotesk text-[clamp(2.4rem,5.5vw,4.2rem)] leading-[0.95] font-[600] tracking-[-0.02em]">
+      <h2
+        className="site-cascade-item site-grotesk text-[clamp(2.4rem,5.5vw,4.2rem)] leading-[0.95] font-[600] tracking-[-0.02em]"
+        style={cascadeStyle(DETAIL_CASCADE_STEP_MS)}
+      >
         {project.title}
       </h2>
 
-      <p className="mt-7 max-w-xl text-[1.02rem] leading-relaxed text-[var(--ink-soft)]">
+      <p
+        className="site-cascade-item mt-7 max-w-xl text-[1.02rem] leading-relaxed text-[var(--ink-soft)]"
+        style={cascadeStyle(DETAIL_CASCADE_STEP_MS * 2)}
+      >
         {project.description}
       </p>
 
       <dl className="mt-10 grid max-w-xl grid-cols-1 gap-x-10 gap-y-7 sm:grid-cols-2">
-        <div>
+        <div
+          className="site-cascade-item"
+          style={cascadeStyle(DETAIL_CASCADE_STEP_MS * 3)}
+        >
           <dt className="site-mono mb-2 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
             role
           </dt>
           <dd className="text-[0.92rem] text-[var(--ink)]">{project.role}</dd>
         </div>
         {project.url && (
-          <div>
+          <div
+            className="site-cascade-item"
+            style={cascadeStyle(DETAIL_CASCADE_STEP_MS * 4)}
+          >
             <dt className="site-mono mb-2 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
               live
             </dt>
@@ -255,7 +286,10 @@ export function ProjectDetail({
             </dd>
           </div>
         )}
-        <div className="sm:col-span-2">
+        <div
+          className="site-cascade-item sm:col-span-2"
+          style={cascadeStyle(DETAIL_CASCADE_STEP_MS * 5)}
+        >
           <dt className="site-mono mb-3 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
             stack
           </dt>
@@ -266,7 +300,10 @@ export function ProjectDetail({
           </dd>
         </div>
         {achievements.length > 0 && (
-          <div className="sm:col-span-2">
+          <div
+            className="site-cascade-item sm:col-span-2"
+            style={cascadeStyle(DETAIL_CASCADE_STEP_MS * 6)}
+          >
             <dt className="site-mono mb-3 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
               selected
             </dt>
@@ -292,7 +329,10 @@ export function ProjectDetail({
       {/* visual examples of the work — scroll down past "selected" to reach */}
       {previews.length > 0 && (
         <section className="site-cited">
-          <p className="site-mono mb-5 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase">
+          <p
+            className="site-cascade-item site-mono mb-5 text-[0.66rem] tracking-[0.2em] text-[var(--ink-faint)] uppercase"
+            style={cascadeStyle(DETAIL_CASCADE_STEP_MS * 7)}
+          >
             work cited
           </p>
           <div className="site-media-list">
@@ -302,6 +342,7 @@ export function ProjectDetail({
                 raw={raw}
                 index={i}
                 caption={captions[i]}
+                enterDelayMs={DETAIL_CASCADE_STEP_MS * (8 + i)}
               />
             ))}
           </div>

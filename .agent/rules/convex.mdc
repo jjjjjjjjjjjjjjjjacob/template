@@ -1,6 +1,6 @@
 ---
 description: Convex backend development patterns and best practices
-globs: apps/convex/**/*
+globs: packages/backend/**/*
 alwaysApply: true
 ---
 # Convex Development Guide

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState, Suspense, lazy, useMemo } from 'react';
 import { useQuery } from 'convex/react';
-import { api } from '@template/convex';
+import { api } from '@template/backend';
 import { ExternalLink } from 'lucide-react';
 import { SitePublicShell } from '@/components/site/public-shell';
 import { getProjectPreviewUrls } from '@/lib/project-previews';

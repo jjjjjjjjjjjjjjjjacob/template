@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { type ColumnDef } from '@tanstack/react-table';
-import { VirtualDataTable } from '@/components/ui/virtual-data-table';
-import { Button } from '@/components/ui/button';
+import { Copy, Edit } from 'lucide-react';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Edit, Copy } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { VirtualDataTable } from '@/components/ui/virtual-data-table';
 import { cn } from '@/utils/tailwind-utils';
 
 // Example data type

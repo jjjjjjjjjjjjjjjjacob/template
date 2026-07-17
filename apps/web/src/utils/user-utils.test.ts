@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { computeUserDisplayName, getUserInitials } from './user-utils';
+import { describe, expect, it } from 'vitest';
 import type { User } from '../types';
+import { computeUserDisplayName, getUserInitials } from './user-utils';
 
 describe('User Utils', () => {
   describe('computeUserDisplayName', () => {

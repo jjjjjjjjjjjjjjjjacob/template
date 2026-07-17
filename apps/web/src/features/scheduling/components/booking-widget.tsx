@@ -1,7 +1,10 @@
-import * as React from 'react';
 import { Link } from '@tanstack/react-router';
 import {
+  type AvailabilityResult,
+  type AvailableSlot,
   addMonthsToMonthKey,
+  type BookingFormValues,
+  type BookingResult,
   buildSlotCalendar,
   defaultSchedulerTimeZone,
   formatFullDateTime,
@@ -11,16 +14,13 @@ import {
   getMonthKeyFromDateKey,
   groupSlotsByDay,
   monthKeyFromTimestamp,
+  type SchedulerEventType,
   schedulerError,
   slotMonthKeys,
   timeZoneOptions,
   userTimeZone,
-  type AvailabilityResult,
-  type AvailableSlot,
-  type BookingFormValues,
-  type BookingResult,
-  type SchedulerEventType,
 } from '@template/scheduler';
+import * as React from 'react';
 import {
   bookingStage,
   useSiteVisuals,

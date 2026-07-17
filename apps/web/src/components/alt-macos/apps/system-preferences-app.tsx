@@ -1,14 +1,6 @@
-import {
-  useDeferredValue,
-  useId,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react';
-import { useMutation } from 'convex/react';
 import { api } from '@template/backend';
 import type { Id } from '@template/backend/dataModel';
-import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
+import { useMutation } from 'convex/react';
 import {
   Accessibility,
   BatteryCharging,
@@ -36,6 +28,14 @@ import {
   Users,
   Volume2,
 } from 'lucide-react';
+import {
+  type CSSProperties,
+  useDeferredValue,
+  useId,
+  useRef,
+  useState,
+} from 'react';
+import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
 
 type PaneId =
   | 'appearance'

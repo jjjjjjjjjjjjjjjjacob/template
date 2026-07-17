@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import type { ResumeData } from '@/hooks/use-story-canvas';
-import { ThemeProvider } from './theme-provider';
 import { PDFDownloadPopover } from './pdf-download-popover';
+import { ThemeProvider } from './theme-provider';
 
 describe('PDFDownloadPopover', () => {
   it('uses the first-class site presentation by default', async () => {

@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { cn } from '@/utils/tailwind-utils';
 import {
-  OptimizedImageProps,
+  createIntersectionObserver,
   generateOptimizedImageUrls,
   generateResponsiveSizes,
   getOptimalImageFormat,
   getOptimalImageQuality,
-  createIntersectionObserver,
+  OptimizedImageProps,
 } from '@/lib/asset-optimization';
+import { cn } from '@/utils/tailwind-utils';
 
 /**
  * Optimized Image component for mobile performance

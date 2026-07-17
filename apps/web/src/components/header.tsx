@@ -1,12 +1,12 @@
-import { Sun, Moon, Github } from 'lucide-react';
-import * as React from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '@template/backend';
-import { useTheme } from './theme-provider';
-import { useSectionStore } from '@/stores/section-store';
-import { trackEvents } from '@/lib/track-events';
 import { Link } from '@tanstack/react-router';
+import { api } from '@template/backend';
+import { useQuery } from 'convex/react';
+import { Github, Moon, Sun } from 'lucide-react';
+import * as React from 'react';
 import { useAdminAuth } from '@/features/admin/hooks/use-admin';
+import { trackEvents } from '@/lib/track-events';
+import { useSectionStore } from '@/stores/section-store';
+import { useTheme } from './theme-provider';
 
 // Custom X (Twitter) icon component
 const XIcon = ({ className }: { className?: string }) => (

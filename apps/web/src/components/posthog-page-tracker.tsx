@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from '@tanstack/react-router';
 import { usePostHog } from 'posthog-js/react';
+import { useEffect } from 'react';
 import { trackEvents } from '@/lib/track-events';
 
 interface PostHogPageTrackerProps {

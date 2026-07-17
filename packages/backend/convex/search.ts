@@ -1,13 +1,13 @@
-import { query, mutation } from './_generated/server';
-import { v } from 'convex/values';
 import type {
-  ItemSearchResult,
-  UserSearchResult,
-  TagSearchResult,
   ActionSearchResult,
+  ItemSearchResult,
+  TagSearchResult,
+  UserSearchResult,
 } from '@template/types';
+import { v } from 'convex/values';
+import { mutation, query } from './_generated/server';
 import { fuzzyMatch } from './search/fuzzy_search';
-import { scoreItem, scoreUser, scoreTag } from './search/search_scorer';
+import { scoreItem, scoreTag, scoreUser } from './search/search_scorer';
 import { parseSearchQuery } from './search/search_utils';
 
 // Main search function
@@ -475,28 +475,24 @@ export const searchAll = query({
             .filter((item) => item.resultType === 'item')
 
             .map(
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               ({ resultType: _resultType, ...item }) => item
             ) as ItemSearchResult[];
           paginatedUsers = paginatedResults
             .filter((item) => item.resultType === 'user')
 
             .map(
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               ({ resultType: _resultType, ...item }) => item
             ) as UserSearchResult[];
           paginatedTags = paginatedResults
             .filter((item) => item.resultType === 'tag')
 
             .map(
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               ({ resultType: _resultType, ...item }) => item
             ) as TagSearchResult[];
           paginatedActions = paginatedResults
             .filter((item) => item.resultType === 'action')
 
             .map(
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               ({ resultType: _resultType, ...item }) => item
             ) as ActionSearchResult[];
           break;
@@ -516,28 +512,24 @@ export const searchAll = query({
         .filter((item) => item.resultType === 'item')
 
         .map(
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           ({ resultType: _resultType, ...item }) => item
         ) as ItemSearchResult[];
       paginatedUsers = paginatedResults
         .filter((item) => item.resultType === 'user')
 
         .map(
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           ({ resultType: _resultType, ...item }) => item
         ) as UserSearchResult[];
       paginatedTags = paginatedResults
         .filter((item) => item.resultType === 'tag')
 
         .map(
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           ({ resultType: _resultType, ...item }) => item
         ) as TagSearchResult[];
       paginatedActions = paginatedResults
         .filter((item) => item.resultType === 'action')
 
         .map(
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           ({ resultType: _resultType, ...item }) => item
         ) as ActionSearchResult[];
     }

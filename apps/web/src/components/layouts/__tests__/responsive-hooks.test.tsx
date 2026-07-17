@@ -1,18 +1,19 @@
 /// <reference lib="dom" />
-import { describe, it, expect, afterEach, vi, beforeEach } from 'vitest';
-import { renderHook, cleanup } from '@testing-library/react';
+
+import { cleanup, renderHook } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   useMobile,
-  useMobilePortrait,
   useMobileLandscape,
+  useMobilePortrait,
 } from '@/hooks/use-mobile';
-import { useTablet, useDesktop } from '@/hooks/use-tablet';
 import {
-  useResponsive,
-  useBreakpointUp,
-  useBreakpointDown,
   useBreakpointBetween,
+  useBreakpointDown,
+  useBreakpointUp,
+  useResponsive,
 } from '@/hooks/use-responsive';
+import { useDesktop, useTablet } from '@/hooks/use-tablet';
 
 // Mock window.matchMedia
 const mockMatchMedia = vi.fn();

@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import {
-  usePerformanceMetrics,
-  formatMetricValue,
-  getMetricRating,
-} from '@/lib/performance-monitor';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
+import {
+  formatMetricValue,
+  getMetricRating,
+  usePerformanceMetrics,
+} from '@/lib/performance-monitor';
 
 interface NavigationTimingData {
   dns_lookup: number;

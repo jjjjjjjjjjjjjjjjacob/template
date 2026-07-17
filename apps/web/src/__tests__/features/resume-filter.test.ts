@@ -26,8 +26,8 @@ vi.mock('@template/backend', () => ({
   },
 }));
 
-import { useSearch } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
+import { useSearch } from '@tanstack/react-router';
 
 const mockedUseSearch = useSearch as unknown as vi.Mock;
 const mockedUseQuery = useQuery as unknown as vi.Mock;

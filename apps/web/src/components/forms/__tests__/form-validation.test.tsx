@@ -1,16 +1,17 @@
 /// <reference lib="dom" />
-import { describe, it, expect, vi } from 'vitest';
+
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import { Input } from '@/components/ui/input';
 import {
-  validators,
+  FormValidationContext,
   useFormValidation,
   ValidatedInput,
   ValidatedSubmitButton,
-  FormValidationContext,
   type ValidationRule,
+  validators,
 } from '../form-validation';
-import { Input } from '@/components/ui/input';
 
 describe('validators', () => {
   describe('required', () => {

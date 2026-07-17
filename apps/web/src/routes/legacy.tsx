@@ -1,27 +1,27 @@
-import { useHashScroll } from '@/hooks/use-hash-scroll';
-import { useSectionObserverById } from '@/hooks/use-section-observer';
-import { createFileRoute } from '@tanstack/react-router';
 import { convexQuery } from '@convex-dev/react-query';
+import { createFileRoute } from '@tanstack/react-router';
 import { api } from '@template/backend';
-import { defaultParticleConfig } from '@/components/particle-controls';
+import { Github } from 'lucide-react';
 import {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
   lazy,
   Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
 } from 'react';
-import { Button } from '@/components/ui/button';
-import { useMediaQuery } from '@/hooks/use-media-query';
-import { useTheme } from '@/components/theme-provider';
 import { AnimatedSection } from '@/components/animated-section';
-import { useResumeFilter } from '@/hooks/use-resume-filter';
-import { Github } from 'lucide-react';
+import { defaultParticleConfig } from '@/components/particle-controls';
 import { ProjectCard } from '@/components/project-card';
 import { ResumeExperience } from '@/components/resume-experience';
 import { ResumeSkills } from '@/components/resume-skills';
 import { SiteFooter } from '@/components/site-footer';
+import { useTheme } from '@/components/theme-provider';
+import { Button } from '@/components/ui/button';
+import { useHashScroll } from '@/hooks/use-hash-scroll';
+import { useMediaQuery } from '@/hooks/use-media-query';
+import { useResumeFilter } from '@/hooks/use-resume-filter';
+import { useSectionObserverById } from '@/hooks/use-section-observer';
 import { buildResumeDataFromSource } from '@/lib/resume-export-data';
 
 // Custom X (Twitter) icon component
@@ -35,10 +35,11 @@ const XIcon = ({ className }: { className?: string }) => (
     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
   </svg>
 );
-import { Separator } from '@/components/ui';
-import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
+
 import { HeroTitle } from '@/components/hero-title';
 import { PDFDownloadPopover } from '@/components/pdf-download-popover';
+import { Separator } from '@/components/ui';
+import { usePageAssetsReady } from '@/hooks/use-page-assets-ready';
 import { trackEvents } from '@/lib/track-events';
 
 // Lazy-load the Three.js particle field so three/fiber/drei leave the
@@ -176,7 +177,7 @@ function HomePage() {
   const mobileObstacleRadius = 256;
   const desktopBoundaryRoundness = 0;
   const desktopObstacleRadius = 320;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // biome-ignore lint/correctness/noUnusedVariables: intentionally unused
   const { assetsReady, markParticlesReady } = usePageAssetsReady();
 
   useEffect(() => {

@@ -1,5 +1,7 @@
-import * as React from 'react';
 import { SignInButton, SignUpButton } from '@clerk/tanstack-react-start';
+import { LogIn, Sparkles } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -7,8 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Sparkles, LogIn } from 'lucide-react';
 
 interface AuthPromptDialogProps {
   open: boolean;

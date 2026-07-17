@@ -1,6 +1,6 @@
-import { beforeAll, afterEach, afterAll } from 'vitest';
-import { setupTestEnvironment, createTestUser } from './setup';
+import { afterAll, afterEach, beforeAll } from 'vitest';
 import { mockApiFactory } from './mock-api-factory';
+import { createTestUser, setupTestEnvironment } from './setup';
 
 // Create the MSW server
 const server = mockApiFactory.createServer();

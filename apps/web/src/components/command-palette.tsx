@@ -1,18 +1,25 @@
-import * as React from 'react';
 import { useNavigate } from '@tanstack/react-router';
+import type {
+  ActionSearchResult,
+  ItemSearchResult,
+  TagSearchResult,
+  UserSearchResult,
+} from '@template/types';
 import {
-  Search,
-  User,
-  Tag,
-  Plus,
-  Settings,
-  History,
-  TrendingUp,
-  X,
-  Sparkles,
   FileText,
+  History,
   MessageSquare,
+  Plus,
+  Search,
+  Settings,
+  Sparkles,
+  Tag,
+  TrendingUp,
+  User,
+  X,
 } from 'lucide-react';
+import * as React from 'react';
+import { Badge } from '@/components/ui/badge';
 import {
   CommandDialog,
   CommandEmpty,
@@ -22,16 +29,9 @@ import {
   CommandList,
   CommandSeparator,
 } from '@/components/ui/command';
-import { Badge } from '@/components/ui/badge';
 // import { cn } from '@/utils/tailwind-utils';
 import { useSearch } from '@/features/search/hooks/use-search';
 import { useSearchCache } from '@/features/search/hooks/use-search-cache';
-import type {
-  ItemSearchResult,
-  UserSearchResult,
-  TagSearchResult,
-  ActionSearchResult,
-} from '@template/types';
 
 interface ReviewSearchResult {
   id: string;

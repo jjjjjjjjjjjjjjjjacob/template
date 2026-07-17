@@ -1,7 +1,7 @@
-import { hydrateRoot } from 'react-dom/client';
 import { StartClient } from '@tanstack/react-start';
-import { createRouter } from './router';
 import { startTransition } from 'react';
+import { hydrateRoot } from 'react-dom/client';
+import { createRouter } from './router';
 
 // Global type declarations
 declare global {
@@ -30,7 +30,6 @@ function initializeHydrationMonitoring() {
 }
 
 // Enhanced error boundary for hydration errors
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function handleHydrationError(error: unknown, _errorInfo?: any) {
   console.error('Hydration Error:', error);
 

@@ -1,18 +1,19 @@
 /// <reference lib="dom" />
-import React from 'react';
-import { describe, it, expect, vi } from 'vitest';
+
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { HttpResponse, http } from 'msw';
+import React from 'react';
+import { describe, expect, it, vi } from 'vitest';
 import {
-  renderWithProviders,
   renderComponent,
   renderWithAuth,
-  renderWithoutAuth,
   renderWithDarkTheme,
   renderWithLoadingAuth,
+  renderWithoutAuth,
+  renderWithProviders,
 } from '@/test-utils';
 import { server, testData } from '@/test-utils/integration-setup';
-import { http, HttpResponse } from 'msw';
 
 // Simple test component for infrastructure validation
 function TestComponent({ message = 'Hello Test' }: { message?: string }) {
@@ -155,6 +156,7 @@ describe('Test Infrastructure Integration', () => {
           }
         };
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: preserve the existing lint baseline
         React.useEffect(() => {
           fetchData();
         }, []);
@@ -200,6 +202,7 @@ describe('Test Infrastructure Integration', () => {
           }
         };
 
+        // biome-ignore lint/correctness/useExhaustiveDependencies: preserve the existing lint baseline
         React.useEffect(() => {
           fetchData();
         }, []);

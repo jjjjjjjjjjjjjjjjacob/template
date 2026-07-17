@@ -32,7 +32,7 @@ These files contain critical information about how to work with this codebase ef
 - **Frontend**: TanStack Start, shadcn/ui, Tailwind CSS v4, TanStack Query/Router, Three.js, Framer Motion
 - **Backend**: Convex (real-time DB + serverless functions), Clerk (auth)
 - **Infrastructure**: Cloudflare Workers, Terraform, ngrok (local webhooks)
-- **Development**: Bun, Turborepo, Vitest, TypeScript, ESLint, Prettier
+- **Development**: Bun, Turborepo, Vitest, TypeScript, Biome, Prettier
 
 ## Development Commands
 
@@ -46,13 +46,15 @@ bun run build         # Build all projects
 bun run test          # Run all tests
 bun run typecheck     # Type check all projects
 bun run lint          # Lint all projects
+bun run check         # Biome check (lint + assists)
+bun run check:fix     # Biome check with autofix
 ```
 
 ### Quality Checks
 
 ```bash
-bun run quality       # Run typecheck + lint + format check
-bun run quality:fix   # Run typecheck + lint fix + format
+bun run quality       # Run typecheck + check + format check
+bun run quality:fix   # Run typecheck + check fix + format
 ```
 
 ### Turborepo Commands
@@ -117,7 +119,7 @@ bun run clean                                      # Clear outputs and local cac
 
 - **Indentation**: 2 spaces for TypeScript/JavaScript/JSON, 4 spaces for Python/Rust
 - **No comments** unless explicitly requested
-- **ESLint Error Handling**: For unused variables that would create TypeScript or logic issues if prefixed with underscore, use `// eslint-disable-next-line @typescript-eslint/no-unused-vars` instead
+- **Biome Error Handling**: Prefix intentionally unused variables with `_`; when that would affect TypeScript or logic, use `// biome-ignore lint/correctness/noUnusedVariables: <reason>` instead
 - Prefer existing utility functions over creating new ones
 
 ### Import Patterns
@@ -238,7 +240,7 @@ Run `bun run dev` to start:
 ## Quality Standards
 
 - **Type Safety**: Full TypeScript coverage required
-- **Linting**: ESLint with TypeScript rules
+- **Linting**: Biome with TypeScript and React rules
 - **Testing**: Comprehensive test coverage
 - **Formatting**: Prettier with Tailwind plugin
 - **No Linter Fixes**: Don't fix linter errors unless explicitly requested

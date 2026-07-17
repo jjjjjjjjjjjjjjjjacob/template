@@ -1,8 +1,8 @@
 import { Moon, Sun } from 'lucide-react';
 import { useRef } from 'react';
 import { flushSync } from 'react-dom';
-import { transitionTheme, type ThemeRevealOrigin } from './theme-reveal';
-import { useSiteVisuals, type SiteTheme } from './visual-provider';
+import { type ThemeRevealOrigin, transitionTheme } from './theme-reveal';
+import { type SiteTheme, useSiteVisuals } from './visual-provider';
 
 function classes(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(' ');

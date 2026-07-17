@@ -1,18 +1,18 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
-import { type ErrorFallbackProps } from './base-error-boundary';
 import {
   AlertTriangle,
-  RefreshCw,
-  Home,
   Bug,
-  Wifi,
-  Shield,
   Database,
+  Home,
+  RefreshCw,
+  Shield,
+  Wifi,
 } from 'lucide-react';
+import React from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { type ErrorFallbackProps } from './base-error-boundary';
 
 /**
  * Minimal inline error fallback for small components

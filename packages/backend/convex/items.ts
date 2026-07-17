@@ -1,5 +1,5 @@
-import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
+import { mutation, query } from './_generated/server';
 import { getCurrentUser as getUserFromUsers } from './users';
 
 // Get current user (same logic as users.getCurrentUser)
@@ -93,7 +93,6 @@ export const update = mutation({
 
     const { id, ...updates } = args;
     const filteredUpdates = Object.fromEntries(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(updates).filter(([_key, value]) => value !== undefined)
     );
 

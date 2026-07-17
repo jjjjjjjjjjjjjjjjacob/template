@@ -1,11 +1,11 @@
-import { http, HttpResponse } from 'msw';
+import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
-import type { MockApiHandlers } from './types';
 import {
   createTestEmoji,
   createTestSearchResults,
   createTestUser,
 } from './setup';
+import type { MockApiHandlers } from './types';
 
 /**
  * Factory for creating API mock handlers using MSW

@@ -1,42 +1,42 @@
-import React from 'react';
 import {
   Bold,
-  Italic,
-  Strikethrough,
   Code,
-  Link,
+  Eye,
+  FileCode,
   Heading1,
   Heading2,
   Heading3,
+  Image,
+  Italic,
+  Link,
   List,
   ListOrdered,
-  Quote,
-  FileCode,
-  Maximize,
-  Eye,
-  MoreHorizontal,
-  Image,
   type LucideIcon,
+  Maximize,
+  MoreHorizontal,
+  Quote,
+  Strikethrough,
 } from 'lucide-react';
-import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
+import React from 'react';
+import { createInlineImageSyntax } from '../../lib/remark-inline-images';
 import { Button } from '../ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 import { Separator } from '../ui/separator';
+import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-} from '../ui/dropdown-menu';
-import { createInlineImageSyntax } from '../../lib/remark-inline-images';
 
 interface FormattingToolbarProps {
   onAction: (action: string) => void;

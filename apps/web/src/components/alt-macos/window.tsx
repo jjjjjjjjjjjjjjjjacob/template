@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
 
 export interface WindowDockTarget {

@@ -1,14 +1,14 @@
 import { createLazyFileRoute, Link } from '@tanstack/react-router';
-import { useQuery } from 'convex/react';
 import { api } from '@template/backend';
+import { useQuery } from 'convex/react';
+import { ArrowLeft, CalendarDays, Clock, Share, User } from 'lucide-react';
 import React, { Suspense } from 'react';
-import { Button } from '../../components/ui/button';
-import { BlogImageGallery } from '../../components/blog/blog-image-gallery';
-import { ProjectLinks } from '../../components/blog/project-links';
-import { ArrowLeft, CalendarDays, User, Clock, Share } from 'lucide-react';
-import { formatReadingTime } from '../../utils/blog-utils';
-import { BlogShareModal } from '../../components/blog/blog-share-modal';
 import { SitePublicShell } from '@/components/site/public-shell';
+import { BlogImageGallery } from '../../components/blog/blog-image-gallery';
+import { BlogShareModal } from '../../components/blog/blog-share-modal';
+import { ProjectLinks } from '../../components/blog/project-links';
+import { Button } from '../../components/ui/button';
+import { formatReadingTime } from '../../utils/blog-utils';
 
 // Dynamic import for markdown components
 const MarkdownRenderer = React.lazy(

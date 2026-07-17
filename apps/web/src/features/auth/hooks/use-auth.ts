@@ -1,12 +1,12 @@
 // This file contains auth functionality and may need type fixes
 import { useUser } from '@clerk/tanstack-react-start';
-import { useQuery } from '@tanstack/react-query';
 import { convexQuery } from '@convex-dev/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@template/backend';
 import type { AuthState, AuthUser } from '../types';
 
 // Re-export auth service functions for convenience
-export { useAuthService, authUtils } from '../services/auth-service';
+export { authUtils, useAuthService } from '../services/auth-service';
 
 /**
  * Main auth hook that combines Clerk user state with Convex user data

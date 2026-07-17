@@ -1,21 +1,21 @@
 // Admin hooks
+
+
+// Admin components
+export { AdminGuard } from './components/admin-guard';
 export {
   useAdminAuth,
   useAdminStats,
   useUserManagement,
 } from './hooks/use-admin';
-
 // Admin services
-export { useAdminService, adminUtils } from './services/admin-service';
-
-// Admin components
-export { AdminGuard } from './components/admin-guard';
+export { adminUtils, useAdminService } from './services/admin-service';
 
 // Admin types
 export type {
-  AdminUser,
+  AdminAction,
   AdminPermission,
   AdminStats,
-  AdminAction,
+  AdminUser,
   UserManagementFilters,
 } from './types';

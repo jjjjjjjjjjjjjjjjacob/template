@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
 import { AuthenticateWithRedirectCallback } from '@clerk/tanstack-react-start';
+import { createFileRoute } from '@tanstack/react-router';
 import { SiteAuthShell } from '@/components/site/auth-shell';
 
 export const Route = createFileRoute('/sign-in/sso-callback')({

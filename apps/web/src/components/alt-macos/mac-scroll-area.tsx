@@ -1,12 +1,12 @@
 import {
+  type CSSProperties,
+  type PointerEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
-  type PointerEvent,
-  type ReactNode,
 } from 'react';
 
 import { cn } from '@/utils/tailwind-utils';

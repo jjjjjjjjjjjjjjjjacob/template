@@ -1,12 +1,13 @@
 /// <reference lib="dom" />
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders } from '@/test-utils';
-import { useAuth } from '../hooks/use-auth';
 import {
   setupAuthForIntegrationTest,
   testData,
 } from '@/test-utils/integration-setup';
+import { useAuth } from '../hooks/use-auth';
 
 // Test component that uses the auth feature
 function TestAuthComponent() {

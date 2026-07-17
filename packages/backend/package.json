@@ -24,8 +24,6 @@
     "deploy": "convex deploy",
     "test": "vitest run --config vitest.config.ts",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "seed": "convex run seed:seed",
     "seed:clear": "convex run seed:clear",
     "clean": "rm -rf .turbo"

@@ -107,16 +107,13 @@ export function getThemeGradientClasses() {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function applyUserTheme(_userTheme: UserTheme) {
   // Legacy function - now handled by theme provider
   // // console.warn('applyUserTheme is deprecated. Use theme provider instead.');
 }
 
 export function applyScopedUserTheme(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _userTheme: UserTheme,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _element: HTMLElement
 ) {
   // Legacy function - now handled by theme provider
@@ -125,7 +122,6 @@ export function applyScopedUserTheme(
   // );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function injectUserThemeCSS(_userTheme: UserTheme) {
   // Legacy function - now handled by theme provider
   // // console.warn('injectUserThemeCSS is deprecated. Use theme provider instead.');

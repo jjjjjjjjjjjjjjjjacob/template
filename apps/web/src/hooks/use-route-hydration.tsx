@@ -1,8 +1,8 @@
+import { useMatches, useRouter } from '@tanstack/react-router';
 import * as React from 'react';
-import { useRouter, useMatches } from '@tanstack/react-router';
 import {
-  useHydrationPriority,
   type HydrationPriority,
+  useHydrationPriority,
 } from './use-hydration-priority';
 
 interface RouteHydrationConfig {
@@ -145,7 +145,6 @@ export function useDeferredRouteComponent<T extends React.ComponentType<any>>(
 
   const DeferredComponent = React.useMemo(() => {
     return React.forwardRef<HTMLElement, React.ComponentProps<T>>(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       (props, _ref) => {
         if (!hydration.isHydrated) {
           if (options.fallback) {
@@ -177,7 +176,6 @@ export function withRouteHydration<P extends Record<string, any>>(
     fallback?: React.ComponentType<any>;
   } = {}
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const WrappedComponent = React.forwardRef<HTMLElement, P>((props, _ref) => {
     const hydration = useRouteHydration({
       componentName:

@@ -1,12 +1,12 @@
-import { httpRouter } from 'convex/server';
-import { httpAction, type ActionCtx } from './_generated/server';
-import { internal } from './_generated/api';
 import type {
-  WebhookEvent,
-  UserJSON,
   OrganizationMembershipJSON,
+  UserJSON,
+  WebhookEvent,
 } from '@clerk/backend';
+import { httpRouter } from 'convex/server';
 import { Webhook } from 'svix';
+import { internal } from './_generated/api';
+import { type ActionCtx, httpAction } from './_generated/server';
 
 const http = httpRouter();
 
@@ -28,7 +28,7 @@ async function syncUserOAuthConnections(
     // Extract external accounts (OAuth connections) from user data
     const externalAccounts = userData.external_accounts || [];
 
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.log(
       `Syncing OAuth connections for user ${userData.id}, found ${externalAccounts.length} external accounts`
     );
@@ -56,15 +56,15 @@ async function syncUserOAuthConnections(
         // Apple ID requires special handling due to privacy-focused approach
         try {
           // TODO: Handle Apple ID connection
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.log('Apple ID connection handled for user:', userData.id);
 
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.log(
             `Successfully processed Apple ID connection for user ${userData.id}`
           );
         } catch (appleError) {
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.error(
             `Failed to process Apple ID connection for user ${userData.id}:`,
             appleError
@@ -75,14 +75,14 @@ async function syncUserOAuthConnections(
 
       // Skip other unsupported platforms
       if (!platform) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(`Skipping unsupported OAuth provider: ${account.provider}`);
         continue;
       }
 
       // Skip if no provider user ID (some OAuth connections might not have one yet)
       if (!account.provider_user_id || account.provider_user_id.trim() === '') {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Skipping ${account.provider} - no provider user ID available`
         );
@@ -91,31 +91,31 @@ async function syncUserOAuthConnections(
 
       // Store or update the social connection - TODO: implement
       try {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Social connection synced for ${platform} - user: ${userData.id}`
         );
 
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Successfully synced ${platform} connection for user ${userData.id}`
         );
       } catch (connectionError) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.error(
           `Failed to sync ${platform} connection for user ${userData.id}:`,
           connectionError
         );
 
         // Try to mark the connection as having an error - TODO: implement
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Connection error for ${platform}: ${connectionError instanceof Error ? connectionError.message : 'Unknown error'}`
         );
       }
     }
   } catch (syncError) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error(
       `Failed to sync OAuth connections for user ${userData.id}:`,
       syncError
@@ -130,10 +130,10 @@ async function cleanupUserOAuthConnections(
 ): Promise<void> {
   try {
     // TODO: cleanup user connections
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.log(`Cleaned up OAuth connections for deleted user ${clerkUserId}`);
   } catch (cleanupError) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error(
       `Failed to cleanup OAuth connections for deleted user ${clerkUserId}:`,
       cleanupError
@@ -148,14 +148,14 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
 
   // SECURITY: Validate content type
   if (!contentType || !contentType.includes('application/json')) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error('Invalid content type:', contentType);
     return new Response('Invalid content type', { status: 400 });
   }
 
   // SECURITY: Validate User-Agent (Svix webhooks should have identifiable UA)
   if (!userAgent || !userAgent.includes('Svix')) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error('Invalid or missing user agent:', userAgent);
     return new Response('Invalid request', { status: 400 });
   }
@@ -186,14 +186,14 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
       }
 
       // Track signup to PostHog - TODO: implement analytics
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: intentional logging
       console.log('User signup tracked:', {
         userId: userData.id,
         email: userData.email_addresses?.[0]?.email_address,
         signupMethod,
       });
 
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: intentional logging
       console.log(
         `New user created: ${userData.id} (${userData.email_addresses?.[0]?.email_address})`
       );
@@ -221,7 +221,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
         });
 
         // TODO: Update admin status
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Admin status update for user ${userData.id}: ${hasAdminRole}`
         );
@@ -256,13 +256,13 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
 
       if (userId) {
         const isAdmin = role === 'org:admin' || role === 'admin';
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Updating admin status for user ${userId}: role=${role}, isAdmin=${isAdmin}`
         );
 
         // TODO: Update admin status
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(
           `Admin status update for user ${userId}: isAdmin=${isAdmin}`
         );
@@ -280,7 +280,7 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
       const userId = publicUserData?.user_id;
 
       if (userId) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(`Removing admin status for user ${userId}`);
       }
       break;
@@ -292,21 +292,21 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
       const userId = sessionData.user_id as string;
 
       if (userId) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(`Session created for user ${userId}`);
 
         // Fetch the user data to sync OAuth connections
         // This ensures we capture any new OAuth connections made during sign-in
         try {
           // Track session creation event - TODO: implement analytics
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.log('Session created event:', {
             userId,
             eventType: 'session_created',
             timestamp: (sessionData.created_at as number) || Date.now(),
           });
         } catch (error) {
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.error(
             `Failed to track session creation for user ${userId}:`,
             error
@@ -322,19 +322,19 @@ const handleClerkWebhook = httpAction(async (ctx, request) => {
       const userId = sessionData.user_id as string;
 
       if (userId) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.log(`Session ended for user ${userId}`);
 
         try {
           // Track session ended event - TODO: implement analytics
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.log('Session ended event:', {
             userId,
             eventType: 'session_ended',
             timestamp: (sessionData.updated_at as number) || Date.now(),
           });
         } catch (error) {
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.error(
             `Failed to track session end for user ${userId}:`,
             error
@@ -366,7 +366,7 @@ export async function validateRequest(
   const mainWebhookSecret = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!mainWebhookSecret) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error('Missing CLERK_WEBHOOK_SECRET');
     return null;
   }
@@ -376,7 +376,7 @@ export async function validateRequest(
   const svix_signature = req.headers.get('svix-signature') ?? '';
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error('Missing svix headers');
     return null;
   }
@@ -393,11 +393,11 @@ export async function validateRequest(
   try {
     const wh = new Webhook(mainWebhookSecret);
     const event = wh.verify(body, svixHeaders) as WebhookEvent;
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.log('Webhook validated with main secret');
     return event;
   } catch (error) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error('Webhook verification failed:', error);
     return null;
   }

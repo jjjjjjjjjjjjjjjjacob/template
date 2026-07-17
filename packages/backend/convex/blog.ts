@@ -1,8 +1,8 @@
-import { query, mutation } from './_generated/server';
 import { v } from 'convex/values';
-import { getCurrentUserOrThrow, getCurrentUser } from './users';
-import { extractExcerpt, calculateReadingTime } from './blog_utils';
+import { mutation, query } from './_generated/server';
+import { calculateReadingTime, extractExcerpt } from './blog_utils';
 import { AuthUtils } from './lib/auth';
+import { getCurrentUser, getCurrentUserOrThrow } from './users';
 
 export const hasPublishedPosts = query({
   args: {},
@@ -480,7 +480,7 @@ export const getMultipleImageUrls = query({
         const url = await ctx.storage.getUrl(storageId);
         urls[storageId] = url;
       } catch (error) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.error(`Failed to get URL for storage ID ${storageId}:`, error);
         urls[storageId] = null;
       }

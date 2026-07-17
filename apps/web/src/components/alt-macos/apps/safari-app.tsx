@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
 import type { ResumeProject } from '@/hooks/use-resume-filter';
 

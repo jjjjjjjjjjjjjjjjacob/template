@@ -60,7 +60,7 @@ template/
 - [Vinxi](https://vinxi.vercel.app/) (build system)
 - [Vitest](https://vitest.dev/) (testing)
 - [TypeScript](https://typescriptlang.org/) (type checking)
-- [ESLint](https://eslint.org/) (linting)
+- [Biome](https://biomejs.dev/) (linting)
 - [Prettier](https://prettier.io/) (formatting)
 - [Turborepo](https://turborepo.dev/) (monorepo orchestration)
 
@@ -130,8 +130,10 @@ All scripts are run from the root with Bun:
 | `bun run test`         | Run all tests                  |
 | `bun run typecheck`    | Type check all projects        |
 | `bun run lint`         | Lint all projects              |
-| `bun run quality`      | Run typecheck + lint + format  |
-| `bun run quality:fix`  | Run typecheck + lint fix + fmt |
+| `bun run check`        | Biome check (lint + assists)   |
+| `bun run check:fix`    | Biome check with autofix       |
+| `bun run quality`      | Run typecheck + check + format |
+| `bun run quality:fix`  | Run typecheck + check fix + fmt |
 
 #### Turborepo Usage
 

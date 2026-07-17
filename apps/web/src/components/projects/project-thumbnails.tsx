@@ -1,5 +1,5 @@
+import { Calendar, Code, ExternalLink } from 'lucide-react';
 import * as React from 'react';
-import { ExternalLink, Code, Calendar } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -128,7 +128,6 @@ function ProjectThumbnails({
       </div>
 
       <div className="space-y-4">
-        {/* eslint-disable-next-line @typescript-eslint/no-unused-vars */}
         {projects.map((project, _index) => (
           <ProjectThumbnail
             key={project.id}

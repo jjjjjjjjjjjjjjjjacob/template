@@ -1,10 +1,10 @@
-import {
-  routePreloadStrategy,
-  type RoutePreloadConfig,
-  type RouteHydrationConfig,
-  routeHydrationStrategy,
-} from './route-hydration-config';
 import type { Router } from '@tanstack/react-router';
+import {
+  type RouteHydrationConfig,
+  type RoutePreloadConfig,
+  routeHydrationStrategy,
+  routePreloadStrategy,
+} from './route-hydration-config';
 
 declare global {
   interface Window {

@@ -1,8 +1,9 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vitest/config';
-import { resolve } from 'path';
+
 import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
 import tsConfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [
@@ -37,7 +38,7 @@ export default defineConfig({
         '**/*{.,-}{test,spec}.{js,cjs,mjs,ts,tsx,jsx}',
         '**/__tests__/**',
         '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
-        '**/.{eslint,mocha,prettier}rc.{js,cjs,yml}',
+        '**/.{mocha,prettier}rc.{js,cjs,yml}',
         // Project specific exclusions
         'src/entry-client.tsx',
         'src/entry-server.tsx',

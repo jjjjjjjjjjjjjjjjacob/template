@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { useEffect, useState } from 'react';
 import {
   STICKY_COLOR_ORDER,
   STICKY_FONT_OPTIONS,

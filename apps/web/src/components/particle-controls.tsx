@@ -1,9 +1,9 @@
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
-import { Button } from '@/components/ui/button';
-import { ChevronRight, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
 
 export interface ParticleConfig {
   // Basic

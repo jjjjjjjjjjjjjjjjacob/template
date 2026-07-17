@@ -1,5 +1,3 @@
-import * as React from 'react';
-import { useAction, useQuery } from 'convex/react';
 import { api } from '@template/backend';
 import type {
   AvailabilityResult,
@@ -8,6 +6,8 @@ import type {
   SchedulerClient,
   SchedulerEventType,
 } from '@template/scheduler';
+import { useAction, useQuery } from 'convex/react';
+import * as React from 'react';
 
 export function useConvexSchedulerClient(): SchedulerClient {
   const eventTypes = useQuery(api.scheduling.listEventTypes, {});

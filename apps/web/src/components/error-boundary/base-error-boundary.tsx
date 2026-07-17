@@ -1,8 +1,8 @@
 import React, { Component, ReactNode } from 'react';
 import {
-  errorLogger,
   type EnhancedError,
   type ErrorContext,
+  errorLogger,
   errorUtils,
 } from '@/lib/error-handling';
 

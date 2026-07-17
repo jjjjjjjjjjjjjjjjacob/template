@@ -5,8 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "bun run fonts:optimize && vite --port 3030 --config vite.config.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
     "build": "bun run fonts:optimize && NODE_OPTIONS='--max-old-space-size=8192' vite build --config vite.config.ts",
     "preview": "vite preview --config vite.config.ts",
     "test": "vitest run",

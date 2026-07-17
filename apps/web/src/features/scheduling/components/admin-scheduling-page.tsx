@@ -1,24 +1,20 @@
-import * as React from 'react';
-import { useAction, useMutation, useQuery } from 'convex/react';
 import { api } from '@template/backend';
+import { useAction, useMutation, useQuery } from 'convex/react';
 import {
   CalendarClock,
-  CheckCircle2,
   CalendarX2,
+  CheckCircle2,
   ExternalLink,
   Loader2,
   Plug,
-  Trash2,
   Save,
   Settings2,
+  Trash2,
   Video,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -27,14 +23,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import {
-  formatTimeRange,
+  type AvailableSlot,
   formatFullDateTime,
+  formatTimeRange,
   groupSlotsByDay,
   minutesToTimeInput,
   timeInputToMinutes,
   userTimeZone,
-  type AvailableSlot,
 } from '../utils';
 
 type EventTypeForm = {

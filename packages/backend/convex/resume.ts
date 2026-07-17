@@ -1,10 +1,10 @@
+import { v } from 'convex/values';
 import {
   internalMutation,
+  type MutationCtx,
   mutation,
   query,
-  type MutationCtx,
 } from './_generated/server';
-import { v } from 'convex/values';
 import { AuthUtils } from './lib/auth';
 
 export const listProfiles = query({

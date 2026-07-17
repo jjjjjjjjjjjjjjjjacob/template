@@ -1,5 +1,5 @@
 // Performance monitoring configuration for Vite builds
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
 const PERFORMANCE_LOG = resolve(process.cwd(), 'performance.log');
@@ -314,7 +314,6 @@ class PerformanceMonitor {
 
       console.log(`Build Time: ${this.formatTrend(buildTimeTrend, 's')}`);
       console.log(`Bundle Size: ${this.formatTrend(sizeTrend, 'bytes')}`);
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       // Silently ignore trend display errors
     }

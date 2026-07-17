@@ -1,4 +1,23 @@
+import {
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+  Clock,
+  Code,
+  Copy,
+  ExternalLink,
+  MapPin,
+  User,
+} from 'lucide-react';
 import React, { useState } from 'react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -7,14 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import {
   Tooltip,
   TooltipContent,
@@ -23,17 +34,6 @@ import {
 } from '@/components/ui/tooltip';
 import { type EnhancedError } from '@/lib/error-handling';
 import { ErrorRecovery } from './error-recovery';
-import {
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-  Copy,
-  ExternalLink,
-  Clock,
-  MapPin,
-  User,
-  Code,
-} from 'lucide-react';
 
 export interface ErrorDisplayProps {
   error: EnhancedError;

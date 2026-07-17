@@ -1,5 +1,5 @@
 /// <reference lib="dom" />
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 /**
  * Integration tests for the feature-based architecture

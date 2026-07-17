@@ -1,17 +1,17 @@
 /// <reference lib="dom" />
 
+import { useUser } from '@clerk/tanstack-react-start';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { cleanup, render, screen } from '@testing-library/react';
 import {
   afterEach,
+  beforeEach,
   describe,
   expect,
   it,
-  vi,
-  beforeEach,
   type MockedFunction,
+  vi,
 } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useUser } from '@clerk/tanstack-react-start';
 
 // Mock Clerk
 vi.mock('@clerk/tanstack-react-start', () => ({
@@ -190,12 +190,12 @@ describe('Profile Page', () => {
         createdAt: new Date('2023-01-01'),
         update: vi.fn().mockResolvedValue({}),
         setProfileImage: vi.fn().mockResolvedValue({}),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
       } as any,
       isLoaded: true,
       isSignedIn: true,
       ...overrides.clerkUser,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
     } as any);
 
     mockQueries.useCurrentUser.mockReturnValue({

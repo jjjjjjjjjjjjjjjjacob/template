@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
-
+import type { ResumeProfilePayload } from '@/hooks/use-resume-filter';
 import {
-  DEFAULT_RESUME_SLUG,
   buildResumeDataFromProfile,
   buildResumeDataFromSource,
+  DEFAULT_RESUME_SLUG,
   parseResumeSlug,
 } from '@/lib/resume-export-data';
-import type { ResumeProfilePayload } from '@/hooks/use-resume-filter';
 
 const samplePayload: ResumeProfilePayload = {
   profile: {

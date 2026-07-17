@@ -1,4 +1,10 @@
-export { Alert, AlertTitle, AlertDescription } from './alert';
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from './accordion';
+export { Alert, AlertDescription, AlertTitle } from './alert';
 export { Avatar, AvatarFallback, AvatarImage } from './avatar';
 export { Badge, badgeVariants } from './badge';
 export { Button, buttonVariants } from './button';
@@ -91,24 +97,18 @@ export { Slider } from './slider';
 export { Switch } from './switch';
 export {
   Table,
-  TableHeader,
   TableBody,
+  TableCaption,
+  TableCell,
+  TableEmpty,
   TableFooter,
   TableHead,
-  TableRow,
-  TableCell,
-  TableCaption,
-  TableEmpty,
+  TableHeader,
   TableLoading,
+  TableRow,
 } from './table';
 export { Tabs, TabsContent, TabsList, TabsTrigger } from './tabs';
 export { Textarea } from './textarea';
-export {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from './accordion';
 export {
   Tooltip,
   TooltipContent,

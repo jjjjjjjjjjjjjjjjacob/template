@@ -1,36 +1,36 @@
-import * as React from 'react';
-import { useQuery, useMutation } from 'convex/react';
+import { Link } from '@tanstack/react-router';
 import { api } from '@template/backend';
+import { useMutation, useQuery } from 'convex/react';
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  ExternalLink,
+  GripVertical,
+  Plus,
+  Settings2,
+  Trash2,
+} from 'lucide-react';
+import * as React from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from '@/components/ui/dialog';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
-  GripVertical,
-  Plus,
-  Trash2,
-  Settings2,
-  ChevronDown,
-  ChevronUp,
-  Check,
-  ExternalLink,
-} from 'lucide-react';
-import { toast } from 'sonner';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { cn } from '@/utils/tailwind-utils';
-import { Link } from '@tanstack/react-router';
 
 interface ResumeProjectManagerProps {
   profileSlug: string;

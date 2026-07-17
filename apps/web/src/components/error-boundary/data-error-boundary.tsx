@@ -1,9 +1,6 @@
+import { AlertTriangle, Database, Home, RefreshCw } from 'lucide-react';
 import React, { useState } from 'react';
-import {
-  BaseErrorBoundary,
-  type ErrorBoundaryProps,
-  type ErrorFallbackProps,
-} from './base-error-boundary';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,9 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Database, RefreshCw, AlertTriangle, Home } from 'lucide-react';
+import {
+  BaseErrorBoundary,
+  type ErrorBoundaryProps,
+  type ErrorFallbackProps,
+} from './base-error-boundary';
 
 /**
  * Data-specific error boundary for database and API errors

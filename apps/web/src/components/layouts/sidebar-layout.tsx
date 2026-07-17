@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { useMobile } from '@/hooks/use-mobile';
 import { cn } from '@/utils/tailwind-utils';
 import { BaseLayout } from './base-layout';
-import { useMobile } from '@/hooks/use-mobile';
 
 export interface SidebarLayoutProps {
   children: React.ReactNode;

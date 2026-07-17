@@ -1,7 +1,6 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "globalDependencies": [
-    "eslint.config.js",
     "tsconfig.json",
     "vitest.config.ts",
     "vitest.setup.ts"
@@ -53,10 +52,6 @@
     "test:coverage": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
-    },
-    "lint": {},
-    "lint:fix": {
-      "cache": false
     },
     "typecheck": {
       "dependsOn": ["^build"]

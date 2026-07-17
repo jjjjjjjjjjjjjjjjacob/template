@@ -1,13 +1,14 @@
 /// <reference lib="dom" />
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithProviders } from '@/test-utils';
-import { useAdminAuth } from '../hooks/use-admin';
-import { AdminGuard } from '../components/admin-guard';
 import {
   setupAuthForIntegrationTest,
   testData,
 } from '@/test-utils/integration-setup';
+import { AdminGuard } from '../components/admin-guard';
+import { useAdminAuth } from '../hooks/use-admin';
 
 // Test component that uses the admin feature
 function TestAdminComponent() {

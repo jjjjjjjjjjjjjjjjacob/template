@@ -1,9 +1,9 @@
-import { fuzzyScore } from './fuzzy_search';
 import type {
   ItemSearchResult,
-  UserSearchResult,
   TagSearchResult,
+  UserSearchResult,
 } from '@template/types';
+import { fuzzyScore } from './fuzzy_search';
 
 /**
  * Advanced relevance scoring system for search results

@@ -1,11 +1,11 @@
-import { Link, createFileRoute } from '@tanstack/react-router';
-import { Mail, MapPin, Calendar, ExternalLink } from 'lucide-react';
-import { Suspense, lazy } from 'react';
-import { trackEvents } from '@/lib/track-events';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { Calendar, ExternalLink, Mail, MapPin } from 'lucide-react';
+import { lazy, Suspense } from 'react';
 import {
   SitePublicShell,
   SiteResumeAction,
 } from '@/components/site/public-shell';
+import { trackEvents } from '@/lib/track-events';
 
 // Lazy load heavy data visualization components
 const ResumeCharts = lazy(() => import('@/components/resume/resume-charts'));

@@ -1,4 +1,4 @@
-import React, { useRef, forwardRef, useImperativeHandle } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import { cn } from '../../utils/tailwind-utils';
 
 interface EditorTextareaProps {

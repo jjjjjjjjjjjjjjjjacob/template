@@ -1,11 +1,11 @@
 export {
+  type AvailableSlot,
   formatDateHeader,
   formatFullDateTime,
   formatTimeRange,
   groupSlotsByDay,
   minutesToTimeInput,
+  type SchedulerEventType as SchedulingEventType,
   timeInputToMinutes,
   userTimeZone,
-  type AvailableSlot,
-  type SchedulerEventType as SchedulingEventType,
 } from '@template/scheduler';

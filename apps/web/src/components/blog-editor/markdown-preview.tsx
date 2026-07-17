@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import { MarkdownImage } from '../blog/blog-inline-image';
-import { loadRemarkPlugins, loadRehypePlugins } from '../blog/remark-plugins';
 import { PluggableList } from 'unified';
+import { MarkdownImage } from '../blog/blog-inline-image';
+import { loadRehypePlugins, loadRemarkPlugins } from '../blog/remark-plugins';
 
 // Lazy load the syntax highlighter component
 const CodeBlock = React.lazy(() => import('../blog/syntax-highlighter'));

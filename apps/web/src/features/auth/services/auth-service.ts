@@ -1,8 +1,9 @@
 // This file contains auth service functionality and may need type fixes
-import { useMutation } from '@tanstack/react-query';
+
 import { useConvexMutation } from '@convex-dev/react-query';
-import { useAction } from 'convex/react';
+import { useMutation } from '@tanstack/react-query';
 import { api } from '@template/backend';
+import { useAction } from 'convex/react';
 
 /**
  * Service for user-related mutations

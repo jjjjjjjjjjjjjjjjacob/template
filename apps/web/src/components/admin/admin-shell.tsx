@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { Link, useRouterState } from '@tanstack/react-router';
 import { OrganizationSwitcher, useUser } from '@clerk/tanstack-react-start';
+import { Link, useRouterState } from '@tanstack/react-router';
 import {
   ArrowUpRight,
   CalendarClock,
@@ -13,8 +12,9 @@ import {
   PanelLeft,
   User,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import * as React from 'react';
 import { SiteThemeToggle } from '@/components/site/theme-toggle';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/utils/tailwind-utils';
 import './admin.css';
 

@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
 import type { QueryClient } from '@tanstack/react-query';
 import type { Router } from '@tanstack/react-router';
+import type { ReactNode } from 'react';
 
 export interface TestWrapperOptions {
   // Query client configuration

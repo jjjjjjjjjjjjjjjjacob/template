@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useQuery } from 'convex/react';
 import { api } from '@template/backend';
+import { useQuery } from 'convex/react';
+import { useEffect, useMemo, useState } from 'react';
 import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
 
 interface Project {

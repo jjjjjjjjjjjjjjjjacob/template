@@ -335,6 +335,7 @@ export function MetaballStage({
   const dampRef = useRef(cursorMode === 'trail' ? 0.04 : 0.12);
 
   // ---- mount once: build renderer, run the RAF loop ----------------------
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally constrained dependencies
   useEffect(() => {
     const el = hostRef.current;
     if (!el) return;
@@ -492,7 +493,6 @@ export function MetaballStage({
       }
     };
     // Build once; live updates flow through the sync effect below.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ---- live sync: update uniforms/targets when props change --------------

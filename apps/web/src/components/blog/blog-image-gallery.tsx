@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { useQuery } from 'convex/react';
 import { api } from '@template/backend';
+import { Id } from '@template/backend/dataModel';
+import { useQuery } from 'convex/react';
+import { Expand, Image as ImageIcon } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
-  DialogTitle,
   DialogDescription,
+  DialogTitle,
+  DialogTrigger,
 } from '@/components/ui/dialog';
-import { Image as ImageIcon, Expand } from 'lucide-react';
-import { Id } from '@template/backend/dataModel';
 
 interface BlogImageGalleryProps {
   images?: Id<'_storage'>[];

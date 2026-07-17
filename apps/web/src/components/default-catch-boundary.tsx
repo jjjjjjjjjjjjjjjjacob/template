@@ -1,10 +1,10 @@
 import {
+  type ErrorComponentProps,
   Link,
   rootRouteId,
-  useMatch,
   useLocation,
+  useMatch,
   useRouter,
-  type ErrorComponentProps,
 } from '@tanstack/react-router';
 import { SiteStatusPage } from '@/components/site/status-page';
 import { getRouteExperience } from '@/lib/route-experience';
@@ -17,7 +17,7 @@ export function DefaultCatchBoundary({ error }: ErrorComponentProps) {
     select: (state) => state.id === rootRouteId,
   });
 
-  // eslint-disable-next-line no-console
+  // biome-ignore lint/suspicious/noConsole: intentional logging
   console.error(error);
 
   return (

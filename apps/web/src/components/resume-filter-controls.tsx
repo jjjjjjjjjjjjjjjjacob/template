@@ -1,7 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { Button } from '@/components/ui/button';
+import { Eye, Filter, Settings } from 'lucide-react';
+import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,11 +16,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Settings, Filter, Eye } from 'lucide-react';
 import {
-  type ResumeFilters,
-  type FocusArea,
   type Domain,
+  type FocusArea,
+  type ResumeFilters,
   type Technology,
   useResumeFilterNavigation,
 } from '@/hooks/use-resume-filter';

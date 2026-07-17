@@ -1,5 +1,5 @@
-import type { ResumeData } from '@/hooks/use-story-canvas';
 import type { ResumeProfilePayload } from '@/hooks/use-resume-filter';
+import type { ResumeData } from '@/hooks/use-story-canvas';
 
 export const RESUME_EXPORT_FILENAME_BASE = 'jacob-stein-resume';
 export const DEFAULT_RESUME_SLUG = 'default';

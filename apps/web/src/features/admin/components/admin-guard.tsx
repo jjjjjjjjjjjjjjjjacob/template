@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { useAdminAuth } from '../hooks/use-admin';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
+import { ReactNode } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAdminAuth } from '../hooks/use-admin';
 
 interface AdminGuardProps {
   children: ReactNode;

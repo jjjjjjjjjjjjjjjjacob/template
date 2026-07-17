@@ -1,6 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
-import { ConvexHttpClient } from 'convex/browser';
 import { api } from '@template/backend';
+import { ConvexHttpClient } from 'convex/browser';
 
 export const Route = createFileRoute('/blog/$slug')({
   loader: async ({ params }) => {

@@ -1,6 +1,6 @@
-import * as React from 'react';
 import posthog from 'posthog-js';
 import { PostHogProvider as PostHogProviderNative } from 'posthog-js/react';
+import * as React from 'react';
 import { APP_CONFIG } from '@/utils/bindings';
 
 interface PostHogProviderProps {

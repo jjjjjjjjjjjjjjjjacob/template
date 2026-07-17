@@ -10,8 +10,8 @@ import {
   groupSlotsByDay,
   minutesToTimeInput,
   slotMonthKeys,
-  timeZoneOptions,
   timeInputToMinutes,
+  timeZoneOptions,
 } from '../format';
 
 describe('scheduler SDK', () => {
@@ -115,10 +115,12 @@ describe('scheduler SDK', () => {
     );
 
     expect(options[0].value).toBe('Europe/London');
-    expect(options.some((option) => option.value === defaultSchedulerTimeZone))
-      .toBe(true);
-    expect(formatTimeZoneLabel('America/New_York', Date.UTC(2026, 6, 1, 12, 0)))
-      .toContain('New York');
+    expect(
+      options.some((option) => option.value === defaultSchedulerTimeZone)
+    ).toBe(true);
+    expect(
+      formatTimeZoneLabel('America/New_York', Date.UTC(2026, 6, 1, 12, 0))
+    ).toContain('New York');
   });
 
   it('converts minute counts and time input strings', () => {

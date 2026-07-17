@@ -15,7 +15,6 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 // Emotion/sentiment-based colors
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _SENTIMENT_COLORS = {
   positive: {
     default: '#10B981', // Green

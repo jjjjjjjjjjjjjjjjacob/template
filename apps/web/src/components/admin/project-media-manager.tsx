@@ -1,13 +1,31 @@
-import * as React from 'react';
-import { useQuery, useMutation } from 'convex/react';
 import { api } from '@template/backend';
+import { Id } from '@template/backend/dataModel';
+import { useMutation, useQuery } from 'convex/react';
+import {
+  Edit,
+  Globe,
+  GripVertical,
+  Image as ImageIcon,
+  Plus,
+  Star,
+  Trash2,
+  Video,
+} from 'lucide-react';
+import * as React from 'react';
+import { toast } from 'sonner';
 import { FileUpload, FileUploadFile } from '@/components/forms/file-upload';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -15,25 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
-import {
-  Trash2,
-  Star,
-  Image as ImageIcon,
-  Video,
-  Globe,
-  GripVertical,
-  Plus,
-  Edit,
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { Id } from '@template/backend/dataModel';
+import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/utils/tailwind-utils';
 import { uploadWithProgress } from '@/utils/upload-with-progress';
 
@@ -56,7 +56,6 @@ interface ProjectMediaManagerProps {
 }
 
 export function ProjectMediaManager({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   projectId,
   media,
   thumbnailIndex,

@@ -1,7 +1,7 @@
-import { memo } from 'react';
 import { ExternalLink } from 'lucide-react';
-import { ProjectSlideshow } from '@/components/project-slideshow';
+import { memo } from 'react';
 import { AnimatedSection } from '@/components/animated-section';
+import { ProjectSlideshow } from '@/components/project-slideshow';
 import type { ResumeProject } from '@/hooks/use-resume-filter';
 
 interface ProjectCardProps {

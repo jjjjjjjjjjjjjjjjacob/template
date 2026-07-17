@@ -1,5 +1,5 @@
+import { useAuth, useOrganization, useUser } from '@clerk/tanstack-react-start';
 import * as React from 'react';
-import { useAuth, useUser, useOrganization } from '@clerk/tanstack-react-start';
 
 export interface UseAdminAuthResult {
   isAdmin: boolean;

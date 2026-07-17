@@ -1,6 +1,6 @@
-import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';
-import { useEffect, useState } from 'react';
 import posthog from 'posthog-js';
+import { useEffect, useState } from 'react';
+import { type Metric, onCLS, onFCP, onINP, onLCP, onTTFB } from 'web-vitals';
 
 export interface PerformanceMetrics {
   cls: number | null;

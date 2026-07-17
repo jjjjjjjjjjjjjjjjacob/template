@@ -1,8 +1,9 @@
 /// <reference lib="dom" />
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FileUpload, useFileUpload, type FileUploadFile } from '../file-upload';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { FileUpload, type FileUploadFile, useFileUpload } from '../file-upload';
 
 const createMockFile = (name: string, size: number, type: string): File => {
   const file = new File(['mock content'], name, { type });

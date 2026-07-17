@@ -1,24 +1,23 @@
 // Main auth hooks
-export {
-  useAuth,
-  useAuthGuard,
-  useCurrentUser,
-  useAuthService,
-  authUtils,
-} from './hooks/use-auth';
+
 
 // Auth components
 export { AuthPromptDialog } from './components/auth-prompt-dialog';
-
+export {
+  authUtils,
+  useAuth,
+  useAuthGuard,
+  useAuthService,
+  useCurrentUser,
+} from './hooks/use-auth';
+// Auth utilities (re-exported for convenience)
+export { getNonBlockingAuth, getOptimizedAuth } from './lib/optimized-auth';
 // Auth types
 export type {
-  AuthUser,
-  AuthState,
+  AuthCache,
   AuthPromptConfig,
   AuthRoute,
+  AuthState,
+  AuthUser,
   OptimizedAuthResult,
-  AuthCache,
 } from './types';
-
-// Auth utilities (re-exported for convenience)
-export { getOptimizedAuth, getNonBlockingAuth } from './lib/optimized-auth';

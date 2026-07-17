@@ -1,5 +1,5 @@
 // Re-export shared types from @template/types
-export type { User, Item, Rating } from '@template/types';
+export type { Item, Rating, User } from '@template/types';
 
 // Local types
 export interface EmojiReaction {

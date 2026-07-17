@@ -1,15 +1,15 @@
-import { cn } from '@/utils';
-import { useState, useRef } from 'react';
+import { ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+import { useRef, useState } from 'react';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { trackEvents } from '@/lib/track-events';
+import { cn } from '@/utils';
 
 interface ProjectSlideshowProps {
   previews: string[];

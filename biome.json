@@ -1,0 +1,144 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!!**/build",
+      "!!**/.nitro",
+      "!!**/.output",
+      "!!**/.tanstack",
+      "!!**/.turbo",
+      "!!**/.wrangler",
+      "!apps/web/src/routeTree.gen.ts",
+      "!apps/web/worker-configuration.d.ts",
+      "!packages/backend/convex/_generated"
+    ]
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "javascript": {
+    "jsxRuntime": "reactClassic"
+  },
+  "linter": {
+    "enabled": true,
+    "includes": ["**/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}"],
+    "rules": {
+      "recommended": true,
+      "a11y": {
+        "noAutofocus": "off",
+        "noLabelWithoutControl": "off",
+        "noNoninteractiveElementToInteractiveRole": "off",
+        "noNoninteractiveTabindex": "off",
+        "noRedundantAlt": "off",
+        "noStaticElementInteractions": "warn",
+        "noSvgWithoutTitle": "off",
+        "useAltText": "warn",
+        "useAnchorContent": "warn",
+        "useAriaPropsSupportedByRole": "off",
+        "useButtonType": "off",
+        "useKeyWithClickEvents": "warn",
+        "useSemanticElements": "off",
+        "useValidAnchor": "warn"
+      },
+      "complexity": {
+        "noStaticOnlyClass": "off",
+        "noThisInStatic": "off",
+        "noUselessSwitchCase": "off",
+        "useIndexOf": "off",
+        "useOptionalChain": "off"
+      },
+      "correctness": {
+        "noUnusedFunctionParameters": "off",
+        "noUnusedImports": "error",
+        "noUnusedPrivateClassMembers": "off",
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": {
+          "level": "warn",
+          "options": {
+            "reportUnnecessaryDependencies": false
+          }
+        },
+        "useHookAtTopLevel": "error",
+        "useJsxKeyInIterable": "off",
+        "useParseIntRadix": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useConst": "error",
+        "useExponentiationOperator": "off",
+        "useImportType": "off",
+        "useNodejsImportProtocol": "off",
+        "useTemplate": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "off",
+        "noAssignInExpressions": "off",
+        "noConsole": "warn",
+        "noDebugger": "error",
+        "noExplicitAny": "warn",
+        "noGlobalIsNan": "off",
+        "noImplicitAnyLet": "off",
+        "noVar": "error",
+        "useIterableCallbackReturn": "off"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "**/src/client.tsx",
+        "**/route-performance.ts",
+        "**/vite.config.ts"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off",
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/performance.config.js",
+        "**/scripts/**/*.js",
+        "**/convex/migrations/**/*.ts",
+        "**/convex/seed/**/*.ts",
+        "**/bundle-analyzer.js"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/test-utils/**/*.ts",
+        "**/test-utils/**/*.tsx",
+        "**/use-route-hydration.tsx"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,9 +1,6 @@
+import { LogIn, RefreshCw, ShieldAlert } from 'lucide-react';
 import React from 'react';
-import {
-  BaseErrorBoundary,
-  type ErrorBoundaryProps,
-  type ErrorFallbackProps,
-} from './base-error-boundary';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,8 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ShieldAlert, RefreshCw, LogIn } from 'lucide-react';
+import {
+  BaseErrorBoundary,
+  type ErrorBoundaryProps,
+  type ErrorFallbackProps,
+} from './base-error-boundary';
 
 /**
  * Auth-specific error boundary with specialized error handling

@@ -1,13 +1,13 @@
-import { createFileRoute, Outlet, useLocation } from '@tanstack/react-router';
 import {
+  OrganizationSwitcher,
+  RedirectToSignIn,
   SignedIn,
   SignedOut,
-  RedirectToSignIn,
-  OrganizationSwitcher,
   useClerk,
 } from '@clerk/tanstack-react-start';
-import type React from 'react';
+import { createFileRoute, Outlet, useLocation } from '@tanstack/react-router';
 import { LogOut, Shield, User } from 'lucide-react';
+import type React from 'react';
 import { AdminShell } from '@/components/admin/admin-shell';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

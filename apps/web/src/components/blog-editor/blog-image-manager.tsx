@@ -1,22 +1,22 @@
-import * as React from 'react';
-import { useQuery, useMutation } from 'convex/react';
 import { api } from '@template/backend';
+import { Id } from '@template/backend/dataModel';
+import { useMutation, useQuery } from 'convex/react';
+import { Image as ImageIcon, Plus, Star, Trash2 } from 'lucide-react';
+import * as React from 'react';
+import { toast } from 'sonner';
 import { FileUpload, FileUploadFile } from '@/components/forms/file-upload';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Trash2, Star, Image as ImageIcon, Plus } from 'lucide-react';
-import { toast } from 'sonner';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { createInlineImageSyntax } from '@/lib/remark-inline-images';
-import { Id } from '@template/backend/dataModel';
 import { uploadWithProgress } from '@/utils/upload-with-progress';
 
 interface BlogImageManagerProps {

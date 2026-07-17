@@ -8,13 +8,13 @@
 
 import { execSync } from 'child_process';
 import {
+  copyFileSync,
   existsSync,
   mkdirSync,
   writeFileSync,
-  copyFileSync,
   // statSync,
 } from 'fs';
-import { join, dirname, basename } from 'path';
+import { basename, dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -147,7 +147,7 @@ function quickSubset(inputPath, outputPath, unicodeRange) {
       timeout: 30000, // 30 second timeout
       encoding: 'utf8',
     });
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // biome-ignore lint/correctness/noUnusedVariables: intentionally unused
   } catch (error) {
     // console.warn('⚠️  Subsetting failed, copying original');
     copyFileSync(inputPath, outputPath);
@@ -307,7 +307,6 @@ async function main() {
   // console.log('   • WOFF2 fonts used directly (no re-processing)');
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 main().catch((e) => {
   // console.error(e);
   process.exit(1);

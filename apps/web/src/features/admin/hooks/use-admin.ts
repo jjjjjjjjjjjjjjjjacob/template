@@ -1,6 +1,7 @@
 // This file contains admin functionality and may need type fixes
-import { useQuery } from '@tanstack/react-query';
+
 import { convexQuery } from '@convex-dev/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@template/backend';
 import { useAuth } from '../../auth';
 import type { UserManagementFilters } from '../types';

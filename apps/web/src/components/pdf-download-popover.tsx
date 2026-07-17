@@ -1,17 +1,17 @@
-import { useState, type ReactElement } from 'react';
+import { Download, FileCode, FileDown, FileText, Loader2 } from 'lucide-react';
+import { type ReactElement, useState } from 'react';
+import { useTheme } from '@/components/theme-provider';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Download, FileCode, FileDown, FileText, Loader2 } from 'lucide-react';
-import type { ResumeData } from '@/hooks/use-story-canvas';
-import { buildResumeMarkdown } from '@/lib/resume-export-text';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { trackEvents } from '@/lib/track-events';
-import { useTheme } from '@/components/theme-provider';
+import type { ResumeData } from '@/hooks/use-story-canvas';
 import { RESUME_EXPORT_FILENAME_BASE } from '@/lib/resume-export-data';
+import { buildResumeMarkdown } from '@/lib/resume-export-text';
+import { trackEvents } from '@/lib/track-events';
 
 interface ClientTextFormat {
   value: 'md';

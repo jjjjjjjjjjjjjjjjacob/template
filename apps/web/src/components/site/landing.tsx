@@ -1,18 +1,18 @@
 import { Link } from '@tanstack/react-router';
 import {
+  type CSSProperties,
   useCallback,
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
 } from 'react';
 import { usePortfolioData } from '@/hooks/use-portfolio-data';
-import { ProjectRow, ProjectDetail } from './project-row';
+import { ProjectDetail, ProjectRow } from './project-row';
+import { SitePublicNav, useHasPublishedBlogPosts } from './public-nav';
+import { SiteResumeAction } from './public-shell';
+import { SiteThemeToggle } from './theme-toggle';
 import { useMenuAim } from './use-menu-aim';
 import { projectStage, useSiteVisuals } from './visual-provider';
-import { SiteResumeAction } from './public-shell';
-import { SitePublicNav, useHasPublishedBlogPosts } from './public-nav';
-import { SiteThemeToggle } from './theme-toggle';
 
 const FALLBACK = {
   name: 'jacob stein',

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { resolve, dirname } from 'path';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -81,7 +81,6 @@ class BundleAnalyzer {
         // Fallback: analyze files directly
         chunks = this.analyzeFilesDirectly();
       }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       console.warn(
         '⚠️  Could not read build manifest, analyzing files directly'
@@ -119,7 +118,7 @@ class BundleAnalyzer {
   }
 
   analyzeFilesDirectly() {
-    const { readdirSync, statSync } = require('fs'); // eslint-disable-line @typescript-eslint/no-require-imports
+    const { readdirSync, statSync } = require('fs');
     const chunks = [];
 
     try {
@@ -153,7 +152,7 @@ class BundleAnalyzer {
   }
 
   analyzeAssets() {
-    const { readdirSync, statSync } = require('fs'); // eslint-disable-line @typescript-eslint/no-require-imports
+    const { readdirSync, statSync } = require('fs');
     const assets = [];
 
     try {
@@ -405,7 +404,6 @@ class BundleAnalyzer {
       console.log(
         `Vendor Optimization: ${(current.vendorOptimization * 100).toFixed(1)}%`
       );
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       // Silently ignore comparison errors
     }
@@ -413,7 +411,7 @@ class BundleAnalyzer {
 
   getFileSize(filePath) {
     try {
-      const { statSync } = require('fs'); // eslint-disable-line @typescript-eslint/no-require-imports
+      const { statSync } = require('fs');
       return statSync(filePath).size;
     } catch {
       return 0;

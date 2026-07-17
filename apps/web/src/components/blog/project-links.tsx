@@ -1,5 +1,5 @@
+import { ExternalLink, Github } from 'lucide-react';
 import * as React from 'react';
-import { Github, ExternalLink } from 'lucide-react';
 
 interface ProjectLinksProps {
   githubUrl?: string;

@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { Button } from './button';
 
 afterEach(() => {

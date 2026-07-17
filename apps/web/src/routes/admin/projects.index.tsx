@@ -1,9 +1,29 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useQuery, useMutation } from 'convex/react';
 import { api } from '@template/backend';
+import type { Id } from '@template/backend/dataModel';
+import { useMutation, useQuery } from 'convex/react';
+import {
+  Edit,
+  Eye,
+  EyeOff,
+  FileText,
+  GripVertical,
+  Image,
+  MoreHorizontal,
+  Plus,
+  Trash2,
+} from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import {
   Table,
   TableBody,
@@ -12,27 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Plus,
-  MoreHorizontal,
-  Edit,
-  Trash2,
-  Eye,
-  EyeOff,
-  GripVertical,
-  Image,
-  FileText,
-} from 'lucide-react';
-import { toast } from 'sonner';
 import { useAdminAuth } from '@/features/auth/hooks/use-admin';
-import { useState } from 'react';
-import type { Id } from '@template/backend/dataModel';
 
 export const Route = createFileRoute('/admin/projects/')({
   component: ProjectsIndexPage,

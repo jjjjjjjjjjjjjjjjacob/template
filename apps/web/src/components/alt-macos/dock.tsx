@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { WindowDockTarget } from '@/components/alt-macos/window';
 
 interface DockApp {

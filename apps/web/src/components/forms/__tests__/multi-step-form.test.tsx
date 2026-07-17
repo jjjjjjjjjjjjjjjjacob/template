@@ -1,11 +1,12 @@
 /// <reference lib="dom" />
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   MultiStepForm,
-  useMultiStepForm,
   type MultiStepFormStep,
+  useMultiStepForm,
 } from '../multi-step-form';
 
 const mockSteps: MultiStepFormStep[] = [

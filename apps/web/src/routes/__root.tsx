@@ -1,10 +1,10 @@
 import {
-  Outlet,
   createRootRouteWithContext,
   HeadContent,
+  Outlet,
   Scripts,
-  useNavigate,
   useLocation,
+  useNavigate,
 } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 import { getWebRequest } from '@tanstack/react-start/server';
@@ -27,24 +27,24 @@ const TanStackRouterDevtools = import.meta.env.DEV
     )
   : () => null;
 
-import { QueryClientProvider, type QueryClient } from '@tanstack/react-query';
-import { DefaultCatchBoundary } from '@/components/default-catch-boundary';
-import { NotFound } from '@/components/not-found';
-import { Header } from '@/components/header';
-import { SiteChrome } from '@/components/site/chrome';
-import { SiteVisualProvider } from '@/components/site/visual-provider';
-import { ThemeProvider } from '@/components/theme-provider';
-import { PostHogProvider } from '@/components/posthog-provider';
-import { PostHogPageTracker } from '@/components/posthog-page-tracker';
-import appCss from '@/styles/app.css?url';
-import siteCss from '@/components/site/site.css?url';
-import blogCss from '@/styles/blog.css?url';
+import { ClerkProvider, useAuth } from '@clerk/tanstack-react-start';
+import { ConvexQueryClient } from '@convex-dev/react-query';
+import { type QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConvexReactClient } from 'convex/react';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
-import { ConvexQueryClient } from '@convex-dev/react-query';
-import { ClerkProvider, useAuth } from '@clerk/tanstack-react-start';
-import { useSectionStore } from '@/stores/section-store';
+import { DefaultCatchBoundary } from '@/components/default-catch-boundary';
+import { Header } from '@/components/header';
+import { NotFound } from '@/components/not-found';
+import { PostHogPageTracker } from '@/components/posthog-page-tracker';
+import { PostHogProvider } from '@/components/posthog-provider';
+import { SiteChrome } from '@/components/site/chrome';
+import siteCss from '@/components/site/site.css?url';
+import { SiteVisualProvider } from '@/components/site/visual-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import { getRouteExperience } from '@/lib/route-experience';
+import { useSectionStore } from '@/stores/section-store';
+import appCss from '@/styles/app.css?url';
+import blogCss from '@/styles/blog.css?url';
 
 // Optimized server function with caching and mobile optimizations
 const fetchClerkAuth = createServerFn({ method: 'GET' }).handler(async () => {

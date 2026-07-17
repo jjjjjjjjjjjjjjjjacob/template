@@ -99,7 +99,7 @@ export default function CodeBlock({
 
         setHighlighterReady(true);
       } catch (error) {
-        // eslint-disable-next-line no-console
+        // biome-ignore lint/suspicious/noConsole: intentional logging
         console.warn(
           `Failed to load syntax highlighting for ${language}:`,
           error

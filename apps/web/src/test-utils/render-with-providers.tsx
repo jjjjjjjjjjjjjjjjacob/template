@@ -1,6 +1,6 @@
+import { type RenderOptions, render } from '@testing-library/react';
 import React from 'react';
-import { render, type RenderOptions } from '@testing-library/react';
-import { createTestWrapper, createSimpleTestWrapper } from './test-wrapper';
+import { createSimpleTestWrapper, createTestWrapper } from './test-wrapper';
 import type { TestWrapperOptions } from './types';
 
 /**

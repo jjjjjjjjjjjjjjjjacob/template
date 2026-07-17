@@ -1,12 +1,12 @@
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { v } from 'convex/values';
+import { internal } from './_generated/api';
 import {
   action,
   internalMutation,
   internalQuery,
   query,
 } from './_generated/server';
-import { internal } from './_generated/api';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export const saveMessage = internalMutation({
   args: {

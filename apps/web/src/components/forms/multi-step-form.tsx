@@ -1,4 +1,7 @@
+import { Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import * as React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -6,10 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { cn } from '@/utils/tailwind-utils';
 
 export interface MultiStepFormStep {

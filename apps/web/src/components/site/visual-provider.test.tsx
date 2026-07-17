@@ -2,13 +2,13 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useEffect } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SiteThemeToggle } from './theme-toggle';
 import {
   projectStage,
+  type SiteStage,
   SiteVisualProvider,
   useSiteVisuals,
-  type SiteStage,
 } from './visual-provider';
-import { SiteThemeToggle } from './theme-toggle';
 
 function SiteVisualProbe() {
   const { theme, stage, setStage } = useSiteVisuals();

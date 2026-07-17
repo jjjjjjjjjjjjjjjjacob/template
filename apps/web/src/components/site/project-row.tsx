@@ -1,4 +1,4 @@
-import { useState, type CSSProperties } from 'react';
+import { type CSSProperties, useState } from 'react';
 import type { ResumeProject } from '@/hooks/use-resume-filter';
 import {
   flattenTechnologies,

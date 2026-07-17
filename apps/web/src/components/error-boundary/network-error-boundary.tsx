@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import {
-  BaseErrorBoundary,
-  type ErrorBoundaryProps,
-  type ErrorFallbackProps,
-} from './base-error-boundary';
+import { Globe, Home, RefreshCw, WifiOff } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,9 +9,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { WifiOff, RefreshCw, Globe, Home } from 'lucide-react';
+import {
+  BaseErrorBoundary,
+  type ErrorBoundaryProps,
+  type ErrorFallbackProps,
+} from './base-error-boundary';
 
 /**
  * Network-specific error boundary with connection monitoring

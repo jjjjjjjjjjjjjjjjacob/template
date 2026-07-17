@@ -1,8 +1,8 @@
 import { convexTest } from 'convex-test';
+import { describe, expect, it } from 'vitest';
 import { modules } from '../vitest.setup';
-import { describe, it, expect } from 'vitest';
-import schema from './schema';
 import { api } from './_generated/api';
+import schema from './schema';
 
 describe('Users Functions', () => {
   describe('Authentication Tests', () => {
@@ -445,7 +445,7 @@ describe('Users Functions', () => {
       };
 
       // This should work as it's an internal mutation
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
       await t.mutation((api.users as any).upsertFromClerk, {
         data: clerkUserData,
       });
@@ -479,7 +479,7 @@ describe('Users Functions', () => {
       expect(user).toBeDefined();
 
       // Delete user via webhook
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
       await t.mutation((api.users as any).deleteFromClerk, {
         clerkUserId: userData.external_id,
       });

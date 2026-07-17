@@ -1,11 +1,12 @@
 // This file contains search functionality and may need type fixes
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+
 import { convexQuery, useConvexMutation } from '@convex-dev/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { api } from '@template/backend';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { searchCache } from '../services/search-cache';
 import type { SearchFilters, SearchOptions, SearchState } from '../types';
-import { useDebouncedValue } from '@/hooks/use-debounced-value';
 
 const DEFAULT_OPTIONS: SearchOptions = {
   debounceMs: 300,

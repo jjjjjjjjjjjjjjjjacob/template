@@ -1,10 +1,10 @@
 import { createLazyFileRoute } from '@tanstack/react-router';
-import { useQuery } from 'convex/react';
 import { api } from '@template/backend';
+import { useQuery } from 'convex/react';
 import React from 'react';
-import { BlogFeedItem } from '../../components/blog/blog-feed-item';
-import { BlogCollectionNav } from '../../components/blog/blog-collection-nav';
 import { SitePublicShell } from '@/components/site/public-shell';
+import { BlogCollectionNav } from '../../components/blog/blog-collection-nav';
+import { BlogFeedItem } from '../../components/blog/blog-feed-item';
 
 export const Route = createLazyFileRoute('/blog/')({
   component: BlogIndexPage,

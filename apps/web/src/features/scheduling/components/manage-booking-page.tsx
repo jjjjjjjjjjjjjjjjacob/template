@@ -1,17 +1,17 @@
-import * as React from 'react';
 import { Link } from '@tanstack/react-router';
 import {
+  type AvailableSlot,
   defaultSchedulerTimeZone,
   formatFullDateTime,
   formatTimeRange,
   formatTimeZoneLabel,
   groupSlotsByDay,
+  type ManagedBooking,
   schedulerError,
   timeZoneOptions,
   userTimeZone,
-  type AvailableSlot,
-  type ManagedBooking,
 } from '@template/scheduler';
+import * as React from 'react';
 import {
   bookingStage,
   useSiteVisuals,

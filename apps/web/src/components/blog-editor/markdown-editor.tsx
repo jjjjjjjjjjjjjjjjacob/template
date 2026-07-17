@@ -1,24 +1,25 @@
+import { api } from '@template/backend';
+import { useQuery } from 'convex/react';
 import React, {
-  useState,
-  useEffect,
+  Suspense,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
-  Suspense,
+  useState,
 } from 'react';
-import { useQuery } from 'convex/react';
-import { api } from '@template/backend';
+import { useIsMobile, useIsTablet } from '../../hooks/use-media-query';
 import { cn } from '../../utils/tailwind-utils';
 import { Card } from '../ui/card';
 import { Separator } from '../ui/separator';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet';
-import { FormattingToolbar } from './formatting-toolbar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { EditorTextarea } from './editor-textarea';
-import { useIsMobile, useIsTablet } from '../../hooks/use-media-query';
+import { FormattingToolbar } from './formatting-toolbar';
 
 // Dynamic import for markdown preview
 const MarkdownPreview = React.lazy(() => import('./markdown-preview'));
+
 import type { Id } from '@template/backend/dataModel';
 
 interface MarkdownEditorProps {

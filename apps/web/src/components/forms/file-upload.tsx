@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
 import {
-  Upload,
-  X,
+  AlertCircle,
+  Check,
   File,
+  FileAudio,
   FileImage,
   FileText,
   FileVideo,
-  FileAudio,
-  AlertCircle,
-  Check,
+  Upload,
+  X,
 } from 'lucide-react';
+import * as React from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { cn } from '@/utils/tailwind-utils';
 
 export interface FileUploadFile {
@@ -82,6 +82,7 @@ export function FileUpload({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: preserve the existing lint baseline
   const validateFile = React.useCallback(
     (file: File): string | null => {
       if (file.size > maxFileSize) {
@@ -92,6 +93,7 @@ export function FileUpload({
     [maxFileSize]
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: preserve the existing lint baseline
   const addFiles = React.useCallback(
     async (newFiles: File[]) => {
       const validFiles: FileUploadFile[] = [];

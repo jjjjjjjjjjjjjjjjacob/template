@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { MacScrollArea } from '@/components/alt-macos/mac-scroll-area';
 
 interface TerminalAppProps {

@@ -1,6 +1,7 @@
 // Components
-export { SearchProvider } from './components/search-provider';
+
 export { CommandPalette } from '@/components/command-palette';
+export { SearchProvider } from './components/search-provider';
 
 // Hooks
 export { useSearch } from './hooks/use-search';
@@ -11,12 +12,12 @@ export { searchCache } from './services/search-cache';
 
 // Types
 export type {
-  SearchCache,
-  SearchFilters,
-  SearchState,
-  SearchOptions,
-  ParsedQuery,
-  SearchResultType,
   BaseSearchResult,
+  ParsedQuery,
+  SearchCache,
   SearchContext,
+  SearchFilters,
+  SearchOptions,
+  SearchResultType,
+  SearchState,
 } from './types';

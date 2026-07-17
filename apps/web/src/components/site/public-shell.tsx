@@ -1,9 +1,9 @@
-import { useEffect, useMemo, type ComponentProps, type ReactNode } from 'react';
+import { type ComponentProps, type ReactNode, useEffect, useMemo } from 'react';
 import { PDFDownloadPopover } from '@/components/pdf-download-popover';
 import { usePortfolioData } from '@/hooks/use-portfolio-data';
 import { buildResumeDataFromSource } from '@/lib/resume-export-data';
-import { projectStage, useSiteVisuals } from './visual-provider';
 import { SitePublicNav } from './public-nav';
+import { projectStage, useSiteVisuals } from './visual-provider';
 
 function classes(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(' ');

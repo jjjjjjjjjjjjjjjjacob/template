@@ -1,9 +1,9 @@
-import { tanstackStart } from '@tanstack/react-start/plugin/vite';
-import { defineConfig } from 'vite';
-import tsConfigPaths from 'vite-tsconfig-paths';
 import tailwindcss from '@tailwindcss/vite';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { defineConfig } from 'vite';
+import tsConfigPaths from 'vite-tsconfig-paths';
 
 // Performance monitoring plugin with proper error detection
 const performancePlugin = () => {
@@ -40,7 +40,6 @@ const performancePlugin = () => {
         };
 
         try {
-          // eslint-disable-next-line @typescript-eslint/no-require-imports
           const fs = require('fs');
           fs.writeFileSync(
             path.resolve(process.cwd(), 'build-metrics.json'),

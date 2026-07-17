@@ -1,5 +1,5 @@
-import { useDeferredValue, useEffect, useRef, useState } from 'react';
 import type { Doc, Id } from '@template/backend/dataModel';
+import { useDeferredValue, useEffect, useRef, useState } from 'react';
 
 export type StickyNote = Doc<'stickies'>;
 export type StickyColor = StickyNote['color'];

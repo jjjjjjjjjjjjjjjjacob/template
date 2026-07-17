@@ -1,7 +1,7 @@
+import { ReactNode } from 'react';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import { cn } from '@/utils';
-import { ReactNode } from 'react';
 
 interface AnimatedSectionProps {
   children: ReactNode;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { schedulerError } from '../client';
 import {
   addMonthsToMonthKey,
   buildSlotCalendar,
@@ -14,7 +15,6 @@ import {
   timeZoneOptions,
   userTimeZone,
 } from '../format';
-import { schedulerError } from '../client';
 import type {
   AvailabilityResult,
   AvailableSlot,
@@ -25,7 +25,15 @@ import type {
   SchedulerEventType,
 } from '../types';
 import { useSchedulerClient } from './context';
-import { Badge, Button, cn, Input, Label, Select, Textarea } from './primitives';
+import {
+  Badge,
+  Button,
+  cn,
+  Input,
+  Label,
+  Select,
+  Textarea,
+} from './primitives';
 
 export type BookingFlowProps = {
   client?: SchedulerClient;
@@ -61,7 +69,10 @@ export function BookingFlow({
   );
   const [selectedDateKey, setSelectedDateKey] = React.useState('');
   const [visibleMonthKey, setVisibleMonthKey] = React.useState(
-    monthKeyFromTimestamp(Date.now(), initialTimeZone ?? defaultSchedulerTimeZone)
+    monthKeyFromTimestamp(
+      Date.now(),
+      initialTimeZone ?? defaultSchedulerTimeZone
+    )
   );
   const [bookingResult, setBookingResult] =
     React.useState<BookingResult | null>(null);
@@ -159,15 +170,18 @@ export function BookingFlow({
     () => slotMonthKeys(availability?.slots ?? [], timeZone),
     [availability?.slots, timeZone]
   );
-  const zoneOptions = React.useMemo(() => timeZoneOptions(timeZone), [timeZone]);
+  const zoneOptions = React.useMemo(
+    () => timeZoneOptions(timeZone),
+    [timeZone]
+  );
   const firstAvailableDateKey = availableDays[0]?.dateKey ?? '';
   const firstAvailableMonthKey =
     availableMonthKeys[0] ?? monthKeyFromTimestamp(Date.now(), timeZone);
   const lastAvailableMonthKey =
-    availableMonthKeys[availableMonthKeys.length - 1] ??
-    firstAvailableMonthKey;
+    availableMonthKeys[availableMonthKeys.length - 1] ?? firstAvailableMonthKey;
   const calendar = React.useMemo(
-    () => buildSlotCalendar(availability?.slots ?? [], timeZone, visibleMonthKey),
+    () =>
+      buildSlotCalendar(availability?.slots ?? [], timeZone, visibleMonthKey),
     [availability?.slots, timeZone, visibleMonthKey]
   );
   const selectedDaySlots = React.useMemo(
@@ -378,7 +392,7 @@ export function BookingFlow({
 
             <div className="space-y-5">
               {availableDays.length > 0 && (
-                <div className="rounded-lg border bg-background/50 p-3">
+                <div className="bg-background/50 rounded-lg border p-3">
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <Button
                       type="button"
@@ -402,7 +416,7 @@ export function BookingFlow({
                       next
                     </Button>
                   </div>
-                  <div className="text-muted-foreground grid grid-cols-7 gap-1 text-center text-[0.68rem] uppercase tracking-[0.14em]">
+                  <div className="text-muted-foreground grid grid-cols-7 gap-1 text-center text-[0.68rem] tracking-[0.14em] uppercase">
                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => (
                       <span key={`${day}-${index}`}>{day}</span>
                     ))}
@@ -425,7 +439,8 @@ export function BookingFlow({
                             'text-muted-foreground/35',
                           day.hasSlots &&
                             'hover:bg-accent hover:text-accent-foreground',
-                          day.isToday && 'shadow-[inset_0_0_0_1px_currentColor]',
+                          day.isToday &&
+                            'shadow-[inset_0_0_0_1px_currentColor]',
                           selectedDateKey === day.dateKey &&
                             'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground'
                         )}
@@ -440,8 +455,9 @@ export function BookingFlow({
               {selectedDaySlots.length > 0 && (
                 <div className="space-y-3">
                   <h3 className="text-muted-foreground text-sm font-light">
-                    {availableDays.find((day) => day.dateKey === selectedDateKey)
-                      ?.label ?? 'Available times'}
+                    {availableDays.find(
+                      (day) => day.dateKey === selectedDateKey
+                    )?.label ?? 'Available times'}
                   </h3>
                   <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
                     {selectedDaySlots.map((slot) => (

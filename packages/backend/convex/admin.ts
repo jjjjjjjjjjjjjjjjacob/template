@@ -1,5 +1,5 @@
-import { query, mutation } from './_generated/server';
 import { v } from 'convex/values';
+import { mutation, query } from './_generated/server';
 import { AuthUtils } from './lib/auth';
 
 // Admin queries for user management and system stats
@@ -232,7 +232,6 @@ export const getUserDetails = query({
   args: {
     userId: v.string(),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return null for now - can be implemented later
     return null;
@@ -244,7 +243,6 @@ export const getActions = query({
     page: v.optional(v.number()),
     limit: v.optional(v.number()),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return empty list for now - can be implemented later
     return [];
@@ -256,7 +254,6 @@ export const updateUserRole = mutation({
     userId: v.string(),
     role: v.string(),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return null for now - can be implemented later
     return null;
@@ -267,7 +264,6 @@ export const suspendUser = mutation({
   args: {
     userId: v.string(),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return null for now - can be implemented later
     return null;
@@ -278,7 +274,6 @@ export const unsuspendUser = mutation({
   args: {
     userId: v.string(),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return null for now - can be implemented later
     return null;
@@ -289,7 +284,6 @@ export const deleteUser = mutation({
   args: {
     userId: v.string(),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return null for now - can be implemented later
     return null;
@@ -301,7 +295,6 @@ export const updateUserPermissions = mutation({
     userId: v.string(),
     permissions: v.array(v.string()),
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async (_ctx, _args) => {
     // Return null for now - can be implemented later
     return null;

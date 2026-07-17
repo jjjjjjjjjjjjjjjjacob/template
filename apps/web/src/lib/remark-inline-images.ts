@@ -1,6 +1,6 @@
-import { visit } from 'unist-util-visit';
+import type { Image, Root } from 'mdast';
 import type { Plugin } from 'unified';
-import type { Root, Image } from 'mdast';
+import { visit } from 'unist-util-visit';
 
 interface NodeData {
   hProperties?: Record<

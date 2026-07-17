@@ -1,16 +1,16 @@
-import {
-  action,
-  type ActionCtx,
-  internalMutation,
-  internalQuery,
-  mutation,
-  query,
-  type MutationCtx,
-  type QueryCtx,
-} from './_generated/server';
 import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import type { Doc, Id } from './_generated/dataModel';
+import {
+  type ActionCtx,
+  action,
+  internalMutation,
+  internalQuery,
+  type MutationCtx,
+  mutation,
+  type QueryCtx,
+  query,
+} from './_generated/server';
 import { AuthUtils } from './lib/auth';
 import {
   buildAvailableSlots,
@@ -22,7 +22,6 @@ const DEFAULT_TIME_ZONE = 'America/New_York';
 const DEFAULT_HOST_EMAIL = 'jacob@jacobstein.me';
 const DEFAULT_BOOKING_NOTIFICATION_FROM =
   'Jacob Stein <notifications@jacobstein.me>';
-const HOLD_TTL_MS = 10 * 60 * 1000;
 const DEFAULT_EVENT_REMINDERS = [
   { method: 'email' as const, minutes: 24 * 60 },
   { method: 'popup' as const, minutes: 10 },

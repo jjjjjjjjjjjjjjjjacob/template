@@ -1,3 +1,4 @@
+import { Check, Layers, Palette } from 'lucide-react';
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -6,13 +7,12 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Check, Palette, Layers } from 'lucide-react';
+import { cn } from '@/utils/tailwind-utils';
 import {
   THEME_COLORS,
   type ThemeColor,
   type UserTheme,
 } from '@/utils/theme-colors';
-import { cn } from '@/utils/tailwind-utils';
 
 interface DualThemeColorPickerProps {
   selectedTheme: UserTheme;

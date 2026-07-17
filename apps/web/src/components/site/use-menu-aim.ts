@@ -1,11 +1,11 @@
 import {
+  type FocusEventHandler,
+  type MouseEventHandler,
+  type RefObject,
   useCallback,
   useEffect,
   useRef,
   useState,
-  type FocusEventHandler,
-  type MouseEventHandler,
-  type RefObject,
 } from 'react';
 
 /**

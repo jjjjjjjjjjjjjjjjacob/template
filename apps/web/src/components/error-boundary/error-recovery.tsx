@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { CheckCircle, Clock, RefreshCw, XCircle } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
-  errorLogger,
   type EnhancedError,
   type ErrorRecoveryAction,
+  errorLogger,
 } from '@/lib/error-handling';
-import { RefreshCw, CheckCircle, XCircle, Clock } from 'lucide-react';
 
 export interface ErrorRecoveryProps {
   error: EnhancedError;

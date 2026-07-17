@@ -28,7 +28,7 @@ export function DebugAuth() {
           setTokenError(null);
         })
         .catch((error) => {
-          // eslint-disable-next-line no-console
+          // biome-ignore lint/suspicious/noConsole: intentional logging
           console.error('Error getting Clerk token:', error);
           setTokenError(error.message);
         });

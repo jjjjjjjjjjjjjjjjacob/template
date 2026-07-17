@@ -1,22 +1,36 @@
-import { createLazyFileRoute, useRouter, Link } from '@tanstack/react-router';
-import { useQuery, useMutation } from 'convex/react';
+import { createLazyFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { api } from '@template/backend';
-import { useState, useEffect, useCallback } from 'react';
+import type { Id } from '@template/backend/dataModel';
+import { useMutation, useQuery } from 'convex/react';
+import {
+  ArrowLeft,
+  ChevronDown,
+  ChevronUp,
+  Edit,
+  Plus,
+  Save,
+  Trash2,
+  X,
+} from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import {
+  MediaItem,
+  ProjectMediaManager,
+} from '@/components/admin/project-media-manager';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -24,23 +38,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  ArrowLeft,
-  Save,
-  X,
-  Plus,
-  Trash2,
-  ChevronUp,
-  ChevronDown,
-  Edit,
-} from 'lucide-react';
-import { toast } from 'sonner';
+import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import { useAdminAuth } from '@/features/auth/hooks/use-admin';
-import {
-  ProjectMediaManager,
-  MediaItem,
-} from '@/components/admin/project-media-manager';
-import type { Id } from '@template/backend/dataModel';
 
 interface Achievement {
   description: string;

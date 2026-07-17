@@ -1,13 +1,13 @@
-import {
-  useRef,
-  useMemo,
-  useEffect,
-  useState,
-  useDeferredValue,
-  startTransition,
-} from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
 import { OrthographicCamera } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import {
+  startTransition,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import * as THREE from 'three';
 import type { ParticleConfig } from './particle-controls';
 
@@ -735,6 +735,7 @@ export function ParticleField(
 
   // Handle position copying when requested
   const { onCopyPositions, copyTrigger } = props;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally constrained dependencies
   useEffect(() => {
     // Only act on explicit user-triggered increments (copyTrigger > 0)
     if (
@@ -745,7 +746,6 @@ export function ParticleField(
     ) {
       onCopyPositions(currentPositionsRef.current);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [copyTrigger]);
 
   useEffect(() => {

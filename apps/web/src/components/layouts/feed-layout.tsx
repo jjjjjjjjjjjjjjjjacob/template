@@ -1,7 +1,7 @@
 import * as React from 'react';
+import { useResponsive } from '@/hooks/use-responsive';
 import { cn } from '@/utils/tailwind-utils';
 import { BaseLayout } from './base-layout';
-import { useResponsive } from '@/hooks/use-responsive';
 
 export interface FeedLayoutProps {
   children: React.ReactNode;

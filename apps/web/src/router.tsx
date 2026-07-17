@@ -1,16 +1,16 @@
-import { createRouter as createTanStackRouter } from '@tanstack/react-router';
+import { ConvexQueryClient } from '@convex-dev/react-query';
 import {
   MutationCache,
-  QueryClient,
   notifyManager,
+  QueryClient,
 } from '@tanstack/react-query';
-import { ConvexReactClient } from 'convex/react';
-import { ConvexQueryClient } from '@convex-dev/react-query';
+import { createRouter as createTanStackRouter } from '@tanstack/react-router';
 import { routerWithQueryClient } from '@tanstack/react-router-with-query';
+import { ConvexReactClient } from 'convex/react';
 import toast from '@/utils/toast';
-import { routeTree } from './routeTree.gen';
 import { DefaultCatchBoundary } from './components/default-catch-boundary';
 import { NotFound } from './components/not-found';
+import { routeTree } from './routeTree.gen';
 
 export function createRouter(loadContext?: {
   request?: Request;
@@ -22,7 +22,7 @@ export function createRouter(loadContext?: {
 
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL!;
   if (!CONVEX_URL) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: intentional logging
     console.error('missing envar CONVEX_URL');
   }
   const convexClient = new ConvexReactClient(CONVEX_URL);

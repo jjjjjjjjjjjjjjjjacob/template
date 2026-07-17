@@ -1,7 +1,8 @@
 /// <reference lib="dom" />
-import { describe, it, expect, afterEach, vi } from 'vitest';
-import { render, screen, cleanup } from '@testing-library/react';
-import { FeedLayout, FeedItem } from '../feed-layout';
+
+import { cleanup, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { FeedItem, FeedLayout } from '../feed-layout';
 
 // Mock the responsive hook
 vi.mock('@/hooks/use-responsive', () => ({

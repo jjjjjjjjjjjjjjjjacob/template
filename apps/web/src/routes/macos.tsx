@@ -1,34 +1,34 @@
-import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
-import { useMutation, useQuery } from 'convex/react';
 import { api } from '@template/backend';
 import type { Id } from '@template/backend/dataModel';
-import { ClientOnly } from '@/components/ui/client-only';
-import { usePortfolioData } from '@/hooks/use-portfolio-data';
-import { useMobile } from '@/hooks/use-mobile';
-import { BootScreen } from '@/components/alt-macos/boot-screen';
-import { Desktop } from '@/components/alt-macos/desktop';
-import { Window, type WindowDockTarget } from '@/components/alt-macos/window';
-import { Dock } from '@/components/alt-macos/dock';
-import { MenuBar } from '@/components/alt-macos/menu-bar';
+import { useMutation, useQuery } from 'convex/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FinderApp } from '@/components/alt-macos/apps/finder-app';
+import { IChatApp } from '@/components/alt-macos/apps/ichat-app';
+import { MailApp } from '@/components/alt-macos/apps/mail-app';
+import { PhotoBoothApp } from '@/components/alt-macos/apps/photo-booth-app';
+import { PhotosApp } from '@/components/alt-macos/apps/photos-app';
+import { SafariApp } from '@/components/alt-macos/apps/safari-app';
 import {
   buildDefaultStickies,
   buildNewStickySeed,
   STICKIES_HELP_NOTE_HTML,
   StickiesApp,
-  StickyNoteWindow,
   type StickyColor,
   type StickyNote,
+  StickyNoteWindow,
   type StickyPatch,
 } from '@/components/alt-macos/apps/stickies-app';
-import { SafariApp } from '@/components/alt-macos/apps/safari-app';
-import { PhotosApp } from '@/components/alt-macos/apps/photos-app';
-import { MailApp } from '@/components/alt-macos/apps/mail-app';
-import { TerminalApp } from '@/components/alt-macos/apps/terminal-app';
-import { PhotoBoothApp } from '@/components/alt-macos/apps/photo-booth-app';
-import { IChatApp } from '@/components/alt-macos/apps/ichat-app';
 import { SystemPreferencesApp } from '@/components/alt-macos/apps/system-preferences-app';
+import { TerminalApp } from '@/components/alt-macos/apps/terminal-app';
+import { BootScreen } from '@/components/alt-macos/boot-screen';
+import { Desktop } from '@/components/alt-macos/desktop';
+import { Dock } from '@/components/alt-macos/dock';
+import { MenuBar } from '@/components/alt-macos/menu-bar';
+import { Window, type WindowDockTarget } from '@/components/alt-macos/window';
+import { ClientOnly } from '@/components/ui/client-only';
+import { useMobile } from '@/hooks/use-mobile';
+import { usePortfolioData } from '@/hooks/use-portfolio-data';
 import { getWallpaperClientKey } from '@/utils/wallpaper-client-key';
 
 export const Route = createFileRoute('/macos')({

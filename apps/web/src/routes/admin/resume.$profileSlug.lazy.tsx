@@ -1,17 +1,17 @@
-import { createLazyFileRoute, useRouter, Link } from '@tanstack/react-router';
-import { useQuery, useMutation } from 'convex/react';
+import { createLazyFileRoute, Link, useRouter } from '@tanstack/react-router';
 import { api } from '@template/backend';
-import { useState, useEffect, useCallback } from 'react';
+import { useMutation, useQuery } from 'convex/react';
+import { ArrowLeft, Plus, Save, Trash2, X } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { ResumeProjectManager } from '@/components/admin/resume-project-manager';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Save, X, Plus, Trash2 } from 'lucide-react';
-import { toast } from 'sonner';
 import { useAdminAuth } from '@/features/auth/hooks/use-admin';
-import { ResumeProjectManager } from '@/components/admin/resume-project-manager';
 
 export const Route = createLazyFileRoute('/admin/resume/$profileSlug')({
   component: EditProfilePage,

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { schedulerError } from '../client';
 import {
   defaultSchedulerTimeZone,
   formatFullDateTime,
@@ -8,7 +9,6 @@ import {
   timeZoneOptions,
   userTimeZone,
 } from '../format';
-import { schedulerError } from '../client';
 import type {
   AvailableSlot,
   BookingTokenPurpose,
@@ -131,7 +131,10 @@ export function ManageBookingFlow({
   }
 
   const groupedSlots = groupSlotsByDay(slots, timeZone).slice(0, 10);
-  const zoneOptions = React.useMemo(() => timeZoneOptions(timeZone), [timeZone]);
+  const zoneOptions = React.useMemo(
+    () => timeZoneOptions(timeZone),
+    [timeZone]
+  );
 
   function changeTimeZone(nextTimeZone: string) {
     setTimeZone(nextTimeZone);

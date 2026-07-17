@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
-
+import type { ResumeData } from '@/hooks/use-story-canvas';
 import {
   buildResumeMarkdown,
   buildResumePlainText,
 } from '@/lib/resume-export-text';
-import type { ResumeData } from '@/hooks/use-story-canvas';
 
 const sampleData: ResumeData = {
   name: 'Jacob Stein',

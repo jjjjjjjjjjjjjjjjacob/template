@@ -1,6 +1,6 @@
 import * as React from 'react';
-import type { MetaballVariant } from './metaball-stage';
 import { useTheme } from '@/components/theme-provider';
+import type { MetaballVariant } from './metaball-stage';
 
 export type SiteTheme = 'light' | 'dark';
 

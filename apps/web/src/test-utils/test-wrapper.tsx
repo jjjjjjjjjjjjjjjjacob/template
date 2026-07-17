@@ -1,14 +1,14 @@
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
-  RouterProvider,
   createRootRoute,
   createRoute,
   createRouter,
   type Router,
+  RouterProvider,
 } from '@tanstack/react-router';
-import { ThemeProvider } from '@/components/theme-provider';
+import React from 'react';
 import { SiteVisualProvider } from '@/components/site/visual-provider';
+import { ThemeProvider } from '@/components/theme-provider';
 import type { TestWrapperOptions } from './types';
 
 /**
@@ -24,13 +24,11 @@ export function createTestWrapper(options: TestWrapperOptions = {}) {
     router,
     initialPath = '/',
     initialSearch = {},
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     auth: _auth = {
       isSignedIn: true,
       isLoaded: true,
       user: { id: 'test-user-123' },
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     theme: _theme = 'light',
     features = {},
     additionalProviders = [],
@@ -165,13 +163,11 @@ export function createSimpleTestWrapper(
   const {
     queryClient,
     queryOptions = { retry: false, staleTime: 0, gcTime: 0 },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     auth: _auth = {
       isSignedIn: true,
       isLoaded: true,
       user: { id: 'test-user-123' },
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     theme: _theme = 'light',
     features = {},
     additionalProviders = [],

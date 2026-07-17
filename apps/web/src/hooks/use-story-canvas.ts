@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
 import jsPDF from 'jspdf';
+import { useCallback, useState } from 'react';
 
 // Type for checking roundRect support
 type CanvasWithRoundRect = CanvasRenderingContext2D & {
@@ -284,6 +284,7 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedBlob, setGeneratedBlob] = useState<Blob | null>(null);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally constrained dependencies
   const generateResumeImage = useCallback(
     async (
       resumeData: ResumeData,
@@ -308,7 +309,6 @@ export function useStoryCanvas(options: UseStoryCanvasOptions = {}) {
         setIsGenerating(false);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 

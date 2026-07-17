@@ -1,14 +1,14 @@
-import {
-  mutation,
-  query,
-  internalMutation,
-  action,
-  QueryCtx,
-  MutationCtx,
-} from './_generated/server';
-import { v, Validator } from 'convex/values';
 import type { UserJSON } from '@clerk/backend';
+import { Validator, v } from 'convex/values';
 import { internal } from './_generated/api';
+import {
+  action,
+  internalMutation,
+  MutationCtx,
+  mutation,
+  QueryCtx,
+  query,
+} from './_generated/server';
 
 // Helper function to get user by external_id
 async function userByExternalId(
@@ -185,7 +185,7 @@ export const updateProfile = action({
     last_name: v.optional(v.string()),
     image_url: v.optional(v.string()),
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
   handler: async (ctx, args): Promise<any> => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -215,7 +215,7 @@ export const updateProfileInternal = internalMutation({
       throw new Error('User not found');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
     const updates: Record<string, any> = {};
 
     if (args.username !== undefined) {
@@ -248,7 +248,7 @@ export const completeOnboarding = action({
     username: v.optional(v.string()),
     image_url: v.optional(v.string()),
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
   handler: async (ctx, args): Promise<any> => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
@@ -283,7 +283,7 @@ export const completeOnboardingInternal = internalMutation({
       throw new Error('User not authenticated');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
     const updates: Record<string, any> = {
       onboarding_completed: true,
     };
@@ -309,7 +309,7 @@ export const updateOnboardingData = action({
     last_name: v.optional(v.string()),
     image_url: v.optional(v.string()),
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
   handler: async (ctx, args): Promise<any> => {
     // console.log('updateOnboardingData called with args:', args);
 
@@ -356,12 +356,12 @@ export const updateOnboardingDataInternal = internalMutation({
     }
 
     if (!user) {
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: intentional logging
       console.error('Failed to get or create user');
       throw new Error('User not authenticated');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
     const updates: Record<string, any> = {};
 
     if (args.username !== undefined) {
@@ -439,7 +439,7 @@ export const debugAuth = query({
           : null,
       };
     } catch (error) {
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: intentional logging
       console.error('Error in debugAuth:', error);
       return {
         hasAuth: !!ctx.auth,
@@ -572,7 +572,7 @@ export const deleteFromClerk = internalMutation({
     if (user !== null) {
       await ctx.db.delete(user._id);
     } else {
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: intentional logging
       console.warn(
         `Can't delete user, there is none for Clerk user ID: ${clerkUserId}`
       );

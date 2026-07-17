@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router';
-import { useEffect, type ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { SiteThemeToggle } from './theme-toggle';
 import { projectStage, useSiteVisuals } from './visual-provider';
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useSectionStore, type Section } from '@/stores/section-store';
+import { type Section, useSectionStore } from '@/stores/section-store';
 
 interface UseSectionObserverProps {
   section: Section;

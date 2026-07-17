@@ -1,8 +1,8 @@
 import { convexTest } from 'convex-test';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { modules } from '../vitest.setup';
-import { describe, it, expect, beforeEach } from 'vitest';
-import schema from './schema';
 import { api } from './_generated/api';
+import schema from './schema';
 
 describe('Authentication Debug Tests', () => {
   let t: ReturnType<typeof convexTest>;
@@ -251,9 +251,9 @@ describe('Authentication Debug Tests', () => {
       expect(statusWithUser.completed).toBe(false);
       expect(statusWithUser.needsOnboarding).toBe(true);
       expect(statusWithUser.userExists).toBe(true);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
       expect((statusWithUser as any).user).toBeDefined();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: existing type escape hatch
       expect((statusWithUser as any).user.external_id).toBe(
         mockIdentity.subject
       );

@@ -6,9 +6,9 @@
 import { getAuth } from '@clerk/tanstack-react-start/server';
 import {
   generateAuthCacheKey,
+  getAuthTimeout,
   getCachedAuth,
   setCachedAuth,
-  getAuthTimeout,
 } from './ssr-auth-cache';
 
 export interface OptimizedAuthResult {

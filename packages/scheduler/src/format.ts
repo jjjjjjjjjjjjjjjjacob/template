@@ -92,10 +92,7 @@ export function formatFullDateTime(timestamp: number, timeZone: string) {
   }).format(new Date(timestamp));
 }
 
-export function formatTimeZoneLabel(
-  timeZone: string,
-  timestamp = Date.now()
-) {
+export function formatTimeZoneLabel(timeZone: string, timestamp = Date.now()) {
   return `${timeZoneDisplayName(timeZone)} (${timeZoneOffsetLabel(
     timeZone,
     timestamp
@@ -107,7 +104,11 @@ export function timeZoneOptions(
   timestamp = Date.now()
 ): SchedulerTimeZoneOption[] {
   return Array.from(
-    new Set([preferredTimeZone, defaultSchedulerTimeZone, ...schedulerTimeZones])
+    new Set([
+      preferredTimeZone,
+      defaultSchedulerTimeZone,
+      ...schedulerTimeZones,
+    ])
   )
     .filter(Boolean)
     .map((timeZone) => ({

@@ -12,6 +12,7 @@ import {
   userTimeZone,
 } from '@template/scheduler';
 import * as React from 'react';
+import { SiteThemeToggle } from '@/components/site/theme-toggle';
 import {
   bookingStage,
   useSiteVisuals,
@@ -136,9 +137,12 @@ export function ManageBookingPage({ mode }: { mode: 'cancel' | 'reschedule' }) {
     <main className="site-shell site-booking-main mx-auto grid max-w-6xl gap-4 px-6 md:grid-cols-[minmax(260px,32%)_1fr] md:gap-16 md:px-10">
       <aside className="site-aside site-booking-aside">
         <header className="site-fade-in">
-          <Link to="/book" className="site-link site-booking-back">
-            &lt; back
-          </Link>
+          <div className="site-booking-top">
+            <Link to="/book" className="site-link site-booking-back">
+              &lt; back
+            </Link>
+            <SiteThemeToggle className="site-booking-theme-toggle" />
+          </div>
           <p className="site-mono site-booking-kicker">booking — {mode}</p>
           <h1 className="site-grotesk site-booking-title">
             {status === 'done' ? doneTitle : readyTitle}

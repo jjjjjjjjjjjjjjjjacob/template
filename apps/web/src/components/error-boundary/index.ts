@@ -1,6 +1,5 @@
 // Base error boundary and types
 
-
 // Re-export error handling utilities for convenience
 export {
   type EnhancedError,

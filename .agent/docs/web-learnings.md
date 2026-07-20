@@ -232,8 +232,9 @@ or anything touching `site/theme-reveal.ts` / the `data-theme` attr / `::view-tr
 - **First paint is bootstrapped in `<head>`.** Keep the inline storage/system resolver synchronized
   with `ThemeProvider` and `lib/site-theme.ts` so returning users do not receive the wrong CSS palette.
 - **Toggle:** a bespoke `.site-theme-toggle` button (lucide `Sun`/`Moon`, shows the CURRENT mode like
-  the legacy toggle), used on public pages and in the admin desktop/mobile chrome. Its `ref` provides
-  the reveal origin via the centre of `getBoundingClientRect()`.
+  the legacy toggle), used on public pages, booking (`/book`, cancel/reschedule — inline with
+  `< back` via `.site-booking-top`), and admin desktop/mobile chrome. Its `ref` provides the reveal
+  origin via the centre of `getBoundingClientRect()`.
 
 ## Per-example portfolio captions (site "work cited" media)
 
@@ -280,3 +281,14 @@ project-row.tsx`, `PreviewMedia` figcaption). The standalone macOS experience sh
   placement first — `data-orientation` is set correctly by the video's
   `onLoadedMetadata` (verified: HEAT clips are 1080×2344 / 1080×1240 / 1080×1238
   portrait + one 1436×1080 landscape).
+
+## Booking deep links (`/book?meetingType=…`)
+
+**Situation: preselecting / highlighting a meeting type on the public booking page.**
+
+- `/book` accepts optional search param `meetingType` via TanStack `validateSearch`.
+- Values may be camelCase (`workingSession`) or slug form (`working-session`);
+  `meetingTypeToEventTypeSlug()` in `features/scheduling/utils.ts` normalizes to the
+  Convex event-type slug before passing `initialEventTypeSlug` into `BookingWidget`.
+- Path deep links still work: `/book/$eventTypeSlug` (e.g. `/book/working-session`).
+- Default seeded slugs: `intro`, `working-session`, `deep-dive`.

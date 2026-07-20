@@ -121,18 +121,18 @@ bun run dev
 
 All scripts are run from the root with Bun:
 
-| Command                | Description                    |
-| ---------------------- | ------------------------------ |
-| `bun run dev`          | Start full dev environment     |
-| `bun run dev:frontend` | Start frontend only            |
-| `bun run dev:backend`  | Start backend only             |
-| `bun run build`        | Build all projects             |
-| `bun run test`         | Run all tests                  |
-| `bun run typecheck`    | Type check all projects        |
-| `bun run lint`         | Lint all projects              |
-| `bun run check`        | Biome check (lint + assists)   |
-| `bun run check:fix`    | Biome check with autofix       |
-| `bun run quality`      | Run typecheck + check + format |
+| Command                | Description                     |
+| ---------------------- | ------------------------------- |
+| `bun run dev`          | Start full dev environment      |
+| `bun run dev:frontend` | Start frontend only             |
+| `bun run dev:backend`  | Start backend only              |
+| `bun run build`        | Build all projects              |
+| `bun run test`         | Run all tests                   |
+| `bun run typecheck`    | Type check all projects         |
+| `bun run lint`         | Lint all projects               |
+| `bun run check`        | Biome check (lint + assists)    |
+| `bun run check:fix`    | Biome check with autofix        |
+| `bun run quality`      | Run typecheck + check + format  |
 | `bun run quality:fix`  | Run typecheck + check fix + fmt |
 
 #### Turborepo Usage

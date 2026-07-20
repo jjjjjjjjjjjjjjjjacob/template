@@ -1617,10 +1617,21 @@ html.site-document body {
   min-height: 100dvh;
 }
 
+.site-booking-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
 .site-booking-back {
   display: inline-flex;
   width: fit-content;
   font-size: 0.88rem;
+}
+
+.site-booking-theme-toggle {
+  margin: 0;
 }
 
 .site-booking-kicker {

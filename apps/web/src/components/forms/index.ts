@@ -1,6 +1,5 @@
 // Multi-step form components
 
-
 // Character counting input
 export {
   CharacterCountInput,

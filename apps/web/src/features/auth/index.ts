@@ -1,6 +1,5 @@
 // Main auth hooks
 
-
 // Auth components
 export { AuthPromptDialog } from './components/auth-prompt-dialog';
 export {

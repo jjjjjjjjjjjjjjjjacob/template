@@ -21,6 +21,7 @@ import {
   userTimeZone,
 } from '@template/scheduler';
 import * as React from 'react';
+import { SiteThemeToggle } from '@/components/site/theme-toggle';
 import {
   bookingStage,
   useSiteVisuals,
@@ -345,9 +346,12 @@ export function BookingWidget({
     >
       <aside className="site-aside site-booking-aside">
         <header className="site-fade-in">
-          <Link to="/" className="site-link site-booking-back">
-            &lt; back
-          </Link>
+          <div className="site-booking-top">
+            <Link to="/" className="site-link site-booking-back">
+              &lt; back
+            </Link>
+            <SiteThemeToggle className="site-booking-theme-toggle" />
+          </div>
           <p className="site-mono site-booking-kicker">booking — google meet</p>
           <h1 className="site-grotesk site-booking-title">
             Book time with Jacob
@@ -943,9 +947,12 @@ function BookingConfirmation({
     >
       <aside className="site-aside site-booking-aside">
         <header className="site-fade-in">
-          <Link to="/" className="site-link site-booking-back">
-            &lt; back
-          </Link>
+          <div className="site-booking-top">
+            <Link to="/" className="site-link site-booking-back">
+              &lt; back
+            </Link>
+            <SiteThemeToggle className="site-booking-theme-toggle" />
+          </div>
           <p className="site-mono site-booking-kicker">
             confirmed — google meet
           </p>
